@@ -1,0 +1,28 @@
+# Django and third-party apps
+django
+django-auto-prefetch
+django-cleanup
+django-extensions
+django-rosetta
+django-o365mail
+django-modeltranslation
+django-markdownx
+pillow
+huey
+redis
+
+# Management
+python-dotenv
+gunicorn
+ipython
+
+# Testing
+coverage
+
+# Code formatting
+black
+pyclean
+ruff
+isort
+djade
+djlint

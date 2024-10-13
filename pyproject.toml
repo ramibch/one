@@ -1,0 +1,10 @@
+[tool.ruff]
+exclude = ["venv", "migrations"]
+line-length = 136
+
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[tool.coverage.run]
+branch = true
+omit = ["manage.py"]
