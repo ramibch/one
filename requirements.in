@@ -16,8 +16,9 @@ python-dotenv
 gunicorn
 ipython
 
-# Testing
-coverage
+# Testing and faking data
+coverage[toml]
+factory-boy
 
 # Code formatting
 black

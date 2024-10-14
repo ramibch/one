@@ -18,7 +18,7 @@ click==8.1.7
     #   djlint
 colorama==0.4.6
     # via djlint
-coverage==7.6.2
+coverage==7.6.3
     # via -r requirements.in
 cssbeautifier==1.15.1
     # via djlint
@@ -56,6 +56,10 @@ editorconfig==0.12.4
     #   jsbeautifier
 executing==2.1.0
     # via stack-data
+factory-boy==3.3.1
+    # via -r requirements.in
+faker==30.3.0
+    # via factory-boy
 gunicorn==23.0.0
     # via -r requirements.in
 html-tag-names==0.1.2
@@ -119,7 +123,9 @@ pyclean==3.0.0
 pygments==2.18.0
     # via ipython
 python-dateutil==2.9.0.post0
-    # via o365
+    # via
+    #   faker
+    #   o365
 python-dotenv==1.0.1
     # via -r requirements.in
 pyyaml==6.0.2
@@ -155,6 +161,8 @@ traitlets==5.14.3
     # via
     #   ipython
     #   matplotlib-inline
+typing-extensions==4.12.2
+    # via faker
 tzdata==2024.2
     # via o365
 tzlocal==5.2
