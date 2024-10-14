@@ -188,6 +188,12 @@ O365_MAIL_SAVE_TO_SENT = True
 
 ## Project settings
 
+# telegram
+
+TELEGRAM_BOT_API_KEY = os.environ.get("TELEGRAM_BOT_API_KEY")
+TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID")
+
+
 # https
 
 if HTTPS:  # pragma: no cover
