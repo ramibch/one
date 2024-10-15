@@ -19,3 +19,10 @@
 #### Admin reporting
 
 Reporting to admin should be done always in `tasks` modules.
+
+
+
+## Submodules
+
+[https://gist.github.com/gitaarik/8735255](https://gist.github.com/gitaarik/8735255)
+
