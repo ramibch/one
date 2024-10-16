@@ -1,0 +1,3 @@
+[submodule "submodules/articles"]
+	path = submodules/articles
+	url = git@github.com:ramiboutas/articles.git
