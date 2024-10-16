@@ -11,5 +11,9 @@ register = template.Library()
 @stringfilter
 def markdown(value):
     return format_html(
-        md.markdown(value, extensions=settings.MARKDOWN_EXTENSIONS, extension_configs=settings.MARKDOWN_EXTENSION_CONFIGS)
+        md.markdown(
+            value,
+            extensions=settings.MARKDOWN_EXTENSIONS,
+            extension_configs=settings.MARKDOWN_EXTENSION_CONFIGS,
+        )
     )

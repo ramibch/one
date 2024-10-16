@@ -48,6 +48,8 @@ django-o365mail==1.1.0
     # via -r requirements.in
 django-rosetta==0.10.1
     # via -r requirements.in
+django-upgrade==1.22.1
+    # via -r requirements.in
 djlint==1.35.2
     # via -r requirements.in
 editorconfig==0.12.4
@@ -58,7 +60,7 @@ executing==2.1.0
     # via stack-data
 factory-boy==3.3.1
     # via -r requirements.in
-faker==30.3.0
+faker==30.4.0
     # via factory-boy
 gunicorn==23.0.0
     # via -r requirements.in
@@ -104,7 +106,7 @@ pathspec==0.12.1
     #   djlint
 pexpect==4.9.0
     # via ipython
-pillow==10.4.0
+pillow==11.0.0
     # via
     #   -r requirements.in
     #   django-markdownx
@@ -155,6 +157,8 @@ sqlparse==0.5.1
     # via django
 stack-data==0.6.3
     # via ipython
+tokenize-rt==6.0.0
+    # via django-upgrade
 tqdm==4.66.5
     # via djlint
 traitlets==5.14.3

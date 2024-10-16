@@ -6,6 +6,7 @@ django-extensions
 django-rosetta
 django-o365mail
 django-modeltranslation
+django-upgrade
 django-markdownx
 pillow
 huey
@@ -15,6 +16,7 @@ redis
 python-dotenv
 gunicorn
 ipython
+
 
 # Testing and faking data
 coverage[toml]

@@ -17,7 +17,9 @@ class AbstractPage(Model):
         abstract = True
 
     def get_absolute_url(self):
-        raise NotImplementedError
+        raise NotImplementedError(
+            "This method is not implemented in the AbstractPage model."
+        )
 
     @cached_property
     def url(self):
@@ -50,3 +52,7 @@ class AbstractSingletonModel(Model):
     @classmethod
     def load(cls):
         return cls.objects.get_or_create()[0]
+
+    @classmethod
+    def get(cls):
+        return cls.load()

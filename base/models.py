@@ -30,8 +30,12 @@ class FooterItem(Model):
 
 
 class PageLink(Model):
-    navbar_item = ForeignKey(NavbarItem, on_delete=models.CASCADE, null=True, blank=True)
-    footer_item = ForeignKey(FooterItem, on_delete=models.CASCADE, null=True, blank=True)
+    navbar_item = ForeignKey(
+        NavbarItem, on_delete=models.CASCADE, null=True, blank=True
+    )
+    footer_item = ForeignKey(
+        FooterItem, on_delete=models.CASCADE, null=True, blank=True
+    )
 
     # page = ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True)
     # article = ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)

@@ -5,12 +5,12 @@ from .models import FooterItem, NavbarItem, PageLink
 
 @register(NavbarItem)
 class NavbarItemOptions(TranslationOptions):
-    fields = ("title", )
+    fields = ("title",)
 
 
 @register(FooterItem)
 class FooterItemOptions(TranslationOptions):
-    fields = ("title", )
+    fields = ("title",)
 
 
 @register(PageLink)
