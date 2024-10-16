@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     "huey.contrib.djhuey",
     "rosetta",
     # Project apps
-    "base",
+    "code.base",
 ]
 
 MIDDLEWARE = [
@@ -75,7 +75,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "config.urls"
+ROOT_URLCONF = "code.urls"
 
 TEMPLATES = [
     {
@@ -88,12 +88,13 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "code.base.context_processors.menus_and_links",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = "config.wsgi.application"
+WSGI_APPLICATION = "code.wsgi.application"
 
 
 # Database

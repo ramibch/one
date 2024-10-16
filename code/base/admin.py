@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.db.migrations.recorder import MigrationRecorder
-
 from django.utils.timezone import now
 
 

@@ -60,7 +60,7 @@ executing==2.1.0
     # via stack-data
 factory-boy==3.3.1
     # via -r requirements.in
-faker==30.4.0
+faker==30.5.0
     # via factory-boy
 gunicorn==23.0.0
     # via -r requirements.in
