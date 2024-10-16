@@ -1,3 +1,6 @@
 [submodule "submodules/articles"]
 	path = submodules/articles
 	url = git@github.com:ramiboutas/articles.git
+[submodule "submodules/pages"]
+	path = submodules/pages
+	url = git@github.com:ramiboutas/pages.git

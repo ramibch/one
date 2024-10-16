@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     "huey.contrib.djhuey",
     "rosetta",
     # Project apps
-    "code.base",
+    "codebase.base",
 ]
 
 MIDDLEWARE = [
@@ -75,7 +75,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "code.urls"
+ROOT_URLCONF = "codebase.urls"
 
 TEMPLATES = [
     {
@@ -88,13 +88,13 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "code.base.context_processors.menus_and_links",
+                "codebase.base.context_processors.menus_and_links",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = "code.wsgi.application"
+WSGI_APPLICATION = "codebase.wsgi.application"
 
 
 # Database
@@ -194,6 +194,16 @@ O365_MAIL_SAVE_TO_SENT = True
 TELEGRAM_BOT_API_KEY = os.environ.get("TELEGRAM_BOT_API_KEY")
 TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID")
 
+
+# submodules
+
+# article topics
+ARTICLES_MARKDOWN_PATH = BASE_DIR / "submodules" / "articles"
+SYNC_ARTICLE_TOPICS = ("example-topic",)
+
+# pages
+PAGES_MARKDOWN_PATH = BASE_DIR / "submodules" / "pages"
+SYNC_PAGE_TOPICS = ("general-pages",)
 
 # https
 

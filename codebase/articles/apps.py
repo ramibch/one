@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from django.apps import AppConfig
 
-class {{ camel_case_app_name }}Config(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'code.{{ app_name }}'
+
+class ArticlesConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "codebase.articles"
 
     def ready(self):  # pragma: no cover
         from . import signals  # noqa
