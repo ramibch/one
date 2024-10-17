@@ -1,7 +1,8 @@
 from auto_prefetch import ForeignKey, Model
-from base.abstracts import AbstractPage
 from django.db import models
 from markdownx.models import MarkdownxField
+
+from ..base.abstracts import AbstractPage
 
 
 def upload_article_file(obj, filename):
@@ -23,7 +24,6 @@ class ArticleFile(Model):
     article = ForeignKey(Article, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     file = models.FileField(upload_to=upload_article_file)
-    st_ctime = models.FloatField(default=0.0)
 
     def __str__(self):
         return self.name

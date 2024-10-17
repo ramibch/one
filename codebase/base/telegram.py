@@ -30,7 +30,7 @@ class Bot:
 
     def to_admin(text: str):
         """Send text message to the admin"""
-        processed_text = f"{settings.WEBSITE_NAME} - {settings.WEBSITE_URL}\n\n:{text}"
+        processed_text = f"{settings.WEBSITE_NAME} - {settings.WEBSITE_URL}:\n\n{text}"
         Bot.to_chat(chat_id=settings.TELEGRAM_ADMIN_CHAT_ID, text=processed_text)
 
     def to_group(group_id, text, file_url=None):

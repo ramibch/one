@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.db.migrations",
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
     "django_extensions",
@@ -63,6 +64,8 @@ INSTALLED_APPS = [
     "rosetta",
     # Project apps
     "codebase.base",
+    "codebase.articles",
+    "codebase.pages",
 ]
 
 MIDDLEWARE = [
