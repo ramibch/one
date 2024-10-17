@@ -12,14 +12,13 @@ class AbstractPage(Model):
     slug = models.SlugField(max_length=128, unique=True, editable=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+    st_ctime = models.FloatField(default=0.0)
 
     class Meta(Model.Meta):
         abstract = True
 
     def get_absolute_url(self):
-        raise NotImplementedError(
-            "This method is not implemented in the AbstractPage model."
-        )
+        raise NotImplementedError("This method is not implemented in the AbstractPage model.")
 
     @cached_property
     def url(self):

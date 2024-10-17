@@ -12,11 +12,7 @@ class Bot:
         """Send text message to a chat"""
 
         if file_url is None:
-            params = {
-                "chat_id": chat_id,
-                "text": text,
-                "disable_web_page_preview": True
-            }
+            params = {"chat_id": chat_id, "text": text, "disable_web_page_preview": True}
             requests.get(Bot.base_url + "sendMessage", params=params)
         else:
             common_params = {"chat_id": chat_id, "caption": text}
@@ -34,7 +30,8 @@ class Bot:
 
     def to_admin(text: str):
         """Send text message to the admin"""
-        Bot.to_chat(chat_id=settings.TELEGRAM_ADMIN_CHAT_ID, text=text)
+        processed_text = f"{settings.WEBSITE_NAME} - {settings.WEBSITE_URL}\n\n:{text}"
+        Bot.to_chat(chat_id=settings.TELEGRAM_ADMIN_CHAT_ID, text=processed_text)
 
     def to_group(group_id, text, file_url=None):
         """Send text and optionally an image to a group"""

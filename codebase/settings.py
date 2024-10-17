@@ -189,6 +189,11 @@ O365_MAIL_SAVE_TO_SENT = True
 
 ## Project settings
 
+# Website
+
+WEBSITE_NAME = "Example site"
+WEBSITE_URL = "http://127.0.0.1/"
+
 # telegram
 
 TELEGRAM_BOT_API_KEY = os.environ.get("TELEGRAM_BOT_API_KEY")
