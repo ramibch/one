@@ -8,7 +8,7 @@ def upload_article_file(obj, filename:str):
 
 
 class Article(AbstractPage):
-    """File-based Article page"""
+    """File-based article model"""
     pass
 
 

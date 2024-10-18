@@ -3,29 +3,15 @@ from pathlib import Path
 from django.conf import settings
 from django.core.files import File
 from django.db.models import Q
+from django.utils.text import slugify
 from huey import crontab
 from huey.contrib import djhuey as huey
-from django.utils.text import slugify
 
 from ..base.telegram import Bot
 from .models import Article, ArticleFile
 
 
-def check_md_file_conventions(article_file_path: Path) -> bool:
-    return all(
-        (
-            article_file_path.name[:2] in settings.LANGUAGE_CODES,
-            len(article_file_path.read_text().split("\n")),
-            article_file_path.read_text().strip().startswith("#"),
-        )
-    )
-
-
 @huey.db_periodic_task(crontab(hour="0", minute="1"))
-def sync_articles_dairly___():
-    pass
-
-
 def sync_articles_dairly():
     """
     Read the contents of the 'articles' submodule and save them in the database.
@@ -50,7 +36,7 @@ def sync_articles_dairly():
     articles_path = getattr(settings, "ARTICLES_MARKDOWN_PATH", None)
 
     if not isinstance(articles_path, Path):
-        Bot.to_admin(to_admin + "No path for articles found while syncing articles. Check ARTICLES_MARKDOWN_PATH")
+        Bot.to_admin(to_admin + "No path for articles found. Check ARTICLES_MARKDOWN_PATH")
         return
 
     if not articles_path.is_dir():
@@ -75,7 +61,14 @@ def sync_articles_dairly():
 
             # Markdown files (.md) need to be proccessed first
             for md_file_path in (p for p in subfolder_path.iterdir() if p.name.endswith(".md")):
-                if not check_md_file_conventions(md_file_path):
+                md_file_conventions_ok = all(
+                    (
+                        md_file_path.name[:2] in settings.LANGUAGE_CODES,
+                        len(md_file_path.read_text().split("\n")) > 2,
+                        md_file_path.read_text().strip().startswith("#"),
+                    )
+                )
+                if not md_file_conventions_ok:
                     to_admin += f"⚠️ File '{md_file_path.name}' does not meet conventions"
                     continue
 
@@ -85,8 +78,6 @@ def sync_articles_dairly():
                 setattr(db_article, f"title_{lang_code}", title)
                 setattr(db_article, f"slug_{lang_code}", slugify(title))
                 setattr(db_article, f"body_{lang_code}", body_text)
-                setattr(db_article, "folder", folder)
-                setattr(db_article, "subfolder", subfolder_path.name)
 
             # The other files are proccessed afterwards
             for other_file_path in (p for p in subfolder_path.iterdir() if not p.name.endswith(".md")):

@@ -24,7 +24,7 @@ factory-boy
 # Code formatting
 black
 pyclean
-ruff
 isort
+ruff
 djade
 djlint
