@@ -1,23 +1,15 @@
 from auto_prefetch import ForeignKey, Model
 from django.db import models
-from markdownx.models import MarkdownxField
 
 from ..base.abstracts import AbstractPage
 
-
-def upload_article_file(obj, filename):
-    return f"articles/{obj.article.id}/{filename}"
+def upload_article_file(obj, filename:str):
+    return f"articles/{obj.article.folder}/{obj.article.subfolder}/{filename}"
 
 
 class Article(AbstractPage):
-    """Article page"""
-
-    topic = models.CharField(max_length=128)
-    folder = models.CharField(max_length=256)
-    body = MarkdownxField()
-
-    class Meta(AbstractPage.Meta):
-        unique_together = ["topic", "folder"]
+    """File-based Article page"""
+    pass
 
 
 class ArticleFile(Model):
@@ -27,3 +19,6 @@ class ArticleFile(Model):
 
     def __str__(self):
         return self.name
+
+
+

@@ -5,12 +5,13 @@ from django.core.files import File
 from django.db.models import Q
 from huey import crontab
 from huey.contrib import djhuey as huey
+from django.utils.text import slugify
 
 from ..base.telegram import Bot
 from .models import Article, ArticleFile
 
 
-def check_article_file_conventions(article_file_path: Path) -> bool:
+def check_md_file_conventions(article_file_path: Path) -> bool:
     return all(
         (
             article_file_path.name[:2] in settings.LANGUAGE_CODES,
@@ -28,22 +29,22 @@ def sync_articles_dairly___():
 def sync_articles_dairly():
     """
     Read the contents of the 'articles' submodule and save them in the database.
-    To know which contents to sync, check out the setting SYNC_ARTICLE_TOPICS.
+    To know which contents to sync, check out the setting SYNC_ARTICLE_FOLDERS.
     """
 
     # definitions and checks
     to_admin = "🔄 Syncing articles\n\n"
 
-    topics = getattr(settings, "SYNC_ARTICLE_TOPICS", ())
+    folders = getattr(settings, "SYNC_ARTICLE_FOLDERS", ())
 
-    if len(topics) == 0:
-        Bot.to_admin(to_admin + "No topics found while syncing articles. Check SYNC_ARTICLE_TOPICS")
+    if len(folders) == 0:
+        Bot.to_admin(to_admin + "No folders found while syncing articles. Check SYNC_ARTICLE_FOLDERS")
         return
 
     try:
-        iter(topics)
+        iter(folders)
     except TypeError:
-        Bot.to_admin(to_admin + "The variable for topics is not iterable. Check SYNC_ARTICLE_TOPICS")
+        Bot.to_admin(to_admin + "The variable for folders is not iterable. Check SYNC_ARTICLE_FOLDERS")
         return
 
     articles_path = getattr(settings, "ARTICLES_MARKDOWN_PATH", None)
@@ -57,59 +58,58 @@ def sync_articles_dairly():
         return
 
     # Scanning
-    for topic in topics:
-        topic_path = articles_path / topic
+    for folder in folders:
+        folder_path = articles_path / folder
 
-        if not topic_path.is_dir():
-            to_admin += f"🔴 {topic} is not listed\n\n"
+        if not folder_path.is_dir():
+            to_admin += f"🔴 {folder} is not listed\n\n"
             continue
 
-        for folder_path in topic_path.iterdir():
-            if not folder_path.is_dir():
+        for subfolder_path in folder_path.iterdir():
+            if not subfolder_path.is_dir():
                 continue
 
-            to_admin += f"✍ {topic}/{folder_path.name}\n"
             body_replacements = {}
+            to_admin += f"✍ {folder}/{subfolder_path.name}\n"
+            db_article = Article.objects.get_or_create(folder=folder, subfolder=subfolder_path.name)[0]
 
-            # We make sure that we proccess the markdown files first!
-            article_file_paths = [p for p in list(folder_path.iterdir()) if p.name.endswith(".md")] + [
-                p for p in list(folder_path.iterdir()) if not p.name.endswith(".md")
-            ]
-            for file_path in article_file_paths:
-                db_article = Article.objects.get_or_create(topic=topic, folder=folder_path.name)[0]
+            # Markdown files (.md) need to be proccessed first
+            for md_file_path in (p for p in subfolder_path.iterdir() if p.name.endswith(".md")):
+                if not check_md_file_conventions(md_file_path):
+                    to_admin += f"⚠️ File '{md_file_path.name}' does not meet conventions"
+                    continue
 
-                if file_path.name.endswith(".md"):
-                    if not check_article_file_conventions(file_path):
-                        to_admin += f"⚠️ File '{file_path.name}' does not meet conventions"
-                        continue
+                lang_code = md_file_path.name[:2]
+                title = md_file_path.read_text().split("\n")[0].replace("#", "").strip()
+                body_text = "\n".join(md_file_path.read_text().split("\n")[1:]).strip()
+                setattr(db_article, f"title_{lang_code}", title)
+                setattr(db_article, f"slug_{lang_code}", slugify(title))
+                setattr(db_article, f"body_{lang_code}", body_text)
+                setattr(db_article, "folder", folder)
+                setattr(db_article, "subfolder", subfolder_path.name)
 
-                    lang_code = file_path.name[:2]
-                    title = file_path.read_text().split("\n")[0].replace("#", "").strip()
-                    body_text = "\n".join(file_path.read_text().split("\n")[1:]).strip()
-                    setattr(db_article, f"title_{lang_code}", title)
-                    setattr(db_article, f"body_{lang_code}", body_text)
-                    setattr(db_article, "folder", folder_path.name)
-                    setattr(db_article, "topic", topic)
-                else:
-                    db_articlefile = ArticleFile.objects.get_or_create(article=db_article, name=file_path.name)[0]
-                    db_articlefile.file = File(file_path.open(mode="rb"), name=file_path.name)
-                    db_articlefile.save()
-                    body_replacements[f"]({db_articlefile.name})"] = f"]({db_articlefile.file.url})"
+            # The other files are proccessed afterwards
+            for other_file_path in (p for p in subfolder_path.iterdir() if not p.name.endswith(".md")):
+                db_articlefile = ArticleFile.objects.get_or_create(article=db_article, name=other_file_path.name)[0]
+                db_articlefile.file = File(other_file_path.open(mode="rb"), name=other_file_path.name)
+                db_articlefile.save()
+                body_replacements[f"]({db_articlefile.name})"] = f"]({db_articlefile.file.url})"
 
-                if body_replacements != {}:
-                    for lang_code in settings.LANGUAGE_CODES:
-                        for local, remote in body_replacements.items():
-                            value = getattr(db_article, f"body_{lang_code}").replace(local, remote)
-                            setattr(db_article, f"body_{lang_code}", value)
+            # Adjust article body field if the markdown file includes files.
+            for local, remote in body_replacements.items():
+                for lang_code in settings.LANGUAGE_CODES:
+                    new_value = getattr(db_article, f"body_{lang_code}").replace(local, remote)
+                    setattr(db_article, f"body_{lang_code}", new_value)
 
-                db_article.save()
+            # Save all object attributes in the database
+            db_article.save()
 
     # Delete articles that could not be processed
     qs = Article.objects.filter(Q(title__in=[None, ""]) | Q(body__in=[None, ""]))
     if qs.count() > 0:
         to_admin += "\n😔Articles not possible to create:\n"
     for obj in qs:
-        to_admin += f"{obj.topic}/{obj.folder}"
+        to_admin += f"{obj.folder}/{obj.subfolder}\n"
     qs.delete()
 
     Bot.to_admin(to_admin)

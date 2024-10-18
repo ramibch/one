@@ -5,4 +5,4 @@ from .models import Article
 
 @register(Article)
 class ArticleOptions(TranslationOptions):
-    fields = ("title", "body")
+    fields = ("title", "body", "slug")

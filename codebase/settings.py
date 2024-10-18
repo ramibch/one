@@ -42,7 +42,9 @@ DEBUG = os.environ.get("DEBUG", "") == "1"
 ## 1. Django settings
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "10.10.10.30"
+]
 
 
 # Application definition
@@ -83,7 +85,9 @@ ROOT_URLCONF = "codebase.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            BASE_DIR / "codebase" / "templates",
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -157,6 +161,10 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Media files
+
+MEDIA_ROOT = BASE_DIR / "media"
+
 
 ## Third-party settings
 # django-markdownx & python-markdown
@@ -197,24 +205,23 @@ O365_MAIL_SAVE_TO_SENT = True
 WEBSITE_NAME = "Example site"
 WEBSITE_URL = "http://127.0.0.1/"
 
-# telegram
+# Telegram
 
 TELEGRAM_BOT_API_KEY = os.environ.get("TELEGRAM_BOT_API_KEY")
 TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID")
 
 
-# submodules
+# Submodules
 
-# article topics
+# Article topics
 ARTICLES_MARKDOWN_PATH = BASE_DIR / "submodules" / "articles"
-SYNC_ARTICLE_TOPICS = ("example-topic",)
+SYNC_ARTICLE_FOLDERS = ("example-topic",)
 
-# pages
+# Pages
 PAGES_MARKDOWN_PATH = BASE_DIR / "submodules" / "pages"
-SYNC_PAGE_TOPICS = ("general-pages",)
+SYNC_PAGE_FOLDERS = ("general-pages",)
 
-# https
-
+# Https
 if HTTPS:  # pragma: no cover
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_HSTS_SECONDS = 31_536_000  # 31536000 # usual: 31536000 (1 year)

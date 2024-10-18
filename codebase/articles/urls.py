@@ -1,5 +1,8 @@
-from __future__ import annotations
 
 from django.urls import path
 
-urlpatterns = []
+from .views import ArticleDetailView
+
+urlpatterns = [
+    path("<slug:slug>/", ArticleDetailView.as_view(), name="article-detail"),
+]
