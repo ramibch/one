@@ -38,7 +38,6 @@ class AbstractPage(Model):
         return self.title
 
 
-
 class AbstractSingletonModel(Model):
     """Singleton Django Model"""
 

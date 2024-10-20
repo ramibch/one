@@ -1,5 +1,4 @@
 {
-  "ruff.nativeServer": "on",
   "[python]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff",

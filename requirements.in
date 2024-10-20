@@ -8,6 +8,10 @@ django-o365mail
 django-modeltranslation
 django-upgrade
 django-markdownx
+django-storages
+django_htmx
+django-allauth[socialaccount]
+boto3
 pillow
 huey
 redis

@@ -10,10 +10,7 @@ from ..base.telegram import Bot
 from .models import Page
 
 
-@huey.db_periodic_task(crontab(hour="1", minute="1"))
-def sync_pages_dairly__():
-    pass
-
+@huey.db_periodic_task(crontab(hour="2", minute="10"))
 def sync_pages_dairly():
     """
     Read the contents of the 'pages' submodule and save them in the database.
@@ -86,7 +83,7 @@ def sync_pages_dairly():
     # Delete articles that could not be processed
     qs = Page.objects.filter(Q(title__in=[None, ""]) | Q(body__in=[None, ""]))
     if qs.count() > 0:
-        to_admin += "\Pages not possible to create:\n"
+        to_admin += "\nPages not possible to create:\n"
     for obj in qs:
         to_admin += f"{obj.folder}/{obj.subfolder}\n"
     qs.delete()

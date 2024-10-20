@@ -1,0 +1,22 @@
+{% load i18n %}
+{% for message in messages %}
+  <dialog open x-data="{ open: true }" x-show="open">
+    <article>
+      <header>
+        <button aria-label="Close" rel="prev" x-on:click="open = false"></button>
+        <p>
+          <strong>
+            {% if message.tags == 'error' %}
+              ℹ️ {% trans "Error" %}
+            {% elif message.tags == 'warning' %}
+              ℹ️ {% trans "Warning" %}
+            {% else %}
+              ℹ️ {% trans "Infomation" %}
+            {% endif %}
+          </strong>
+        </p>
+      </header>
+      <p>{{ message }}</p>
+    </article>
+  </dialog>
+{% endfor %}

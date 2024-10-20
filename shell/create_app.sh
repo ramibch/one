@@ -1,2 +1,2 @@
-python manage.py startapp $1 --template=code/app_template
-mv $1 code/$1
+python manage.py startapp $1 --template=codebase/app_template
+mv $1 codebase/$1

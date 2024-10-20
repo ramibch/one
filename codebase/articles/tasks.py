@@ -11,7 +11,7 @@ from ..base.telegram import Bot
 from .models import Article, ArticleFile
 
 
-@huey.db_periodic_task(crontab(hour="0", minute="1"))
+@huey.db_periodic_task(crontab(hour="1", minute="10"))
 def sync_articles_dairly():
     """
     Read the contents of the 'articles' submodule and save them in the database.

@@ -23,4 +23,6 @@ urlpatterns = [
     path("", include("codebase.base.urls")),
     path("a/", include("codebase.articles.urls")),
     path("p/", include("codebase.pages.urls")),
+    path("u/", include("codebase.users.urls")),
+    path("allauth/", include("allauth.urls")),
 ]

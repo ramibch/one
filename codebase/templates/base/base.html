@@ -1,0 +1,68 @@
+{% load cache i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="ltr" data-theme="light">
+  <head>
+    <title>
+      {% block head_title %}
+        {{ page_title }}
+      {% endblock head_title %}
+    </title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% url 'favicon' %}" />
+    <link rel="apple-touch-icon" href="{% url 'favicon' %}" />
+    <!-- meta tags -->
+    <meta charset="utf-8" />
+    <meta name="ROBOTS" content="all" />
+    <meta name="REVISIT-AFTER" content="7 days" />
+    <meta name="KEYWORDS" content="{{ page_keywords }}" />
+    <meta name="DESCRIPTION" content="{{ page_description }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- mobile related meta tags -->
+    <meta name="application-name" content="{{ page_title }}" />
+    <meta name="apple-mobile-web-app-title" content="{{ page_title }}" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- OG meta tags-->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ page_title }}" />
+    <meta property="og:image"
+          content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'favicon' %}" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:description" content="{{ page_description }}" />
+    <!-- twitter meta tags -->
+    <meta name="twitter:url"
+          content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'favicon' %}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{{ page_title }}" />
+    <meta name="twitter:description" content="{{ page_description }}" />
+    <!-- css -->
+    <link href="{% static 'css/bootstrap-grid.min.css' %}" rel="stylesheet" />
+    <link href="{% static settings.MAIN_STATIC_CSS_FILE %}" rel="stylesheet" />
+    <link href="{% static 'css/rb.css' %}" rel="stylesheet" />
+    {% block head_extra %}{% endblock %}
+  </head>
+  <body class="container">
+    <header>
+      {% include "base/navbar.html" %}
+    </header>
+    <section>
+      {% include "base/messages.html" %}
+    </section>
+    <main>
+      {% block content %}
+      {% endblock content %}
+    </main>
+    <footer>
+      {% include "base/footer.html" %}
+    </footer>
+    <!-- js -->
+    <script defer src="{% static 'js/htmx.js' %}"></script>
+    <script defer src="{% static 'js/htmx-ext-ws.js' %}"></script>
+    <script defer src="{% static 'js/hyperscript.js' %}"></script>
+    <script defer src="{% static 'js/cropper.js' %}"></script>
+    <script defer src="{% static 'js/alpine_persist.js' %}"></script>
+    <script defer src="{% static 'js/alpine.js' %}"></script>
+    <script defer src="{% static 'js/sortable.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>
