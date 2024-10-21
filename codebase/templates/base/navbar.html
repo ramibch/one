@@ -1,12 +1,13 @@
+{% load i18n %}
 <nav>
   <ul>
     <li>
-      <strong>
-        <a href="/">{{ settings.WEBSITE_NAME }}</a>
-      </strong>
+      <strong> <a href="/">{{ settings.WEBSITE_NAME }}</a> </strong>
     </li>
     <li>
-      <a href="#">Link to add</a>
+      <span style="cursor: pointer"
+            x-on:click="theme_light = ! theme_light"
+            x-text="theme_light ? '🌒' : '☀️' "></span>
     </li>
   </ul>
   <ul>
@@ -26,10 +27,63 @@
         </details>
       </li>
     {% endfor %}
-    <li>
-      <span style="cursor: pointer"
-            x-on:click="theme_light = ! theme_light"
-            x-text="theme_light ? '🌒' : '☀️' "></span>
-    </li>
+    <!-- 👇‍ allauth Menu: original code: allauth/layouts/base.html 👇‍ -->
+    {% if user.is_authenticated %}
+      <details class="dropdown">
+        <summary>👤 {% trans "Account" %}</summary>
+        <ul dir="ltr">
+          {% url 'account_email' as email_url_ %}
+          {% if email_url_ %}
+            <li>
+              <a href="{{ email_url_ }}" class="contrast">{% trans "Change Email" %}</a>
+            </li>
+          {% endif %}
+          {% url 'account_change_password' as change_password_url_ %}
+          {% if change_password_url_ %}
+            <li>
+              <a href="{{ change_password_url_ }}" class="contrast">{% trans "Change Password" %}</a>
+            </li>
+          {% endif %}
+          {% url 'socialaccount_connections' as connections_url_ %}
+          {% if connections_url_ %}
+            <li>
+              <a href="{{ connections_url_ }}" class="contrast">{% trans "Account Connections" %}</a>
+            </li>
+          {% endif %}
+          {% url 'mfa_index' as mfa_url_ %}
+          {% if mfa_url_ %}
+            <li>
+              <a href="{{ mfa_url_ }}" class="contrast">{% trans "Two-Factor Authentication" %}</a>
+            </li>
+          {% endif %}
+          {% url 'usersessions_list' as usersessions_list_url_ %}
+          {% if usersessions_list_url_ %}
+            <li>
+              <a href="{{ usersessions_list_url_ }}" class="contrast">{% trans "Sessions" %}</a>
+            </li>
+          {% endif %}
+          {% url 'account_logout' as logout_url_ %}
+          {% if logout_url_ %}
+            <li>
+              <a href="{{ logout_url_ }}" class="contrast">{% trans "Sign Out" %}</a>
+            </li>
+          {% endif %}
+        </ul>
+      </details>
+    {% else %}
+      {% url 'account_login' as login_url_ %}
+      {% if login_url_ %}
+        <li>
+          <a href="{{ login_url_ }}">{% trans "Sign In" %}</a>
+        </li>
+      {% endif %}
+      {% url 'account_signup' as signup_url_ %}
+      {% if signup_url_ %}
+        <li>
+          <a href="{{ signup_url_ }}">{% trans "Sign Up" %}</a>
+        </li>
+      {% endif %}
+    {% endif %}
+    <!-- 👆 allauth Menu: original code: allauth/layouts/base.html 👆 -->
   </ul>
 </nav>

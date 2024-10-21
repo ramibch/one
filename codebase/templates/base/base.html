@@ -1,7 +1,10 @@
 {% load cache i18n static %}
 {% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" dir="ltr" data-theme="light">
+<html lang="{{ LANGUAGE_CODE }}"
+      dir="ltr"
+      x-data="{'theme_light' : $persist(true)}"
+      x-bind:data-theme="theme_light ? 'light' : 'dark' ">
   <head>
     <title>
       {% block head_title %}

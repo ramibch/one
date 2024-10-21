@@ -340,7 +340,7 @@ WEBSITE_DEFAULT_PAGE_KEYWORDS = _("Default page keywords")
 # PicoCSS version
 ## https://picocss.com/docs/version-picker
 
-MAIN_STATIC_CSS_FILE = "css/picocss/pico.blue.min.css"
+MAIN_STATIC_CSS_FILE = "css/picocss/pico.green.min.css"
 
 
 # Submodules
