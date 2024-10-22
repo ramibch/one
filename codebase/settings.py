@@ -22,9 +22,15 @@ from django.utils.translation import gettext_lazy as _
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load .env file
 
-dotenv.load_dotenv(dotenv_path=BASE_DIR / ".env")
+# Load env vars from .env file if not testing
+try:
+    command = sys.argv[1]
+except IndexError:  # pragma: no cover
+    command = "help"
+
+if command != "test":  # pragma: no cover
+    dotenv.load_dotenv(dotenv_path=BASE_DIR / ".env")
 
 
 # Activate settings for HTTPS connections
@@ -423,5 +429,5 @@ if HTTPS:  # pragma: no cover
 
 # Test mode (override values)
 
-if "test" in sys.argv:
+if "test" == command:
     pass
