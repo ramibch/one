@@ -1,3 +1,7 @@
+from django.views.generic.detail import DetailView
+
+from .models import Page
 
 
-from django.shortcuts import render
+class PageDetailView(DetailView):
+    model = Page

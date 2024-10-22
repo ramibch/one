@@ -1,5 +1,7 @@
-
-
 from django.urls import path
 
-urlpatterns = []
+from .views import PageDetailView
+
+urlpatterns = [
+    path("<slug:slug>/", PageDetailView.as_view(), name="page-detail"),
+]

@@ -7,9 +7,9 @@
         <p>
           <strong>
             {% if message.tags == 'error' %}
-              ℹ️ {% trans "Error" %}
+              🔴 {% trans "Error" %}
             {% elif message.tags == 'warning' %}
-              ℹ️ {% trans "Warning" %}
+              ⚠️ {% trans "Warning" %}
             {% else %}
               ℹ️ {% trans "Infomation" %}
             {% endif %}

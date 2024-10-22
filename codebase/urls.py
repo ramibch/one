@@ -19,10 +19,13 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
+    # Django
     path("admin/", admin.site.urls),
-    path("", include("codebase.base.urls")),
+    # Third-party
+    path("allauth/", include("allauth.urls")),
+    # Own
     path("a/", include("codebase.articles.urls")),
     path("p/", include("codebase.pages.urls")),
     path("u/", include("codebase.users.urls")),
-    path("allauth/", include("allauth.urls")),
+    path("", include("codebase.base.urls")),
 ]

@@ -30,7 +30,14 @@
     <!-- 👇‍ allauth Menu: original code: allauth/layouts/base.html 👇‍ -->
     {% if user.is_authenticated %}
       <details class="dropdown">
-        <summary>👤 {% trans "Account" %}</summary>
+        <summary>
+          👤
+          {% if user.first_name %}
+            {{ user.first_name }}
+          {% else %}
+            {% trans "Account" %}
+          {% endif %}
+        </summary>
         <ul dir="ltr">
           {% url 'account_email' as email_url_ %}
           {% if email_url_ %}

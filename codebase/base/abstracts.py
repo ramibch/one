@@ -17,6 +17,7 @@ class AbstractPage(Model):
 
     class Meta(Model.Meta):
         unique_together = ["folder", "subfolder"]
+        ordering = ["-created_on"]
         abstract = True
 
     def get_absolute_url(self):

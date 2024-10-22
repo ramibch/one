@@ -51,7 +51,7 @@
     <section>
       {% include "base/messages.html" %}
     </section>
-    <main>
+    <main {% if request.path_info|slice:"0:9" == "/allauth/" %}class="offset-md-3 col-md-6"{% endif %}>
       {% block content %}
       {% endblock content %}
     </main>

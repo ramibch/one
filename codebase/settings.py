@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
     "django.db.migrations",
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
@@ -292,7 +293,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 LOGIN_URL = "account_login"
 
-LOGIN_REDIRECT_URL = "profile_list"
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 
@@ -346,7 +347,7 @@ WEBSITE_DEFAULT_PAGE_KEYWORDS = _("Default page keywords")
 # PicoCSS version
 ## https://picocss.com/docs/version-picker
 
-MAIN_STATIC_CSS_FILE = "css/picocss/pico.green.min.css"
+MAIN_STATIC_CSS_FILE = "css/picocss/pico.orange.min.css"
 
 
 # Submodules
@@ -429,5 +430,5 @@ if HTTPS:  # pragma: no cover
 
 # Test mode (override values)
 
-if "test" == command:
+if command == "test":
     pass

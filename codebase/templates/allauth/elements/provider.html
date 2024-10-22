@@ -1,1 +1,11 @@
-<a role="button"  title="{{ attrs.name }}" href="{{ attrs.href }}">{{ attrs.name }}</a>
+{% load static %}
+<a role="button"
+   class="outline"
+   title="{{ attrs.name }}"
+   href="{{ attrs.href }}">
+  {% with 'img/social/48x48/'|add:attrs.name|lower|add:'.svg' as icon_path %}
+    <!-- https://icons8.com/icons/-->
+    <img src="{% static icon_path %}" alt="{{ attrs.name }}" width="32">
+  {% endwith %}
+  {{ attrs.name }}
+</a>
