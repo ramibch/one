@@ -8,6 +8,7 @@ from ..articles.models import Article
 from ..pages.models import Page
 
 
+@cache_page(60 * 60 * 24 * 1)
 def home(request: HttpRequest) -> HttpResponse:
     context = {"featured_articles": Article.objects.filter(featured=True), "page_title": settings.WEBSITE_NAME}
     return render(request, "base/home.html", context=context)

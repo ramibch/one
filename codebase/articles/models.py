@@ -1,18 +1,17 @@
-from auto_prefetch import ForeignKey, Model
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django.conf import settings
-from ..base.telegram import Bot
-from ..base.abstracts import AbstractPage
 from pathlib import Path
 
+from auto_prefetch import ForeignKey, Model
 from django.conf import settings
 from django.core.files import File
+from django.db import models
 from django.db.models import Q
-from django.utils.text import slugify
 from django.urls import reverse_lazy
+from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
 
+from ..base.abstracts import AbstractPage
 from ..base.telegram import Bot
+
 
 def upload_article_file(obj, filename: str):
     return f"articles/{obj.article.folder}/{obj.article.subfolder}/{filename}"
@@ -37,7 +36,6 @@ class ArticleFile(Model):
 
 
 def sync_articles():
-
     """
     Read the contents of the 'articles' submodule and save them in the database.
     To know which contents to sync, check out the setting SYNC_ARTICLE_FOLDERS.

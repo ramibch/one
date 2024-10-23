@@ -21,10 +21,10 @@ class CountryDetails:
         x_forwarded_for = self.request.headers.get("x-forwarded-for")
         ip = x_forwarded_for.split(",")[0] if x_forwarded_for else self.request.META.get("REMOTE_ADDR")
 
-        g = GeoIP2()
+        geo_ip = GeoIP2()
 
         try:
-            country_dict = g.country(ip)
+            country_dict = geo_ip.country(ip)
         except Exception:
             # If there is an Exception, return where I am located :)
             country_dict = {"country_code": "CH", "country_name": "Swizerland"}

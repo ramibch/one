@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-## 0. Setup
+# 0. Setup
 import os
 import sys
 from datetime import datetime
@@ -103,7 +103,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    'django.middleware.locale.LocaleMiddleware',
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -213,8 +213,8 @@ LANGUAGE_CODES_WITHOUT_DEFAULT = ["de", "es"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Caching
-## Server-side cache settings. Do not confuse with front-end cache.
-## https://docs.djangoproject.com/en/stable/topics/cache/
+# Server-side cache settings. Do not confuse with front-end cache.
+# https://docs.djangoproject.com/en/stable/topics/cache/
 
 CACHES = {
     "default": {
@@ -232,13 +232,13 @@ Third-party settings
 
 
 # django-markdownx & python-markdown
-## https://pypi.org/project/django-markdownx/
-##  https://neutronx.github.io/django-markdownx/customization/
+# https://pypi.org/project/django-markdownx/
+# https://neutronx.github.io/django-markdownx/customization/
 MARKDOWNX_MEDIA_PATH = datetime.now().strftime("markdownx/%Y/%m/%d")
 MARKDOWNX_IMAGE_MAX_SIZE = {"size": (1920, 0), "quality": 100}
 
-## Extensions
-## https://python-markdown.github.io/extensions/
+# Extensions
+# https://python-markdown.github.io/extensions/
 MARKDOWN_EXTENSION_CONFIGS = {
     "markdown.extensions.codehilite": {
         "css_class": "codehilite",
@@ -267,12 +267,12 @@ O365_MAIL_SAVE_TO_SENT = True
 
 # Translations and rosetta
 
-## DeepL
+# DeepL
 DEEPL_AUTH_KEY = os.environ.get("DEEPL_AUTH_KEY", "")
 
 
-## Rosetta
-## https://django-rosetta.readthedocs.io/settings.html
+# Rosetta
+# https://django-rosetta.readthedocs.io/settings.html
 ROSETTA_MESSAGES_PER_PAGE = 50
 ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
 ROSETTA_WSGI_AUTO_RELOAD = True
@@ -346,18 +346,18 @@ WEBSITE_DEFAULT_PAGE_DESCRIPTION = _("Default page desciption")
 WEBSITE_DEFAULT_PAGE_KEYWORDS = _("Default page keywords")
 
 # PicoCSS version
-## https://picocss.com/docs/version-picker
+# https://picocss.com/docs/version-picker
 
 MAIN_STATIC_CSS_FILE = "css/picocss/pico.orange.min.css"
 
 
 # Submodules
 
-## Article topics
+# Article topics
 ARTICLES_MARKDOWN_PATH = BASE_DIR / "submodules" / "articles"
 SYNC_ARTICLE_FOLDERS = ("example-topic",)
 
-## Pages
+# Pages
 PAGES_MARKDOWN_PATH = BASE_DIR / "submodules" / "pages"
 SYNC_PAGE_FOLDERS = ("general-pages",)
 
@@ -369,37 +369,37 @@ TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID")
 
 # Storage of static and media files
 
-## Static files that Django needs to find because they are not in the app static folders
+# Static files that Django needs to find because they are not in the app static folders
 STATICFILES_DIRS = [
     BASE_DIR / "submodules" / "static" / "src",
 ]
 
-## S3 auth and bucket parameters
+# S3 auth and bucket parameters
 S3_ACCESS_KEY = os.environ.get("S3_ACCESS_KEY")
 S3_SECRET_KEY = os.environ.get("S3_SECRET_KEY")
 S3_MEDIA_BUCKET_NAME = os.environ.get("S3_MEDIA_BUCKET_NAME")
 S3_STATIC_BUCKET_NAME = os.environ.get("S3_STATIC_BUCKET_NAME")
 S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL")
 
-## S3 media
+# S3 media
 S3_MEDIA_LOCATION = ""  # "" or "media"
 S3_MEDIA_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_MEDIA_BUCKET_NAME}/"
 S3_MEDIA_URL = S3_MEDIA_BASE_URL if S3_MEDIA_LOCATION == "" else S3_MEDIA_BASE_URL + f"{S3_MEDIA_LOCATION}/"
 S3_MEDIA_STORAGE_BACKEND = "codebase.s3.PublicMediaStorage"
 
-## S3 static
+# S3 static
 S3_STATIC_LOCATION = ""  # "" or "static"
 S3_STATIC_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_STATIC_BUCKET_NAME}/"
 S3_STATIC_URL = S3_STATIC_BASE_URL if S3_STATIC_LOCATION == "" else S3_STATIC_BASE_URL + f"{S3_STATIC_LOCATION}/"
 S3_STATIC_STORAGE_BACKEND = "codebase.s3.StaticStorage"
 
-## Local
+# Local
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
 
-## Storage backends
+# Storage backends
 if USE_S3:
     STORAGES = {
         "default": {"BACKEND": S3_MEDIA_STORAGE_BACKEND},
