@@ -6,6 +6,7 @@ from ..articles.models import Article
 from ..pages.models import Page
 from .views import favicon, home, hx_seach_results, search
 
+
 articles_sitemap = {
     "queryset": Article.objects.filter(),
     "date_field": "updated_on",
