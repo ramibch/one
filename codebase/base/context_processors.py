@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from .models import FooterItem, NavbarItem
+from .models import MenuItem
 
 
 def site_utilities(request):
@@ -9,6 +9,6 @@ def site_utilities(request):
         "settings": settings,
         "page_title": settings.WEBSITE_DEFAULT_PAGE_TITLE,
         "page_keywords": settings.WEBSITE_DEFAULT_PAGE_KEYWORDS,
-        "navbar_items": NavbarItem.objects.all(),
-        "footer_items": FooterItem.objects.all(),
+        "navbar_items": MenuItem.objects.filter(show_in_navbar=True),
+        "footer_items": MenuItem.objects.filter(show_in_footer=True),
     }

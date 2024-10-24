@@ -18,9 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+# Custom 404 error view
+handler404 = "codebase.base.views.error_404"
+# Custom 500 error view
+handler500 = "codebase.base.views.error_500"
+
 urlpatterns = [
     # Django
-    path("admin/", admin.site.urls),
+    path("abcdef/", admin.site.urls),
     # Third-party
     path("allauth/", include("allauth.urls")),
     # Own

@@ -1,18 +1,13 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import FooterItem, NavbarItem, PageLink
+from .models import MenuItem, PageLink
 
 
-@register(NavbarItem)
-class NavbarItemOptions(TranslationOptions):
-    fields = ("title",)
-
-
-@register(FooterItem)
-class FooterItemOptions(TranslationOptions):
+@register(MenuItem)
+class MenuItemOptions(TranslationOptions):
     fields = ("title",)
 
 
 @register(PageLink)
 class PageLinkOptions(TranslationOptions):
-    fields = ("custom_title",)
+    fields = ("external_title",)

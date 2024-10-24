@@ -1,0 +1,7 @@
+User-Agent: *
+Disallow: {% url 'admin:index' %}
+
+User-agent: GPTBot
+Disallow: /
+
+Sitemap: {{ settings.WEBSITE_URL }}{% url "django.contrib.sitemaps.views.sitemap" %}

@@ -41,3 +41,11 @@ def hx_seach_results(request: HttpRequest) -> HttpResponse:
     total = pages.count() + articles.count()
     context = {"pages": pages, "articles": articles, "total": total}
     return render(request, "base/hx_search_results.html", context)
+
+
+def error_404(request, exception):
+    return render(request, "base/404.html", status=404)
+
+
+def error_500(request):
+    return render(request, "base/500.html", status=500)

@@ -212,17 +212,12 @@ LANGUAGE_CODES_WITHOUT_DEFAULT = ["de", "es"]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Caching
-# Server-side cache settings. Do not confuse with front-end cache.
-# https://docs.djangoproject.com/en/stable/topics/cache/
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
-    }
-}
-
+# A list of trusted origins for unsafe requests (e.g. POST).
+# https://docs.djangoproject.com/en/5.1/ref/settings/#csrf-trusted-origins
+CSRF_TRUSTED_ORIGINS = [
+    # TODO: Add here h
+]
 
 """
 ####################
@@ -339,7 +334,7 @@ Project settings
 # Website
 
 WEBSITE_NAME = "Example site"
-WEBSITE_URL = "http://127.0.0.1/"
+WEBSITE_URL = "http://127.0.0.1"  # Without / at the end
 WEBSITE_EMOJI = "🍊"
 WEBSITE_DEFAULT_PAGE_TITLE = _("Default page title")
 WEBSITE_DEFAULT_PAGE_DESCRIPTION = _("Default page desciption")
@@ -366,6 +361,12 @@ SYNC_PAGE_FOLDERS = ("general-pages",)
 
 TELEGRAM_BOT_API_KEY = os.environ.get("TELEGRAM_BOT_API_KEY")
 TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID")
+
+# Whatsapp
+# https://developers.facebook.com/docs/whatsapp/cloud-api/messages/text-messages
+WHATSAPP_API_ACCESS_TOKEN = os.environ.get("WHATSAPP_BUSINESS_PHONE_NUMBER_ID")
+WHATSAPP_BUSINESS_PHONE_NUMBER_ID = os.environ.get("WHATSAPP_BUSINESS_PHONE_NUMBER_ID")
+
 
 # Storage of static and media files
 
