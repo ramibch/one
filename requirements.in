@@ -16,6 +16,8 @@ boto3
 pillow
 huey
 redis
+geoip2
+
 
 # Management
 python-dotenv

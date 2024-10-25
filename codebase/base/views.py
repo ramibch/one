@@ -6,11 +6,16 @@ from django.views.decorators.http import require_GET
 
 from ..articles.models import Article
 from ..pages.models import Page
+from .telegram import Bot
 
 
 @cache_page(60 * 60 * 24 * 1)
 def home(request: HttpRequest) -> HttpResponse:
-    context = {"featured_articles": Article.objects.filter(featured=True), "page_title": settings.WEBSITE_NAME}
+    context = {
+        "featured_articles": Article.objects.filter(featured=True),
+    }
+    exception = "dasd"
+    Bot.to_admin(f"404 Error: {exception}\n\n{request}\n{request.user}\n{request.country}")
     return render(request, "base/home.html", context=context)
 
 
@@ -44,6 +49,7 @@ def hx_seach_results(request: HttpRequest) -> HttpResponse:
 
 
 def error_404(request, exception):
+    Bot.to_admin(f"404 Error: {exception}\n\n{request}\n{request.user}\n{request.country}")
     return render(request, "base/404.html", status=404)
 
 

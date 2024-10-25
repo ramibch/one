@@ -64,10 +64,7 @@ DEBUG = os.environ.get("DEBUG", "") == "1"
 """
 
 
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "10.10.10.30",
-]
+ALLOWED_HOSTS = ["127.0.0.1", "10.10.10.30", "*"]
 
 
 # Application definition
@@ -90,6 +87,7 @@ INSTALLED_APPS = [
     "rosetta",
     "allauth",
     "allauth.account",
+    "geoip2",
     # "allauth.socialaccount",
     # "allauth.socialaccount.providers.google",
     # "allauth.socialaccount.providers.linkedin_oauth2",
@@ -225,6 +223,10 @@ Third-party settings
 ####################
 """
 
+# geoip2
+
+GEOIP_PATH = BASE_DIR / "geoip2dbs"
+
 
 # django-markdownx & python-markdown
 # https://pypi.org/project/django-markdownx/
@@ -358,9 +360,13 @@ SYNC_PAGE_FOLDERS = ("general-pages",)
 
 
 # Telegram
+# 1. Use BotFather to get API KEY: https://telegram.me/BotFather
+# 2. (Admin): Write something to Bot in Telegram
+# 3. Read the updates: codebase.base.telegram.Bot.get_updates
 
 TELEGRAM_BOT_API_KEY = os.environ.get("TELEGRAM_BOT_API_KEY")
-TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID")
+TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID", "1777934566")
+
 
 # Whatsapp
 # https://developers.facebook.com/docs/whatsapp/cloud-api/messages/text-messages

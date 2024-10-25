@@ -21,12 +21,18 @@ class Bot:
             if requests.get(Bot.base_url + "sendPhoto", params=cparams | {"photo": file_url}).status_code != 200:
                 requests.get(Bot.base_url + "sendDocument", params=cparams | {"document": file_url})
 
-    def to_admin(text: str):
+    def to_admin(text: str, include_site_info=True):
         """Send text message to the admin"""
-        processed_text = f"{settings.WEBSITE_NAME} - {settings.WEBSITE_URL}:\n\n{text}"
-        Bot.to_chat(chat_id=settings.TELEGRAM_ADMIN_CHAT_ID, text=processed_text)
+        out = f"{settings.WEBSITE_NAME} - {settings.WEBSITE_URL}:\n\n{text}" if include_site_info else text
+        Bot.to_chat(chat_id=settings.TELEGRAM_ADMIN_CHAT_ID, text=out)
 
     def to_group(cls, group_id, text, file_url=None):
         """Send text and optionally an image to a group"""
         chat_id = "@" + group_id if not group_id.startswith("@") else group_id
         Bot.to_chat(chat_id, text, file_url)
+
+    def get_updates(print_them=True):
+        r = requests.get(Bot.base_url + "getUpdates")
+        if print_them:
+            print(r.text)
+        return r.json()
