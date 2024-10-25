@@ -14,8 +14,7 @@ def home(request: HttpRequest) -> HttpResponse:
     context = {
         "featured_articles": Article.objects.filter(featured=True),
     }
-    exception = "dasd"
-    Bot.to_admin(f"404 Error: {exception}\n\n{request}\n{request.user}\n{request.country}")
+
     return render(request, "base/home.html", context=context)
 
 
@@ -54,4 +53,5 @@ def error_404(request, exception):
 
 
 def error_500(request):
+    Bot.to_admin(f"500 Error: {request}\n{request.user}\n{request.country}")
     return render(request, "base/500.html", status=500)
