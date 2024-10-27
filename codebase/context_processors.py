@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from .models import MenuItem
+from .base.models import MenuItem
 
 
 def site_utilities(request):

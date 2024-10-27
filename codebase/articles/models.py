@@ -9,8 +9,8 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from ..base.abstracts import AbstractPage
-from ..base.telegram import Bot
+from ..utils.abstracts import AbstractPage
+from ..utils.telegram import Bot
 
 
 def upload_article_file(obj, filename: str):

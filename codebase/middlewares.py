@@ -27,7 +27,7 @@ class CountryDetails:
             country_dict = geo_ip.country(ip)
         except Exception:
             # If there is an Exception, return where I am located :)
-            country_dict = {"country_code": "CH", "country_name": "Swizerland"}
+            country_dict = {"country_code": "XX", "country_name": "Undefined"}
 
         return country_dict
 

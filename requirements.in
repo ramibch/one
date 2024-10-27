@@ -10,14 +10,13 @@ django-upgrade
 django-markdownx
 django-storages
 django_htmx
-# django-allauth[socialaccount]
-django-allauth
+django-templated-email-md
+django-allauth[socialaccount]
 boto3
 pillow
 huey
 redis
 geoip2
-
 
 # Management
 python-dotenv

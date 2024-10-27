@@ -6,7 +6,7 @@ from django.views.decorators.http import require_GET
 
 from ..articles.models import Article
 from ..pages.models import Page
-from .telegram import Bot
+from ..utils.telegram import Bot
 
 
 @cache_page(60 * 60 * 24 * 1)

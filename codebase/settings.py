@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     "rosetta",
     "allauth",
     "allauth.account",
+    "templated_email_md",
     "geoip2",
     # "allauth.socialaccount",
     # "allauth.socialaccount.providers.google",
@@ -110,7 +111,7 @@ MIDDLEWARE = [
     # third-party middlewares
     "allauth.account.middleware.AccountMiddleware",
     # own middlewares
-    "codebase.base.middleware.CountryMiddleware",
+    "codebase.middlewares.CountryMiddleware",
 ]
 
 ROOT_URLCONF = "codebase.urls"
@@ -128,7 +129,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "codebase.base.context_processors.site_utilities",
+                "codebase.context_processors.site_utilities",
             ],
         },
     },
@@ -262,6 +263,27 @@ O365_MAIL_MAILBOX_KWARGS = {"resource": EMAIL_HOST_USER}
 O365_MAIL_SAVE_TO_SENT = True
 
 
+#  django-templated-email
+# Configure the templated email backend
+TEMPLATED_EMAIL_BACKEND = "templated_email_md.backend.MarkdownTemplateBackend"
+
+# Optional: Specify the base HTML template for wrapping your content. See the Usage guide for details.
+# TEMPLATED_EMAIL_BASE_HTML_TEMPLATE = "templated_email/markdown_base.html"
+
+# Set the directory where your email templates are stored
+TEMPLATED_EMAIL_TEMPLATE_DIR = "templated_email/"  # Ensure there's a trailing slash
+
+# Define the file extension for your Markdown templates
+TEMPLATED_EMAIL_FILE_EXTENSION = "md"
+
+# Optional: Specify Markdown extensions if needed
+TEMPLATED_EMAIL_MARKDOWN_EXTENSIONS = [
+    "markdown.extensions.extra",
+    "markdown.extensions.meta",
+    "markdown.extensions.tables",
+]
+
+
 # Translations and rosetta
 
 # DeepL
@@ -362,7 +384,7 @@ SYNC_PAGE_FOLDERS = ("general-pages",)
 # Telegram
 # 1. Use BotFather to get API KEY: https://telegram.me/BotFather
 # 2. (Admin): Write something to Bot in Telegram
-# 3. Read the updates: codebase.base.telegram.Bot.get_updates
+# 3. Read the updates: codebase.utils.telegram.Bot.get_updates
 
 TELEGRAM_BOT_API_KEY = os.environ.get("TELEGRAM_BOT_API_KEY")
 TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID", "1777934566")

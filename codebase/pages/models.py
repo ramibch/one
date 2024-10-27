@@ -1,6 +1,7 @@
-from ..base.abstracts import AbstractPage
-
 from django.urls import reverse_lazy
+
+from ..utils.abstracts import AbstractPage
+
 
 class Page(AbstractPage):
     """File-based page model"""
