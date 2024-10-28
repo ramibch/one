@@ -87,11 +87,10 @@ INSTALLED_APPS = [
     "rosetta",
     "allauth",
     "allauth.account",
-    "templated_email_md",
     "geoip2",
-    # "allauth.socialaccount",
-    # "allauth.socialaccount.providers.google",
-    # "allauth.socialaccount.providers.linkedin_oauth2",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.linkedin_oauth2",
     # Project apps
     "codebase.base",
     "codebase.articles",
@@ -263,27 +262,6 @@ O365_MAIL_MAILBOX_KWARGS = {"resource": EMAIL_HOST_USER}
 O365_MAIL_SAVE_TO_SENT = True
 
 
-#  django-templated-email
-# Configure the templated email backend
-TEMPLATED_EMAIL_BACKEND = "templated_email_md.backend.MarkdownTemplateBackend"
-
-# Optional: Specify the base HTML template for wrapping your content. See the Usage guide for details.
-# TEMPLATED_EMAIL_BASE_HTML_TEMPLATE = "templated_email/markdown_base.html"
-
-# Set the directory where your email templates are stored
-TEMPLATED_EMAIL_TEMPLATE_DIR = "templated_email/"  # Ensure there's a trailing slash
-
-# Define the file extension for your Markdown templates
-TEMPLATED_EMAIL_FILE_EXTENSION = "md"
-
-# Optional: Specify Markdown extensions if needed
-TEMPLATED_EMAIL_MARKDOWN_EXTENSIONS = [
-    "markdown.extensions.extra",
-    "markdown.extensions.meta",
-    "markdown.extensions.tables",
-]
-
-
 # Translations and rosetta
 
 # DeepL
@@ -367,7 +345,7 @@ WEBSITE_DEFAULT_PAGE_KEYWORDS = _("Default page keywords")
 # PicoCSS version
 # https://picocss.com/docs/version-picker
 
-MAIN_STATIC_CSS_FILE = "css/picocss/pico.orange.min.css"
+PICO_CSS_FILE = "css/picocss/pico.orange.min.css"
 
 
 # Submodules

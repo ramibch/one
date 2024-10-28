@@ -10,7 +10,6 @@ django-upgrade
 django-markdownx
 django-storages
 django_htmx
-django-templated-email-md
 django-allauth[socialaccount]
 boto3
 pillow

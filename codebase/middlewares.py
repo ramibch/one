@@ -21,13 +21,10 @@ class CountryDetails:
         x_forwarded_for = self.request.headers.get("x-forwarded-for")
         ip = x_forwarded_for.split(",")[0] if x_forwarded_for else self.request.META.get("REMOTE_ADDR")
 
-        geo_ip = GeoIP2()
-
         try:
-            country_dict = geo_ip.country(ip)
+            country_dict = GeoIP2().country(ip)
         except Exception:
-            # If there is an Exception, return where I am located :)
-            country_dict = {"country_code": "XX", "country_name": "Undefined"}
+            country_dict = {"country_code": None, "country_name": None}
 
         return country_dict
 
