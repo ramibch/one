@@ -20,7 +20,8 @@ class MenuItem(Model):
 
 
 class PageLink(Model):
-    menu_item = ForeignKey(MenuItem, on_delete=models.CASCADE)
+    menu_item = ForeignKey(MenuItem, on_delete=models.SET_NULL, null=True, blank=True)
+    show_in_navbar = models.BooleanField(default=True)
     page = ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True)
     article = ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
     external_title = models.CharField(max_length=128, null=True, blank=True)

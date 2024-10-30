@@ -21,7 +21,7 @@ def home(request: HttpRequest) -> HttpResponse:
 @require_GET
 @cache_control(max_age=60 * 60 * 24 * 30, immutable=True, public=True)  # 30 days
 def favicon(request: HttpRequest) -> HttpResponse:
-    emoji = getattr(settings, "WEBSITE_EMOJI", "🌐")
+    emoji = getattr(settings.WEBSITE, "emoji", "🌐")
 
     return HttpResponse(
         ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' + f'<text y=".9em" font-size="90">{emoji}</text>' + "</svg>"),
@@ -48,10 +48,10 @@ def hx_seach_results(request: HttpRequest) -> HttpResponse:
 
 
 def error_404(request, exception):
-    Bot.to_admin(f"404 Error: {exception}\n\n{request}\n{request.user}\n{request.country}")
+    Bot.to_admin(f"404 Error: {exception}\n\n{request}\n{request.user}")
     return render(request, "base/404.html", status=404)
 
 
 def error_500(request):
-    Bot.to_admin(f"500 Error: {request}\n{request.user}\n{request.country}")
+    Bot.to_admin(f"500 Error: {request}\n{request.user}")
     return render(request, "base/500.html", status=500)

@@ -334,18 +334,28 @@ Project settings
 """
 
 # Website
-
-WEBSITE_NAME = "Example site"
-WEBSITE_URL = "http://127.0.0.1"  # Without / at the end
-WEBSITE_EMOJI = "🍊"
-WEBSITE_DEFAULT_PAGE_TITLE = _("Default page title")
-WEBSITE_DEFAULT_PAGE_DESCRIPTION = _("Default page desciption")
-WEBSITE_DEFAULT_PAGE_KEYWORDS = _("Default page keywords")
-
-# PicoCSS version
-# https://picocss.com/docs/version-picker
-
-PICO_CSS_FILE = "css/picocss/pico.orange.min.css"
+WEBSITE = {
+    "name": "Example site",
+    "url": "http://127.0.0.1",  # Without / at the end
+    "emoji": "🍊",
+    "default_page_title": _("Default page title"),
+    "default_page_description": _("Default page desciption"),
+    "default_page_keywords": _("Default page keywords"),
+    "css_files": (
+        "css/bootstrap-grid.min.css",
+        "css/rb.css",
+        "css/picocss/pico.orange.min.css",
+    ),
+    "js_files": (
+        "js/htmx.js",
+        "js/htmx-ext-ws.js",
+        "js/hyperscript.js",
+        "js/cropper.js",
+        "js/alpine_persist.js",
+        "js/alpine.js",
+        "js/sortable.js",
+    ),
+}
 
 
 # Submodules

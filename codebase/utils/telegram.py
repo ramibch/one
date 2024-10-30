@@ -23,7 +23,7 @@ class Bot:
 
     def to_admin(text: str, include_site_info=True):
         """Send text message to the admin"""
-        out = f"{settings.WEBSITE_NAME} - {settings.WEBSITE_URL}:\n\n{text}" if include_site_info else text
+        out = f"{settings.WEBSITE["name"]} - {settings.WEBSITE["url"]}:\n\n{text}" if include_site_info else text
         Bot.to_chat(chat_id=settings.TELEGRAM_ADMIN_CHAT_ID, text=out)
 
     def to_group(cls, group_id, text, file_url=None):

@@ -3,10 +3,7 @@
 
 ## Conventions
 
-
-### Background tasks
-
-#### Name
+### tasks.py
 
 * Standard Task: `<do_something>_task`
 * Periodic tasks:
@@ -16,9 +13,7 @@
   * Every X minutes Task : `<do_something>_every_X_min`
 
 
-#### Admin reporting
 
-Reporting to admin should be done always in `tasks` modules.
 
 
 
@@ -27,8 +22,9 @@ Reporting to admin should be done always in `tasks` modules.
 [https://gist.github.com/gitaarik/8735255](https://gist.github.com/gitaarik/8735255)
 
 
-## Create a new database in Postgres
+## How-tos
 
+## Create a new database in Postgres
 
 ```shell
 sudo -u postgres psql

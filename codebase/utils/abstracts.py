@@ -33,7 +33,7 @@ class AbstractPage(Model):
 
     @cached_property
     def full_page_url(self):
-        return settings.WEBSITE_URL + self.url
+        return settings.WEBSITE["url"] + self.url
 
     def __str__(self):
         return self.title
