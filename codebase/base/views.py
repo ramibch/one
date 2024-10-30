@@ -14,7 +14,6 @@ def home(request: HttpRequest) -> HttpResponse:
     context = {
         "featured_articles": Article.objects.filter(featured=True),
     }
-
     return render(request, "base/home.html", context=context)
 
 
