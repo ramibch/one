@@ -2,6 +2,7 @@ from pathlib import Path
 
 from auto_prefetch import ForeignKey, Model
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.db import models
 from django.db.models import Q
@@ -9,8 +10,10 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from ..base.abstracts import AbstractPage
-from ..base.telegram import Bot
+from ..utils.abstracts import AbstractPage
+from ..utils.telegram import Bot
+
+User = get_user_model()
 
 
 def upload_article_file(obj, filename: str):
@@ -33,6 +36,15 @@ class ArticleFile(Model):
 
     def __str__(self):
         return self.name
+
+
+class Comment(Model):
+    article = ForeignKey(Article, on_delete=models.CASCADE)
+    author = ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField(_("Comment"), max_length=512)
+
+    def __str__(self):
+        return f"{self.content[:20]}... by {str(self.author)}"
 
 
 def sync_articles():

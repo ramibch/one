@@ -88,9 +88,9 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "geoip2",
-    # "allauth.socialaccount",
-    # "allauth.socialaccount.providers.google",
-    # "allauth.socialaccount.providers.linkedin_oauth2",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.linkedin_oauth2",
     # Project apps
     "codebase.base",
     "codebase.articles",
@@ -110,7 +110,7 @@ MIDDLEWARE = [
     # third-party middlewares
     "allauth.account.middleware.AccountMiddleware",
     # own middlewares
-    "codebase.base.middleware.CountryMiddleware",
+    "codebase.middlewares.CountryMiddleware",
 ]
 
 ROOT_URLCONF = "codebase.urls"
@@ -128,7 +128,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "codebase.base.context_processors.site_utilities",
+                "codebase.context_processors.site_utilities",
             ],
         },
     },
@@ -345,7 +345,7 @@ WEBSITE_DEFAULT_PAGE_KEYWORDS = _("Default page keywords")
 # PicoCSS version
 # https://picocss.com/docs/version-picker
 
-MAIN_STATIC_CSS_FILE = "css/picocss/pico.orange.min.css"
+PICO_CSS_FILE = "css/picocss/pico.orange.min.css"
 
 
 # Submodules
@@ -362,7 +362,7 @@ SYNC_PAGE_FOLDERS = ("general-pages",)
 # Telegram
 # 1. Use BotFather to get API KEY: https://telegram.me/BotFather
 # 2. (Admin): Write something to Bot in Telegram
-# 3. Read the updates: codebase.base.telegram.Bot.get_updates
+# 3. Read the updates: codebase.utils.telegram.Bot.get_updates
 
 TELEGRAM_BOT_API_KEY = os.environ.get("TELEGRAM_BOT_API_KEY")
 TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID", "1777934566")

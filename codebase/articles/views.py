@@ -1,8 +1,7 @@
 from django.views.generic.list import ListView
 
+from ..utils.generic_views import MultilinguageDetailView
 from .models import Article
-
-from ..base.generic_views import MultilinguageDetailView
 
 
 class ArticleDetailView(MultilinguageDetailView):
@@ -11,4 +10,3 @@ class ArticleDetailView(MultilinguageDetailView):
 
 class ArticleListView(ListView):
     model = Article
-

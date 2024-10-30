@@ -19,14 +19,16 @@ beautifulsoup4==4.12.3
     # via o365
 black==24.10.0
     # via -r requirements.in
-boto3==1.35.48
+boto3==1.35.50
     # via -r requirements.in
-botocore==1.35.48
+botocore==1.35.50
     # via
     #   boto3
     #   s3transfer
 certifi==2024.8.30
     # via requests
+cffi==1.17.1
+    # via cryptography
 charset-normalizer==3.4.0
     # via requests
 click==8.1.7
@@ -37,6 +39,8 @@ colorama==0.4.6
     # via djlint
 coverage==7.6.4
     # via -r requirements.in
+cryptography==43.0.3
+    # via pyjwt
 cssbeautifier==1.15.1
     # via djlint
 decorator==5.1.1
@@ -62,7 +66,7 @@ django-cleanup==9.0.0
     # via -r requirements.in
 django-extensions==3.2.3
     # via -r requirements.in
-django-htmx==1.19.0
+django-htmx==1.21.0
     # via -r requirements.in
 django-markdownx==4.0.7
     # via -r requirements.in
@@ -168,8 +172,12 @@ pure-eval==0.2.3
     # via stack-data
 pyclean==3.0.0
     # via -r requirements.in
+pycparser==2.22
+    # via cffi
 pygments==2.18.0
     # via ipython
+pyjwt==2.9.0
+    # via django-allauth
 python-dateutil==2.9.0.post0
     # via
     #   botocore
@@ -185,12 +193,15 @@ regex==2024.9.11
     # via djlint
 requests==2.32.3
     # via
+    #   django-allauth
     #   django-rosetta
     #   geoip2
     #   o365
     #   requests-oauthlib
 requests-oauthlib==2.0.0
-    # via o365
+    # via
+    #   django-allauth
+    #   o365
 ruff==0.7.1
     # via -r requirements.in
 s3transfer==0.10.3
@@ -211,7 +222,7 @@ stack-data==0.6.3
     # via ipython
 tokenize-rt==6.1.0
     # via django-upgrade
-tqdm==4.66.5
+tqdm==4.66.6
     # via djlint
 traitlets==5.14.3
     # via

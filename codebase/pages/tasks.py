@@ -6,7 +6,7 @@ from django.utils.text import slugify
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from ..base.telegram import Bot
+from ..utils.telegram import Bot
 from .models import Page
 
 
