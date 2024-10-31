@@ -6,7 +6,7 @@ from django.core.management import call_command
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from .telegram import Bot
+from ..utils.telegram import Bot
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="0"))

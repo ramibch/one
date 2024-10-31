@@ -19,16 +19,14 @@ beautifulsoup4==4.12.3
     # via o365
 black==24.10.0
     # via -r requirements.in
-boto3==1.35.50
+boto3==1.35.52
     # via -r requirements.in
-botocore==1.35.50
+botocore==1.35.52
     # via
     #   boto3
     #   s3transfer
 certifi==2024.8.30
     # via requests
-cffi==1.17.1
-    # via cryptography
 charset-normalizer==3.4.0
     # via requests
 click==8.1.7
@@ -39,8 +37,6 @@ colorama==0.4.6
     # via djlint
 coverage==7.6.4
     # via -r requirements.in
-cryptography==43.0.3
-    # via pyjwt
 cssbeautifier==1.15.1
     # via djlint
 decorator==5.1.1
@@ -60,7 +56,7 @@ django==5.1.2
     #   django-storages
 django-allauth==65.1.0
     # via -r requirements.in
-django-auto-prefetch==1.10.0
+django-auto-prefetch==1.11.0
     # via -r requirements.in
 django-cleanup==9.0.0
     # via -r requirements.in
@@ -80,7 +76,7 @@ django-storages==1.14.4
     # via -r requirements.in
 django-upgrade==1.22.1
     # via -r requirements.in
-djlint==1.35.2
+djlint==1.35.3
     # via -r requirements.in
 editorconfig==0.12.4
     # via
@@ -172,12 +168,8 @@ pure-eval==0.2.3
     # via stack-data
 pyclean==3.0.0
     # via -r requirements.in
-pycparser==2.22
-    # via cffi
 pygments==2.18.0
     # via ipython
-pyjwt==2.9.0
-    # via django-allauth
 python-dateutil==2.9.0.post0
     # via
     #   botocore
@@ -193,20 +185,17 @@ regex==2024.9.11
     # via djlint
 requests==2.32.3
     # via
-    #   django-allauth
     #   django-rosetta
     #   geoip2
     #   o365
     #   requests-oauthlib
 requests-oauthlib==2.0.0
-    # via
-    #   django-allauth
-    #   o365
+    # via o365
 ruff==0.7.1
     # via -r requirements.in
 s3transfer==0.10.3
     # via boto3
-setuptools==75.2.0
+setuptools==75.3.0
     # via geoip2
 six==1.16.0
     # via
@@ -240,5 +229,5 @@ urllib3==2.2.3
     #   requests
 wcwidth==0.2.13
     # via prompt-toolkit
-yarl==1.16.0
+yarl==1.17.1
     # via aiohttp

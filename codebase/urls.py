@@ -17,6 +17,9 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from django.utils.translation import gettext_lazy as _
+from django.conf import settings
+
 
 # Custom 404 error view
 handler404 = "codebase.base.views.error_404"
@@ -32,5 +35,6 @@ urlpatterns = [
     path("a/", include("codebase.articles.urls")),
     path("p/", include("codebase.pages.urls")),
     path("u/", include("codebase.users.urls")),
+    path("s/", include("codebase.search.urls")),
     path("", include("codebase.base.urls")),
 ]

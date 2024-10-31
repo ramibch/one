@@ -11,16 +11,21 @@
     </li>
   </ul>
   <ul>
-    {% for category in nav_categories %}
+    {% for link in navbar_links  %}
+    <li>
+      <a href="{{ link.url }}" class="contrast">{{ link.title }} </a>
+    </li>
+    {% endfor %}
+    {% for item in navbar_items %}
       <li>
         <details class="dropdown">
-          <summary>{{ category.name }}</summary>
+          <summary>{{ item.title }}</summary>
           <ul dir="rtl">
-            {% for nav_link in category.nav_links %}
+            {% for link in item.pagelink_set.all %}
               <li>
-                <a href="{{ nav_link.url }}"
+                <a href="{{ link.url }}"
                    class="contrast"
-                   {% if nav_link.new_tab %}target="_blank"{% endif %}>{{ nav_link.name }}</a>
+                   {% if link.new_tab %}target="_blank"{% endif %}>{{ link.title }}</a>
               </li>
             {% endfor %}
           </ul>
@@ -81,16 +86,17 @@
       {% url 'account_login' as login_url_ %}
       {% if login_url_ %}
         <li>
-          <a href="{{ login_url_ }}">{% trans "Sign In" %}</a>
+          <a href="{{ login_url_ }}" class="contrast">{% trans "Sign In" %}</a>
         </li>
       {% endif %}
       {% url 'account_signup' as signup_url_ %}
       {% if signup_url_ %}
         <li>
-          <a href="{{ signup_url_ }}">{% trans "Sign Up" %}</a>
+          <a href="{{ signup_url_ }}" class="contrast">{% trans "Sign Up" %}</a>
         </li>
       {% endif %}
     {% endif %}
     <!-- 👆 allauth Menu: original code: allauth/layouts/base.html 👆 -->
+
   </ul>
 </nav>

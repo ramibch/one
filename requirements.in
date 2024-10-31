@@ -10,7 +10,8 @@ django-upgrade
 django-markdownx
 django-storages
 django_htmx
-django-allauth[socialaccount]
+#django-allauth[socialaccount]
+django-allauth
 boto3
 pillow
 huey

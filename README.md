@@ -1,6 +1,10 @@
 # django-project-template
 
 
+## TODO:
+- payments (stripe)
+-
+
 ## Conventions
 
 ### tasks.py
@@ -11,9 +15,6 @@
   * Dairly task: `<do_something>_darily`
   * Hourly task: `<do_something>_hourly`
   * Every X minutes Task : `<do_something>_every_X_min`
-
-
-
 
 
 

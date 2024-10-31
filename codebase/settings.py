@@ -40,7 +40,8 @@ HTTPS = os.environ.get("HTTPS", "") == "1"
 
 # Use a S3 service to store static and media files
 
-USE_S3 = os.environ.get("USE_S3", "") == "1"
+USE_S3_FOR_MEDIA_FILES = os.environ.get("USE_S3_FOR_MEDIA_FILES", "") == "1"
+USE_S3_FOR_STATIC_FILES = os.environ.get("USE_S3_FOR_STATIC_FILES", "") == "1"
 
 
 # Use Postgres database
@@ -88,14 +89,16 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "geoip2",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
-    "allauth.socialaccount.providers.linkedin_oauth2",
+    # "allauth.socialaccount",
+    # "allauth.socialaccount.providers.google",
+    # "allauth.socialaccount.providers.linkedin_oauth2",
     # Project apps
     "codebase.base",
     "codebase.articles",
     "codebase.pages",
     "codebase.users",
+    "codebase.menus",
+    "codebase.search",
 ]
 
 MIDDLEWARE = [
@@ -355,6 +358,9 @@ WEBSITE = {
         "js/alpine.js",
         "js/sortable.js",
     ),
+    "footer": {
+        "background_color": "#F5FEF8",
+    },
 }
 
 
@@ -417,23 +423,24 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
 
 # Storage backends
-if USE_S3:
-    STORAGES = {
-        "default": {"BACKEND": S3_MEDIA_STORAGE_BACKEND},
-        "staticfiles": {"BACKEND": S3_STATIC_STORAGE_BACKEND},
-    }
-else:
-    STORAGES = {
-        "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-            "OPTIONS": {"location": MEDIA_ROOT, "base_url": MEDIA_URL},
-        },
-        "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-            "OPTIONS": {"location": STATIC_ROOT, "base_url": STATIC_URL},
-        },
-    }
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {"location": MEDIA_ROOT, "base_url": MEDIA_URL},
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "OPTIONS": {"location": STATIC_ROOT, "base_url": STATIC_URL},
+    },
+}
+
+
+if USE_S3_FOR_MEDIA_FILES:
+    STORAGES["default"] = {"BACKEND": S3_MEDIA_STORAGE_BACKEND}
+
+if USE_S3_FOR_STATIC_FILES:
+    STORAGES["staticfiles"] = {"BACKEND": S3_STATIC_STORAGE_BACKEND}
 
 # Https
 if HTTPS:  # pragma: no cover
