@@ -19,7 +19,7 @@
     {% for item in navbar_items %}
       <li>
         <details class="dropdown">
-          <summary>{{ item.title }}</summary>
+          <summary>{% if item.emoji %}{{ item.emoji}}{% endif %} {{ item.title }}</summary>
           <ul dir="rtl">
             {% for link in item.pagelink_set.all %}
               <li>
@@ -35,14 +35,7 @@
     <!-- 👇‍ allauth Menu: original code: allauth/layouts/base.html 👇‍ -->
     {% if user.is_authenticated %}
       <details class="dropdown">
-        <summary>
-          👤
-          {% if user.first_name %}
-            {{ user.first_name }}
-          {% else %}
-            {% trans "Account" %}
-          {% endif %}
-        </summary>
+        <summary> 👤 {% if user.first_name %} {{ user.first_name }} {% else %} {% trans "Account" %} {% endif %}</summary>
         <ul dir="ltr">
           {% url 'account_email' as email_url_ %}
           {% if email_url_ %}

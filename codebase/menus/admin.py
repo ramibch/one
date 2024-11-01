@@ -12,8 +12,11 @@ class PageLinkInline(admin.StackedInline):
 
 @admin.register(PageLink)
 class PageLinkAdmin(admin.ModelAdmin):
-    list_display = ("title", "show_in_navbar", "order")
-    list_filter = ("show_in_navbar", )
+    list_display = ("full_title", "title", "show_in_navbar", "order")
+    list_filter = ("show_in_navbar", "show_as_emoji", "new_tab", "menu_item")
+
+
+
 
 @admin.register(SocialMediaLink)
 class SocialMediaLinkAdmin(admin.ModelAdmin):

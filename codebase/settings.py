@@ -358,9 +358,6 @@ WEBSITE = {
         "js/alpine.js",
         "js/sortable.js",
     ),
-    "footer": {
-        "background_color": "#F5FEF8",
-    },
 }
 
 

@@ -45,7 +45,7 @@
   </head>
   <body class="container">
     <header>
-      {% include "base/navbar.html" %}
+      {% include "menus/navbar.html" %}
     </header>
     <section>
       {% include "base/messages.html" %}
@@ -55,7 +55,7 @@
       {% endblock content %}
     </main>
     <footer>
-      {% include "base/footer.html" %}
+      {% include "menus/footer.html" %}
     </footer>
     <!-- js -->
     {% for js_file in website.js_files %}
