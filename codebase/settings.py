@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "geoip2",
+    "djmoney",
     # "allauth.socialaccount",
     # "allauth.socialaccount.providers.google",
     # "allauth.socialaccount.providers.linkedin_oauth2",
@@ -99,6 +100,8 @@ INSTALLED_APPS = [
     "codebase.users",
     "codebase.menus",
     "codebase.search",
+    "codebase.plans",
+    "codebase.home",
 ]
 
 MIDDLEWARE = [
@@ -121,9 +124,7 @@ ROOT_URLCONF = "codebase.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            BASE_DIR / "codebase" / "templates",
-        ],
+        "DIRS": [BASE_DIR / "codebase" / "_templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -341,6 +342,7 @@ WEBSITE = {
     "name": "Example site",
     "url": "http://127.0.0.1",  # Without / at the end
     "emoji": "🍊",
+    "emoji_in_brand": True,
     "default_page_title": _("Default page title"),
     "default_page_description": _("Default page desciption"),
     "default_page_keywords": _("Default page keywords"),
@@ -358,6 +360,9 @@ WEBSITE = {
         "js/alpine.js",
         "js/sortable.js",
     ),
+    "footer_links_separator": "|",
+    "change_theme_light_in_footer": True,
+    "change_theme_light_in_navbar": True,
 }
 
 

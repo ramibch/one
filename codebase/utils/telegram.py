@@ -6,12 +6,16 @@ from huey.contrib import djhuey as huey
 
 
 class Bot:
-    ssl._create_default_https_context = ssl._create_unverified_context
     base_url = f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_API_KEY}/"
+
+    def prepare():
+        ssl._create_default_https_context = ssl._create_unverified_context
 
     @huey.task()
     def to_chat(chat_id: str, text: str, file_url=None):
         """Send text message to a chat"""
+
+        Bot.prepare()
 
         if file_url is None:
             params = {"chat_id": chat_id, "text": text, "disable_web_page_preview": True}

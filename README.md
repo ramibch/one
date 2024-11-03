@@ -1,9 +1,10 @@
-# django-project-template
+# Django Project Template for my future SaaS sites
 
 
 ## TODO:
-- payments (stripe)
--
+- payments and stripe checkout
+- plans
+
 
 ## Conventions
 

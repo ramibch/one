@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load markdown_extras %}
+{% block content %}
+  <section>
+    <h1>{{ object.title }}</h1>
+  </section>
+  <article id="article-body">{{ object.body | markdown }}</article>
+{% endblock content %}

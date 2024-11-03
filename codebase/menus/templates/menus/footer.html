@@ -1,0 +1,47 @@
+{% load i18n static %}
+<div>
+  {% for item  in footer_items %}
+    <aside {% if footer_items.count == 3 %}class="col-md-4" {% else %} class="col-md-3" {% endif %}>
+      <p>
+        <strong>
+          {% if item.emoji %}{{ item.emoji }}{% endif %}
+        {{ item.title }}</strong>
+      </p>
+      <nav>
+        <ul>
+          {% for link in item.footerlink_set.all %}
+            <li>
+              <a href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>{{ link.display_title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </aside>
+  {% endfor %}
+  <center class="mt-4">
+    <p>
+      {% for link in footer_links %}
+        <a href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>{{ link.display_title }}</a>
+        {% if not forloop.last %}{{ website.footer_links_separator }}{% endif %}
+      {% endfor %}
+    </p>
+    <p>
+      {% for link in social_media_links %}
+        {% with 'img/social/small/'|add:link.platform|lower|add:'.svg' as icon_path %}
+          <a href="{{ link.url }}"
+             title="{{ link.title }}"
+             {% if link.new_tab %}target="_blank"{% endif %}>
+            <img src='{% static icon_path %}' alt="{{ link.title }}" height="48">
+          </a>
+        {% endwith %}
+      {% endfor %}
+    </p>
+    <small>
+      <i>&copy; <span x-text="new Date().getFullYear()"></span> {{ website.name }}
+      </i>
+    </small>
+    {% if website.change_theme_light_in_footer %}
+      {% include "elements/theme_light.html" %}
+    {% endif %}
+  </center>
+</div>

@@ -6,6 +6,7 @@ django-extensions
 django-rosetta
 django-o365mail
 django-modeltranslation
+django-money[exchange]
 django-upgrade
 django-markdownx
 django-storages
@@ -17,12 +18,12 @@ pillow
 huey
 redis
 geoip2
+makefun
 
 # Management
 python-dotenv
 gunicorn
 ipython
-
 # Testing and faking data
 coverage[toml]
 factory-boy

@@ -1,0 +1,20 @@
+{% load i18n %}
+<nav>
+  <ul>
+    <li>
+      <strong> <a href="{% url "home" %}">
+        {% if website.emoji and website.emoji_in_brand %}{{ website.emoji }}{% endif %}
+      {{ website.name }}</a> </strong>
+    </li>
+  </ul>
+  <ul>
+    {% for link in navbar_links %}
+      <li>
+        <a href="{{ link.url }}" class="contrast">{{ link.display_title }}</a>
+      </li>
+    {% endfor %}
+    {% if website.change_theme_light_in_navbar %}
+      <li>{% include "elements/theme_light.html" %}</li>
+    {% endif %}
+  </ul>
+</nav>

@@ -1,0 +1,21 @@
+{% load i18n %}
+{% for message in messages %}
+  <article class="row"
+           x-cloak
+           x-show="showAlert"
+           x-data="{ showAlert: true }"
+           role="alert">
+    <p class="col-md-10">
+      <strong>
+        {% if message.tags == 'error' %}
+          🚫 {% trans "Error" %}
+        {% elif message.tags == 'warning' %}
+          ⚠️ {% trans "Warning" %}
+        {% else %}
+          ℹ️ {% trans "Infomation" %}
+        {% endif %}
+      </strong> {{ message }}
+    </p>
+    <button class="col-md-2 outline" x-on:click="showAlert = false">{% trans "OK" %}</button>
+  </article>
+{% endfor %}

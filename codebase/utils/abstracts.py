@@ -6,22 +6,11 @@ from django.utils.html import format_html
 from markdownx.models import MarkdownxField
 
 
-class AbstractPage(Model):
-    title = models.CharField(max_length=256, editable=False)
-    slug = models.SlugField(max_length=128, unique=True, editable=False)
-    folder = models.CharField(max_length=128, editable=False)
-    subfolder = models.CharField(max_length=256, editable=False)
-    body = MarkdownxField(editable=False)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-
-    class Meta(Model.Meta):
-        unique_together = ["folder", "subfolder"]
-        ordering = ["-created_on"]
-        abstract = True
+class PageMethodsMixin:
+    title = "Please override title field in the subclass."
 
     def get_absolute_url(self):
-        raise NotImplementedError("This method is not implemented in the AbstractPage model.")
+        raise NotImplementedError
 
     @cached_property
     def url(self):
@@ -37,6 +26,21 @@ class AbstractPage(Model):
 
     def __str__(self):
         return self.title
+
+
+class AbstractPage(Model, PageMethodsMixin):
+    title = models.CharField(max_length=256, editable=False)
+    slug = models.SlugField(max_length=128, unique=True, editable=False)
+    folder = models.CharField(max_length=128, editable=False)
+    subfolder = models.CharField(max_length=256, editable=False)
+    body = MarkdownxField(editable=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta(Model.Meta):
+        unique_together = ["folder", "subfolder"]
+        ordering = ["-created_on"]
+        abstract = True
 
 
 class AbstractSingletonModel(Model):

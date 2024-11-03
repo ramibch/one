@@ -21,6 +21,8 @@ def django_commands_dairly():
 
     call_command("check", deploy=True, stdout=out, stderr=err)
 
+    call_command("update_rates", verbosity=0, stdout=out, stderr=err)
+
     Bot.to_admin(f"Django commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n")
 
 

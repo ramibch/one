@@ -15,18 +15,22 @@ asttokens==2.4.1
     # via stack-data
 attrs==24.2.0
     # via aiohttp
+babel==2.16.0
+    # via py-moneyed
 beautifulsoup4==4.12.3
     # via o365
 black==24.10.0
     # via -r requirements.in
-boto3==1.35.52
+boto3==1.35.54
     # via -r requirements.in
-botocore==1.35.52
+botocore==1.35.54
     # via
     #   boto3
     #   s3transfer
 certifi==2024.8.30
-    # via requests
+    # via
+    #   django-money
+    #   requests
 charset-normalizer==3.4.0
     # via requests
 click==8.1.7
@@ -52,6 +56,7 @@ django==5.1.2
     #   django-htmx
     #   django-markdownx
     #   django-modeltranslation
+    #   django-money
     #   django-rosetta
     #   django-storages
 django-allauth==65.1.0
@@ -68,6 +73,8 @@ django-markdownx==4.0.7
     # via -r requirements.in
 django-modeltranslation==0.19.10
     # via -r requirements.in
+django-money==3.5.3
+    # via -r requirements.in
 django-o365mail==1.1.0
     # via -r requirements.in
 django-rosetta==0.10.1
@@ -76,7 +83,7 @@ django-storages==1.14.4
     # via -r requirements.in
 django-upgrade==1.22.1
     # via -r requirements.in
-djlint==1.35.3
+djlint==1.35.4
     # via -r requirements.in
 editorconfig==0.12.4
     # via
@@ -86,7 +93,7 @@ executing==2.1.0
     # via stack-data
 factory-boy==3.3.1
     # via -r requirements.in
-faker==30.8.1
+faker==30.8.2
     # via factory-boy
 frozenlist==1.5.0
     # via
@@ -122,6 +129,8 @@ jsbeautifier==1.15.1
     #   djlint
 json5==0.9.25
     # via djlint
+makefun==1.15.6
+    # via -r requirements.in
 markdown==3.7
     # via django-markdownx
 matplotlib-inline==0.1.7
@@ -166,6 +175,8 @@ ptyprocess==0.7.0
     # via pexpect
 pure-eval==0.2.3
     # via stack-data
+py-moneyed==3.0
+    # via django-money
 pyclean==3.0.0
     # via -r requirements.in
 pygments==2.18.0
@@ -191,12 +202,14 @@ requests==2.32.3
     #   requests-oauthlib
 requests-oauthlib==2.0.0
     # via o365
-ruff==0.7.1
+ruff==0.7.2
     # via -r requirements.in
 s3transfer==0.10.3
     # via boto3
 setuptools==75.3.0
-    # via geoip2
+    # via
+    #   django-money
+    #   geoip2
 six==1.16.0
     # via
     #   asttokens
@@ -218,7 +231,10 @@ traitlets==5.14.3
     #   ipython
     #   matplotlib-inline
 typing-extensions==4.12.2
-    # via faker
+    # via
+    #   djlint
+    #   faker
+    #   py-moneyed
 tzdata==2024.2
     # via o365
 tzlocal==5.2
