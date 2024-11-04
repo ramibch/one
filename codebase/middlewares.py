@@ -16,25 +16,21 @@ class CountryDetails:
     def __init__(self, request: HttpRequest) -> None:
         self.request = request
 
-    def _get_country_dict(self):
-        # get IP
+    def get_country_dict(self):
         x_forwarded_for = self.request.headers.get("x-forwarded-for")
         ip = x_forwarded_for.split(",")[0] if x_forwarded_for else self.request.META.get("REMOTE_ADDR")
-
         try:
-            country_dict = GeoIP2().country(ip)
+            return GeoIP2().country(ip)
         except Exception:
-            country_dict = {"country_code": None, "country_name": None}
-
-        return country_dict
+            return {"country_code": None, "country_name": None}
 
     @cached_property
     def code(self) -> str:
-        return self._get_country_dict()["country_code"]
+        return self.get_country_dict()["country_code"]
 
     @cached_property
     def name(self) -> str:
-        return self._get_country_dict()["country_name"]
+        return self.get_country_dict()["country_name"]
 
     def __str__(self):
         return self.code

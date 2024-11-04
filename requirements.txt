@@ -11,6 +11,7 @@ asgiref==3.8.1
     #   django
     #   django-allauth
     #   django-htmx
+    #   django-minify-html
 asttokens==2.4.1
     # via stack-data
 attrs==24.2.0
@@ -55,6 +56,7 @@ django==5.1.2
     #   django-extensions
     #   django-htmx
     #   django-markdownx
+    #   django-minify-html
     #   django-modeltranslation
     #   django-money
     #   django-rosetta
@@ -70,6 +72,8 @@ django-extensions==3.2.3
 django-htmx==1.21.0
     # via -r requirements.in
 django-markdownx==4.0.7
+    # via -r requirements.in
+django-minify-html==1.11.0
     # via -r requirements.in
 django-modeltranslation==0.19.10
     # via -r requirements.in
@@ -129,14 +133,14 @@ jsbeautifier==1.15.1
     #   djlint
 json5==0.9.25
     # via djlint
-makefun==1.15.6
-    # via -r requirements.in
 markdown==3.7
     # via django-markdownx
 matplotlib-inline==0.1.7
     # via ipython
 maxminddb==2.6.2
     # via geoip2
+minify-html==0.15.0
+    # via django-minify-html
 multidict==6.1.0
     # via
     #   aiohttp

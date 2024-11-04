@@ -7,3 +7,6 @@
 [submodule "submodules/static"]
   path = submodules/static
   url = git@github.com:ramiboutas/static.git
+[submodule "submodules/private-articles"]
+	path = submodules/private-articles
+	url = git@github.com:ramiboutas/private-articles.git
