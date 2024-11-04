@@ -27,7 +27,7 @@ urlpatterns = [
     # Django
     path("abcdef/", admin.site.urls),
     # Third-party
-    path("👥/", include("allauth.urls")),
+    path("allauth/", include("allauth.urls")),
     # Own
     path("👤/", include("codebase.users.urls")),
     path("🔎/", include("codebase.search.urls")),

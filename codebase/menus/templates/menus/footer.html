@@ -28,10 +28,9 @@
     <p>
       {% for link in social_media_links %}
         {% with 'img/social/small/'|add:link.platform|lower|add:'.svg' as icon_path %}
-          <a href="{{ link.url }}"
-             title="{{ link.title }}"
+          <a href="{{ link.url }}" style="text-decoration: none;" title="{{ link.platform }}"
              {% if link.new_tab %}target="_blank"{% endif %}>
-            <img src='{% static icon_path %}' alt="{{ link.title }}" height="48">
+            <img src='{% static icon_path %}' alt="{{ link.platform }}" height="48">
           </a>
         {% endwith %}
       {% endfor %}
