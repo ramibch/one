@@ -1,5 +1,4 @@
 from auto_prefetch import Model
-from django.conf import settings
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.html import format_html
@@ -19,10 +18,6 @@ class PageMethodsMixin:
     @cached_property
     def anchor_tag(self):
         return format_html(f"<a target='_blank' href='{self.url}'>{self.title}</a>")
-
-    @cached_property
-    def full_page_url(self):
-        return settings.WEBSITE["url"] + self.url
 
     def __str__(self):
         return self.title

@@ -1,4 +1,4 @@
-from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
@@ -12,7 +12,7 @@ from ..utils.telegram import Bot
 @cache_control(max_age=60 * 60 * 24 * 30, immutable=True, public=True)  # 30 days
 def favicon(request: HttpRequest) -> HttpResponse:
     try:
-        emoji = settings.WEBSITE["emoji"]
+        emoji = get_current_site(request).website.emoji
     except KeyError:
         emoji = "🌐 "
 

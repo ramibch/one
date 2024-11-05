@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "django.contrib.sites",
     "django.db.migrations",
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
@@ -376,6 +377,25 @@ WEBSITE = {
     "footer_links_separator": "|",
     "change_theme_light_in_footer": True,
     "change_theme_light_in_navbar": True,
+}
+
+
+FRONTEND = {
+    "css_files": (
+        "css/bootstrap-grid.min.css",
+        "css/rb.css",
+        "css/picocss/pico.orange.min.css",
+    ),
+    "js_files": (
+        "js/htmx.js",
+        "js/htmx-ext-ws.js",
+        "js/hyperscript.js",
+        "js/cropper.js",
+        "js/alpine_persist.js",
+        "js/alpine.js",
+        "js/sortable.js",
+    ),
+    "footer_links_separator": "|",
 }
 
 

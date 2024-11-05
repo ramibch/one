@@ -25,10 +25,9 @@ class Bot:
             if requests.get(Bot.base_url + "sendPhoto", params=cparams | {"photo": file_url}).status_code != 200:
                 requests.get(Bot.base_url + "sendDocument", params=cparams | {"document": file_url})
 
-    def to_admin(text: str, include_site_info=True):
+    def to_admin(text: str):
         """Send text message to the admin"""
-        out = f"{settings.WEBSITE["name"]} - {settings.WEBSITE["url"]}:\n\n{text}" if include_site_info else text
-        Bot.to_chat(chat_id=settings.TELEGRAM_ADMIN_CHAT_ID, text=out)
+        Bot.to_chat(chat_id=settings.TELEGRAM_ADMIN_CHAT_ID, text=text)
 
     def to_group(cls, group_id, text, file_url=None):
         """Send text and optionally an image to a group"""

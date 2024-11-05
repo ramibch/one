@@ -38,7 +38,7 @@
     <meta name="twitter:title" content="{{ title }}" />
     <meta name="twitter:description" content="{{ description }}" />
     <!-- css -->
-    {% for css_file in website.css_files %}
+    {% for css_file in frontend.css_files %}
       <link href="{% static css_file %}" rel="stylesheet" />
     {% endfor %}
     {% block head_extra %}{% endblock %}
@@ -56,7 +56,7 @@
       {% include "menus/footer.html" %}
     </footer>
     <!-- js -->
-    {% for js_file in website.js_files %}
+    {% for js_file in frontend.js_files %}
       <script defer src="{% static js_file %}"></script>
     {% endfor %}
     {% django_browser_reload_script %}
