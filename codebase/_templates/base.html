@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n static django_browser_reload %}
 {% get_current_language as LANGUAGE_CODE %}
 {% firstof page_title object.title website.default_page_title as title %}
 {% firstof page_keywords object.keywords website.default_page_keywords as keywords %}
@@ -59,6 +59,7 @@
     {% for js_file in website.js_files %}
       <script defer src="{% static js_file %}"></script>
     {% endfor %}
+    {% django_browser_reload_script %}
     {% block extra_js %}{% endblock %}
   </body>
 </html>

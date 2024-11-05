@@ -1,7 +1,11 @@
-from huey import crontab
+from django.contrib.auth import get_user_model
 from huey.contrib import djhuey as huey
 
+from .models import SearchTerm
 
-@huey.db_periodic_task(crontab(hour="0", minute="1"))
-def example_task_dairly():
-    pass
+User = get_user_model()
+
+
+@huey.task()
+def save_search_query(q, cc, u):
+    SearchTerm.objects.create(query=q, country_code=cc, user=u)

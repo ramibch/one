@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "geoip2",
     "djmoney",
+    "django_browser_reload",
     # "allauth.socialaccount",
     # "allauth.socialaccount.providers.google",
     # "allauth.socialaccount.providers.linkedin_oauth2",
@@ -114,9 +115,10 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # own middlewares
-    "codebase.middlewares.CountryMiddleware",
+    "codebase.middlewares.Middlewares",
     # third-party middlewares
     "allauth.account.middleware.AccountMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = "codebase.urls"
@@ -125,7 +127,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "codebase" / "_templates"],
-        "APP_DIRS": True,
+        # "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -134,9 +136,20 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "codebase.context_processors.site_utilities",
             ],
+            "debug": DEBUG,
+            "loaders": [
+                (
+                    "django.template.loaders.cached.Loader",
+                    [
+                        "django.template.loaders.filesystem.Loader",
+                        "django.template.loaders.app_directories.Loader",
+                    ],
+                ),
+            ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = "codebase.wsgi.application"
 

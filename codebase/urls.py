@@ -28,12 +28,13 @@ urlpatterns = [
     path("abcdef/", admin.site.urls),
     # Third-party
     path("allauth/", include("allauth.urls")),
+    path("__reload__/", include("django_browser_reload.urls")),
     # Own
     path("👤/", include("codebase.users.urls")),
     path("🔎/", include("codebase.search.urls")),
     path("📝/", include("codebase.articles.urls")),
     path("🌐/", include("codebase.pages.urls")),
-    path("💸/", include("codebase.plans.urls")),
+    path("🚀/", include("codebase.plans.urls")),
     path("", include("codebase.base.urls")),
     path("", include("codebase.home.urls")),
 ]

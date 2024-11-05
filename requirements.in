@@ -18,6 +18,8 @@ pillow
 huey
 redis
 geoip2
+Werkzeug
+django-browser-reload
 
 
 # Management

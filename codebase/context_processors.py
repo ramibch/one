@@ -5,6 +5,7 @@ from .menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
 def site_utilities(request):
     show_types = ["user" if request.user.is_authenticated else "no_user", "always"]
+
     return {
         "request": request,
         "website": settings.WEBSITE,

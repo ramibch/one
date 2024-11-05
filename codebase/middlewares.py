@@ -1,14 +1,21 @@
+from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
+from django.core.management import call_command
 from django.http import HttpRequest
 from django.utils.functional import cached_property
 
 
-class CountryMiddleware:
+class Middlewares:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
+        # Assign coutry to request object
         request.country = CountryDetails(request)
+
+        # Clear cache in development
+        if settings.DEBUG:
+            call_command("clear_cache")
         return self.get_response(request)
 
 
