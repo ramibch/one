@@ -1,21 +1,15 @@
+from auto_prefetch import Model, OneToOneField
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import models
 
 
-class Website(Site):
-    """
-    Website model. Extended version of the Django Site model.
+class SiteProfile(Model):
+    site = OneToOneField(Site, null=True, on_delete=models.SET_NULL)
 
-    https://stackoverflow.com/questions/2821702/how-do-you-extend-the-site-model-in-django
+    remarks = models.TextField(null=True, blank=True)
 
-    https://docs.djangoproject.com/en/5.1/topics/db/models/#multi-table-inheritance
-
-    """
-
-    title = models.TextField(default="")
-
-    emoji = models.CharField(max_length=8, default="🍊")
+    emoji = models.CharField(max_length=8, default="")
 
     emoji_in_brand = models.BooleanField(default=True)
 
@@ -34,7 +28,7 @@ class Website(Site):
 
     def url(self):
         schema = "https" if settings.HTTPS else "http"
-        return f"{schema}://{self.domain}"
+        return f"{schema}://{self.site.domain}"
 
     def __str__(self):
-        return self.name
+        return self.site.name

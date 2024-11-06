@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
 
 from auto_prefetch import ForeignKey, Model
+from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -9,7 +10,6 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from ..articles.models import Article
-from ..base.models import Website
 from ..pages.models import Page
 from ..plans.models import Plan
 
@@ -43,7 +43,7 @@ class AbstractLink(Model):
     external_url = models.URLField(max_length=256, null=True, blank=True)
     new_tab = models.BooleanField(default=False)
     show_type = models.CharField(default="always", choices=SHOW_TYPES, max_length=16)
-    website = models.ManyToManyField(Website)
+    site = models.ManyToManyField(Site)
 
     class Meta(Model.Meta):
         abstract = True
@@ -112,7 +112,7 @@ class FooterItem(Model):
     emoji = models.CharField(max_length=8, null=True, blank=True)
     title = models.CharField(max_length=64)
     show_type = models.CharField(default="always", choices=SHOW_TYPES, max_length=16)
-    website = models.ManyToManyField(Website)
+    site = models.ManyToManyField(Site)
 
     def __str__(self) -> str:
         return self.title
@@ -142,7 +142,7 @@ class SocialMediaLink(Model):
     url = models.URLField(max_length=256)
     new_tab = models.BooleanField(default=True)
     show_type = models.CharField(default="always", choices=SHOW_TYPES, max_length=16)
-    website = models.ManyToManyField(Website)
+    site = models.ManyToManyField(Site)
 
     @cached_property
     def platform(self):

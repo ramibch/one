@@ -22,26 +22,28 @@
     <p>
       {% for link in footer_links %}
         <a href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>{{ link.display_title }}</a>
-        {% if not forloop.last %}{{ website.footer_links_separator }}{% endif %}
+        {% if not forloop.last %}{{ site.siteprofile.footer_links_separator }}{% endif %}
       {% endfor %}
     </p>
     <p>
       {% for link in social_media_links %}
         {% if link.url %}
-        {% with 'img/social/small/'|add:link.platform|lower|add:'.svg' as icon_path %}
-          <a href="{{ link.url }}" style="text-decoration: none;" title="{{ link.platform }}"
-          {% if link.new_tab %}target="_blank"{% endif %}>
-          <img src='{% static icon_path %}' alt="{{ link.platform }}" height="32">
-          </a>
-        {% endwith %}
+          {% with 'img/social/small/'|add:link.platform|lower|add:'.svg' as icon_path %}
+            <a href="{{ link.url }}"
+               style="text-decoration: none"
+               title="{{ link.platform }}"
+               {% if link.new_tab %}target="_blank"{% endif %}>
+              <img src='{% static icon_path %}' alt="{{ link.platform }}" height="32">
+            </a>
+          {% endwith %}
         {% endif %}
       {% endfor %}
     </p>
     <small>
-      <i>&copy; <span x-text="new Date().getFullYear()"></span> {{ website.name }}
+      <i>&copy; <span x-text="new Date().getFullYear()"></span> {{ site.name }}
       </i>
     </small>
-    {% if website.change_theme_light_in_footer %}
+    {% if site.siteprofile.change_theme_light_in_footer %}
       {% include "elements/theme_light.html" %}
     {% endif %}
   </center>

@@ -24,8 +24,8 @@ def hx_seach_results(request: HttpRequest) -> HttpResponse:
         {
             "user": request.user if isinstance(request.user, User) else None,
             "country_code": request.country.code,
+            "site": get_current_site(request),
             "query": q,
-            "website": get_current_site(request).website,
         }
     )
 

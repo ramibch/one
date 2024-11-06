@@ -1,8 +1,8 @@
 {% load i18n static django_browser_reload %}
 {% get_current_language as LANGUAGE_CODE %}
-{% firstof page_title object.title website.default_page_title as title %}
-{% firstof page_keywords object.keywords website.default_page_keywords as keywords %}
-{% firstof page_description object.description website.default_page_description as description %}
+{% firstof page_title object.title site.siteprofile.default_page_title as title %}
+{% firstof page_keywords object.keywords site.siteprofile.default_page_keywords as keywords %}
+{% firstof page_description object.description site.siteprofile.default_page_description as description %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}"
       dir="ltr"

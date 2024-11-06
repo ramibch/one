@@ -1,32 +1,21 @@
+from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.management.base import BaseCommand, CommandError
 
 
-from django.contrib.sites.models import Site
-
-from ...models import Website
-
-from django.conf import settings
-
 class Command(BaseCommand):
-    help = "By default creates initial sites that are defined in the setting INITIAL_SITES"
+    help = "Creates initial sites that are defined in the setting INITIAL_SITES"
 
     def add_arguments(self, parser):
-        parser.add_argument("--delete-example-site", action="store_true",help="Remove previously the site example.com")
-        parser.add_argument("--delete-all-sites", action="store_true",help="Remove previously all the sites")
-        parser.add_argument("--delete-all-websites", action="store_true",help="Remove previously all the websites")
-
+        parser.add_argument("--delete-example", action="store_true", help="Remove previously the site example.com")
+        parser.add_argument("--delete-all", action="store_true", help="Remove previously all the sites")
 
     def handle(self, *args, **options):
-
-        if options["delete_example_site"]:
+        if options["delete_example"]:
             Site.objects.filter(domain="example.com").delete()
 
-        if options["delete_all_sites"]:
+        if options["delete_all"]:
             Site.objects.all().delete()
-
-        if options["delete_all_websites"]:
-            Website.objects.all().delete()
-
 
         existing_sites = Site.objects.all()
         if existing_sites.count() > 0:
@@ -36,14 +25,12 @@ class Command(BaseCommand):
         initial_sites = getattr(settings, "INITIAL_SITES", None)
 
         if initial_sites is None:
-            raise CommandError(f"The setting INITIAL_SITES is not defined.")
+            raise CommandError("The setting INITIAL_SITES is not defined.")
 
-        created_websites = []
+        created_sites = []
 
         for site_name, site_domain in initial_sites:
-            # Sites objects are automatically created when their Website are created
-            created_websites.append(Website.objects.create(name=site_name, domain=site_domain))
+            created_sites.append(Site.objects.create(name=site_name, domain=site_domain))
 
-        created_websites_as_str = "\n".join([site.domain for site in created_websites])
-        self.stdout.write(self.style.SUCCESS(f"Websites and Sites successfully created:\n{created_websites_as_str}"))
-
+        created_sites_as_str = "\n".join([site.domain for site in created_sites])
+        self.stdout.write(self.style.SUCCESS(f"Sites successfully created:\n{created_sites_as_str}"))

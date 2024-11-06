@@ -2,6 +2,7 @@ import subprocess
 from io import StringIO
 
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.management import call_command
 from huey import crontab
 from huey.contrib import djhuey as huey
@@ -33,3 +34,14 @@ def fetch_submodules_dairly():
     emoji_ok = "✅" if ok else "🔴"
 
     Bot.to_admin(f"{emoji_ok} Submodules fetched")
+
+
+@huey.db_periodic_task(crontab(hour="0", minute="15"))
+def check_sites_without_siteprofiles_dairly():
+    sites = Site.objects.filter(siteprofile__isnull=True)
+
+    if sites.count() == 0:
+        return
+
+    sites_str = "\n".join(site.domain for site in sites)
+    Bot.to_admin(f"⚠️ The following sites have no Site Profile associated:\n\n{sites_str}")
