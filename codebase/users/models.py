@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
@@ -19,7 +18,9 @@ class User(AbstractUser):
 
     @cached_property
     def display_name(self):
-        return getattr(self, "first_name", getattr(self, "username", _("Account")))
+        if self.first_name not in ("", None):
+            return self.first_name
+        return self.username
 
     def __str__(self) -> str:
         return f"User ({self.username} - {self.email})"

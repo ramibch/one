@@ -7,5 +7,10 @@ User = get_user_model()
 
 
 @huey.task()
-def save_search_query(q, cc, u):
+def save_search_query(params):
+    SearchTerm.objects.create(**params)
+
+
+@huey.task()
+def save_search_query_(q, cc, u):
     SearchTerm.objects.create(query=q, country_code=cc, user=u)

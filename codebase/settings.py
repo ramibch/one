@@ -133,7 +133,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "codebase" / "_templates"],
-        # "APP_DIRS": True,
+        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -143,15 +143,6 @@ TEMPLATES = [
                 "codebase.context_processors.site_utilities",
             ],
             "debug": DEBUG,
-            "loaders": [
-                (
-                    "django.template.loaders.cached.Loader",
-                    [
-                        "django.template.loaders.filesystem.Loader",
-                        "django.template.loaders.app_directories.Loader",
-                    ],
-                ),
-            ],
         },
     },
 ]
@@ -380,7 +371,7 @@ FRONTEND = {
 
 INITIAL_SITES_ALL = {
     # Environment Key : tupple( tupple(site name, site_domain))
-    "DEV" :  (
+    "DEV": (
         ("Site 8000", "127.0.0.1:8000"),
         ("Site 8001", "127.0.0.1:8001"),
         ("Site 8002", "127.0.0.1:8002"),
