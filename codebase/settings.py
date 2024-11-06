@@ -41,8 +41,13 @@ HTTPS = os.environ.get("HTTPS", "") == "1"
 # Use a S3 service to store static and media files
 
 USE_S3_FOR_MEDIA_FILES = os.environ.get("USE_S3_FOR_MEDIA_FILES", "") == "1"
+
 USE_S3_FOR_STATIC_FILES = os.environ.get("USE_S3_FOR_STATIC_FILES", "") == "1"
 
+
+PRODUCTION = os.environ.get("PRODUCTION", "") == "1"
+
+EnvironmentError
 
 # Use Postgres database
 
@@ -351,35 +356,7 @@ Project settings
 ################
 """
 
-# Website
-WEBSITE = {
-    "name": "Example site",
-    "url": "http://127.0.0.1",  # Without / at the end
-    "emoji": "🍊",
-    "emoji_in_brand": True,
-    "default_page_title": _("Default page title"),
-    "default_page_description": _("Default page desciption"),
-    "default_page_keywords": _("Default page keywords"),
-    "css_files": (
-        "css/bootstrap-grid.min.css",
-        "css/rb.css",
-        "css/picocss/pico.orange.min.css",
-    ),
-    "js_files": (
-        "js/htmx.js",
-        "js/htmx-ext-ws.js",
-        "js/hyperscript.js",
-        "js/cropper.js",
-        "js/alpine_persist.js",
-        "js/alpine.js",
-        "js/sortable.js",
-    ),
-    "footer_links_separator": "|",
-    "change_theme_light_in_footer": True,
-    "change_theme_light_in_navbar": True,
-}
-
-
+# Frontend
 FRONTEND = {
     "css_files": (
         "css/bootstrap-grid.min.css",
@@ -397,6 +374,25 @@ FRONTEND = {
     ),
     "footer_links_separator": "|",
 }
+
+
+# Initial sites
+
+INITIAL_SITES_ALL = {
+    # Environment Key : tupple( tupple(site name, site_domain))
+    "DEV" :  (
+        ("Site 8000", "127.0.0.1:8000"),
+        ("Site 8001", "127.0.0.1:8001"),
+        ("Site 8002", "127.0.0.1:8002"),
+    ),
+    "PROD": (
+        ("Rami Site", "ramiboutas.com"),
+        ("English Stuff", "englishstuff.online"),
+        ("Nice CV", "nicecv.online"),
+    ),
+}
+
+INITIAL_SITES = INITIAL_SITES_ALL["PROD" if PRODUCTION else "DEV"]
 
 
 # Submodules
