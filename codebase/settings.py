@@ -233,6 +233,16 @@ CSRF_TRUSTED_ORIGINS = [
     # TODO: Add here h
 ]
 
+
+# Superuser without input
+
+DJANGO_SUPERUSER_USERNAME = os.environ.get("DJANGO_SUPERUSER_USERNAME")
+DJANGO_SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
+DJANGO_SUPERUSER_EMAIL  = os.environ.get("DJANGO_SUPERUSER_EMAIL")
+
+
+
+
 """
 ####################
 Third-party settings
@@ -400,6 +410,8 @@ SYNC_ARTICLE_FOLDERS = ("example-topic",)
 # Pages
 PAGES_MARKDOWN_PATH = BASE_DIR / "submodules" / "pages"
 SYNC_PAGE_FOLDERS = ("general-pages",)
+
+
 
 
 # Telegram

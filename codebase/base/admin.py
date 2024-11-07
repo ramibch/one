@@ -21,6 +21,7 @@ class MigrationRecorderAdmin(admin.ModelAdmin):
 class ExtendedSiteAdmin(admin.ModelAdmin):
     list_display = ("__str__", "site__domain", "site__name")
     search_fields = ("site__domain", "site__name")
+    readonly_fields = ("last_huey_flush",)
     # list_editable = ("site__domain", "site__name")
     actions = ["flush_huey"]
 

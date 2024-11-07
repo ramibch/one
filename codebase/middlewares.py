@@ -14,7 +14,7 @@ class Middlewares:
         request.country = CountryDetails(request)
 
         # Clear cache in development
-        if settings.DEBUG:
+        if settings.DEBUG and "django_extensions" in settings.INSTALLED_APPS:
             call_command("clear_cache")
         return self.get_response(request)
 
@@ -29,7 +29,14 @@ class CountryDetails:
         try:
             return GeoIP2().country(ip)
         except Exception:
-            return {"country_code": None, "country_name": None}
+            return {
+                "country_code": None,
+                "country_name": None,
+                "continent_code": None,
+                "continent_name": None,
+                "is_in_european_union": None,
+            }
+
 
     @cached_property
     def code(self) -> str:

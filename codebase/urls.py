@@ -27,6 +27,7 @@ urlpatterns = [
     # Django
     path("abcdef/doc/", include("django.contrib.admindocs.urls")),
     path("abcdef/", admin.site.urls),
+    path("i18n/", include("django.conf.urls.i18n")),
     # Third-party
     path("allauth/", include("allauth.urls")),
     path("__reload__/", include("django_browser_reload.urls")),

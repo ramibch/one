@@ -29,8 +29,6 @@ def hx_seach_results(request: HttpRequest) -> HttpResponse:
         }
     )
 
-    print(get_current_site(request))
-
     pages = Page.objects.filter(body__contains=q)
     articles = Article.objects.filter(body__contains=q)
     total = pages.count() + articles.count()

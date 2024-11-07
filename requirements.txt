@@ -87,7 +87,7 @@ django-storages==1.14.4
     # via -r requirements.in
 django-upgrade==1.22.1
     # via -r requirements.in
-djlint==1.36.0
+djlint==1.36.1
     # via -r requirements.in
 docutils==0.21.2
     # via -r requirements.in

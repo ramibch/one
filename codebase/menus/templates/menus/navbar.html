@@ -1,5 +1,4 @@
 {% load i18n %}
-<hr>
 <nav>
   <ul>
     <li>
@@ -18,6 +17,8 @@
   {% if site.extended.change_theme_light_in_navbar %}
     <li>{% include "elements/theme_light.html" %}</li>
   {% endif %}
+  {% if site.extended.change_language_in_navbar %}
+    <li>{% include "elements/change_language.html" %}</li>
+  {% endif %}
 </ul>
 </nav>
-<hr>
