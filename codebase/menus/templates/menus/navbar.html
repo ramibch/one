@@ -4,7 +4,7 @@
   <ul>
     <li>
       <strong> <a href="{% url "home" %}">
-        {% if site.siteprofile.emoji and site.siteprofile.emoji_in_brand %}{{ site.siteprofile.emoji }}{% endif %}
+        {% if site.extended.emoji and site.extended.emoji_in_brand %}{{ site.extended.emoji }}{% endif %}
       {{ site.name }}</a>
     </strong>
   </li>
@@ -15,7 +15,7 @@
       <a href="{{ link.url }}" class="contrast">{{ link.display_title }}</a>
     </li>
   {% endfor %}
-  {% if site.siteprofile.change_theme_light_in_navbar %}
+  {% if site.extended.change_theme_light_in_navbar %}
     <li>{% include "elements/theme_light.html" %}</li>
   {% endif %}
 </ul>

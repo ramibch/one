@@ -7,6 +7,7 @@ class Command(BaseCommand):
     help = "Creates initial sites that are defined in the setting INITIAL_SITES"
 
     def add_arguments(self, parser):
+        parser.add_argument("environments", nargs="+", type=str)
         parser.add_argument("--delete-example", action="store_true", help="Remove previously the site example.com")
         parser.add_argument("--delete-all", action="store_true", help="Remove previously all the sites")
 
@@ -29,8 +30,9 @@ class Command(BaseCommand):
 
         created_sites = []
 
-        for site_name, site_domain in initial_sites:
-            created_sites.append(Site.objects.create(name=site_name, domain=site_domain))
+        for env in options["environments"]:
+            for site_name, site_domain in initial_sites[env]:
+                created_sites.append(Site.objects.create(name=site_name, domain=site_domain))
 
         created_sites_as_str = "\n".join([site.domain for site in created_sites])
         self.stdout.write(self.style.SUCCESS(f"Sites successfully created:\n{created_sites_as_str}"))

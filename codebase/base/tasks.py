@@ -37,8 +37,8 @@ def fetch_submodules_dairly():
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="15"))
-def check_sites_without_siteprofiles_dairly():
-    sites = Site.objects.filter(siteprofile__isnull=True)
+def check_sites_without_extended_sites_dairly():
+    sites = Site.objects.filter(extended__isnull=True)
 
     if sites.count() == 0:
         return

@@ -3,7 +3,7 @@ from django.db.migrations.recorder import MigrationRecorder
 from django.utils.timezone import now
 from huey.contrib.djhuey import HUEY
 
-from .models import SiteProfile
+from .models import ExtendedSite
 
 
 @admin.register(MigrationRecorder.Migration)
@@ -17,8 +17,8 @@ class MigrationRecorderAdmin(admin.ModelAdmin):
         queryset.update(applied=now())
 
 
-@admin.register(SiteProfile)
-class SiteProfileAdmin(admin.ModelAdmin):
+@admin.register(ExtendedSite)
+class ExtendedSiteAdmin(admin.ModelAdmin):
     list_display = ("__str__", "site__domain", "site__name")
     search_fields = ("site__domain", "site__name")
     # list_editable = ("site__domain", "site__name")

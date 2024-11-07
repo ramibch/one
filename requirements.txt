@@ -22,9 +22,9 @@ beautifulsoup4==4.12.3
     # via o365
 black==24.10.0
     # via -r requirements.in
-boto3==1.35.54
+boto3==1.35.55
     # via -r requirements.in
-botocore==1.35.54
+botocore==1.35.55
     # via
     #   boto3
     #   s3transfer
@@ -88,6 +88,8 @@ django-storages==1.14.4
 django-upgrade==1.22.1
     # via -r requirements.in
 djlint==1.36.0
+    # via -r requirements.in
+docutils==0.21.2
     # via -r requirements.in
 editorconfig==0.12.4
     # via
@@ -192,7 +194,7 @@ pyyaml==6.0.2
     # via djlint
 redis==5.2.0
     # via -r requirements.in
-regex==2024.9.11
+regex==2024.11.6
     # via djlint
 requests==2.32.3
     # via
@@ -224,7 +226,7 @@ stack-data==0.6.3
     # via ipython
 tokenize-rt==6.1.0
     # via django-upgrade
-tqdm==4.66.6
+tqdm==4.67.0
     # via djlint
 traitlets==5.14.3
     # via

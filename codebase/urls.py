@@ -25,6 +25,7 @@ handler500 = "codebase.base.views.error_500"
 
 urlpatterns = [
     # Django
+    path("abcdef/doc/", include("django.contrib.admindocs.urls")),
     path("abcdef/", admin.site.urls),
     # Third-party
     path("allauth/", include("allauth.urls")),

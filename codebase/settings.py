@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     "django.contrib.sitemaps",
     "django.contrib.sites",
     "django.db.migrations",
+    "django.contrib.admindocs",
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
     "django_extensions",
@@ -120,6 +121,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.contrib.admindocs.middleware.XViewMiddleware",
     # own middlewares
     "codebase.middlewares.Middlewares",
     # third-party middlewares
@@ -369,21 +371,24 @@ FRONTEND = {
 
 # Initial sites
 
-INITIAL_SITES_ALL = {
+INITIAL_SITES = {
     # Environment Key : tupple( tupple(site name, site_domain))
-    "DEV": (
+    "dev": (
         ("Site 8000", "127.0.0.1:8000"),
         ("Site 8001", "127.0.0.1:8001"),
         ("Site 8002", "127.0.0.1:8002"),
     ),
-    "PROD": (
+    "prod": (
         ("Rami Site", "ramiboutas.com"),
         ("English Stuff", "englishstuff.online"),
         ("Nice CV", "nicecv.online"),
     ),
+    "testprod": (
+        ("Site test 1", "sitetest1.ramiboutas.com"),
+        ("Site test 2", "sitetest2.ramiboutas.com"),
+        ("Site test 3", "sitetest3.ramiboutas.com"),
+    ),
 }
-
-INITIAL_SITES = INITIAL_SITES_ALL["PROD" if PRODUCTION else "DEV"]
 
 
 # Submodules
