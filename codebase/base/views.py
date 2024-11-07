@@ -12,7 +12,7 @@ from ..utils.telegram import Bot
 @cache_control(max_age=60 * 60 * 24 * 30, immutable=True, public=True)  # 30 days
 def favicon(request: HttpRequest) -> HttpResponse:
     try:
-        emoji = get_current_site(request).extended.emoji
+        emoji = get_current_site(request).extendedsite.emoji
     except AttributeError:
         emoji = "🌐 "
 

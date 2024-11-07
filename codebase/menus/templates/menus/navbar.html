@@ -3,7 +3,7 @@
   <ul>
     <li>
       <strong> <a href="{% url "home" %}">
-        {% if site.extended.emoji and site.extended.emoji_in_brand %}{{ site.extended.emoji }}{% endif %}
+        {% if site.extendedsite.emoji and site.extendedsite.emoji_in_brand %}{{ site.extendedsite.emoji }}{% endif %}
       {{ site.name }}</a>
     </strong>
   </li>
@@ -14,10 +14,10 @@
       <a href="{{ link.url }}" class="contrast">{{ link.display_title }}</a>
     </li>
   {% endfor %}
-  {% if site.extended.change_theme_light_in_navbar %}
+  {% if site.extendedsite.change_theme_light_in_navbar %}
     <li>{% include "elements/theme_light.html" %}</li>
   {% endif %}
-  {% if site.extended.change_language_in_navbar %}
+  {% if site.extendedsite.change_language_in_navbar %}
     <li>{% include "elements/change_language.html" %}</li>
   {% endif %}
 </ul>

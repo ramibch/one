@@ -1,10 +1,11 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
 
 from .models import Article, ArticleFile
 
 
 @admin.register(Article)
-class ArticleAdmin(admin.ModelAdmin):
+class ArticleAdmin(TranslationAdmin):
     list_display = ("title", "featured", "folder", "subfolder", "created_on", "updated_on")
     list_editable = ("featured",)
     readonly_fields = ("title", "folder", "subfolder", "body", "created_on", "updated_on")

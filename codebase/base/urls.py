@@ -7,7 +7,7 @@ from .views import favicon
 
 urlpatterns = [
     # Sitemaps
-    path("sitemap.xml", sitemap, {"sitemaps": get_sitemaps()}, name="django.contrib.sitemaps.views.sitemap"),  # name=""
+    path("sitemap.xml", sitemap, {"sitemaps": get_sitemaps()}, name="sitemap"),
     # Favicon
     path("favicon.ico", favicon, name="favicon"),
     # robots.txt

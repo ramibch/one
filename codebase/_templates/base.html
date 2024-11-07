@@ -1,17 +1,14 @@
 {% load i18n static django_browser_reload %}
-{% firstof page_title object.title site.extended.default_page_title as title %}
-{% firstof page_keywords object.keywords site.extended.default_page_keywords as keywords %}
-{% firstof page_description object.description site.extended.default_page_description as description %}
+{% firstof page_title object.title site.extendedsite.default_page_title as title %}
+{% firstof page_keywords object.keywords site.extendedsite.default_page_keywords as keywords %}
+{% firstof page_description object.description site.extendedsite.default_page_description as description %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 {% get_language_info_list for LANGUAGES as languages %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}"
       dir="ltr"
-      x-data="{
-        'theme_light' : $persist(true),
-        'open_language_modal' : false,
-      }"
+      x-data="{ 'theme_light' : $persist(true), 'open_language_modal' : false, }"
       x-bind:data-theme="theme_light ? 'light' : 'dark' ">
   <head>
     <title>{{ title }}</title>
@@ -48,7 +45,7 @@
     {% endfor %}
     {% block head_extra %}{% endblock %}
   </head>
-  <body class="container" >
+  <body class="container">
     <header>
       {% include "elements/messages.html" %}
       {% include "menus/navbar.html" %}

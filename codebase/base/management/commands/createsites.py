@@ -2,6 +2,8 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.management.base import BaseCommand, CommandError
 
+from ...models import ExtendedSite
+
 
 class Command(BaseCommand):
     help = "Creates initial sites that are defined in the setting INITIAL_SITES"
@@ -32,7 +34,7 @@ class Command(BaseCommand):
 
         for env in options["environments"]:
             for site_name, site_domain in initial_sites[env]:
-                created_sites.append(Site.objects.create(name=site_name, domain=site_domain))
+                created_sites.append(ExtendedSite.objects.create(name=site_name, domain=site_domain))
 
         created_sites_as_str = "\n".join([site.domain for site in created_sites])
         self.stdout.write(self.style.SUCCESS(f"Sites successfully created:\n{created_sites_as_str}"))

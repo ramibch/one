@@ -63,6 +63,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "some-tests-need-a-secret-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "") == "1"
 
+
 """
 ##################
 1. Django settings
@@ -76,16 +77,6 @@ ALLOWED_HOSTS = ["127.0.0.1", "10.10.10.30", "*"]
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "django.contrib.sitemaps",
-    "django.contrib.sites",
-    "django.db.migrations",
-    "django.contrib.admindocs",
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
     "django_extensions",
@@ -97,7 +88,18 @@ INSTALLED_APPS = [
     "allauth.account",
     "geoip2",
     "djmoney",
+    # Django apps
     "django_browser_reload",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
+    "django.contrib.sites",
+    "django.db.migrations",
+    "django.contrib.admindocs",
     # "allauth.socialaccount",
     # "allauth.socialaccount.providers.google",
     # "allauth.socialaccount.providers.linkedin_oauth2",
@@ -238,9 +240,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 DJANGO_SUPERUSER_USERNAME = os.environ.get("DJANGO_SUPERUSER_USERNAME")
 DJANGO_SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
-DJANGO_SUPERUSER_EMAIL  = os.environ.get("DJANGO_SUPERUSER_EMAIL")
-
-
+DJANGO_SUPERUSER_EMAIL = os.environ.get("DJANGO_SUPERUSER_EMAIL")
 
 
 """
@@ -288,7 +288,7 @@ O365_MAIL_MAILBOX_KWARGS = {"resource": EMAIL_HOST_USER}
 O365_MAIL_SAVE_TO_SENT = True
 
 
-# Translations and rosetta
+## Translations
 
 # DeepL
 DEEPL_AUTH_KEY = os.environ.get("DEEPL_AUTH_KEY", "")
@@ -300,6 +300,8 @@ ROSETTA_MESSAGES_PER_PAGE = 50
 ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
 ROSETTA_WSGI_AUTO_RELOAD = True
 
+# modeltranslation
+MODELTRANSLATION_DEBUG = DEBUG
 
 # django-allauth
 
@@ -410,8 +412,6 @@ SYNC_ARTICLE_FOLDERS = ("example-topic",)
 # Pages
 PAGES_MARKDOWN_PATH = BASE_DIR / "submodules" / "pages"
 SYNC_PAGE_FOLDERS = ("general-pages",)
-
-
 
 
 # Telegram
