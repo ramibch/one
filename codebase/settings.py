@@ -361,6 +361,10 @@ Project settings
 ################
 """
 
+# Cache clear
+CLEAR_CACHE_IN_DEVELOPMENT = False
+
+
 # Frontend
 FRONTEND = {
     "css_files": (

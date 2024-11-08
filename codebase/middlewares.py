@@ -14,7 +14,7 @@ class Middlewares:
         request.country = CountryDetails(request)
 
         # Clear cache in development
-        if settings.DEBUG and "django_extensions" in settings.INSTALLED_APPS:
+        if settings.CLEAR_CACHE_IN_DEVELOPMENT and settings.DEBUG and "django_extensions" in settings.INSTALLED_APPS:
             call_command("clear_cache")
         return self.get_response(request)
 
