@@ -1,4 +1,3 @@
-# Django and third-party apps
 django
 django-auto-prefetch
 django-cleanup
@@ -21,16 +20,14 @@ geoip2
 Werkzeug
 django-browser-reload
 docutils
+django-debug-toolbar
 
-# Management
+
 python-dotenv
 gunicorn
 ipython
-# Testing and faking data
 coverage[toml]
 factory-boy
-
-# Code formatting
 black
 pyclean
 isort

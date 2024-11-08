@@ -73,6 +73,7 @@ DEBUG = os.environ.get("DEBUG", "") == "1"
 
 ALLOWED_HOSTS = ["127.0.0.1", "10.10.10.30", "*"]
 
+INTERNAL_IPS = ["127.0.0.1", "10.10.10.30",]
 
 # Application definition
 
@@ -88,6 +89,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "geoip2",
     "djmoney",
+    "debug_toolbar",
     # Django apps
     "django_browser_reload",
     "django.contrib.admin",
@@ -115,6 +117,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware", # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-middleware
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -127,8 +130,8 @@ MIDDLEWARE = [
     # own middlewares
     "codebase.middlewares.Middlewares",
     # third-party middlewares
-    "allauth.account.middleware.AccountMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "codebase.urls"

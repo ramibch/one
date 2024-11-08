@@ -17,6 +17,8 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from debug_toolbar.toolbar import debug_toolbar_urls
+
 
 # Custom 404 error view
 handler404 = "codebase.base.views.error_404"
@@ -39,4 +41,4 @@ urlpatterns = [
     path("🚀/", include("codebase.plans.urls")),
     path("", include("codebase.base.urls")),
     path("", include("codebase.home.urls")),
-]
+]  + debug_toolbar_urls()
