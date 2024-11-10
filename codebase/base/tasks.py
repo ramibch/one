@@ -11,9 +11,9 @@ from ..utils.telegram import Bot
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="0"))
-def django_commands_dairly():
+def django_commands_daily():
     """
-    Typical django commands to run dairly
+    Typical django commands to run daily
 
     """
     out, err = StringIO(), StringIO()
@@ -28,7 +28,7 @@ def django_commands_dairly():
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="10"))
-def fetch_submodules_dairly():
+def fetch_submodules_daily():
     ok = subprocess.call(["git", "submodule", "update", "--remote"]) == 0
 
     emoji_ok = "✅" if ok else "🔴"
@@ -37,7 +37,7 @@ def fetch_submodules_dairly():
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="15"))
-def check_sites_without_extended_sites_dairly():
+def check_sites_without_extended_sites_daily():
     sites = Site.objects.filter(extended__isnull=True)
 
     if sites.count() == 0:

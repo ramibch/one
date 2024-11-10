@@ -1,9 +1,9 @@
 from django.urls import reverse_lazy
 
-from ..utils.abstracts import AbstractPage
+from ..utils.abstracts_and_mixins import AbstractFlatPageModel
 
 
-class Page(AbstractPage):
+class Page(AbstractFlatPageModel):
     """File-based page model"""
 
     def get_absolute_url(self):

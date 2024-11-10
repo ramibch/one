@@ -37,7 +37,6 @@ class CountryDetails:
                 "is_in_european_union": None,
             }
 
-
     @cached_property
     def code(self) -> str:
         return self.get_country_dict()["country_code"]

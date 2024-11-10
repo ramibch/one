@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from huey.contrib.djhuey import HUEY
 from modeltranslation.admin import TranslationAdmin
 
-from ..utils.admin_actions import translate_null_fields
+from ..utils.actions import translation_actions
 from .models import ExtendedSite
 
 
@@ -13,11 +13,6 @@ from .models import ExtendedSite
 class MigrationRecorderAdmin(admin.ModelAdmin):
     list_display = ("name", "app", "applied")
     list_filter = ("app", "applied")
-    actions = ("set_applied_now",)
-
-    @admin.action(description="Set applied now | ⚠️ You must know what you are doing!")
-    def set_applied_now(modeladmin, request, queryset):
-        queryset.update(applied=now())
 
 
 @admin.register(ExtendedSite)
@@ -26,7 +21,7 @@ class ExtendedSiteAdmin(TranslationAdmin):
     search_fields = ("domain", "name")
     readonly_fields = ("last_huey_flush",)
     list_editable = ("domain", "name")
-    actions = ["flush_huey", translate_null_fields]
+    actions = ["flush_huey"] + translation_actions
 
     fieldsets = (
         (
@@ -35,7 +30,7 @@ class ExtendedSiteAdmin(TranslationAdmin):
         ),
         (
             _("Management"),
-            {"fields": ("remarks", "last_huey_flush")},
+            {"fields": ("remarks", "last_huey_flush", "allow_field_translation")},
         ),
         (
             _("Brand"),

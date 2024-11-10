@@ -6,10 +6,10 @@ from django.utils.functional import cached_property
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
 
-from ..utils.abstracts import PageMethodsMixin
+from ..utils.abstracts_and_mixins import PageMixin
 
 
-class Plan(Model, PageMethodsMixin):
+class Plan(Model, PageMixin):
     title = models.CharField(max_length=256, editable=False)
     description = models.CharField(max_length=128, null=True)
     slug = models.SlugField(max_length=128, unique=True, editable=False)

@@ -8,18 +8,20 @@ class ExtendedSite(Site):
     remarks = models.TextField(null=True, blank=True)
 
     emoji = models.CharField(max_length=8, null=True)
+    emoji_in_brand = models.BooleanField(default=True)
     default_page_title = models.CharField(max_length=64, null=True)
     default_page_description = models.TextField(max_length=256, null=True)
     default_page_keywords = models.TextField(max_length=128, null=True)
 
-    emoji_in_brand = models.BooleanField(default=True)
     change_theme_light_in_footer = models.BooleanField(default=True)
     change_theme_light_in_navbar = models.BooleanField(default=True)
     change_language_in_navbar = models.BooleanField(default=True)
     change_language_in_footer = models.BooleanField(default=True)
 
-    # Managements
+    # Management
+    allow_field_translation = models.BooleanField(default=False)
     last_huey_flush = models.DateTimeField(null=True)
+    has_user_home = models.BooleanField(default=False)
 
     @cached_property
     def url(self):

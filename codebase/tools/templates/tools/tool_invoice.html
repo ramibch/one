@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% load i18n markdown_extras %}
+{% block content %}
+  <h1>
+    <center>
+      {{ object.title }}
+    </center>
+  </h1>
+  {% translate "Invoice" as INVOICE_TEXT %}
+  <div x-data="{
+        title: '{{ INVOICE_TEXT }}', company_name : '', company_address : '', to_heading: '{% translate "Client" %}', to: '',
+        ship_to_heading: '{% translate "Ship to" %}', ship_to: '',
+        number_heading : '{% translate "Invoice No." %}', number: '0001',
+        date_heading : '{% translate "Date" %}',date: '', order_number_heading : '{% translate "Order No." %}', order_number : '',
+        article_title_text : '{% translate "Article" %}', article_quantity_text : '{% translate "Quantity" %}',
+        article_price_text : '{% translate "Price, €" %}', article_total_text : '{% translate "Total, €" %}',
+        terms_heading : '{% translate "Terms and Conditions" %}', terms : '',
+        subtotal : 0, subtotal_heading: '{% translate "Subtotal, €" %}', subtotal_str : '',
+        vat: 19, vat_heading: '{% translate "VAT, %" %}',
+        discount: 0, discount_heading: '{% translate "Discount, %" %}',
+        subtotal_with_discount : 0, subtotal_with_discount_str : '', subtotal_with_discount_heading : '{% translate "Subtotal - Discount, €" %}',
+        total : 0, total_heading: '{% translate "Total, €" %}', total_str : '',
+        products : [['', 0, 1.00, 0, ''],],
+        update_totals(){
+          this.subtotal = 0; this.products.forEach(
+            (item, index) =>
+            {
+              let item_total = item[2]*item[1];
+              item[3] = item_total.toFixed(this.settings_price_decimals);
+              this.subtotal = this.subtotal + item_total;
+            });
+            this.subtotal_str = this.subtotal.toFixed(this.settings_price_decimals);
+            this.subtotal_with_discount = this.subtotal*(1-this.discount/100);
+            this.subtotal_with_discount_str = this.subtotal_with_discount.toFixed(this.settings_price_decimals);
+            this.total = this.subtotal*(1+this.vat/100)*(1-this.discount/100);
+            this.total_str = this.total.toFixed(this.settings_price_decimals);
+        },
+        add_product(){this.products.push(['', 0, 1.00, 0, '']); },
+        delete_product(index){this.products.splice(index, 1);},
+        show_settings : false, settings_price_decimals: 2, settings_shipto_active : false, settings_discount_active : false, }"
+       x-init="update_totals();">
+    <div class="row">
+      <div class="col-md-6">
+        <input type="text" x-model="title" style="border: 0; outline: 0; font-weight: bold;" />
+        <input type="text" x-model="company_name" placeholder="Company name" />
+        <textarea x-model="company_address" rows="4" placeholder="Company address"></textarea>
+      </div>
+      <div class="col-md-6">
+        <!-- https://gist.github.com/igotit-anything/90ea1095c785a41dd8409bd92d86c6f7 -->
+      </div>
+      <div x-bind:class="settings_shipto_active ? 'col-md-3' : 'col-md-6'">
+        <input x-model="to_heading" style="border: 0; outline: 0" />
+        <textarea x-model="to" rows="4"></textarea>
+      </div>
+      <div x-bind:class="settings_shipto_active ? 'col-md-3' : '' " x-show="settings_shipto_active">
+        <input x-model="ship_to_heading" style="border: 0; outline: 0" />
+        <textarea x-model="ship_to" rows="4"></textarea>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col">
+            <input x-model="number_heading" style="border: 0; outline: 0; text-align: right" />
+            <input x-model="date_heading" style="border: 0; outline: 0; text-align: right" />
+            <input x-model="order_number_heading" style="border: 0; outline: 0; text-align: right" />
+          </div>
+          <div class="col">
+            <input x-model="number" type="text" />
+            <input x-model="date" type="date" />
+            <input x-model="order_number" type="text" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <input type="text" x-model="article_title_text" style="border: 0; outline: 0" />
+      </div>
+      <div class="col-md-2">
+        <input type="text"
+               x-model="article_quantity_text" style="border: 0; outline: 0" />
+      </div>
+      <div class="col-md-2">
+        <input type="text" x-model="article_price_text" style="border: 0; outline: 0" />
+      </div>
+      <div class="col-md-2">
+        <input type="text" x-model="article_total_text" style="border: 0; outline: 0" />
+      </div>
+      <template x-for="(product, p_index) in products">
+        <div class="row">
+          <template x-for="(item, index) in product">
+            <div x-bind:class="index == 0? 'col-md-4' : 'col-md-2' ">
+              <template x-if="index < 4">
+                <input x-bind:disabled="index == 3" x-model="product[index]" x-on:keyup="update_totals()" />
+              </template>
+              <template x-if="index == 4">
+                <button class="secondary outline" x-on:click="delete_product(p_index); update_totals()">🗑</button>
+              </template>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+    <!-- Add item -->
+    <button class="secondary outline" x-on:click="add_product();" x-bind:disabled="products.length > 9">
+      ➕ {% translate "New Article" %}
+      <small x-show="products.length > 9">⚠️ {% translate "Only up to 10 items allowed" %}</small>
+    </button>
+    <div class="row">
+      <div class="col-md-6">
+        <input type="text" x-model="terms_heading" style="border: 0; outline: 0" />
+        <textarea rows="4" x-model="terms"></textarea>
+      </div>
+      <!-- subtotal, discount, total -->
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-6">
+            <input type="text" x-model="subtotal_heading" style="border: 0; outline: 0; text-align: right" />
+            <input type="text" x-show="settings_discount_active" x-model="discount_heading" style="border: 0; outline: 0; text-align: right" />
+            <input x-show="settings_discount_active" type="text" x-model="subtotal_with_discount_heading" style="border: 0; outline: 0; text-align: right" />
+            <input type="text" x-model="vat_heading" style="border: 0; outline: 0; text-align: right" />
+            <input type="text" x-model="total_heading" style="border: 0; outline: 0; text-align: right" />
+          </div>
+          <div class="col-6">
+            <input type="text" x-model="subtotal_str" disabled />
+            <input x-show="settings_discount_active" type="number" x-model="discount" x-on:keyup="update_totals()" max="100" min="0" />
+            <input x-show="settings_discount_active" type="text" x-model="subtotal_with_discount_str" disabled />
+            <input type="number" x-model="vat" x-on:keyup="update_totals()" max="100" min="0" />
+            <input type="text" x-model="total_str" disabled />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1">
+        <button x-on:click="show_settings = true;">⚙</button>
+      </div>
+      <div class="col-11">
+        <button x-on:click="createpdf(title, company_name, company_address, to_heading, to, ship_to_heading, ship_to, number_heading, number, date_heading, date, order_number_heading, order_number, article_title_text, article_quantity_text, article_price_text, article_total_text, terms_heading, terms, subtotal, subtotal_heading, subtotal_str, vat, vat_heading, discount, discount_heading, subtotal_with_discount, subtotal_with_discount_str, subtotal_with_discount_heading, total, total_heading, total_str, products, settings_shipto_active, settings_discount_active)">
+          {% translate "Download invoice" %} ⬇️
+        </button>
+      </div>
+    </div>
+    <!-- modal -->
+    <dialog x-bind:open="show_settings">
+      <article>
+        <header>
+          <a href="#close" aria-label="Close" class="close" x-on:click="show_settings = false"></a>
+          {% translate "Settings" %}
+        </header>
+        <input type="number" x-model="settings_price_decimals" x-on:change="update_totals()" />
+        <p>{% translate "Number of decimals for price fields" %}</p>
+        <label class="switch">
+          <input type="checkbox" x-model="settings_shipto_active" />
+          <span class="slider round"></span>
+        </label>
+        <p>{% translate "Shipping address" %}</p>
+        <label class="switch">
+          <input type="checkbox" x-model="settings_discount_active" />
+          <span class="slider round"></span>
+        </label>
+        <p>
+        {% translate "Discount" %}
+        </p>
+      </article>
+    </dialog>
+  </div>
+  <small>{% include "tools/partials/no_data_storage.txt" %}</small>
+  {% include "tools/partials/body_md.html" %}
+  {% include "tools/partials/related_tools.html" %}
+{% endblock content %}
+{% block extra_js %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" integrity="sha512-1g3IT1FdbHZKcBVZzlk4a4m5zLRuBjMFMxub1FeIRvR+rhfqHFld9VFXXBYe66ldBWf+syHHxoZEbZyunH6Idg==">
+  </script>
+  <script>
+    function createpdf(title, company_name, company_address, to_heading, to, ship_to_heading, ship_to, number_heading, number, date_heading, date, order_number_heading, order_number, article_title_text, article_quantity_text, article_price_text, article_total_text, terms_heading, terms, subtotal, subtotal_heading, subtotal_str, vat, vat_heading, discount, discount_heading, subtotal_with_discount, subtotal_with_discount_str, subtotal_with_discount_heading, total, total_heading, total_str, products, settings_shipto_active, settings_discount_active) {
+      const doc = jsPDF("p", "mm", [297, 210]);
+      doc.setFontSize(10);
+      const titleWidth = doc.getTextWidth(title);
+
+      doc.text(title, 20, 20);
+      doc.line(20, 21, 20 + titleWidth, 21)
+      doc.text(company_name, 20, 30);
+      doc.text(company_address, 20, 40);
+
+      doc.text(`${number_heading}: ${number}`, 120, 30);
+      doc.text(`${date_heading}: ${date}`, 120, 40);
+      doc.text(`${order_number_heading}: ${order_number}`, 120, 50);
+
+
+      doc.text(to_heading, 20, 80);
+      doc.text(to, 20, 90);
+      if(settings_shipto_active){
+        doc.text(ship_to_heading, 100, 80);
+        doc.text(ship_to, 100, 90);
+      }
+
+      doc.text(article_title_text, 20, 120);
+      doc.text(article_quantity_text, 120, 120);
+      doc.text(article_price_text, 140, 120);
+      doc.text(article_total_text, 160, 120);
+      products.forEach((item, index) => {
+        let h_product = parseInt(130 + index*8); 
+        doc.text(item[0], 20, h_product);
+        doc.text(String(item[1]), 120, h_product);
+        doc.text(String(item[2]), 140, h_product);
+        doc.text(String(item[3]), 160, h_product);
+      });
+      
+      const totalText = `${total_heading}: ${total_str}`
+      const totalTextWidth = doc.getTextWidth(totalText)*1.05;
+
+      doc.text(`${subtotal_heading}: ${subtotal_with_discount_str} `, 120, 220);
+
+      if(settings_discount_active){
+        doc.text(`${discount_heading}: ${discount}`, 120, 230);
+        doc.text(`${subtotal_with_discount_heading}: ${subtotal_with_discount_str}`, 120, 240);
+        doc.text(`${vat_heading}: ${vat}`, 120, 250);
+        doc.text(totalText, 120, 260);
+        doc.line(120, 261, 120 + totalTextWidth, 261)
+      }else{
+        doc.text(`${vat_heading}: ${vat}`, 120, 230);
+        doc.text(totalText, 120, 240);
+        doc.line(120, 241, 120 + totalTextWidth, 241)
+      }
+
+      doc.text(terms_heading, 20, 260);
+      var splitTerms = doc.splitTextToSize(terms, 175);
+      doc.text(splitTerms, 20, 270);
+
+      doc.save(`${title}_${number}.pdf`);
+    }
+  </script>
+{% endblock extra_js %}

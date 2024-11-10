@@ -73,7 +73,10 @@ DEBUG = os.environ.get("DEBUG", "") == "1"
 
 ALLOWED_HOSTS = ["127.0.0.1", "10.10.10.30", "*"]
 
-INTERNAL_IPS = ["127.0.0.1", "10.10.10.30",]
+INTERNAL_IPS = [
+    "127.0.0.1",
+    "10.10.10.30",
+]
 
 # Application definition
 
@@ -109,15 +112,17 @@ INSTALLED_APPS = [
     "codebase.base",
     "codebase.articles",
     "codebase.pages",
-    "codebase.users",
     "codebase.menus",
     "codebase.search",
-    "codebase.plans",
+    "codebase.tex",
+    "codebase.users",
     "codebase.home",
+    "codebase.plans",
+    "codebase.tools",
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware", # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-middleware
+    "debug_toolbar.middleware.DebugToolbarMiddleware",  # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-middleware
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -150,6 +155,15 @@ TEMPLATES = [
                 "codebase.context_processors.site_utilities",
             ],
             "debug": DEBUG,
+        },
+    },
+    {
+        "NAME": "tex",
+        "BACKEND": "codebase.tex.backend.TeXEngine",
+        "DIRS": [BASE_DIR / "codebase" / "_tex_templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "environment": "codebase.tex.environment.environment",
         },
     },
 ]
@@ -364,9 +378,14 @@ Project settings
 ################
 """
 
-# Cache clear
-CLEAR_CACHE_IN_DEVELOPMENT = False
 
+# Cache clear
+CLEAR_CACHE_IN_DEVELOPMENT = True
+
+
+# Tex
+
+LATEX_GRAPHICSPATH = []  # TODO: check if it is posible to pass an arg. to run tex without this setting.
 
 # Frontend
 FRONTEND = {

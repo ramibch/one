@@ -11,7 +11,7 @@ from .models import Page
 
 
 @huey.db_periodic_task(crontab(hour="2", minute="10"))
-def sync_pages_dairly():
+def sync_pages_daily():
     """
     Read the contents of the 'pages' submodule and save them in the database.
     To know which contents to sync, check out the setting SYNC_PAGE_FOLDERS.

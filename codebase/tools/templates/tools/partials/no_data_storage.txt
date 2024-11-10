@@ -1,0 +1,2 @@
+{% load i18n %}
+{% trans "The data you are entering here is not being stored in my server." %}

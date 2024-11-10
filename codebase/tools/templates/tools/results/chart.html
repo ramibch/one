@@ -1,0 +1,16 @@
+{% load i18n %}
+<center>
+  <img src="{{ self.svg.url }}" alt="Chart {{ self.title }}" />
+</center>
+<div class="row">
+  <p>{% trans "Downloads" %}</p>
+  <a class="col" href="{{ self.png.url }}" download target="_blank">
+    <button>PNG</button>
+  </a>
+  <a class="col" href="{{ self.pdf.url }}" download target="_blank">
+    <button>PDF</button>
+  </a>
+  <a class="col" href="{{ self.svg.url }}" download target="_blank">
+    <button>SVG</button>
+  </a>
+</div>

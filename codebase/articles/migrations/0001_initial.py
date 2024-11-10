@@ -2,7 +2,7 @@
 
 import auto_prefetch
 import codebase.articles.models
-import codebase.utils.abstracts
+import codebase.utils.abstracts_and_mixins
 import django.db.models.deletion
 import django.db.models.manager
 import markdownx.models
@@ -83,7 +83,7 @@ class Migration(migrations.Migration):
                 "base_manager_name": "prefetch_manager",
                 "unique_together": {("folder", "subfolder")},
             },
-            bases=(models.Model, codebase.utils.abstracts.PageMethodsMixin),
+            bases=(models.Model, codebase.utils.abstracts_and_mixins.PageMixin),
             managers=[
                 ("objects", django.db.models.manager.Manager()),
                 ("prefetch_manager", django.db.models.manager.Manager()),

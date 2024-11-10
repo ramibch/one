@@ -1,0 +1,13 @@
+{% load i18n %}
+<section class="row">
+    <h2>{% trans "Related tools" %}</h2>
+    {% for related_tool in related_tools %}
+        <div class="col-md-6">
+            <a href="{{ related_tool.url }}" title="{{ related_tool.title }}">{{ related_tool.icon }} {{ related_tool.title }}</a>
+        </div>
+    {% empty %}
+        <p>
+            {% trans "No related tools found." %} 👉 <a href="{% url 'tool_list' %}">{% trans "All the tools." %}</a>
+        </p>
+    {% endfor %}
+</section>

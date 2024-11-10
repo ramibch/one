@@ -1,152 +1,94 @@
 from urllib.parse import urlparse
 
 from auto_prefetch import ForeignKey, Model
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..articles.models import Article
-from ..pages.models import Page
-from ..plans.models import Plan
-
-DJANGO_URL_PATHS = (
-    ("home", _("Home")),
-    ("search", _("Search")),
-    ("sitemap", _("Sitemap")),
-    ("article_list", _("Articles")),
-    ("plan_list", _("Plans")),
-    ("account_login", _("Sign In")),
-    ("account_signup", _("Sign Up")),
-    ("user_dashboard", _("Account")),
-)
+from ..utils.abstracts_and_mixins import AbstractLinkModel
+from ..utils.constants import SHOW_CHOICES
 
 
-SHOW_TYPES = (
-    ("user", "👤 " + _("For logged user")),
-    ("no_user", "🕵🏻 " + _("For anonymous user")),
-    ("always", "👁️ " + _("Show always")),
-    ("never", "🫣 " + _("Never show")),
-)
-
-
-class AbstractLink(Model):
+class NavbarLink(AbstractLinkModel):
     order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    custom_title = models.CharField(max_length=128, null=True, blank=True)
-    django_url_path = models.CharField(blank=True, null=True, max_length=32, choices=DJANGO_URL_PATHS)
-    page = ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True)
-    plan = ForeignKey(Plan, on_delete=models.CASCADE, null=True, blank=True)
-    article = ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
-    external_url = models.URLField(max_length=256, null=True, blank=True)
-    new_tab = models.BooleanField(default=False)
-    show_type = models.CharField(default="always", choices=SHOW_TYPES, max_length=16)
+    emoji = models.CharField(max_length=8, null=True, blank=True)
+    show_as_emoji = models.BooleanField(default=False)
     site = models.ManyToManyField(Site)
+    show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
 
-    class Meta(Model.Meta):
-        abstract = True
+    class Meta(AbstractLinkModel.Meta):
         ordering = ("order",)
 
     @cached_property
-    def link_fields(self):
-        return (self.django_url_path, self.page, self.plan, self.article, self.external_url)
-
-    def clean(self):
-        super().clean()
-        are_links = tuple(obj is not None for obj in self.link_fields)
-        if are_links.count(True) != 1:
-            raise ValidationError(_("One link must be entered."), code="invalid")
-
-        if self.external_url and self.custom_title is None:
-            raise ValidationError(_("Enter a custom title if an external url is entered."), code="invalid")
-
-    @cached_property
-    def url(self):
-        if self.django_url_path:
-            return reverse_lazy(self.django_url_path)
-
-        for obj in (self.page, self.plan, self.article):
-            if getattr(obj, "url", None):
-                return obj.url
-
-        return self.external_url
-
-    @cached_property
-    def text_only_title(self):
-        if self.custom_title:
-            return self.custom_title
-
-        if self.django_url_path:
-            return self.get_django_url_path_display()
-
-        for page_obj in (self.page, self.plan, self.article):
-            if getattr(page_obj, "title", None):
-                return page_obj.title
-
-    def __str__(self):
-        return self.title
-
-
-class NavbarLink(AbstractLink):
-    emoji = models.CharField(max_length=8, null=True, blank=True)
-    show_as_emoji = models.BooleanField(default=False)
-
-    @cached_property
     def title(self):
-        return f"{self.emoji} {self.text_only_title}" if self.emoji else self.text_only_title
+        return f"{self.emoji} {super().title}" if self.emoji else super().title
 
     @cached_property
     def display_title(self):
         return self.emoji if self.show_as_emoji else self.title
 
-    def clean(self):
-        super().clean()
-        if self.show_as_emoji and self.emoji is None:
+    def clean_show_as_emoji(self):
+        if self.show_as_emoji and not self.emoji:
             raise ValidationError(_("Insert an emoji if you want to show it as emoji."), code="invalid")
 
 
 class FooterItem(Model):
-    order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(12)])
+    order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(8)])
     emoji = models.CharField(max_length=8, null=True, blank=True)
     title = models.CharField(max_length=64)
-    show_type = models.CharField(default="always", choices=SHOW_TYPES, max_length=16)
+    show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
     site = models.ManyToManyField(Site)
-
-    def __str__(self) -> str:
-        return self.title
+    allow_field_translation = models.BooleanField(default=False)
 
     class Meta(Model.Meta):
         ordering = ("order",)
 
-    @cached_property
-    def display_title(self):
-        return f"{self.emoji} {self.title}" if self.emoji else self.title
-
-
-class FooterLink(AbstractLink):
-    footer_item = ForeignKey(FooterItem, on_delete=models.SET_NULL, null=True, blank=True)
-
-    @cached_property
-    def title(self):
-        return self.text_only_title
-
-    @cached_property
-    def display_title(self):
+    def __str__(self) -> str:
         return self.title
+
+    @cached_property
+    def display_title(self) -> str:
+        return f"{self.emoji} {super().title}" if self.emoji else super().title
+
+
+class FooterLink(AbstractLinkModel):
+    order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
+    footer_item = ForeignKey(FooterItem, on_delete=models.SET_NULL, null=True, blank=True)
+    site = models.ManyToManyField(Site)
+    show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
+
+    class Meta(AbstractLinkModel.Meta):
+        ordering = ("order",)
+
+    @cached_property
+    def display_title(self) -> str:
+        return super().title
 
 
 class SocialMediaLink(Model):
     order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
     url = models.URLField(max_length=256)
     new_tab = models.BooleanField(default=True)
-    show_type = models.CharField(default="always", choices=SHOW_TYPES, max_length=16)
+    show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
     site = models.ManyToManyField(Site)
+    allow_field_translation = models.BooleanField(default=False)
 
     @cached_property
-    def platform(self):
-        return urlparse(self.url).netloc.replace("www.", "").split(".")[0]
+    def static_icon_url(self) -> str:
+        return f"img/social/small/{self.platform}.svg"
 
-    def __str__(self):
-        return self.url
+    class Meta(Model.Meta):
+        ordering = ("order",)
+
+    def __str__(self) -> str:
+        if self.url:
+            return self.url
+        return getattr(self, f"url_{settings.LANGUAGE_CODE}")
+
+    @cached_property
+    def platform(self) -> str:
+        return urlparse(self.url).netloc.replace("www.", "").split(".")[0]

@@ -15,10 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from debug_toolbar.toolbar import debug_toolbar_urls
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from debug_toolbar.toolbar import debug_toolbar_urls
-
 
 # Custom 404 error view
 handler404 = "codebase.base.views.error_404"
@@ -34,11 +35,16 @@ urlpatterns = [
     path("allauth/", include("allauth.urls")),
     path("__reload__/", include("django_browser_reload.urls")),
     # Own
-    path("👤/", include("codebase.users.urls")),
     path("🔎/", include("codebase.search.urls")),
     path("📝/", include("codebase.articles.urls")),
     path("🌐/", include("codebase.pages.urls")),
+    path("👤/", include("codebase.users.urls")),
     path("🚀/", include("codebase.plans.urls")),
+    path("🔨", include("codebase.tools.urls")),
     path("", include("codebase.base.urls")),
     path("", include("codebase.home.urls")),
-]  + debug_toolbar_urls()
+] + debug_toolbar_urls()
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -13,15 +13,22 @@ django_htmx
 #django-allauth[socialaccount]
 django-allauth
 boto3
+psycopg
 pillow
 huey
 redis
+hiredis
 geoip2
 Werkzeug
 django-browser-reload
 docutils
 django-debug-toolbar
-
+deepl
+Jinja2
+qrcode[pil]
+Pygments
+stripe
+python-barcode[images]
 
 python-dotenv
 gunicorn
