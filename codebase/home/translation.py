@@ -1,6 +1,6 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import Hero, HeroCTA, HomePage
+from .models import Hero, HomePage
 
 
 @register(HomePage)
@@ -10,9 +10,4 @@ class HomePageOptions(TranslationOptions):
 
 @register(Hero)
 class HeroOptions(TranslationOptions):
-    fields = ("headline", "subheadline")
-
-
-@register(HeroCTA)
-class HeroCTAOptions(TranslationOptions):
-    fields = ("custom_title",)
+    fields = ("headline", "subheadline", "cta_title")

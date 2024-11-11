@@ -2,16 +2,18 @@
 <nav>
   <ul>
     <li>
-      <strong> <a href="{% url "home" %}">
+      <strong> <a href="{% url "home" %}?ref=brandheader">
         {% if site.extendedsite.emoji and site.extendedsite.emoji_in_brand %}{{ site.extendedsite.emoji }}{% endif %}
       {{ site.name }}</a>
     </strong>
   </li>
 </ul>
 <ul>
-  {% for link in navbar_links %}
+  {% for navlink in navbar_links %}
     <li>
-      <a href="{{ link.url }}" class="contrast">{{ link.display_title }}</a>
+      <a href="{{ navlink.link.url }}?ref=navbarlink"
+         {% if navlink.new_tab %}target="_blank"{% endif %}
+         class="contrast">{{ navlink.display_title }}</a>
     </li>
   {% endfor %}
   {% if site.extendedsite.change_theme_light_in_navbar %}

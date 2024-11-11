@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-    <h1>
-        <center>
-            {{ object.title }}
-        </center>
-    </h1>
-    <section class="row mb-2">
-        {% for tool in tools %}
-            {% if tool.index_listing %}
-                <div class="col-md-6">
-                    <a href="{{ tool.url }}" title="{{ tool.title }}">{{ tool.icon }} {{ tool.title }}</a>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </section>
+  <h1>
+    <center>
+      {{ object.title }}
+    </center>
+  </h1>
+  <section class="row mb-2">
+    {% for tool in tools %}
+      {% if tool.index_listing %}
+        <div class="col-md-6">
+          <a href="{{ tool.url }}?ref=toollist" title="{{ tool.title }}">{{ tool.icon }} {{ tool.title }}</a>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </section>
 {% endblock content %}

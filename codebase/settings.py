@@ -119,6 +119,7 @@ INSTALLED_APPS = [
     "codebase.home",
     "codebase.plans",
     "codebase.tools",
+    "codebase.links",
 ]
 
 MIDDLEWARE = [

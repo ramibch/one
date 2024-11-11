@@ -7,7 +7,10 @@
           <h1>{{ hero.headline | linebreaks }}</h1>
           <p class="mt-3">{{ hero.subheadline | linebreaks }}</p>
           <center>
-            <a role="button"  href="{{ hero.cta.url }}" class="mt-5">{{ hero.cta.title }}</a>
+            <a {% if hero.cta_new_tab %}target="_blank"{% endif %}
+               href="{{ hero.cta_link.url }}?ref=homeherocta"
+               role="button"
+               class="button mt-5">{{ hero.display_cta_title }}</a>
           </center>
         </div>
         <div class="col-md-6 ">

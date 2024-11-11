@@ -3,14 +3,8 @@ from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.functional import cached_property
 
-from ..utils.abstracts_and_mixins import AbstractLinkModel, PageMixin
-
-
-class HeroCTA(AbstractLinkModel):
-    allow_field_translation = models.BooleanField(default=False)
-
-    def display_title(self):
-        return self.title
+from ..links.models import Link
+from ..utils.abstracts_and_mixins import PageMixin
 
 
 class HomePage(Model, PageMixin):
@@ -29,10 +23,15 @@ class Hero(Model):
     homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
     headline = models.TextField(max_length=256)
     subheadline = models.TextField(max_length=256)
-    cta = ForeignKey(HeroCTA, on_delete=models.SET_NULL, null=True)
+    cta_link = ForeignKey(Link, on_delete=models.SET_NULL, null=True)
+    cta_title = models.CharField(max_length=64, null=True, blank=True)
+    cta_new_tab = models.BooleanField(default=False)
     image = models.ImageField(upload_to="homepages/hero/")
     is_active = models.BooleanField()
     allow_field_translation = models.BooleanField(default=False)
+
+    def display_cta_title(self):
+        return self.cta_title if self.cta_title else self.cta_link.title
 
     def __str__(self):
         return f"{self.headline} - {self.homepage}"

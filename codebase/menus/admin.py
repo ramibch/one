@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.db import models
 from django.forms import CheckboxSelectMultiple
-from modeltranslation.admin import TranslationAdmin, TranslationStackedInline
+from modeltranslation.admin import TranslationAdmin
 
-from ..utils.actions import translate_from_default_language
+from ..utils.actions import translation_actions
 from .models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
 FORMFIELD_OVERRIDES_DICT = {
@@ -12,15 +12,14 @@ FORMFIELD_OVERRIDES_DICT = {
 
 
 @admin.register(NavbarLink)
-class NavbarLinkAdmin(TranslationAdmin):
+class NavbarLinkAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = ("display_title", "emoji", "show_type", "show_as_emoji", "new_tab", "order")
     list_filter = ("show_type", "show_as_emoji", "new_tab", "order")
     list_editable = ("show_type", "order", "emoji", "show_as_emoji", "new_tab")
-    actions = [translate_from_default_language]
 
 
-class FooterLinkInline(TranslationStackedInline):
+class FooterLinkInline(admin.StackedInline):
     model = FooterLink
     extra = 1
     exclude = ("site",)
@@ -29,20 +28,19 @@ class FooterLinkInline(TranslationStackedInline):
 @admin.register(FooterItem)
 class FooterItemAdmin(TranslationAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    list_display = ("display_title", "title", "show_type", "order")
-    list_editable = ("show_type", "order")
+    list_display = ("display_title", "emoji", "show_type", "order")
+    list_editable = ("emoji", "show_type", "order")
     list_filter = ("show_type", "order")
     inlines = (FooterLinkInline,)
-    actions = [translate_from_default_language]
+    actions = translation_actions
 
 
 @admin.register(FooterLink)
-class FooterLinkAdmin(TranslationAdmin):
+class FooterLinkAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = ("display_title", "footer_item", "show_type", "new_tab", "order")
     list_editable = ("show_type", "footer_item", "new_tab", "order")
     list_filter = ("show_type", "order", "new_tab", "footer_item")
-    actions = [translate_from_default_language]
 
 
 @admin.register(SocialMediaLink)
@@ -51,4 +49,3 @@ class SocialMediaLinkAdmin(TranslationAdmin):
     list_display = ("platform", "new_tab", "show_type", "order")
     list_editable = ("show_type", "new_tab", "order")
     list_filter = ("show_type", "new_tab", "order")
-    actions = [translate_from_default_language]

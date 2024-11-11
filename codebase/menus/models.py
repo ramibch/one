@@ -9,23 +9,25 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..utils.abstracts_and_mixins import AbstractLinkModel
+from ..links.models import Link
 from ..utils.constants import SHOW_CHOICES
 
 
-class NavbarLink(AbstractLinkModel):
+class NavbarLink(Model):
     order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
+    link = ForeignKey(Link, on_delete=models.SET_NULL, null=True)
+    site = models.ManyToManyField(Site)
     emoji = models.CharField(max_length=8, null=True, blank=True)
     show_as_emoji = models.BooleanField(default=False)
-    site = models.ManyToManyField(Site)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
+    new_tab = models.BooleanField(default=False)
 
-    class Meta(AbstractLinkModel.Meta):
+    class Meta(Model.Meta):
         ordering = ("order",)
 
     @cached_property
     def title(self):
-        return f"{self.emoji} {super().title}" if self.emoji else super().title
+        return f"{self.emoji} {self.link.title}" if self.emoji else self.link.title
 
     @cached_property
     def display_title(self):
@@ -52,21 +54,23 @@ class FooterItem(Model):
 
     @cached_property
     def display_title(self) -> str:
-        return f"{self.emoji} {super().title}" if self.emoji else super().title
+        return f"{self.emoji} {self.title}" if self.emoji else self.title
 
 
-class FooterLink(AbstractLinkModel):
+class FooterLink(Model):
     order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
+    link = ForeignKey(Link, on_delete=models.SET_NULL, null=True)
     footer_item = ForeignKey(FooterItem, on_delete=models.SET_NULL, null=True, blank=True)
     site = models.ManyToManyField(Site)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
+    new_tab = models.BooleanField(default=False)
 
-    class Meta(AbstractLinkModel.Meta):
+    class Meta(Model.Meta):
         ordering = ("order",)
 
     @cached_property
     def display_title(self) -> str:
-        return super().title
+        return self.link.title
 
 
 class SocialMediaLink(Model):
@@ -75,7 +79,6 @@ class SocialMediaLink(Model):
     new_tab = models.BooleanField(default=True)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
     site = models.ManyToManyField(Site)
-    allow_field_translation = models.BooleanField(default=False)
 
     @cached_property
     def static_icon_url(self) -> str:

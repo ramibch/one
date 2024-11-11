@@ -1,17 +1,17 @@
 {% load i18n static %}
 <div>
+  <!-- Footer items (with links)-->
   {% for item  in footer_items %}
     <aside {% if footer_items.count == 3 %}class="col-md-4" {% else %} class="col-md-3" {% endif %}>
       <p>
-        <strong>
-          {% if item.emoji %}{{ item.emoji }}{% endif %}
-        {{ item.title }}</strong>
+        <strong>{{ item.display_title }}</strong>
       </p>
       <nav>
         <ul>
-          {% for link in item.footerlink_set.all %}
+          {% for footerlink in item.footerlink_set.all %}
             <li>
-              <a href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>{{ link.display_title }}</a>
+              <a href="{{ footerlink.link.url }}?ref=footeritemlink"
+                 {% if footerlink.new_tab %}target="_blank"{% endif %}>{{ footerlink.display_title }}</a>
             </li>
           {% endfor %}
         </ul>
@@ -19,16 +19,19 @@
     </aside>
   {% endfor %}
   <center class="mt-4">
+    <!-- Footer links -->
     <p>
-      {% for link in footer_links %}
-        <a href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>{{ link.display_title }}</a>
+      {% for footerlink in footer_links %}
+        <a href="{{ footerlink.link.url }}?ref=footerlink"
+           {% if footerlink.new_tab %}target="_blank"{% endif %}>{{ footerlink.display_title }}</a>
         {% if not forloop.last %}{{ frontend.footer_links_separator }}{% endif %}
       {% endfor %}
     </p>
+    <!-- Social media links -->
     <p>
       {% for link in social_media_links %}
         {% if link.url %}
-          <a href="{{ link.url }}"
+          <a href="{{ link.url }}?ref={{ request.get_host }}"
              style="text-decoration: none"
              title="{{ link.platform }}"
              {% if link.new_tab %}target="_blank"{% endif %}>
