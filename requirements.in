@@ -14,7 +14,7 @@ django_htmx
 django-allauth
 boto3
 psycopg
-pillow
+pillow==9.5
 huey
 redis
 hiredis
@@ -29,6 +29,8 @@ qrcode[pil]
 Pygments
 stripe
 python-barcode[images]
+django-taggit
+
 
 python-dotenv
 gunicorn

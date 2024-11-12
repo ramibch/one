@@ -1,25 +1,42 @@
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.functional import cached_property
+from markdownx.models import MarkdownxField
 
 from ..links.models import Link
 from ..utils.abstracts_and_mixins import PageMixin
-
+from ..faqs.models import FAQ
+from ..articles.models import Article
 
 class HomePage(Model, PageMixin):
     site = ForeignKey(Site, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=64)
     is_active = models.BooleanField(default=True)
-    enable_hero_testing = models.BooleanField(default=False)
+    enable_section_changing = models.BooleanField(default=False)
+    auto_add_articles = models.BooleanField(default=False)
     allow_field_translation = models.BooleanField(default=False)
+    benefits_title = models.CharField(max_length=64, null=True, blank=True)
+    steps_title = models.CharField(max_length=64, null=True, blank=True)
+    faqs_title = models.CharField(max_length=64, null=True, blank=True)
+    faqs = models.ManyToManyField(FAQ)
+    articles = models.ManyToManyField(Article)
+
 
     @cached_property
-    def active_hero(self):
-        return self.hero_set.filter(is_active=True).first()
+    def active_hero_section(self):
+        return self.herosection_set.filter(is_active=True).first()
+
+    @cached_property
+    def active_problem_section(self):
+        return self.problemsection_set.filter(is_active=True).first()
 
 
-class Hero(Model):
+class FAQsSection(Model):
+    title = models.CharField(max_length=64)
+
+
+class HeroSection(Model):
     homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
     headline = models.TextField(max_length=256)
     subheadline = models.TextField(max_length=256)
@@ -35,3 +52,35 @@ class Hero(Model):
 
     def __str__(self):
         return f"{self.headline} - {self.homepage}"
+
+
+class ProblemSection(Model):
+    """ """
+    homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=64)
+    description = MarkdownxField()
+    is_active = models.BooleanField()
+
+
+
+class SolutionSection(Model):
+    homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=64)
+    description = MarkdownxField()
+    is_active = models.BooleanField()
+
+
+class Benefit(Model):
+    homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
+    emoji = models.CharField(max_length=8)
+    is_active = models.BooleanField()
+
+
+class StepAction(Model):
+    homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
+    step_label = models.CharField(max_length=4, default="01")
+    title = models.CharField(max_length=64)
+    description = MarkdownxField()
+    is_active = models.BooleanField()
+
+

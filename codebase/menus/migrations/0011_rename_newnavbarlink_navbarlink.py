@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("links", "0003_remove_link_new_tab"),
         ("menus", "0010_newnavbarlink_new_tab_delete_navbarlink"),
-        ("sites", "0005_delete_extendedsite"),
+       # ("sites", "0005_delete_extendedsite"),
     ]
 
     operations = [

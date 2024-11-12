@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         ("articles", "0002_initial"),
         ("pages", "0001_initial"),
         ("plans", "0001_initial"),
-        ("sites", "0005_delete_extendedsite"),
+        # ("sites", "0005_delete_extendedsite"),
     ]
 
     operations = [

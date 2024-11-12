@@ -14,7 +14,6 @@ def home(request: HttpRequest) -> HttpResponse:
     site = get_current_site(request)
 
     context = {
-        "featured_articles": Article.objects.filter(featured=True),
         "object": site.homepage_set.filter(is_active=True).first(),
     }
 

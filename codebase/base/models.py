@@ -23,10 +23,12 @@ class ExtendedSite(Site):
     last_huey_flush = models.DateTimeField(null=True)
     has_user_home = models.BooleanField(default=False)
 
+
+    def __str__(self):
+        return self.name
+
     @cached_property
     def url(self):
         schema = "https" if settings.HTTPS else "http"
         return f"{schema}://{self.domain}"
 
-    def __str__(self):
-        return self.name
