@@ -10,7 +10,14 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from ..links.models import Link
-from ..utils.constants import SHOW_CHOICES
+
+
+SHOW_CHOICES = (
+    ("user", "👤 " + _("For logged user")),
+    ("no_user", "🕵🏻 " + _("For anonymous user")),
+    ("always", "👁️ " + _("Show always")),
+    ("never", "🫣 " + _("Never show")),
+)
 
 
 class NavbarLink(Model):

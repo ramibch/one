@@ -5,16 +5,31 @@ from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..utils.constants import DJANGO_URL_PATHS
+from ..pages.models import Page
+from ..plans.models import Plan
+from ..articles.models import Article
+
+DJANGO_URL_PATHS = (
+    # Only url paths without path arguments
+    ("home", _("Home")),
+    ("search", _("Search")),
+    ("sitemap", _("Sitemap")),
+    ("article_list", _("Articles")),
+    ("plan_list", _("Plans")),
+    ("account_login", _("Sign In")),
+    ("account_signup", _("Sign Up")),
+    ("user_dashboard", _("Account")),
+    ("faq_list", _("FAQs")),
+)
 
 
 class Link(Model):
     custom_title = models.CharField(max_length=128, null=True, blank=True)
     external_url = models.URLField(max_length=256, null=True, blank=True)
     django_url_path = models.CharField(blank=True, null=True, max_length=32, choices=DJANGO_URL_PATHS)
-    page = ForeignKey("pages.Page", on_delete=models.CASCADE, null=True, blank=True)
-    plan = ForeignKey("plans.Plan", on_delete=models.CASCADE, null=True, blank=True)
-    article = ForeignKey("articles.Article", on_delete=models.CASCADE, null=True, blank=True)
+    page = ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True)
+    plan = ForeignKey(Plan, on_delete=models.CASCADE, null=True, blank=True)
+    article = ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
     allow_field_translation = models.BooleanField(default=False)
 
     def __str__(self):

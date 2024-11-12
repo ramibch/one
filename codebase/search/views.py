@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..articles.models import Article
 from ..pages.models import Page
+from ..faqs.models import FAQ
 from .tasks import save_search_query
 
 User = get_user_model()
@@ -31,6 +32,12 @@ def hx_seach_results(request: HttpRequest) -> HttpResponse:
 
     pages = Page.objects.filter(body__contains=q)
     articles = Article.objects.filter(body__contains=q)
-    total = pages.count() + articles.count()
-    context = {"pages": pages, "articles": articles, "total": total}
+    faqs = FAQ.objects.filter(title__contains=q)
+    total = pages.count() + articles.count() + faqs.count()
+    context = {
+        "pages": pages,
+        "articles": articles,
+        "faqs": faqs,
+        "total": total,
+    }
     return render(request, "search/hx_results.html", context)

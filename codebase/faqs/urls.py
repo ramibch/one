@@ -1,3 +1,9 @@
 from django.urls import path
 
-urlpatterns = []
+from .views import FAQListView
+
+
+
+urlpatterns = [
+    path("", FAQListView.as_view(), name="faq_list"),
+]

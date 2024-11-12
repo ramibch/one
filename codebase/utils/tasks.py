@@ -25,7 +25,7 @@ def translate_modeltranslation_objects(queryset, translation_fields):
             out += f"{from_lang}: {from_field_value}\n"
             for to_lang in settings.LANGUAGE_CODES_WITHOUT_DEFAULT:
                 to_field = f"{translation_field}_{to_lang}"
-                if getattr(db_obj, to_field) is not None:
+                if getattr(db_obj, to_field) is not None: # TODO: add condition: override_translated_fields
                     continue
                 to_field_value = translate_text(from_lang, to_lang, from_field_value)
                 setattr(db_obj, to_field, to_field_value)
