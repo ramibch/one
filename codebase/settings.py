@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     "geoip2",
     "djmoney",
     "debug_toolbar",
+    "request",
     # Django apps
     "django_browser_reload",
     "django.contrib.admin",
@@ -137,6 +138,7 @@ MIDDLEWARE = [
     # own middlewares
     "codebase.middlewares.Middlewares",
     # third-party middlewares
+    "request.middleware.RequestMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]

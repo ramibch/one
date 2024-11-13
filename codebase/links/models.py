@@ -5,9 +5,9 @@ from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from ..articles.models import Article
 from ..pages.models import Page
 from ..plans.models import Plan
-from ..articles.models import Article
 
 DJANGO_URL_PATHS = (
     # Only url paths without path arguments
@@ -85,3 +85,6 @@ class Link(Model):
 
         if self.model_obj:
             return self.model_obj.title
+
+    def get_link_from_path(path):
+        pass

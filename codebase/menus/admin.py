@@ -24,6 +24,10 @@ class FooterLinkInline(admin.StackedInline):
     extra = 1
     exclude = ("site",)
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(footer_item__isnull=False)
+
 
 @admin.register(FooterItem)
 class FooterItemAdmin(TranslationAdmin):

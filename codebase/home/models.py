@@ -1,16 +1,17 @@
-from auto_prefetch import ForeignKey, Model, OneToOneField
+from auto_prefetch import ForeignKey, Model
 from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.functional import cached_property
 from markdownx.models import MarkdownxField
 
+from ..articles.models import Article
+from ..faqs.models import FAQ
 from ..links.models import Link
 from ..utils.abstracts_and_mixins import PageMixin
-from ..faqs.models import FAQ
-from ..articles.models import Article
+
 
 class HomePage(Model, PageMixin):
-    site = ForeignKey(Site, on_delete=models.SET_NULL, null=True)
+    site = ForeignKey(Site, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     is_active = models.BooleanField(default=True)
     enable_section_changing = models.BooleanField(default=False)
@@ -21,7 +22,6 @@ class HomePage(Model, PageMixin):
     faqs_title = models.CharField(max_length=64, null=True, blank=True)
     faqs = models.ManyToManyField(FAQ)
     articles = models.ManyToManyField(Article)
-
 
     @cached_property
     def active_hero_section(self):
@@ -37,10 +37,10 @@ class FAQsSection(Model):
 
 
 class HeroSection(Model):
-    homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
+    homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
     headline = models.TextField(max_length=256)
     subheadline = models.TextField(max_length=256)
-    cta_link = ForeignKey(Link, on_delete=models.SET_NULL, null=True)
+    cta_link = ForeignKey(Link, on_delete=models.CASCADE)
     cta_title = models.CharField(max_length=64, null=True, blank=True)
     cta_new_tab = models.BooleanField(default=False)
     image = models.ImageField(upload_to="homepages/hero/")
@@ -56,31 +56,29 @@ class HeroSection(Model):
 
 class ProblemSection(Model):
     """ """
-    homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
+
+    homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     description = MarkdownxField()
     is_active = models.BooleanField()
 
 
-
 class SolutionSection(Model):
-    homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
+    homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     description = MarkdownxField()
     is_active = models.BooleanField()
 
 
 class Benefit(Model):
-    homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
+    homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
     emoji = models.CharField(max_length=8)
     is_active = models.BooleanField()
 
 
 class StepAction(Model):
-    homepage = ForeignKey(HomePage, on_delete=models.SET_NULL, null=True)
+    homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
     step_label = models.CharField(max_length=4, default="01")
     title = models.CharField(max_length=64)
     description = MarkdownxField()
     is_active = models.BooleanField()
-
-

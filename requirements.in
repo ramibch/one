@@ -10,11 +10,10 @@ django-upgrade
 django-markdownx
 django-storages
 django_htmx
-#django-allauth[socialaccount]
-django-allauth
+django-allauth[socialaccount]
 boto3
 psycopg
-pillow==9.5
+pillow
 huey
 redis
 hiredis
@@ -30,7 +29,7 @@ Pygments
 stripe
 python-barcode[images]
 django-taggit
-
+django-request
 
 python-dotenv
 gunicorn
@@ -43,3 +42,4 @@ isort
 ruff
 djade
 djlint
+ipdb

@@ -1,8 +1,7 @@
-from auto_prefetch import  Model
+from auto_prefetch import Model
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.html import format_html
-from django.utils.translation import gettext_lazy as _
 from markdownx.models import MarkdownxField
 
 

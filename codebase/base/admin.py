@@ -6,13 +6,33 @@ from huey.contrib.djhuey import HUEY
 from modeltranslation.admin import TranslationAdmin
 
 from ..utils.actions import translation_actions
-from .models import ExtendedSite
+from .models import ExtendedSite, Traffic
 
 
 @admin.register(MigrationRecorder.Migration)
 class MigrationRecorderAdmin(admin.ModelAdmin):
     list_display = ("name", "app", "applied")
     list_filter = ("app", "applied")
+
+
+@admin.register(Traffic)
+class TrafficAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "request_path", "response_code", "request_method", "request_user")
+    list_filter = ("time", "request_site", "request_method", "response_code")
+    readonly_fields = (
+        "request_GET",
+        "request_GET_ref",
+        "request_POST",
+        "request_path",
+        "request_headers",
+        "request_country_code",
+        "response_headers",
+        "response_code",
+        "request_method",
+        "request_user",
+        "request_site",
+        "time",
+    )
 
 
 @admin.register(ExtendedSite)

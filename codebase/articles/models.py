@@ -3,6 +3,7 @@ from pathlib import Path
 from auto_prefetch import ForeignKey, Model
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 from django.core.files import File
 from django.db import models
 from django.db.models import Q
@@ -13,8 +14,6 @@ from django.utils.translation import gettext_lazy as _
 from ..utils.abstracts_and_mixins import AbstractFlatPageModel
 from ..utils.telegram import Bot
 
-from django.contrib.sites.models import Site
-
 User = get_user_model()
 
 
@@ -24,6 +23,7 @@ def upload_article_file(obj, filename: str):
 
 class Article(AbstractFlatPageModel):
     """File-based article model"""
+
     sites = models.ManyToManyField(Site)
     featured = models.BooleanField(_("Featured article"), help_text=_("If featured it will be showed in home "), default=False)
 

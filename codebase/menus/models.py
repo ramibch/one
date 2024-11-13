@@ -11,7 +11,6 @@ from django.utils.translation import gettext_lazy as _
 
 from ..links.models import Link
 
-
 SHOW_CHOICES = (
     ("user", "👤 " + _("For logged user")),
     ("no_user", "🕵🏻 " + _("For anonymous user")),
@@ -22,7 +21,7 @@ SHOW_CHOICES = (
 
 class NavbarLink(Model):
     order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    link = ForeignKey(Link, on_delete=models.SET_NULL, null=True)
+    link = ForeignKey(Link, on_delete=models.CASCADE)
     site = models.ManyToManyField(Site)
     emoji = models.CharField(max_length=8, null=True, blank=True)
     show_as_emoji = models.BooleanField(default=False)
@@ -66,7 +65,7 @@ class FooterItem(Model):
 
 class FooterLink(Model):
     order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    link = ForeignKey(Link, on_delete=models.SET_NULL, null=True)
+    link = ForeignKey(Link, on_delete=models.CASCADE)
     footer_item = ForeignKey(FooterItem, on_delete=models.SET_NULL, null=True, blank=True)
     site = models.ManyToManyField(Site)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
