@@ -1,8 +1,57 @@
-from auto_prefetch import Model
+from auto_prefetch import Manager, Model
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.html import format_html
 from markdownx.models import MarkdownxField
+
+from ..utils.exceptions import SubmoduleException
+
+User = get_user_model()
+
+
+class SubmoduleFolderManager(Manager):
+    def _get_submodule(self):
+        from ..articles.models import ArticleFolder
+        from ..pages.models import PageFolder
+
+        SUBMODULES = {
+            ArticleFolder: "articles",
+            PageFolder: "pages",
+        }
+        try:
+            return SUBMODULES[self.model]
+        except KeyError as e:
+            raise e
+
+    def sync_folders(self):
+        submodule = self._get_submodule()
+
+        if submodule is None:
+            raise SubmoduleException(f"Submodule for {self.model} not found")
+
+        submodule_path = settings.SUBMODULES_PATH / submodule
+
+        if not submodule_path.is_dir():
+            raise SubmoduleException(f"Submodule {submodule_path} is not a directory")
+
+        objs = []
+        for folder_name in [f.name for f in submodule_path.iterdir() if f.is_dir()]:
+            objs.append(self.model(name=folder_name))
+
+        self.bulk_create(objs, update_fields=["name"], unique_fields=["name"], update_conflicts=True)
+
+
+class AbstractFolder(Model):
+    name = models.CharField(max_length=64, unique=True)
+    objects = SubmoduleFolderManager()
+
+    class Meta(Model.Meta):
+        abstract = True
+
+    def __str__(self):
+        return self.name
 
 
 class PageMixin:

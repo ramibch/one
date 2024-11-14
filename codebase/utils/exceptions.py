@@ -1,0 +1,2 @@
+class SubmoduleException(Exception):
+    pass

@@ -1,6 +1,10 @@
 from django.urls import reverse_lazy
 
-from ..utils.abstracts_and_mixins import AbstractFlatPageModel
+from ..utils.abstracts_and_mixins import AbstractFlatPageModel, AbstractFolder
+
+
+class PageFolder(AbstractFolder):
+    pass
 
 
 class Page(AbstractFlatPageModel):

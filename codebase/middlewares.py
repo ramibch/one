@@ -25,22 +25,28 @@ class Middlewares:
         response = self.get_response(request)
 
         # Process traffic data
-        if not self.is_exempt_path(request.path):
+        if self.can_we_process_traffic(request.path, request.user):
             TrafficProcessor.process(request, response)
 
         return response
 
     def clear_cache_if_dev(self):
+        """This is better than restarting the http server"""
         if settings.CLEAR_CACHE_IN_DEVELOPMENT and settings.DEBUG and "django_extensions" in settings.INSTALLED_APPS:
             call_command("clear_cache")
 
-    def is_exempt_path(self, path: str) -> bool:
+    def can_we_process_traffic(self, path: str, user) -> bool:
+        """Ignore traffic from staff and for certain urls."""
         exempt_paths = [
             reverse("django_browser_reload:events"),
             reverse("admin:index"),
             reverse("favicon"),
         ]
-        return any(path.startswith(exempt) for exempt in exempt_paths)
+
+        path_ok = not any(path.startswith(exempt) for exempt in exempt_paths)
+        user_ok = not user.is_staff
+
+        return path_ok and user_ok
 
 
 class CountryDetails:

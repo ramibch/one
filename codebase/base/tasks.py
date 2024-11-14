@@ -7,6 +7,7 @@ from django.core.management import call_command
 from huey import crontab
 from huey.contrib import djhuey as huey
 
+from ..utils.abstracts_and_mixins import AbstractFolder
 from ..utils.telegram import Bot
 
 
@@ -45,3 +46,11 @@ def check_sites_without_extended_sites_daily():
 
     sites_str = "\n".join(site.domain for site in sites)
     Bot.to_admin(f"⚠️ The following sites have no Site Profile associated:\n\n{sites_str}")
+
+
+@huey.db_periodic_task(crontab(hour="0", minute="10"))
+def sync_submodule_folders_every_1_hour(hour="/*"):
+    """Syncs all submodule folders"""
+
+    for Model in AbstractFolder.__subclasses__():
+        Model.objects.sync_folders()

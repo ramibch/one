@@ -435,12 +435,15 @@ INITIAL_SITES = {
 
 # Submodules
 
+
+SUBMODULES_PATH = BASE_DIR / "submodules"
+
 # Article topics
-ARTICLES_MARKDOWN_PATH = BASE_DIR / "submodules" / "articles"
+ARTICLES_MARKDOWN_PATH = SUBMODULES_PATH / "articles"
 SYNC_ARTICLE_FOLDERS = ("example-topic",)
 
 # Pages
-PAGES_MARKDOWN_PATH = BASE_DIR / "submodules" / "pages"
+PAGES_MARKDOWN_PATH = SUBMODULES_PATH / "pages"
 SYNC_PAGE_FOLDERS = ("general-pages",)
 
 

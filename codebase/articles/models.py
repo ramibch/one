@@ -11,7 +11,7 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from ..utils.abstracts_and_mixins import AbstractFlatPageModel
+from ..utils.abstracts_and_mixins import AbstractFlatPageModel, AbstractFolder
 from ..utils.telegram import Bot
 
 User = get_user_model()
@@ -19,6 +19,10 @@ User = get_user_model()
 
 def upload_article_file(obj, filename: str):
     return f"articles/{obj.article.folder}/{obj.article.subfolder}/{filename}"
+
+
+class ArticleFolder(AbstractFolder):
+    pass
 
 
 class Article(AbstractFlatPageModel):
