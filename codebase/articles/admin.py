@@ -14,5 +14,5 @@ class ArticleAdmin(TranslationAdmin):
 
 @admin.register(ArticleFile)
 class ArticleFileAdmin(admin.ModelAdmin):
-    list_display = ("name", "article", "file")
-    readonly_fields = ("name", "article", "file")
+    list_display = ("name", "parent_page", "file")
+    readonly_fields = ("name", "parent_page", "file")

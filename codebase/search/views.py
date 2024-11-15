@@ -5,8 +5,8 @@ from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 
 from ..articles.models import Article
-from ..pages.models import Page
 from ..faqs.models import FAQ
+from ..pages.models import Page
 from .tasks import save_search_query
 
 User = get_user_model()

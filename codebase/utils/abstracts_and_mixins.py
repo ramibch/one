@@ -13,12 +13,14 @@ User = get_user_model()
 
 class SubmoduleFolderManager(Manager):
     def _get_submodule(self):
-        from ..articles.models import ArticleFolder
-        from ..pages.models import PageFolder
+        from ..articles.models import ArticlesFolder
+        from ..pages.models import PagesFolder
 
         SUBMODULES = {
-            ArticleFolder: "articles",
-            PageFolder: "pages",
+            # Model (db): folder name (File System)
+            ArticlesFolder: "articles",
+            PagesFolder: "pages",
+            # Add more if needed
         }
         try:
             return SUBMODULES[self.model]
@@ -43,7 +45,7 @@ class SubmoduleFolderManager(Manager):
         self.bulk_create(objs, update_fields=["name"], unique_fields=["name"], update_conflicts=True)
 
 
-class AbstractFolder(Model):
+class AbstractSubmoduleFolder(Model):
     name = models.CharField(max_length=64, unique=True)
     objects = SubmoduleFolderManager()
 
@@ -72,6 +74,24 @@ class PageMixin:
         return self.title
 
 
+class FlatPageManager(Manager):
+    def get_submodule_folder_model(self):
+        """ """
+        from ..articles.models import Article, ArticlesFolder
+        from ..pages.models import Page, PagesFolder
+
+        SUBMODULE_FOLDERS = {
+            # Page Model : Submodule Folder Model
+            Article: ArticlesFolder,
+            Page: PagesFolder,
+            # Add more if needed
+        }
+        try:
+            return SUBMODULE_FOLDERS[self.model]
+        except KeyError as e:
+            raise e
+
+
 class AbstractFlatPageModel(Model, PageMixin):
     title = models.CharField(max_length=256, editable=False)
     slug = models.SlugField(max_length=128, unique=True, editable=False)
@@ -80,6 +100,8 @@ class AbstractFlatPageModel(Model, PageMixin):
     body = MarkdownxField(editable=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+    objects = FlatPageManager()
 
     class Meta(Model.Meta):
         unique_together = ["folder", "subfolder"]

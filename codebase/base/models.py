@@ -8,8 +8,8 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..articles.models import ArticleFolder
-from ..pages.models import PageFolder
+from ..articles.models import ArticlesFolder
+from ..pages.models import PagesFolder
 
 User = get_user_model()
 
@@ -34,8 +34,8 @@ class ExtendedSite(Site):
     has_user_home = models.BooleanField(default=False)
 
     # Submodules
-    article_folders = models.ManyToManyField(ArticleFolder, related_name="+")
-    page_folders = models.ManyToManyField(PageFolder, related_name="+")
+    article_folders = models.ManyToManyField(ArticlesFolder, related_name="+")
+    page_folders = models.ManyToManyField(PagesFolder, related_name="+")
 
     def __str__(self):
         return self.name

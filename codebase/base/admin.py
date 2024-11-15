@@ -8,15 +8,15 @@ from huey.contrib.djhuey import HUEY
 from modeltranslation.admin import TranslationAdmin
 
 from ..utils.actions import translation_actions
-from .models import ArticleFolder, ExtendedSite, PageFolder, Traffic
+from .models import ArticlesFolder, ExtendedSite, PagesFolder, Traffic
 
 FORMFIELD_OVERRIDES_DICT = {
     models.ManyToManyField: {"widget": CheckboxSelectMultiple},
 }
 
 
-@admin.register(ArticleFolder)
-@admin.register(PageFolder)
+@admin.register(ArticlesFolder)
+@admin.register(PagesFolder)
 class ArticleFolderAdmin(admin.ModelAdmin):
     pass
 

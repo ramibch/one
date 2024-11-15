@@ -1,7 +1,7 @@
+from django.conf import settings
 from django.contrib.sitemaps import Sitemap
 
 from .models import Article
-from django.conf import settings
 
 
 class ArticleSitemap(Sitemap):

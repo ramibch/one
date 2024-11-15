@@ -11,7 +11,7 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from ..utils.abstracts_and_mixins import AbstractFlatPageModel, AbstractFolder
+from ..utils.abstracts_and_mixins import AbstractFlatPageModel, AbstractSubmoduleFolder
 from ..utils.telegram import Bot
 
 User = get_user_model()
@@ -21,14 +21,17 @@ def upload_article_file(obj, filename: str):
     return f"articles/{obj.article.folder}/{obj.article.subfolder}/{filename}"
 
 
-class ArticleFolder(AbstractFolder):
+class ArticlesFolder(AbstractSubmoduleFolder):
     pass
 
 
 class Article(AbstractFlatPageModel):
-    """File-based article model"""
+    """
+    File-based article model
+    """
 
     sites = models.ManyToManyField(Site)
+    submodule_folder = models.ForeignKey(ArticlesFolder, on_delete=models.SET_NULL, null=True)
     featured = models.BooleanField(_("Featured article"), help_text=_("If featured it will be showed in home "), default=False)
 
     def get_absolute_url(self):
@@ -36,7 +39,7 @@ class Article(AbstractFlatPageModel):
 
 
 class ArticleFile(Model):
-    article = ForeignKey(Article, on_delete=models.CASCADE)
+    parent_page = ForeignKey(Article, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     file = models.FileField(upload_to=upload_article_file)
 
