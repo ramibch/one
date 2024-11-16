@@ -7,7 +7,7 @@ django-o365mail
 django-modeltranslation
 django-money[exchange]
 django-upgrade
-django-markdownx
+django-markdownify
 django-storages
 django_htmx
 django-allauth[socialaccount]

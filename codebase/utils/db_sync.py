@@ -9,44 +9,38 @@ from ..base.models import ExtendedSite
 from .telegram import Bot
 
 
-def sync_model_objects(folders_setting, model_class, file_class=None):
+def sync_page_objects(PageModel, PageModelFile=None):
     """
     Read the contents of the specified submodule and save them in the database.
-    :param folders_setting: str, setting name for folders to sync.
-    :param model_class: Model class to save objects (Page or Article).
-    :param file_class: Optional, file model class (ArticleFile for articles).
+    :param PageModel: Model class to save objects (Page or Article).
+    :param PageModelFile: Optional, file model class (Example: ArticleFile).
     """
 
-    # Determine model type and paths based on the model class's meta attributes
-    model_type = model_class._meta.model_name
-    markdown_path = getattr(settings, "SUBMODULES_PATH", None) / f"{model_type}s"
-
     # Definitions and checks
+    SubmoduleFolderModel = PageModel.submodule_folder_model
+    submodule_name = SubmoduleFolderModel.submodule_name
+    submodule_path = settings.SUBMODULES_PATH / submodule_name
+
+    if not isinstance(submodule_path, Path):
+        Bot.to_admin(f"No path for {submodule_name} found. Check SUBMODULES_PATH")
+        return
+
+    if not submodule_path.is_dir():
+        Bot.to_admin(f"The '{submodule_name}' path is not a directory. Check SUBMODULES_PATH")
+        return
+
     for extsite in ExtendedSite.objects.filter():
-        to_admin = f"🔄 Syncing {model_type}s for {extsite.name}\n\n"
+        to_admin = f"🔄 Syncing {submodule_name} for {extsite.name}\n\n"
 
-        folders = getattr(settings, folders_setting, ())  # TODO: this depends now on the Site instances.
+        folder_list = extsite.get_submodule_folders_as_list(Model=SubmoduleFolderModel)
 
-        if not folders:
-            Bot.to_admin(to_admin + f"No folders found while syncing {model_type}s. Check {folders_setting}")
-            return
-
-        try:
-            iter(folders)
-        except TypeError:
-            Bot.to_admin(to_admin + f"The variable for folders is not iterable. Check {folders_setting}")
-            return
-
-        if not isinstance(markdown_path, Path):
-            Bot.to_admin(to_admin + f"No path for {model_type}s found. Check SUBMODULES_PATH")
-            return
-        if not markdown_path.is_dir():
-            Bot.to_admin(to_admin + f"The '{model_type}' path is not a directory. Check SUBMODULES_PATH")
-            return
+        if not folder_list or folder_list == []:
+            to_admin += f"No folders found for {extsite} while syncing {submodule_name}."
+            continue
 
         # Scanning
-        for folder in folders:
-            folder_path = markdown_path / folder
+        for folder in folder_list:
+            folder_path = submodule_path / folder
 
             if not folder_path.is_dir():
                 to_admin += f"🔴 {folder} is not listed\n\n"
@@ -56,9 +50,16 @@ def sync_model_objects(folders_setting, model_class, file_class=None):
                 if not subfolder_path.is_dir():
                     continue
 
-                body_replacements = {} if model_type == "article" else None
+                body_replacements = {}
                 to_admin += f"✍ {folder}/{subfolder_path.name}\n"
-                db_object = model_class.objects.get_or_create(folder=folder, subfolder=subfolder_path.name)[0]
+
+                db_object = PageModel.objects.get_or_create(
+                    submodule_folder=SubmoduleFolderModel.objects.get_or_create(name=folder)[0],
+                    subfolder=subfolder_path.name,
+                    folder=folder,
+                )[0]
+
+                db_object.sites.add(extsite)
 
                 # Markdown files (.md) need to be processed first
                 for md_file_path in (p for p in subfolder_path.iterdir() if p.name.endswith(".md")):
@@ -81,9 +82,9 @@ def sync_model_objects(folders_setting, model_class, file_class=None):
                     setattr(db_object, f"body_{lang_code}", body_text)
 
                 # Process additional files if model is 'article'
-                if model_type == "article" and file_class:
+                if PageModelFile:
                     for other_file_path in (p for p in subfolder_path.iterdir() if not p.name.endswith(".md")):
-                        db_file = file_class.objects.get_or_create(article=db_object, name=other_file_path.name)[0]
+                        db_file = PageModelFile.objects.get_or_create(parent_page=db_object, name=other_file_path.name)[0]
                         db_file.file = File(other_file_path.open(mode="rb"), name=other_file_path.name)
                         db_file.save()
                         body_replacements[f"]({db_file.name})"] = f"]({db_file.file.url})"
@@ -98,11 +99,11 @@ def sync_model_objects(folders_setting, model_class, file_class=None):
                 db_object.save()
 
         # Delete objects that could not be processed
-        qs = model_class.objects.filter(Q(title__in=[None, ""]) | Q(body__in=[None, ""]))
-        if qs.exists():
-            to_admin += f"\n{model_type.capitalize()}s not possible to create:\n"
-        for obj in qs:
+        qs_to_delete = PageModel.objects.filter(Q(title__in=[None, ""]) | Q(body__in=[None, ""]))
+        if qs_to_delete.exists():
+            to_admin += f"\n{submodule_name.capitalize()} not possible to create/sync:\n"
+        for obj in qs_to_delete:
             to_admin += f"{obj.folder}/{obj.subfolder}\n"
-        qs.delete()
+        qs_to_delete.delete()
 
         Bot.to_admin(to_admin)

@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..articles.models import ArticlesFolder
 from ..pages.models import PagesFolder
+from ..utils.exceptions import SubmoduleFolderModelUnknow
 
 User = get_user_model()
 
@@ -32,6 +33,7 @@ class ExtendedSite(Site):
     allow_field_translation = models.BooleanField(default=False)
     last_huey_flush = models.DateTimeField(null=True)
     has_user_home = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     # Submodules
     article_folders = models.ManyToManyField(ArticlesFolder, related_name="+")
@@ -39,6 +41,23 @@ class ExtendedSite(Site):
 
     def __str__(self):
         return self.name
+
+    def get_attr_name_for_submodule_folder_model(self, Model):
+        if Model == ArticlesFolder:
+            return "article_folders"
+        if Model == PagesFolder:
+            return "page_folders"
+        raise SubmoduleFolderModelUnknow(f"The model {Model} is not recodnied in the application.")
+
+    def get_submodule_folders(self, Model):
+        attr_name = self.get_attr_name_for_submodule_folder_model(Model)
+        submodule_folder_attr = getattr(self, attr_name)
+        if submodule_folder_attr:
+            return submodule_folder_attr.all()
+
+    def get_submodule_folders_as_list(self, Model):
+        objs = self.get_submodule_folders(Model)
+        return [f.name for f in objs] if objs else []
 
     @cached_property
     def url(self):

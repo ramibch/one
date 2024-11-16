@@ -88,3 +88,13 @@ class Link(Model):
 
     def get_link_from_path(path):
         pass
+
+
+def create_initial_django_links():
+    links = []
+    for url_path in DJANGO_URL_PATHS:
+        if Link.objects.filter(django_url_path=url_path[0]).exists():
+            continue
+        links.append(Link(django_url_path=url_path[0]))
+
+    return Link.objects.bulk_create(links)

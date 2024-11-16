@@ -2,12 +2,11 @@ from auto_prefetch import ForeignKey, Model
 from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.functional import cached_property
-from markdownx.models import MarkdownxField
 
 from ..articles.models import Article
 from ..faqs.models import FAQ
 from ..links.models import Link
-from ..utils.abstracts_and_mixins import PageMixin
+from ..utils.mixins import PageMixin
 
 
 class HomePage(Model, PageMixin):
@@ -59,14 +58,14 @@ class ProblemSection(Model):
 
     homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
-    description = MarkdownxField()
+    description = models.TextField()
     is_active = models.BooleanField()
 
 
 class SolutionSection(Model):
     homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
-    description = MarkdownxField()
+    description = models.TextField()
     is_active = models.BooleanField()
 
 
@@ -80,5 +79,5 @@ class StepAction(Model):
     homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
     step_label = models.CharField(max_length=4, default="01")
     title = models.CharField(max_length=64)
-    description = MarkdownxField()
+    description = models.TextField()
     is_active = models.BooleanField()

@@ -33,7 +33,6 @@ urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
     # Third-party
     path("allauth/", include("allauth.urls")),
-    path('markdownx/', include('markdownx.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
     # Own
     path("🔎/", include("codebase.search.urls")),

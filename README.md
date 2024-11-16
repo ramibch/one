@@ -4,9 +4,10 @@
 ## TODO:
 - payments and stripe checkout
 - Plans (TimeFixedPlan, SubscriptionPlan, ....)
-- Use django-markdownify (https://github.com/erwinmatijsen/django-markdownify)
-- Remove dependecy django-markdownx
+
 ## Conventions
+
+
 
 ### tasks.py
 

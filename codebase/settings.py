@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 # 0. Setup
 import os
 import sys
-from datetime import datetime
 from pathlib import Path
 
 import dotenv
@@ -84,7 +83,7 @@ INSTALLED_APPS = [
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
     "django_extensions",
-    "markdownx",
+    "markdownify.apps.MarkdownifyConfig",
     "modeltranslation",
     "huey.contrib.djhuey",
     "rosetta",
@@ -275,28 +274,26 @@ Third-party settings
 GEOIP_PATH = BASE_DIR / "geoip2dbs"
 
 
-# django-markdownx & python-markdown
-# https://pypi.org/project/django-markdownx/
-# https://neutronx.github.io/django-markdownx/customization/
-MARKDOWNX_MEDIA_PATH = datetime.now().strftime("markdownx/%Y/%m/%d")
-MARKDOWNX_IMAGE_MAX_SIZE = {"size": (1920, 0), "quality": 100}
+# django-markdownify
+# https://django-markdownify.readthedocs.io/en/latest/settings.html
 
-# Extensions
-# https://python-markdown.github.io/extensions/
-MARKDOWN_EXTENSION_CONFIGS = {
-    "markdown.extensions.codehilite": {
-        "css_class": "codehilite",
-        "linenums": False,
-        "guess_lang": False,
-    }
+
+MARKDOWNIFY = {
+    "default": {
+        "WHITELIST_ATTRS": ["href", "src", "alt"],
+        "WHITELIST_TAGS": ["a", "abbr", "acronym", "b", "blockquote", "em", "i", "li", "ol", "p", "strong", "ul", "img"],
+        "MARKDOWN_EXTENSIONS": [
+            "markdown.extensions.codehilite",
+            "markdown.extensions.fenced_code",
+            "markdown.extensions.footnotes",
+            "markdown.extensions.tables",
+        ],
+        "MARKDOWN_EXTENSION_CONFIGS": {
+            "markdown.extensions.codehilite": {"css_class": "codehilite", "linenums": False, "guess_lang": False}
+        },
+    },
+    "simple": {"WHITELIST_TAGS": ["a", "abbr", "acronym", "b", "blockquote", "em", "i", "li", "ol", "p", "strong", "ul"]},
 }
-
-MARKDOWN_EXTENSIONS = [
-    "markdown.extensions.codehilite",
-    "markdown.extensions.fenced_code",
-    "markdown.extensions.footnotes",
-    "markdown.extensions.tables",
-]
 
 # Email and django-o365
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")

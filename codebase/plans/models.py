@@ -6,7 +6,7 @@ from django.utils.functional import cached_property
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
 
-from ..utils.abstracts_and_mixins import PageMixin
+from ..utils.abstracts import PageMixin
 
 
 class Plan(Model, PageMixin):

@@ -1,10 +1,6 @@
+from auto_prefetch import Model
 from django.db import models
-from auto_prefetch import ForeignKey, Model
 from django.utils.translation import gettext_lazy as _
-
-from markdownx.models import MarkdownxField
-
-
 
 
 class FAQ(Model):
@@ -17,5 +13,4 @@ class FAQ(Model):
     )
     category = models.CharField(max_length=32, choices=FAQ_CATEGORY_CHOICES)
     question = models.CharField(max_length=256)
-    answer = MarkdownxField()
-
+    answer = models.TextField()

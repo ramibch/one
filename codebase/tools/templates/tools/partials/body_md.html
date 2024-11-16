@@ -1,6 +1,6 @@
-{% load markdown_extras %}
+{% load markdownify %}
 {% if tool.body_md %}
-    <section id="body_md">
-        {{ tool.body_md | markdown | safe }}
-    </section>
+  <section id="body_md">
+    {{ tool.body_md | markdownify }}
+  </section>
 {% endif %}
