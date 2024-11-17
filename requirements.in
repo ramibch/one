@@ -29,7 +29,6 @@ Pygments
 stripe
 python-barcode[images]
 django-taggit
-django-request
 
 python-dotenv
 gunicorn

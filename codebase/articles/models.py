@@ -16,7 +16,6 @@ def upload_article_file(obj, filename: str):
 
 class ArticlesFolder(AbstractSubmoduleFolderModel):
     submodule_name = "articles"
-    is_premium = models.BooleanField(default=False)
 
 
 class Article(AbstractPageModel):
@@ -25,10 +24,12 @@ class Article(AbstractPageModel):
     """
 
     submodule_folder_model = ArticlesFolder
-    submodule_folder = models.ForeignKey(ArticlesFolder, on_delete=models.SET_NULL, null=True)
+    submodule_folder = ForeignKey(ArticlesFolder, on_delete=models.SET_NULL, null=True)
 
     sites = models.ManyToManyField(Site)
     featured = models.BooleanField(_("Featured article"), help_text=_("If featured it will be showed in home "), default=False)
+    allow_comments = models.BooleanField(default=True)
+    is_premium = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse_lazy("article-detail", kwargs={"slug": self.slug})

@@ -23,12 +23,24 @@ class AbstractSubmoduleFolderModel(Model):
         return self.name
 
     @classmethod
+    def sync_all_folders(cls):
+        if cls == AbstractSubmoduleFolderModel:
+            for SubmoduleFolderModel in cls.__subclasses__():
+                SubmoduleFolderModel.sync_folders()
+        else:
+            print(f"⚠️  Just syncing for '{cls.submodule_name}'. Use the abstract class to sync all the submodules")
+            cls.sync_folders()
+
+    @classmethod
     def sync_folders(cls):
+        if cls == AbstractSubmoduleFolderModel:
+            cls.sync_all_folders()
+            return
+
         submodule_name = getattr(cls, "submodule_name", None)
 
         if submodule_name is None:
-            raise SubmoduleException(f"Submodule for {cls._meta.model} not found. \
-                                     Define submodule_name in your model class.")
+            raise SubmoduleException(f"Folder for {cls._meta.model} not found. Define submodule_name in model.")
 
         submodule_path = settings.SUBMODULES_PATH / submodule_name
 
@@ -47,7 +59,7 @@ class AbstractPageModel(Model, PageMixin):
     submodule_folder = None  # Override in the subclass.
 
     title = models.CharField(max_length=256, editable=False)
-    slug = models.SlugField(max_length=128, unique=True, editable=False)
+    slug = models.SlugField(max_length=128, unique=True, editable=False, db_index=True)
     folder = models.CharField(max_length=128, editable=False)
     subfolder = models.CharField(max_length=256, editable=False)
     body = models.TextField(editable=False)

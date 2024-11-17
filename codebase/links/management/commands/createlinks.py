@@ -7,5 +7,10 @@ class Command(BaseCommand):
     help = "Creates initial links"
 
     def handle(self, *args, **options):
-        objs_str = "\n".join(str(obj) for obj in create_initial_django_links())
-        self.stdout.write(self.style.SUCCESS(f"Links successfully created:\n{objs_str}"))
+        created_links = create_initial_django_links()
+
+        if len(created_links) > 0:
+            objs_str = "\n".join(str(obj) for obj in created_links)
+            self.stdout.write(self.style.SUCCESS(f"Links successfully created:\n{objs_str}"))
+        else:
+            self.stdout.write(self.style.WARNING("Links are already created"))

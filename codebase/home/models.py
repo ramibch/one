@@ -3,7 +3,6 @@ from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.functional import cached_property
 
-from ..articles.models import Article
 from ..faqs.models import FAQ
 from ..links.models import Link
 from ..utils.mixins import PageMixin
@@ -14,13 +13,12 @@ class HomePage(Model, PageMixin):
     title = models.CharField(max_length=64)
     is_active = models.BooleanField(default=True)
     enable_section_changing = models.BooleanField(default=False)
-    auto_add_articles = models.BooleanField(default=False)
+    show_last_articles = models.BooleanField(default=False)
     allow_field_translation = models.BooleanField(default=False)
     benefits_title = models.CharField(max_length=64, null=True, blank=True)
     steps_title = models.CharField(max_length=64, null=True, blank=True)
     faqs_title = models.CharField(max_length=64, null=True, blank=True)
     faqs = models.ManyToManyField(FAQ)
-    articles = models.ManyToManyField(Article)
 
     @cached_property
     def active_hero_section(self):
@@ -81,3 +79,7 @@ class StepAction(Model):
     title = models.CharField(max_length=64)
     description = models.TextField()
     is_active = models.BooleanField()
+
+
+class UserHomePage(Model, PageMixin):
+    pass

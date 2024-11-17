@@ -9,11 +9,12 @@ from ..base.models import ExtendedSite
 from .telegram import Bot
 
 
-def sync_page_objects(PageModel, PageModelFile=None):
+def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
     """
     Read the contents of the specified submodule and save them in the database.
     :param PageModel: Model class to save objects (Page or Article).
     :param PageModelFile: Optional, file model class (Example: ArticleFile).
+    :extended_sites Iterable[ExtendedSite]: Optional, extended sites to sync.
     """
 
     # Definitions and checks
@@ -29,7 +30,10 @@ def sync_page_objects(PageModel, PageModelFile=None):
         Bot.to_admin(f"The '{submodule_name}' path is not a directory. Check SUBMODULES_PATH")
         return
 
-    for extsite in ExtendedSite.objects.filter():
+    if extended_sites is None:
+        extended_sites = ExtendedSite.objects.filter()
+
+    for extsite in extended_sites:
         to_admin = f"🔄 Syncing {submodule_name} for {extsite.name}\n\n"
 
         folder_list = extsite.get_submodule_folders_as_list(Model=SubmoduleFolderModel)

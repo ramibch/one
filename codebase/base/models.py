@@ -72,8 +72,22 @@ class ExtendedSite(Site):
     def get_full_admin_url_for_model_instance(self, obj):
         return self.url + self.get_admin_url_for_model_instance(obj)
 
+    def get_navbar_links(self, show_types: list):
+        return self.navbarlink_set.filter(show_type__in=show_types).distinct()
+
+    def get_footer_items(self, show_types: list):
+        return self.footeritem_set.filter(show_type__in=show_types, footerlink__isnull=False).distinct()
+
+    def get_footer_links(self, show_types: list):
+        return self.footerlink_set.filter(show_type__in=show_types, footer_item=None).distinct()
+
+    def get_social_media_links(self, show_types: list):
+        return self.socialmedialink_set.filter(show_type__in=show_types).distinct()
+
 
 class Traffic(Model):
+    # TODO: check django-request for more attrs
+    # https://github.com/django-request/django-request/blob/master/request/models.py
     # Request info
     request_path = models.CharField(max_length=255)
     request_method = models.CharField(default="GET", max_length=7)

@@ -10,8 +10,8 @@ def site_utilities(request):
         "request": request,
         "site": site,
         "frontend": settings.FRONTEND,
-        "navbar_links": site.navbarlink_set.filter(show_type__in=show_types).distinct(),
-        "footer_items": site.footeritem_set.filter(show_type__in=show_types, footerlink__isnull=False).distinct(),
-        "footer_links": site.footerlink_set.filter(show_type__in=show_types, footer_item=None).distinct(),
-        "social_media_links": site.socialmedialink_set.filter(show_type__in=show_types).distinct(),
+        "navbar_links": site.extendedsite.get_navbar_links(show_types),
+        "footer_items": site.extendedsite.get_footer_items(show_types),
+        "footer_links": site.extendedsite.get_footer_links(show_types),
+        "social_media_links": site.extendedsite.get_social_media_links(show_types),
     }

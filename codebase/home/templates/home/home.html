@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+  <!-- Hero section -->
   {% if object.active_hero %}
     {% with hero=object.active_hero %}
       <section class="row mt-5">
@@ -18,5 +19,16 @@
         </div>
       </section>
     {% endwith %}
+  {% endif %}
+  <!-- Last articles if available -->
+  {% if last_articles %}
+    {% for article in last_articles %}
+      <details>
+        <header>
+          {{ article.title }}
+        </header>
+        {% if article.description %}{{ article.description }}{% endif %}
+      </details>
+    {% endfor %}
   {% endif %}
 {% endblock content %}

@@ -52,5 +52,4 @@ def check_sites_without_extended_sites_daily():
 def sync_submodule_folders_every_1_hour(hour="/*"):
     """Syncs all submodule folders"""
 
-    for SubmoduleFolderModel in AbstractSubmoduleFolderModel.__subclasses__():
-        SubmoduleFolderModel.sync_folders()
+    AbstractSubmoduleFolderModel.sync_all_folders()

@@ -6,7 +6,7 @@ from ...models import ExtendedSite
 
 
 class Command(BaseCommand):
-    help = "Creates initial sites that are defined in the setting INITIAL_SITES"
+    help = "Creates initial sites that are defined in the setting SITES"
 
     def add_arguments(self, parser):
         parser.add_argument("environments", nargs="+", type=str)
@@ -20,21 +20,25 @@ class Command(BaseCommand):
         if options["delete_all"]:
             Site.objects.all().delete()
 
-        existing_sites = Site.objects.all()
-        if existing_sites.count() > 0:
-            site_list_as_str = "\n".join([site.domain for site in existing_sites])
-            raise CommandError(f"Sites are already created.\n{site_list_as_str}")
+        sites = getattr(settings, "SITES", None)
 
-        initial_sites = getattr(settings, "INITIAL_SITES", None)
-
-        if initial_sites is None:
-            raise CommandError("The setting INITIAL_SITES is not defined.")
+        if sites is None:
+            raise CommandError("The setting SITES is not defined.")
 
         created_sites = []
 
         for env in options["environments"]:
-            for site_name, site_domain in initial_sites[env]:
-                created_sites.append(ExtendedSite.objects.create(name=site_name, domain=site_domain))
+            try:
+                env_sites = sites[env]
+            except KeyError:
+                raise CommandError(f"Environment {env} unrecognised in SITES.")  # noqa: B904
 
-        created_sites_as_str = "\n".join([site.domain for site in created_sites])
-        self.stdout.write(self.style.SUCCESS(f"Sites successfully created:\n{created_sites_as_str}"))
+            for site_name, site_domain in env_sites:
+                extsite, created = ExtendedSite.objects.get_or_create(name=site_name, domain=site_domain)
+                if created:
+                    created_sites.append(extsite)
+        if len(created_sites) > 0:
+            created_sites_as_str = "\n".join([site.domain for site in created_sites])
+            self.stdout.write(self.style.SUCCESS(f"Sites for '{env}' successfully created:\n{created_sites_as_str}"))
+        else:
+            self.stdout.write(self.style.WARNING(f"Sites for '{env}' are already created"))

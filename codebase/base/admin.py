@@ -7,6 +7,8 @@ from django.utils.translation import gettext_lazy as _
 from huey.contrib.djhuey import HUEY
 from modeltranslation.admin import TranslationAdmin
 
+from ..articles.tasks import trigger_sync_articles
+from ..pages.tasks import trigger_sync_pages
 from ..utils.actions import translation_actions
 from .models import ArticlesFolder, ExtendedSite, PagesFolder, Traffic
 
@@ -28,7 +30,7 @@ class ExtendedSiteAdmin(TranslationAdmin):
     search_fields = ("domain", "name")
     readonly_fields = ("last_huey_flush",)
     list_editable = ("domain", "name")
-    actions = ["flush_huey"] + translation_actions
+    actions = translation_actions + ["flush_huey", "sync_articles", "sync_pages"]
 
     fieldsets = (
         (
@@ -64,10 +66,18 @@ class ExtendedSiteAdmin(TranslationAdmin):
         ),
     )
 
-    @admin.action(description="🔄 Flush Huey | revoke tasks")
+    @admin.action(description="🗑️ Flush Huey | revoke tasks")
     def flush_huey(modeladmin, request, queryset):
         HUEY.flush()
         queryset.update(last_huey_flush=now())
+
+    @admin.action(description="🔄 Sync articles")
+    def sync_articles(modeladmin, request, queryset):
+        trigger_sync_articles(queryset)
+
+    @admin.action(description="🔄 Sync pages")
+    def sync_pages(modeladmin, request, queryset):
+        trigger_sync_pages(queryset)
 
 
 @admin.register(MigrationRecorder.Migration)

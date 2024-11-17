@@ -92,7 +92,6 @@ INSTALLED_APPS = [
     "geoip2",
     "djmoney",
     "debug_toolbar",
-    "request",
     # Django apps
     "django_browser_reload",
     "django.contrib.admin",
@@ -137,7 +136,6 @@ MIDDLEWARE = [
     # own middlewares
     "codebase.middlewares.Middlewares",
     # third-party middlewares
-    "request.middleware.RequestMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
@@ -179,14 +177,22 @@ WSGI_APPLICATION = "codebase.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 if USE_POSTGRES:
+    POSTGRES_SUPERUSER = os.environ.get("POSTGRES_SUPERUSER")
+    POSTGRES_SUPERPASSWORD = os.environ.get("POSTGRES_SUPERPASSWORD")
+    POSTGRES_DB = os.environ.get("POSTGRES_DB")
+    POSTGRES_USER = os.environ.get("POSTGRES_USER")
+    POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+    POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
+    POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
+
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("POSTGRES_DB", "testing_db"),
-            "USER": os.environ.get("POSTGRES_USER", "postgres"),
-            "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "postgres"),
-            "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
-            "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+            "NAME": os.environ.get("POSTGRES_DB"),
+            "USER": os.environ.get("POSTGRES_USER"),
+            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+            "HOST": os.environ.get("POSTGRES_HOST"),
+            "PORT": os.environ.get("POSTGRES_PORT"),
             "TEST": {
                 "NAME": "test_db",
             },
@@ -291,8 +297,7 @@ MARKDOWNIFY = {
         "MARKDOWN_EXTENSION_CONFIGS": {
             "markdown.extensions.codehilite": {"css_class": "codehilite", "linenums": False, "guess_lang": False}
         },
-    },
-    "simple": {"WHITELIST_TAGS": ["a", "abbr", "acronym", "b", "blockquote", "em", "i", "li", "ol", "p", "strong", "ul"]},
+    }
 }
 
 # Email and django-o365
@@ -410,7 +415,7 @@ FRONTEND = {
 
 # Initial sites
 
-INITIAL_SITES = {
+SITES = {
     # Environment Key : tupple( tupple(site name, site_domain))
     "dev": (
         ("Site 8000", "127.0.0.1:8000"),

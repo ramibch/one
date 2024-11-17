@@ -9,3 +9,8 @@ from .models import Page
 def sync_pages_daily():
     """Sync of pages in the db."""
     sync_page_objects(PageModel=Page)
+
+
+@huey.task()
+def trigger_sync_pages(extsites):
+    sync_page_objects(PageModel=Page, extended_sites=extsites)

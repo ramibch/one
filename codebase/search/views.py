@@ -32,7 +32,7 @@ def hx_seach_results(request: HttpRequest) -> HttpResponse:
 
     pages = Page.objects.filter(body__contains=q)
     articles = Article.objects.filter(body__contains=q)
-    faqs = FAQ.objects.filter(title__contains=q)
+    faqs = FAQ.objects.filter(question__contains=q)
     total = pages.count() + articles.count() + faqs.count()
     context = {
         "pages": pages,
