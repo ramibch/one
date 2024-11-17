@@ -15,10 +15,9 @@ class Command(BaseCommand):
         db_name, host, port = settings.POSTGRES_DB, settings.POSTGRES_HOST, settings.POSTGRES_PORT
         superuser, superpassword = settings.POSTGRES_SUPERUSER, settings.POSTGRES_SUPERPASSWORD
         user, pasword = settings.POSTGRES_USER, settings.POSTGRES_PASSWORD
+        connection_string = f"user='{superuser}' password='{superpassword}' host='{host}' port='{port}'"
 
-        with psycopg.connect(
-            f"user='{superuser}' password='{superpassword}' host='{host}' port='{port}'", autocommit=True
-        ).cursor() as cur:
+        with psycopg.connect(connection_string, autocommit=True).cursor() as cur:
             try:
                 cur.execute(f"CREATE DATABASE {db_name};")
             except DuplicateDatabase:

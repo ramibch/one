@@ -19,7 +19,7 @@ def django_commands_daily():
     """
     out, err = StringIO(), StringIO()
 
-    call_command("compilemessages", ignore=["venv"], locale=settings.LANGUAGE_CODES_WITHOUT_DEFAULT, stdout=out, stderr=err)
+    call_command("compilemessages", ignore=[".venv", "venv"], locale=settings.LANGUAGE_CODES_WITHOUT_DEFAULT, stdout=out, stderr=err)
 
     call_command("check", deploy=True, stdout=out, stderr=err)
 

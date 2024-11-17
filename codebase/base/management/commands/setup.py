@@ -1,4 +1,3 @@
-from django.contrib.sites.models import Site
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
@@ -20,25 +19,16 @@ class Command(BaseCommand):
         call_command("migrate")
 
         # Collect static
-        call_command("collectstatic")
+        call_command("collectstatic", interactive=False)
 
         # Create sites
-        for env in envs:
-            call_command("createsites", env)
+        call_command("createsites", *envs)
 
         # Create links
         call_command("createlinks")
-
-        # Get sites
-
-        sites = Site.objects.all()
 
         # Sync submodule folders
         AbstractSubmoduleFolderModel.sync_all_folders()
 
         # Create menus
-        for env in envs:
-            # TODO: continue here
-            print()
-            pass
-            # call_command("createmenus", env)
+        call_command("createmenus")

@@ -21,8 +21,8 @@ SHOW_CHOICES = (
 
 class NavbarLink(Model):
     order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    link = ForeignKey(Link, on_delete=models.CASCADE)
-    site = models.ManyToManyField(Site)
+    link = ForeignKey(Link, on_delete=models.CASCADE, unique=True)
+    sites = models.ManyToManyField(Site)
     emoji = models.CharField(max_length=8, null=True, blank=True)
     show_as_emoji = models.BooleanField(default=False)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
