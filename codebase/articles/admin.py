@@ -10,6 +10,7 @@ class ArticleAdmin(TranslationAdmin):
     list_editable = ("featured",)
     readonly_fields = ("title", "sites", "submodule_folder", "folder", "subfolder", "body", "created_on", "updated_on")
     list_filter = ("folder", "created_on", "updated_on")
+    search_fields = ("title", "folder", "subfolder", "body")
 
 
 @admin.register(ArticleFile)

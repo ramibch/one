@@ -1,6 +1,6 @@
 from urllib.parse import urlparse
 
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
@@ -21,7 +21,7 @@ SHOW_CHOICES = (
 
 class NavbarLink(Model):
     order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    link = ForeignKey(Link, on_delete=models.CASCADE, unique=True)
+    link = OneToOneField(Link, on_delete=models.CASCADE)
     sites = models.ManyToManyField(Site)
     emoji = models.CharField(max_length=8, null=True, blank=True)
     show_as_emoji = models.BooleanField(default=False)
@@ -65,9 +65,9 @@ class FooterItem(Model):
 
 class FooterLink(Model):
     order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    link = ForeignKey(Link, on_delete=models.CASCADE)
+    link = OneToOneField(Link, on_delete=models.CASCADE)
     footer_item = ForeignKey(FooterItem, on_delete=models.SET_NULL, null=True, blank=True)
-    site = models.ManyToManyField(Site)
+    sites = models.ManyToManyField(Site)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
     new_tab = models.BooleanField(default=False)
 

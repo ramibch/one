@@ -9,7 +9,7 @@ from ..utils.mixins import PageMixin
 
 
 class HomePage(Model, PageMixin):
-    site = ForeignKey(Site, on_delete=models.CASCADE)
+    sites = models.ManyToManyField(Site)
     title = models.CharField(max_length=64)
     is_active = models.BooleanField(default=True)
     enable_section_changing = models.BooleanField(default=False)

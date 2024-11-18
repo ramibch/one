@@ -2,7 +2,23 @@ from django.contrib.sites.models import Site
 from django.core.management.base import BaseCommand
 
 from ....links.models import Link
-from ...models import NavbarLink
+from ...models import FooterLink, NavbarLink
+
+
+def add_navbar_links(link_list: list, show_type: str, start_order: int):
+    """Utility function to get a list of NavbarLink objects"""
+    new_links = []
+    for index, link in enumerate(link_list, start=start_order):
+        new_links.append(NavbarLink(link=link, show_type=show_type, order=index))
+    return new_links
+
+
+def add_footer_links(link_list: list):
+    """Utility function to get a list of FooterLink objects"""
+    new_links = []
+    for index, link in enumerate(link_list, start=1):
+        new_links.append(FooterLink(link=link, order=index))
+    return new_links
 
 
 class Command(BaseCommand):
@@ -17,24 +33,28 @@ class Command(BaseCommand):
         link_login = Link.objects.get_or_create(django_url_path="account_login")[0]
         link_logout = Link.objects.get_or_create(django_url_path="account_signup")[0]
         link_dashboard = Link.objects.get_or_create(django_url_path="user_dashboard")[0]
+        link_home = Link.objects.get_or_create(django_url_path="home")[0]
 
         always_links = (link_search, link_articles, link_plans)
-        nouser_links = (link_login, link_logout)
+        no_user_links = (link_login, link_logout)
         user_links = (link_dashboard,)
 
-        navbar_links = []
-        for index, link in enumerate(always_links, start=1):
-            navbar_links.append(NavbarLink(link=link, show_type="always", order=index))
+        # Navbar links
+        navbar_links = add_navbar_links(always_links, "always", 1)
+        navbar_links += add_navbar_links(no_user_links, "no_user", 4)
+        navbar_links += add_navbar_links(user_links, "user", 6)
+        objs = NavbarLink.objects.bulk_create(
+            navbar_links, update_conflicts=True, unique_fields=["link"], update_fields=["link", "order"]
+        )
+        for obj in objs:
+            obj.sites.set(sites)
 
-        for index, link in enumerate(nouser_links, start=4):
-            navbar_links.append(NavbarLink(link=link, show_type="no_user", order=index))
-
-        for index, link in enumerate(user_links, start=6):
-            navbar_links.append(NavbarLink(link=link, show_type="user", order=index))
-
-        for navbarlink in NavbarLink.objects.bulk_create(navbar_links):
-            navbarlink.sites.set(sites)
-
-        # update_conflicts=True, update_fields=("link", "show_type", "")
+        # Footer links
+        footer_links = add_footer_links([link_home, link_articles, link_search])
+        objs = FooterLink.objects.bulk_create(
+            footer_links, update_conflicts=True, unique_fields=["link"], update_fields=["link", "order"]
+        )
+        for obj in objs:
+            obj.sites.set(sites)
 
         self.stdout.write(self.style.SUCCESS("Menus successfully created"))

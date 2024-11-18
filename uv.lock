@@ -956,7 +956,6 @@ dependencies = [
     { name = "jinja2" },
     { name = "pillow" },
     { name = "psycopg" },
-    { name = "psycopg2" },
     { name = "pyclean" },
     { name = "pygments" },
     { name = "python-barcode", extra = ["images"] },
@@ -1004,7 +1003,6 @@ requires-dist = [
     { name = "jinja2" },
     { name = "pillow" },
     { name = "psycopg" },
-    { name = "psycopg2", specifier = ">=2.9.10" },
     { name = "pyclean" },
     { name = "pygments" },
     { name = "python-barcode", extras = ["images"] },
@@ -1148,12 +1146,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/d1/ad/7ce016ae63e231575
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ce/21/534b8f5bd9734b7a2fcd3a16b1ee82ef6cad81a4796e95ebf4e0c6a24119/psycopg-3.2.3-py3-none-any.whl", hash = "sha256:644d3973fe26908c73d4be746074f6e5224b03c1101d302d9a53bf565ad64907", size = 197934 },
 ]
-
-[[package]]
-name = "psycopg2"
-version = "2.9.10"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/62/51/2007ea29e605957a17ac6357115d0c1a1b60c8c984951c19419b3474cdfd/psycopg2-2.9.10.tar.gz", hash = "sha256:12ec0b40b0273f95296233e8750441339298e6a572f7039da5b260e3c8b60e11", size = 385672 }
 
 [[package]]
 name = "ptyprocess"

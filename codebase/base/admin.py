@@ -1,7 +1,5 @@
 from django.contrib import admin
-from django.db import models
 from django.db.migrations.recorder import MigrationRecorder
-from django.forms.widgets import CheckboxSelectMultiple
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from huey.contrib.djhuey import HUEY
@@ -10,11 +8,8 @@ from modeltranslation.admin import TranslationAdmin
 from ..articles.tasks import trigger_sync_articles
 from ..pages.tasks import trigger_sync_pages
 from ..utils.actions import translation_actions
+from ..utils.admin import FORMFIELD_OVERRIDES_DICT
 from .models import ArticlesFolder, ExtendedSite, PagesFolder, Traffic
-
-FORMFIELD_OVERRIDES_DICT = {
-    models.ManyToManyField: {"widget": CheckboxSelectMultiple},
-}
 
 
 @admin.register(ArticlesFolder)
