@@ -32,7 +32,11 @@ class Middlewares:
 
     def clear_cache_if_dev(self):
         """This is better than restarting the http server"""
-        if settings.CLEAR_CACHE_IN_DEVELOPMENT and settings.DEBUG and "django_extensions" in settings.INSTALLED_APPS:
+        if (
+            settings.CLEAR_CACHE_IN_DEVELOPMENT
+            and settings.DEBUG
+            and "django_extensions" in settings.INSTALLED_APPS
+        ):
             call_command("clear_cache")
 
     def can_we_process_traffic(self, path: str, user) -> bool:
@@ -56,7 +60,11 @@ class CountryDetails:
     @cached_property
     def country_dict(self):
         x_forwarded_for = self.request.headers.get("x-forwarded-for")
-        ip = x_forwarded_for.split(",")[0] if x_forwarded_for else self.request.META.get("REMOTE_ADDR")
+        ip = (
+            x_forwarded_for.split(",")[0]
+            if x_forwarded_for
+            else self.request.META.get("REMOTE_ADDR")
+        )
 
         try:
             return GeoIP2().country(ip)
@@ -105,30 +113,32 @@ class TrafficProcessor:
     def get_response_params(response: HttpResponse):
         return {
             "headers": response.headers,
-            "code": response.status_code,
+            "status_code": response.status_code,
         }
 
     @staticmethod
     @huey.task()
     def save_traffic_data(request_params: dict, response_params: dict):
-        response_code = response_params.get("code")
-        request_site = request_params.get("site")
+        status_code = response_params.get("status_code")
+        site = request_params.get("site")
 
-        traffic_obj = Traffic.objects.create(
+        obj = Traffic.objects.create(
+            user=request_params.get("user"),
+            site=site,
             request_path=request_params.get("path"),
             request_method=request_params.get("method"),
             request_GET=request_params.get("GET"),
             request_POST=request_params.get("POST"),
             request_GET_ref=request_params.get("GET").get("ref", None),
             request_headers=request_params.get("headers"),
-            request_user=request_params.get("user"),
             request_country_code=request_params.get("country_code"),
-            request_site=request_site,
-            response_code=response_code,
+            response_code=status_code,
             response_headers=response_params.get("headers"),
         )
 
-        if response_code >= 400:
+        if status_code >= 400:
             # There is an HTTP Error -> inform admin
-            obj_admin_url = request_site.extendedsite.get_full_admin_url_for_model_instance(traffic_obj)
-            Bot.to_admin(f"🔴 HTTP Status Error {response_code}\n\nCheck traffic object: {obj_admin_url}")
+            url = site.extendedsite.get_object_full_admin_url(obj)
+            Bot.to_admin(
+                f"🔴 {status_code} HTTP Error \n\n" f"Check traffic object: {url}"
+            )

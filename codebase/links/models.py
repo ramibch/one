@@ -26,7 +26,9 @@ DJANGO_URL_PATHS = (
 class Link(Model):
     custom_title = models.CharField(max_length=128, null=True, blank=True)
     external_url = models.URLField(max_length=256, null=True, blank=True)
-    django_url_path = models.CharField(blank=True, null=True, max_length=32, choices=DJANGO_URL_PATHS)
+    django_url_path = models.CharField(
+        blank=True, null=True, max_length=32, choices=DJANGO_URL_PATHS
+    )
     page = ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True)
     plan = ForeignKey(Plan, on_delete=models.CASCADE, null=True, blank=True)
     article = ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
@@ -37,7 +39,9 @@ class Link(Model):
 
     def clean_custom_title(self):
         if self.external_url and self.custom_title is None:
-            raise ValidationError(_("Enter a custom title if an external url is entered."), code="invalid")
+            raise ValidationError(
+                _("Enter a custom title if an external url is entered."), code="invalid"
+            )
 
     def clean(self):
         if self.link_fields.count(None) != self.count_link_fields - 1:

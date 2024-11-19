@@ -47,7 +47,9 @@ class ExtendedSite(Site):
             return "article_folders"
         if Model == PagesFolder:
             return "page_folders"
-        raise SubmoduleFolderModelUnknow(f"The model {Model} is not recodnied in the application.")
+        raise SubmoduleFolderModelUnknow(
+            f"The model {Model} is not recodnied in the application."
+        )
 
     def get_submodule_folders(self, Model):
         attr_name = self.get_attr_name_for_submodule_folder_model(Model)
@@ -64,47 +66,59 @@ class ExtendedSite(Site):
         schema = "https" if settings.HTTPS else "http"
         return f"{schema}://{self.domain}"
 
-    def get_admin_url_for_model_instance(self, obj):
+    def get_object_admin_url(self, obj):
         # the url to the Django admin form for the model instance
         info = (obj._meta.app_label, obj._meta.model_name)
         return reverse("admin:{}_{}_change".format(*info), args=(obj.pk,))
 
-    def get_full_admin_url_for_model_instance(self, obj):
-        return self.url + self.get_admin_url_for_model_instance(obj)
+    def get_object_full_admin_url(self, obj):
+        return self.url + self.get_object_admin_url(obj)
 
     def get_navbar_links(self, show_types: list):
         return self.navbarlink_set.filter(show_type__in=show_types).distinct()
 
     def get_footer_items(self, show_types: list):
-        return self.footeritem_set.filter(show_type__in=show_types, footerlink__isnull=False).distinct()
+        return self.footeritem_set.filter(
+            show_type__in=show_types, footerlink__isnull=False
+        ).distinct()
 
     def get_footer_links(self, show_types: list):
-        return self.footerlink_set.filter(show_type__in=show_types, footer_item=None).distinct()
+        return self.footerlink_set.filter(
+            show_type__in=show_types, footer_item=None
+        ).distinct()
 
     def get_social_media_links(self, show_types: list):
         return self.socialmedialink_set.filter(show_type__in=show_types).distinct()
 
 
 class Traffic(Model):
-    # TODO: check django-request for more attrs
-    # https://github.com/django-request/django-request/blob/master/request/models.py
+    """
+    Model to register traffic data
+    Check this repo for inspiration:
+    https://github.com/django-request/django-request/blob/master/request/models.py
+
+    """
+
     # Request info
+    site = ForeignKey(Site, blank=True, null=True, on_delete=models.SET_NULL)
+    user = ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     request_path = models.CharField(max_length=255)
     request_method = models.CharField(default="GET", max_length=7)
     request_GET = models.TextField(null=True)
     request_POST = models.TextField(null=True)
     request_GET_ref = models.CharField(max_length=255, null=True)
     request_headers = models.TextField(null=True)
-    request_user = ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     request_country_code = models.CharField(max_length=8, null=True)
-    request_site = ForeignKey(Site, blank=True, null=True, on_delete=models.SET_NULL)
 
     # Response info
-    response_code = models.PositiveSmallIntegerField(default=200)
+    response_status_code = models.PositiveSmallIntegerField(default=200)
     response_headers = models.TextField(null=True)
 
     # Others
     time = models.DateTimeField(_("time"), default=timezone.now, db_index=True)
 
     def __str__(self):
-        return f"[{self.time}] {self.request_method} {self.request_path} {self.response_code}"
+        return (
+            f"[{self.time}] {self.request_method} "
+            f"{self.request_path} {self.response_status_code}"
+        )

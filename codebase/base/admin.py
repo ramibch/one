@@ -46,7 +46,13 @@ class ExtendedSiteAdmin(TranslationAdmin):
         ),
         (
             _("Defaults"),
-            {"fields": ("default_page_title", "default_page_description", "default_page_keywords")},
+            {
+                "fields": (
+                    "default_page_title",
+                    "default_page_description",
+                    "default_page_keywords",
+                )
+            },
         ),
         (
             _("Appearance and design"),
@@ -83,8 +89,14 @@ class MigrationRecorderAdmin(admin.ModelAdmin):
 
 @admin.register(Traffic)
 class TrafficAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "request_path", "response_code", "request_method", "request_user")
-    list_filter = ("time", "request_site", "request_method", "response_code")
+    list_display = (
+        "__str__",
+        "request_path",
+        "response_status_code",
+        "request_method",
+        "user",
+    )
+    list_filter = ("time", "site", "request_method", "response_status_code")
     readonly_fields = (
         "request_GET",
         "request_GET_ref",
@@ -93,9 +105,9 @@ class TrafficAdmin(admin.ModelAdmin):
         "request_headers",
         "request_country_code",
         "response_headers",
-        "response_code",
+        "response_status_code",
         "request_method",
-        "request_user",
-        "request_site",
+        "user",
+        "site",
         "time",
     )

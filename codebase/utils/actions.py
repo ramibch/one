@@ -30,4 +30,8 @@ def disallow_field_translation_for_qs(modeladmin, request, queryset):
     queryset.update(allow_field_translation=False)
 
 
-translation_actions = [translate_from_default_language, allow_field_translation_for_qs, disallow_field_translation_for_qs]
+translation_actions = [
+    translate_from_default_language,
+    allow_field_translation_for_qs,
+    disallow_field_translation_for_qs,
+]

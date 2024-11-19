@@ -20,7 +20,18 @@ class HomeAdmin(TranslationAdmin):
 @admin.register(HeroSection)
 class HomePageHeroAdmin(TranslationAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    list_display = ("headline", "cta_link", "image", "is_active", "allow_field_translation")
+    list_display = (
+        "headline",
+        "cta_link",
+        "image",
+        "is_active",
+        "allow_field_translation",
+    )
     list_editable = ("is_active", "cta_link", "image", "allow_field_translation")
-    list_filter = ("homepage", "homepage__sites", "is_active", "allow_field_translation")
+    list_filter = (
+        "homepage",
+        "homepage__sites",
+        "is_active",
+        "allow_field_translation",
+    )
     actions = translation_actions

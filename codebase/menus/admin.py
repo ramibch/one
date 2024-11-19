@@ -14,7 +14,14 @@ FORMFIELD_OVERRIDES_DICT = {
 @admin.register(NavbarLink)
 class NavbarLinkAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    list_display = ("display_title", "emoji", "show_type", "show_as_emoji", "new_tab", "order")
+    list_display = (
+        "display_title",
+        "emoji",
+        "show_type",
+        "show_as_emoji",
+        "new_tab",
+        "order",
+    )
     list_filter = ("show_type", "show_as_emoji", "new_tab", "order")
     list_editable = ("show_type", "order", "emoji", "show_as_emoji", "new_tab")
 

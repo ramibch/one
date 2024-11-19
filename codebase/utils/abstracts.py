@@ -8,8 +8,10 @@ from .mixins import PageMixin
 
 def upload_page_file(obj, filename: str):
     PageModel = obj.parent_page._meta.model
-    submodule_name = PageModel.submodule_folder_model.submodule_name
-    return f"{submodule_name}/{obj.parent_page.folder}/{obj.parent_page.subfolder}/{filename}"
+    sm_name = PageModel.submodule_folder_model.submodule_name
+    folder = obj.parent_page.folder
+    subfolder = obj.parent_page.subfolder
+    return f"{sm_name}/{folder}/{subfolder}/{filename}"
 
 
 class AbstractSubmoduleFolderModel(Model):
@@ -28,7 +30,7 @@ class AbstractSubmoduleFolderModel(Model):
             for SubmoduleFolderModel in cls.__subclasses__():
                 SubmoduleFolderModel.sync_folders()
         else:
-            print(f"⚠️  Just syncing for '{cls.submodule_name}'. Use the abstract class to sync all the submodules")
+            print(f"⚠️  Just syncing for '{cls.submodule_name}'.")
             cls.sync_folders()
 
     @classmethod
@@ -40,7 +42,7 @@ class AbstractSubmoduleFolderModel(Model):
         submodule_name = getattr(cls, "submodule_name", None)
 
         if submodule_name is None:
-            raise SubmoduleException(f"Folder for {cls._meta.model} not found. Define submodule_name in model.")
+            raise SubmoduleException(f"Folder for {cls._meta.model} not found.")
 
         submodule_path = settings.SUBMODULES_PATH / submodule_name
 
@@ -51,7 +53,9 @@ class AbstractSubmoduleFolderModel(Model):
         for folder_name in [f.name for f in submodule_path.iterdir() if f.is_dir()]:
             objs.append(cls._meta.model(name=folder_name))
 
-        cls.objects.bulk_create(objs, update_fields=["name"], unique_fields=["name"], update_conflicts=True)
+        cls.objects.bulk_create(
+            objs, update_fields=["name"], unique_fields=["name"], update_conflicts=True
+        )
 
 
 class AbstractPageModel(Model, PageMixin):

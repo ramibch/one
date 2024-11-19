@@ -11,5 +11,10 @@ urlpatterns = [
     # Favicon
     path("favicon.ico", favicon, name="favicon"),
     # robots.txt
-    path("robots.txt", TemplateView.as_view(template_name="base/robots.txt", content_type="text/plain")),
+    path(
+        "robots.txt",
+        TemplateView.as_view(
+            template_name="base/robots.txt", content_type="text/plain"
+        ),
+    ),
 ]

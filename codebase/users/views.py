@@ -36,5 +36,7 @@ def hx_delete_user(request, id):
         user.delete()
         messages.info(request, _("Account deleted"))
     else:
-        messages.error(request, _("You are not allowed to delete someone else's account."))
+        messages.error(
+            request, _("You are not allowed to delete someone else's account.")
+        )
     return HttpResponseClientRedirect("/")

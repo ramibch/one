@@ -5,7 +5,11 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
-from ..utils.abstracts import AbstractPageFileModel, AbstractPageModel, AbstractSubmoduleFolderModel
+from ..utils.abstracts import (
+    AbstractPageFileModel,
+    AbstractPageModel,
+    AbstractSubmoduleFolderModel,
+)
 
 User = get_user_model()
 
@@ -27,7 +31,11 @@ class Article(AbstractPageModel):
     submodule_folder = ForeignKey(ArticlesFolder, on_delete=models.SET_NULL, null=True)
 
     sites = models.ManyToManyField(Site)
-    featured = models.BooleanField(_("Featured article"), help_text=_("If featured it will be showed in home "), default=False)
+    featured = models.BooleanField(
+        _("Featured article"),
+        help_text=_("If featured it will be showed in home "),
+        default=False,
+    )
     allow_comments = models.BooleanField(default=True)
     is_premium = models.BooleanField(default=False)
 

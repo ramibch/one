@@ -18,16 +18,24 @@ def favicon(request: HttpRequest) -> HttpResponse:
         emoji = "🌐"
 
     return HttpResponse(
-        ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' + f'<text y=".9em" font-size="90">{emoji}</text>' + "</svg>"),
+        (
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
+            + f'<text y=".9em" font-size="90">{emoji}</text>'
+            + "</svg>"
+        ),
         content_type="image/svg+xml",
     )
 
 
 def error_404(request, exception):
     Bot.to_admin(f"404 Error: {exception}\n\n{request}\n{request.user}")
-    return render(request, "error.html", {"page_title": _("Page not found")}, status=404)
+    return render(
+        request, "error.html", {"page_title": _("Page not found")}, status=404
+    )
 
 
 def error_500(request):
     Bot.to_admin(f"500 Error: {request}\n{request.user}")
-    return render(request, "error.html", {"page_title": _("Internal Server Error")}, status=500)
+    return render(
+        request, "error.html", {"page_title": _("Internal Server Error")}, status=500
+    )

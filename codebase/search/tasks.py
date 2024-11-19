@@ -9,4 +9,3 @@ User = get_user_model()
 @huey.task()
 def save_search_query(params):
     SearchTerm.objects.create(**params)
-

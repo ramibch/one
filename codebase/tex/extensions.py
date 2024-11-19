@@ -33,7 +33,11 @@ class GraphicspathExtension(Extension):
 
     def parse(self, parser):
         list_of_paths = getattr(settings, "LATEX_GRAPHICSPATH", [settings.BASE_DIR])
-        value = "\\graphicspath{ " + " ".join(map(format_path_for_latex, list_of_paths)) + " }"
+        value = (
+            "\\graphicspath{ "
+            + " ".join(map(format_path_for_latex, list_of_paths))
+            + " }"
+        )
         node = nodes.Output(lineno=next(parser.stream).lineno)
         node.nodes = [nodes.MarkSafe(nodes.Const(value))]
         return node

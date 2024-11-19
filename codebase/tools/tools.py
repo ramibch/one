@@ -9,9 +9,13 @@ from django.utils.translation import gettext_lazy as _
 from . import models
 
 # Texts
+# TODO: These text must be defined somewhere else
+# Create a Translatable Model ToolDetails or something
 TEXT_GENERATE = _("Generate")
 
-GENERAL_BARCODE_DESCRIPTION = _("Generate your barcode with this online tool and download it for free in different formats")
+GENERAL_BARCODE_DESCRIPTION = _(
+    "Generate your barcode with this online tool and download it for free in different formats"
+)
 
 # Keywords
 GENERAL_KEYWORDS = _(
@@ -283,7 +287,9 @@ TOOLS = (
         category="charts",
         title=_("Simple data Chart Generator"),
         results_template=CHART_RESULTS_TEMPLATE,
-        form=modelform_factory(models.PointDataChart, fields=["title", "x_label", "y_label", "data"]),
+        form=modelform_factory(
+            models.PointDataChart, fields=["title", "x_label", "y_label", "data"]
+        ),
     ),
     Tool(
         icon="🔑",
@@ -306,7 +312,11 @@ def get_tool(slug):
 
 @cache
 def get_related_tools(input_tool):
-    return [tool for tool in TOOLS if input_tool.category == tool.category and input_tool.slug != tool.slug]
+    return [
+        tool
+        for tool in TOOLS
+        if input_tool.category == tool.category and input_tool.slug != tool.slug
+    ]
 
 
 @cache

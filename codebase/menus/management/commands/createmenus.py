@@ -29,13 +29,12 @@ class Command(BaseCommand):
 
         link_search = Link.objects.get_or_create(django_url_path="search")[0]
         link_articles = Link.objects.get_or_create(django_url_path="article_list")[0]
-        link_plans = Link.objects.get_or_create(django_url_path="plan_list")[0]
         link_login = Link.objects.get_or_create(django_url_path="account_login")[0]
         link_logout = Link.objects.get_or_create(django_url_path="account_signup")[0]
         link_dashboard = Link.objects.get_or_create(django_url_path="user_dashboard")[0]
         link_home = Link.objects.get_or_create(django_url_path="home")[0]
 
-        always_links = (link_search, link_articles, link_plans)
+        always_links = (link_search, link_articles)
         no_user_links = (link_login, link_logout)
         user_links = (link_dashboard,)
 
@@ -44,7 +43,10 @@ class Command(BaseCommand):
         navbar_links += add_navbar_links(no_user_links, "no_user", 4)
         navbar_links += add_navbar_links(user_links, "user", 6)
         objs = NavbarLink.objects.bulk_create(
-            navbar_links, update_conflicts=True, unique_fields=["link"], update_fields=["link", "order"]
+            navbar_links,
+            update_conflicts=True,
+            unique_fields=["link"],
+            update_fields=["link", "order"],
         )
         for obj in objs:
             obj.sites.set(sites)
@@ -52,7 +54,10 @@ class Command(BaseCommand):
         # Footer links
         footer_links = add_footer_links([link_home, link_articles, link_search])
         objs = FooterLink.objects.bulk_create(
-            footer_links, update_conflicts=True, unique_fields=["link"], update_fields=["link", "order"]
+            footer_links,
+            update_conflicts=True,
+            unique_fields=["link"],
+            update_fields=["link", "order"],
         )
         for obj in objs:
             obj.sites.set(sites)

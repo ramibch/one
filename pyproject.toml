@@ -52,8 +52,8 @@ dependencies = [
 
 
 [tool.ruff]
-exclude = ["venv", "migrations", "submodules"]
-line-length = 136
+exclude = [".venv", "venv", "migrations", "submodules"]
+line-length = 88
 
 [tool.ruff.lint]
 select = [

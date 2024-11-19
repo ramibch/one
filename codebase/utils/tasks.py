@@ -12,7 +12,9 @@ def translate_modeltranslation_objects(queryset, translation_fields):
     for db_obj in queryset:
         out += f"Object {str(db_obj)}\n"
         if not getattr(db_obj, "allow_field_translation", False):
-            out += "⚠️ Object not allowed to translate. Check: allow_field_translation.\n\n"
+            out += (
+                "⚠️ Object not allowed to translate. Check: allow_field_translation.\n\n"
+            )
             continue
 
         for translation_field in translation_fields:

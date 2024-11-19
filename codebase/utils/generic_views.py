@@ -9,5 +9,11 @@ from django.views.generic.detail import DetailView
 
 class MultilinguageDetailView(DetailView):
     def get_object(self):
-        params = {f"slug_{lang_code}": self.kwargs["slug"] for lang_code in settings.LANGUAGE_CODES}
-        return get_object_or_404(self.model, reduce(operator.or_, (Q(**d) for d in [dict([i]) for i in params.items()])))
+        params = {
+            f"slug_{lang_code}": self.kwargs["slug"]
+            for lang_code in settings.LANGUAGE_CODES
+        }
+        return get_object_or_404(
+            self.model,
+            reduce(operator.or_, (Q(**d) for d in [dict([i]) for i in params.items()])),
+        )

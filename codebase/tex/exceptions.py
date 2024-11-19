@@ -45,7 +45,8 @@ class TexError(Exception):
             width = len(str(bottom + 1))
 
             template_context = "\n".join(
-                "{lineno:>{width}} {line}".format(lineno=lineno, width=width, line=line) for lineno, line in source_lines
+                "{lineno:>{width}} {line}".format(lineno=lineno, width=width, line=line)
+                for lineno, line in source_lines
             )
 
             self.message += "\n\n" + template_context

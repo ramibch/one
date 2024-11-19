@@ -19,13 +19,21 @@ def django_commands_daily():
     """
     out, err = StringIO(), StringIO()
 
-    call_command("compilemessages", ignore=[".venv", "venv"], locale=settings.LANGUAGE_CODES_WITHOUT_DEFAULT, stdout=out, stderr=err)
+    call_command(
+        "compilemessages",
+        ignore=[".venv", "venv"],
+        locale=settings.LANGUAGE_CODES_WITHOUT_DEFAULT,
+        stdout=out,
+        stderr=err,
+    )
 
     call_command("check", deploy=True, stdout=out, stderr=err)
 
     call_command("update_rates", verbosity=0, stdout=out, stderr=err)
 
-    Bot.to_admin(f"Django commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n")
+    Bot.to_admin(
+        f"Django commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n"
+    )
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="10"))
@@ -45,7 +53,9 @@ def check_sites_without_extended_sites_daily():
         return
 
     sites_str = "\n".join(site.domain for site in sites)
-    Bot.to_admin(f"⚠️ The following sites have no Site Profile associated:\n\n{sites_str}")
+    Bot.to_admin(
+        f"⚠️ The following sites have no Site Profile associated:\n\n{sites_str}"
+    )
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="10"))

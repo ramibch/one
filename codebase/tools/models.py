@@ -44,42 +44,54 @@ class EAN14Barcode(AbstractBarcode):
     """digits = 13"""
 
     FORMAT = "ean14"
-    text = models.CharField(max_length=13, validators=[MinLengthValidator(13), MaxLengthValidator(13)])
+    text = models.CharField(
+        max_length=13, validators=[MinLengthValidator(13), MaxLengthValidator(13)]
+    )
 
 
 class EAN13Barcode(AbstractBarcode):
     """digits = 12"""
 
     FORMAT = "ean13"
-    text = models.CharField(max_length=12, validators=[MinLengthValidator(12), MaxLengthValidator(12)])
+    text = models.CharField(
+        max_length=12, validators=[MinLengthValidator(12), MaxLengthValidator(12)]
+    )
 
 
 class EAN13GuardBarcode(AbstractBarcode):
     """digits = 12"""
 
     FORMAT = "ean13-guard"
-    text = models.CharField(max_length=12, validators=[MinLengthValidator(12), MaxLengthValidator(12)])
+    text = models.CharField(
+        max_length=12, validators=[MinLengthValidator(12), MaxLengthValidator(12)]
+    )
 
 
 class EAN8Barcode(AbstractBarcode):
     """digits = 7"""
 
     FORMAT = "ean8"
-    text = models.CharField(max_length=7, validators=[MinLengthValidator(7), MaxLengthValidator(7)])
+    text = models.CharField(
+        max_length=7, validators=[MinLengthValidator(7), MaxLengthValidator(7)]
+    )
 
 
 class EAN8GuardBarcode(AbstractBarcode):
     """digits = 7"""
 
     FORMAT = "ean8-guard"
-    text = models.CharField(max_length=7, validators=[MinLengthValidator(7), MaxLengthValidator(7)])
+    text = models.CharField(
+        max_length=7, validators=[MinLengthValidator(7), MaxLengthValidator(7)]
+    )
 
 
 class JANBarcode(AbstractBarcode):
     """digits = 12"""
 
     FORMAT = "jan"
-    text = models.CharField(max_length=12, validators=[MinLengthValidator(12), MaxLengthValidator(12)])
+    text = models.CharField(
+        max_length=12, validators=[MinLengthValidator(12), MaxLengthValidator(12)]
+    )
 
 
 class CodabarBarcode(AbstractBarcode):
@@ -88,7 +100,9 @@ class CodabarBarcode(AbstractBarcode):
     """
 
     FORMAT = "codabar"
-    text = models.CharField(max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)])
+    text = models.CharField(
+        max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)]
+    )
 
 
 class Code128Barcode(AbstractBarcode):
@@ -97,7 +111,9 @@ class Code128Barcode(AbstractBarcode):
     """
 
     FORMAT = "code128"
-    text = models.CharField(max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)])
+    text = models.CharField(
+        max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)]
+    )
 
 
 class Code39Barcode(AbstractBarcode):
@@ -106,7 +122,9 @@ class Code39Barcode(AbstractBarcode):
     """
 
     FORMAT = "code39"
-    text = models.CharField(max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)])
+    text = models.CharField(
+        max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)]
+    )
 
 
 class ISBN13Barcode(AbstractBarcode):
@@ -115,7 +133,9 @@ class ISBN13Barcode(AbstractBarcode):
     """
 
     FORMAT = "isbn13"
-    text = models.CharField(max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)])
+    text = models.CharField(
+        max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)]
+    )
 
 
 class GS1_128Barcode(AbstractBarcode):
@@ -124,7 +144,9 @@ class GS1_128Barcode(AbstractBarcode):
     """
 
     FORMAT = "gs1_128"
-    text = models.CharField(max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)])
+    text = models.CharField(
+        max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)]
+    )
 
 
 class ISBN10Barcode(AbstractBarcode):
@@ -133,7 +155,9 @@ class ISBN10Barcode(AbstractBarcode):
     """
 
     FORMAT = "isbn10"
-    text = models.CharField(max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)])
+    text = models.CharField(
+        max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)]
+    )
 
 
 class ISSNBarcode(AbstractBarcode):
@@ -142,7 +166,9 @@ class ISSNBarcode(AbstractBarcode):
     """
 
     FORMAT = "issn"
-    text = models.CharField(max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)])
+    text = models.CharField(
+        max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)]
+    )
 
 
 class PZNBarcode(AbstractBarcode):
@@ -151,7 +177,9 @@ class PZNBarcode(AbstractBarcode):
     """
 
     FORMAT = "pzn"
-    text = models.CharField(max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)])
+    text = models.CharField(
+        max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)]
+    )
 
 
 class ITFBarcode(AbstractBarcode):
@@ -160,7 +188,9 @@ class ITFBarcode(AbstractBarcode):
     """
 
     FORMAT = "itf"
-    text = models.CharField(max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)])
+    text = models.CharField(
+        max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)]
+    )
 
 
 class UPCBarcode(AbstractBarcode):
@@ -169,7 +199,9 @@ class UPCBarcode(AbstractBarcode):
     """
 
     FORMAT = "upc"
-    text = models.CharField(max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)])
+    text = models.CharField(
+        max_length=32, validators=[MinLengthValidator(5), MaxLengthValidator(32)]
+    )
 
 
 class QRCode(models.Model):
@@ -200,7 +232,10 @@ class AbstractChart(models.Model):
             for ext in ("png", "pdf", "svg"):
                 output_file = f"output.{ext}"
                 filepath = f"{self._meta.model_name}/{self.id}.{ext}"
-                args = f"gnuplot -e \"set terminal {ext}; set output '{output_file}'\" input.plt"
+                args = (
+                    f'gnuplot -e "set terminal {ext}; '
+                    f"set output '{output_file}'\" input.plt"
+                )
                 run(args, shell=True, capture_output=True, check=False, cwd=tempdir)
                 with open(os.path.join(tempdir, output_file), "rb") as f:
                     filecontent = f.read()
@@ -237,7 +272,9 @@ class SpiderChart(AbstractChart):
 
 class GanttChart(AbstractChart):
     template_name = "tools/gnuplot/gantt.plt"
-    data = models.TextField(_("Data in format (dates as YYYY-MM-DD): TaskName DateStart DateEnd"))
+    data = models.TextField(
+        _("Data in format (dates as YYYY-MM-DD): TaskName DateStart DateEnd")
+    )
 
 
 class BarChart(AbstractChart):

@@ -32,12 +32,16 @@ def render_pdf(
         except CalledProcessError as called_process_error:
             try:
                 # with open(temppath / "texput.log", encoding="utf-8") as f:
-                with codecs.open(temppath / "texput.log", "r", encoding="utf-8", errors="ignore") as f:
+                with codecs.open(
+                    temppath / "texput.log", "r", encoding="utf-8", errors="ignore"
+                ) as f:
                     log = f.read()
             except FileNotFoundError:
                 raise called_process_error  # noqa: B904
             else:
-                raise TexError(log=log, source=rendered_text, template_name=template_name)
+                raise TexError(
+                    log=log, source=rendered_text, template_name=template_name
+                )
         with open(temppath / "texput.pdf", "rb") as f:
             bytes_pdf = f.read()
 

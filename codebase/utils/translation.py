@@ -30,7 +30,9 @@ def rename_deepl_target(lang: str) -> str:
     return out.upper()
 
 
-def translate_text(from_lang: str, to_lang: str, text: str, output_if_error:str=None) -> str | None:
+def translate_text(
+    from_lang: str, to_lang: str, text: str, output_if_error: str = None
+) -> str | None:
     """
     Translate text with DeepL API
     """
@@ -41,5 +43,8 @@ def translate_text(from_lang: str, to_lang: str, text: str, output_if_error:str=
             target_lang=rename_deepl_target(to_lang),
         )
     except Exception as e:
-        Bot.to_admin(f"Failed to translate this text from {from_lang} to {to_lang}:{text}\n\nException:\n{e}\n\nReturning: {output_if_error}")
+        Bot.to_admin(
+            f"Failed to translate this text from {from_lang} to {to_lang}:{text}\n\n"
+            f"Exception:\n{e}\n\nReturning: {output_if_error}"
+        )
         return output_if_error

@@ -13,8 +13,12 @@ class Plan(Model, PageMixin):
     title = models.CharField(max_length=256, editable=False)
     description = models.CharField(max_length=128, null=True)
     slug = models.SlugField(max_length=128, unique=True, editable=False)
-    price_min = MoneyField(max_digits=6, decimal_places=2, default_currency="EUR", default=Money(5, "EUR"))
-    price_max = MoneyField(max_digits=6, decimal_places=2, default_currency="EUR", default=Money(50, "EUR"))
+    price_min = MoneyField(
+        max_digits=6, decimal_places=2, default_currency="EUR", default=Money(5, "EUR")
+    )
+    price_max = MoneyField(
+        max_digits=6, decimal_places=2, default_currency="EUR", default=Money(50, "EUR")
+    )
 
     def get_absolute_url(self):
         return reverse_lazy("plan_detail", kwargs={"slug": self.slug})

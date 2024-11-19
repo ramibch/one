@@ -27,7 +27,9 @@ def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
         return
 
     if not submodule_path.is_dir():
-        Bot.to_admin(f"The '{submodule_name}' path is not a directory. Check SUBMODULES_PATH")
+        Bot.to_admin(
+            f"The '{submodule_name}' path is not a directory. Check SUBMODULES_PATH"
+        )
         return
 
     if extended_sites is None:
@@ -39,7 +41,9 @@ def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
         folder_list = extsite.get_submodule_folders_as_list(Model=SubmoduleFolderModel)
 
         if not folder_list or folder_list == []:
-            to_admin += f"No folders found for {extsite} while syncing {submodule_name}."
+            to_admin += (
+                f"No folders found for {extsite} while syncing {submodule_name}."
+            )
             continue
 
         # Scanning
@@ -58,7 +62,9 @@ def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
                 to_admin += f"✍ {folder}/{subfolder_path.name}\n"
 
                 db_object = PageModel.objects.get_or_create(
-                    submodule_folder=SubmoduleFolderModel.objects.get_or_create(name=folder)[0],
+                    submodule_folder=SubmoduleFolderModel.objects.get_or_create(
+                        name=folder
+                    )[0],
                     subfolder=subfolder_path.name,
                     folder=folder,
                 )[0]
@@ -66,7 +72,9 @@ def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
                 db_object.sites.add(extsite)
 
                 # Markdown files (.md) need to be processed first
-                for md_file_path in (p for p in subfolder_path.iterdir() if p.name.endswith(".md")):
+                for md_file_path in (
+                    p for p in subfolder_path.iterdir() if p.name.endswith(".md")
+                ):
                     md_file_conventions_ok = all(
                         (
                             md_file_path.name[:2] in settings.LANGUAGE_CODES,
@@ -75,37 +83,59 @@ def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
                         )
                     )
                     if not md_file_conventions_ok:
-                        to_admin += f"⚠️ File '{md_file_path.name}' does not meet conventions"
+                        to_admin += (
+                            f"⚠️ File '{md_file_path.name}' does not meet conventions"
+                        )
                         continue
 
                     lang_code = md_file_path.name[:2]
-                    title = md_file_path.read_text().split("\n")[0].replace("#", "").strip()
-                    body_text = "\n".join(md_file_path.read_text().split("\n")[1:]).strip()
+                    title = (
+                        md_file_path.read_text().split("\n")[0].replace("#", "").strip()
+                    )
+                    body_text = "\n".join(
+                        md_file_path.read_text().split("\n")[1:]
+                    ).strip()
                     setattr(db_object, f"title_{lang_code}", title)
                     setattr(db_object, f"slug_{lang_code}", slugify(title))
                     setattr(db_object, f"body_{lang_code}", body_text)
 
                 # Process additional files if model is 'article'
                 if PageModelFile:
-                    for other_file_path in (p for p in subfolder_path.iterdir() if not p.name.endswith(".md")):
-                        db_file = PageModelFile.objects.get_or_create(parent_page=db_object, name=other_file_path.name)[0]
-                        db_file.file = File(other_file_path.open(mode="rb"), name=other_file_path.name)
+                    for other_file_path in (
+                        p
+                        for p in subfolder_path.iterdir()
+                        if not p.name.endswith(".md")
+                    ):
+                        db_file = PageModelFile.objects.get_or_create(
+                            parent_page=db_object, name=other_file_path.name
+                        )[0]
+                        db_file.file = File(
+                            other_file_path.open(mode="rb"), name=other_file_path.name
+                        )
                         db_file.save()
-                        body_replacements[f"]({db_file.name})"] = f"]({db_file.file.url})"
+                        body_replacements[f"]({db_file.name})"] = (
+                            f"]({db_file.file.url})"
+                        )
 
                     # Adjust body if markdown file includes files
                     for local, remote in body_replacements.items():
                         for lang_code in settings.LANGUAGE_CODES:
-                            new_value = getattr(db_object, f"body_{lang_code}").replace(local, remote)
+                            new_value = getattr(db_object, f"body_{lang_code}").replace(
+                                local, remote
+                            )
                             setattr(db_object, f"body_{lang_code}", new_value)
 
                 # Save all object attributes in the database
                 db_object.save()
 
         # Delete objects that could not be processed
-        qs_to_delete = PageModel.objects.filter(Q(title__in=[None, ""]) | Q(body__in=[None, ""]))
+        qs_to_delete = PageModel.objects.filter(
+            Q(title__in=[None, ""]) | Q(body__in=[None, ""])
+        )
         if qs_to_delete.exists():
-            to_admin += f"\n{submodule_name.capitalize()} not possible to create/sync:\n"
+            to_admin += (
+                f"\n{submodule_name.capitalize()} not possible to create/sync:\n"
+            )
         for obj in qs_to_delete:
             to_admin += f"{obj.folder}/{obj.subfolder}\n"
         qs_to_delete.delete()

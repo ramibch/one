@@ -46,7 +46,6 @@ USE_S3_FOR_STATIC_FILES = os.environ.get("USE_S3_FOR_STATIC_FILES", "") == "1"
 
 PRODUCTION = os.environ.get("PRODUCTION", "") == "1"
 
-EnvironmentError
 
 # Use Postgres database
 
@@ -216,7 +215,7 @@ else:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"  # noqa: E501
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -287,7 +286,21 @@ GEOIP_PATH = BASE_DIR / "geoip2dbs"
 MARKDOWNIFY = {
     "default": {
         "WHITELIST_ATTRS": ["href", "src", "alt"],
-        "WHITELIST_TAGS": ["a", "abbr", "acronym", "b", "blockquote", "em", "i", "li", "ol", "p", "strong", "ul", "img"],
+        "WHITELIST_TAGS": [
+            "a",
+            "abbr",
+            "acronym",
+            "b",
+            "blockquote",
+            "em",
+            "i",
+            "li",
+            "ol",
+            "p",
+            "strong",
+            "ul",
+            "img",
+        ],
         "MARKDOWN_EXTENSIONS": [
             "markdown.extensions.codehilite",
             "markdown.extensions.fenced_code",
@@ -295,7 +308,11 @@ MARKDOWNIFY = {
             "markdown.extensions.tables",
         ],
         "MARKDOWN_EXTENSION_CONFIGS": {
-            "markdown.extensions.codehilite": {"css_class": "codehilite", "linenums": False, "guess_lang": False}
+            "markdown.extensions.codehilite": {
+                "css_class": "codehilite",
+                "linenums": False,
+                "guess_lang": False,
+            }
         },
     }
 }
@@ -390,8 +407,8 @@ CLEAR_CACHE_IN_DEVELOPMENT = True
 
 
 # Tex
-
-LATEX_GRAPHICSPATH = []  # TODO: check if it is posible to pass an arg. to run tex without this setting.
+# TODO: check if it is posible to pass an arg. to run tex without this setting.
+LATEX_GRAPHICSPATH = []
 
 # Frontend
 FRONTEND = {
@@ -481,13 +498,21 @@ S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL")
 # S3 media
 S3_MEDIA_LOCATION = ""  # "" or "media"
 S3_MEDIA_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_MEDIA_BUCKET_NAME}/"
-S3_MEDIA_URL = S3_MEDIA_BASE_URL if S3_MEDIA_LOCATION == "" else S3_MEDIA_BASE_URL + f"{S3_MEDIA_LOCATION}/"
+S3_MEDIA_URL = (
+    S3_MEDIA_BASE_URL
+    if S3_MEDIA_LOCATION == ""
+    else S3_MEDIA_BASE_URL + f"{S3_MEDIA_LOCATION}/"
+)
 S3_MEDIA_STORAGE_BACKEND = "codebase.s3.PublicMediaStorage"
 
 # S3 static
 S3_STATIC_LOCATION = ""  # "" or "static"
 S3_STATIC_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_STATIC_BUCKET_NAME}/"
-S3_STATIC_URL = S3_STATIC_BASE_URL if S3_STATIC_LOCATION == "" else S3_STATIC_BASE_URL + f"{S3_STATIC_LOCATION}/"
+S3_STATIC_URL = (
+    S3_STATIC_BASE_URL
+    if S3_STATIC_LOCATION == ""
+    else S3_STATIC_BASE_URL + f"{S3_STATIC_LOCATION}/"
+)
 S3_STATIC_STORAGE_BACKEND = "codebase.s3.StaticStorage"
 
 # Local

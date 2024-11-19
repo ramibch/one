@@ -11,6 +11,8 @@ class Command(BaseCommand):
 
         if len(created_links) > 0:
             objs_str = "\n".join(str(obj) for obj in created_links)
-            self.stdout.write(self.style.SUCCESS(f"Links successfully created:\n{objs_str}"))
+            self.stdout.write(
+                self.style.SUCCESS(f"Links successfully created:\n{objs_str}")
+            )
         else:
             self.stdout.write(self.style.WARNING("Links are already created"))

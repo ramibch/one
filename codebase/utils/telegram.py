@@ -20,12 +20,24 @@ class Bot:
         Bot.prepare()
 
         if file_url is None:
-            params = {"chat_id": chat_id, "text": text, "disable_web_page_preview": True}
+            params = {
+                "chat_id": chat_id,
+                "text": text,
+                "disable_web_page_preview": True,
+            }
             requests.get(Bot.base_url + "sendMessage", params=params)
         else:
             cparams = {"chat_id": chat_id, "caption": text}
-            if requests.get(Bot.base_url + "sendPhoto", params=cparams | {"photo": file_url}).status_code != 200:
-                requests.get(Bot.base_url + "sendDocument", params=cparams | {"document": file_url})
+            if (
+                requests.get(
+                    Bot.base_url + "sendPhoto", params=cparams | {"photo": file_url}
+                ).status_code
+                != 200
+            ):
+                requests.get(
+                    Bot.base_url + "sendDocument",
+                    params=cparams | {"document": file_url},
+                )
 
     @staticmethod
     def to_admin(text: str):

@@ -20,7 +20,9 @@ SHOW_CHOICES = (
 
 
 class NavbarLink(Model):
-    order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
+    order = models.PositiveSmallIntegerField(
+        default=0, validators=[MinValueValidator(0), MaxValueValidator(10)]
+    )
     link = OneToOneField(Link, on_delete=models.CASCADE)
     sites = models.ManyToManyField(Site)
     emoji = models.CharField(max_length=8, null=True, blank=True)
@@ -41,11 +43,15 @@ class NavbarLink(Model):
 
     def clean_show_as_emoji(self):
         if self.show_as_emoji and not self.emoji:
-            raise ValidationError(_("Insert an emoji if you want to show it as emoji."), code="invalid")
+            raise ValidationError(
+                _("Insert an emoji if you want to show it as emoji."), code="invalid"
+            )
 
 
 class FooterItem(Model):
-    order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(8)])
+    order = models.PositiveSmallIntegerField(
+        default=0, validators=[MinValueValidator(0), MaxValueValidator(8)]
+    )
     emoji = models.CharField(max_length=8, null=True, blank=True)
     title = models.CharField(max_length=64)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
@@ -64,9 +70,13 @@ class FooterItem(Model):
 
 
 class FooterLink(Model):
-    order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
+    order = models.PositiveSmallIntegerField(
+        default=0, validators=[MinValueValidator(0), MaxValueValidator(10)]
+    )
     link = OneToOneField(Link, on_delete=models.CASCADE)
-    footer_item = ForeignKey(FooterItem, on_delete=models.SET_NULL, null=True, blank=True)
+    footer_item = ForeignKey(
+        FooterItem, on_delete=models.SET_NULL, null=True, blank=True
+    )
     sites = models.ManyToManyField(Site)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
     new_tab = models.BooleanField(default=False)
@@ -80,7 +90,9 @@ class FooterLink(Model):
 
 
 class SocialMediaLink(Model):
-    order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
+    order = models.PositiveSmallIntegerField(
+        default=0, validators=[MinValueValidator(0), MaxValueValidator(10)]
+    )
     url = models.URLField(max_length=256)
     new_tab = models.BooleanField(default=True)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
