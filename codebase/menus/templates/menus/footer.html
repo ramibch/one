@@ -24,7 +24,7 @@
       {% for footerlink in footer_links %}
         <a href="{{ footerlink.link.url }}?ref=footerlink"
            {% if footerlink.new_tab %}target="_blank"{% endif %}>{{ footerlink.display_title }}</a>
-        {% if not forloop.last %}{{ frontend.footer_links_separator }}{% endif %}
+        {% if not forloop.last %}{{ site.extendedsite.footer_links_separator }}{% endif %}
       {% endfor %}
     </p>
     <!-- Social media links -->

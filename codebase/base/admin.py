@@ -58,6 +58,8 @@ class ExtendedSiteAdmin(TranslationAdmin):
             _("Appearance and design"),
             {
                 "fields": (
+                    "picocss_color",
+                    "footer_links_separator",
                     "change_theme_light_in_navbar",
                     "change_language_in_navbar",
                     "change_theme_light_in_footer",

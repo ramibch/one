@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 
 
@@ -9,7 +8,6 @@ def site_utilities(request):
     return {
         "request": request,
         "site": site,
-        "frontend": settings.FRONTEND,
         "navbar_links": site.extendedsite.get_navbar_links(show_types),
         "footer_items": site.extendedsite.get_footer_items(show_types),
         "footer_links": site.extendedsite.get_footer_links(show_types),

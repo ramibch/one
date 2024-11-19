@@ -16,6 +16,28 @@ User = get_user_model()
 
 
 class ExtendedSite(Site):
+    PICOCSS = (
+        ("amber", _("Amber")),
+        ("blue", _("Blue")),
+        ("fuchsia", _("Fuchsia")),
+        ("jade", _("Jade")),
+        ("grey", _("Grey")),
+        ("purple", _("Purple")),
+        ("cyan", _("Cyan")),
+        ("red", _("Read")),
+        ("violet", _("Violet")),
+        ("indigo", _("Indigo")),
+        ("slate", _("Slate")),
+        ("lime", _("Lime")),
+        ("colors", _("Colors")),
+        ("orange", _("Orange")),
+        ("pumpkin", _("Pumpkin")),
+        ("zinc", _("Zinc")),
+        ("sand", _("Sand")),
+        ("yellow", _("Yellow")),
+        ("pink", _("Pink")),
+        ("green", _("Green")),
+    )
     remarks = models.TextField(null=True, blank=True)
 
     emoji = models.CharField(max_length=8, null=True)
@@ -23,6 +45,9 @@ class ExtendedSite(Site):
     default_page_title = models.CharField(max_length=64, null=True)
     default_page_description = models.TextField(max_length=256, null=True)
     default_page_keywords = models.TextField(max_length=128, null=True)
+
+    picocss_color = models.CharField(max_length=16, choices=PICOCSS, default="orange")
+    footer_links_separator = models.CharField(max_length=4, default="|")
 
     change_theme_light_in_footer = models.BooleanField(default=True)
     change_theme_light_in_navbar = models.BooleanField(default=True)
@@ -41,6 +66,10 @@ class ExtendedSite(Site):
 
     def __str__(self):
         return self.name
+
+    @cached_property
+    def picocss_static_url(self):
+        return f"{settings.STATIC_URL}css/picocss/pico.{self.picocss_color}.min.css"
 
     def get_attr_name_for_submodule_folder_model(self, Model):
         if Model == ArticlesFolder:

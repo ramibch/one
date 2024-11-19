@@ -410,25 +410,6 @@ CLEAR_CACHE_IN_DEVELOPMENT = True
 # TODO: check if it is posible to pass an arg. to run tex without this setting.
 LATEX_GRAPHICSPATH = []
 
-# Frontend
-FRONTEND = {
-    "css_files": (
-        "css/bootstrap-grid.min.css",
-        "css/rb.css",
-        "css/picocss/pico.orange.min.css",
-    ),
-    "js_files": (
-        "js/htmx.js",
-        "js/htmx-ext-ws.js",
-        "js/hyperscript.js",
-        "js/cropper.js",
-        "js/alpine_persist.js",
-        "js/alpine.js",
-        "js/sortable.js",
-    ),
-    "footer_links_separator": "|",
-}
-
 
 # Initial sites
 
@@ -453,17 +434,7 @@ SITES = {
 
 
 # Submodules
-
-
 SUBMODULES_PATH = BASE_DIR / "submodules"
-
-# Article topics
-ARTICLES_MARKDOWN_PATH = SUBMODULES_PATH / "articles"
-SYNC_ARTICLE_FOLDERS = ("example-topic",)
-
-# Pages
-PAGES_MARKDOWN_PATH = SUBMODULES_PATH / "pages"
-SYNC_PAGE_FOLDERS = ("general-pages",)
 
 
 # Telegram
@@ -496,7 +467,7 @@ S3_STATIC_BUCKET_NAME = os.environ.get("S3_STATIC_BUCKET_NAME")
 S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL")
 
 # S3 media
-S3_MEDIA_LOCATION = ""  # "" or "media"
+S3_MEDIA_LOCATION = "media"  # "" or "media"
 S3_MEDIA_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_MEDIA_BUCKET_NAME}/"
 S3_MEDIA_URL = (
     S3_MEDIA_BASE_URL
@@ -506,7 +477,7 @@ S3_MEDIA_URL = (
 S3_MEDIA_STORAGE_BACKEND = "codebase.s3.PublicMediaStorage"
 
 # S3 static
-S3_STATIC_LOCATION = ""  # "" or "static"
+S3_STATIC_LOCATION = "static"  # "" or "static"
 S3_STATIC_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_STATIC_BUCKET_NAME}/"
 S3_STATIC_URL = (
     S3_STATIC_BASE_URL
@@ -516,6 +487,11 @@ S3_STATIC_URL = (
 S3_STATIC_STORAGE_BACKEND = "codebase.s3.StaticStorage"
 
 # Local
+LOCAL_MEDIA_ROOT = BASE_DIR / "media"
+LOCAL_MEDIA_URL = "/media/"
+LOCAL_STATIC_ROOT = BASE_DIR / "staticfiles"
+LOCAL_STATIC_URL = "/static/"
+# TODO: Fix
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -526,20 +502,32 @@ STATIC_URL = "/static/"
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
-        "OPTIONS": {"location": MEDIA_ROOT, "base_url": MEDIA_URL},
+        "OPTIONS": {"location": LOCAL_MEDIA_ROOT, "base_url": LOCAL_MEDIA_URL},
     },
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-        "OPTIONS": {"location": STATIC_ROOT, "base_url": STATIC_URL},
+        "OPTIONS": {"location": LOCAL_STATIC_ROOT, "base_url": LOCAL_STATIC_URL},
     },
 }
 
 
 if USE_S3_FOR_MEDIA_FILES:
     STORAGES["default"] = {"BACKEND": S3_MEDIA_STORAGE_BACKEND}
+# TODO: Fix this
+#     MEDIA_ROOT = S3_MEDIA_BASE_URL
+#     MEDIA_URL = S3_MEDIA_URL
+# else:
+#     MEDIA_ROOT = LOCAL_MEDIA_ROOT
+#     MEDIA_URL = LOCAL_MEDIA_URL
 
 if USE_S3_FOR_STATIC_FILES:
     STORAGES["staticfiles"] = {"BACKEND": S3_STATIC_STORAGE_BACKEND}
+# TODO: Fix this
+#    STATIC_ROOT = S3_STATIC_BASE_URL
+#    STATIC_URL = S3_STATIC_URL
+# else:
+#    STATIC_ROOT = LOCAL_STATIC_ROOT
+#    STATIC_URL = LOCAL_STATIC_URL
 
 # Https
 if HTTPS:  # pragma: no cover
