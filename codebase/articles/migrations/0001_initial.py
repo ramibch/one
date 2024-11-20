@@ -139,7 +139,7 @@ class Migration(migrations.Migration):
                 (
                     "file",
                     models.FileField(
-                        upload_to=codebase.utils.abstracts.upload_page_file
+                        upload_to=codebase.utils.abstracts.get_page_file_path
                     ),
                 ),
                 (

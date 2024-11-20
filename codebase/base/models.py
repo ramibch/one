@@ -1,7 +1,8 @@
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey, Manager, Model
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
+from django.contrib.sites.shortcuts import get_current_site
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -120,6 +121,25 @@ class ExtendedSite(Site):
         return self.socialmedialink_set.filter(show_type__in=show_types).distinct()
 
 
+class TrafficManager(Manager):
+    def create_object_from_request_and_response(self, request, response):
+        status_code = response.status_code
+        site = get_current_site(request)
+        return self.create(
+            user=request.user if request.user.is_authenticated else None,
+            site=site,
+            request_path=request.path,
+            request_method=request.method,
+            request_GET=request.GET,
+            request_POST=request.POST,
+            request_GET_ref=request.GET.get("ref", None),
+            request_headers=request.headers,
+            request_country_code=request.country.code,
+            response_status_code=status_code,
+            response_headers=response.headers,
+        )
+
+
 class Traffic(Model):
     """
     Model to register traffic data
@@ -145,6 +165,8 @@ class Traffic(Model):
 
     # Others
     time = models.DateTimeField(_("time"), default=timezone.now, db_index=True)
+
+    objects = TrafficManager()
 
     def __str__(self):
         return (

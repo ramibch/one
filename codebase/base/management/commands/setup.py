@@ -1,7 +1,7 @@
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
-from ....utils.abstracts import AbstractSubmoduleFolderModel
+from ....utils.abstracts import SubmodulesFolder
 
 
 class Command(BaseCommand):
@@ -28,7 +28,7 @@ class Command(BaseCommand):
         call_command("createlinks")
 
         # Sync submodule folders
-        AbstractSubmoduleFolderModel.sync_all_folders()
+        SubmodulesFolder.sync_all_folders()
 
         # Create menus
         call_command("createmenus")

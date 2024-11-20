@@ -6,7 +6,7 @@ from .exceptions import SubmoduleException
 from .mixins import PageMixin
 
 
-def upload_page_file(obj, filename: str):
+def get_page_file_path(obj, filename: str):
     PageModel = obj.parent_page._meta.model
     sm_name = PageModel.submodule_folder_model.submodule_name
     folder = obj.parent_page.folder
@@ -14,7 +14,7 @@ def upload_page_file(obj, filename: str):
     return f"{sm_name}/{folder}/{subfolder}/{filename}"
 
 
-class AbstractSubmoduleFolderModel(Model):
+class SubmodulesFolder(Model):
     submodule_name = None  # Override in the subclass.
     name = models.CharField(max_length=64, unique=True)
 
@@ -26,7 +26,7 @@ class AbstractSubmoduleFolderModel(Model):
 
     @classmethod
     def sync_all_folders(cls):
-        if cls == AbstractSubmoduleFolderModel:
+        if cls == SubmodulesFolder:
             for SubmoduleFolderModel in cls.__subclasses__():
                 SubmoduleFolderModel.sync_folders()
         else:
@@ -35,7 +35,7 @@ class AbstractSubmoduleFolderModel(Model):
 
     @classmethod
     def sync_folders(cls):
-        if cls == AbstractSubmoduleFolderModel:
+        if cls == SubmodulesFolder:
             cls.sync_all_folders()
             return
 
@@ -58,7 +58,7 @@ class AbstractSubmoduleFolderModel(Model):
         )
 
 
-class AbstractPageModel(Model, PageMixin):
+class PageModel(Model, PageMixin):
     submodule_folder_model = None  # Override in the subclass.
     submodule_folder = None  # Override in the subclass.
 
@@ -76,16 +76,16 @@ class AbstractPageModel(Model, PageMixin):
         abstract = True
 
 
-class AbstractPageFileModel(Model):
+class PageFileModel(Model):
     parent_page = None  # Override in the subclass.
     name = models.CharField(max_length=128)
-    file = models.FileField(upload_to=upload_page_file)
+    file = models.FileField(upload_to=get_page_file_path)
 
     class Meta(Model.Meta):
         abstract = True
 
 
-class AbstractSingletonModel(Model):
+class SingletonModel(Model):
     """Singleton Django Model"""
 
     _singleton = models.BooleanField(default=True, editable=False, unique=True)

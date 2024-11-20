@@ -7,30 +7,15 @@ class Command(BaseCommand):
     help = "Create a Postgres db"
 
     def handle(self, *args, **options):
-        if not settings.USE_POSTGRES:
-            self.stdout.write(self.style.WARNING("Postgres is not being used."))
-            return
+        db_name, host, port = settings.DB_NAME, settings.DB_HOST, settings.DB_PORT
+        su, su_pw = settings.DB_SUPERUSER, settings.DB_SUPERPASSWORD
 
-        db_name, host, port = (
-            settings.POSTGRES_DB,
-            settings.POSTGRES_HOST,
-            settings.POSTGRES_PORT,
-        )
-        superuser, superpassword = (
-            settings.POSTGRES_SUPERUSER,
-            settings.POSTGRES_SUPERPASSWORD,
-        )
-        print(f"Enter 'Drop {db_name}':")
-        if input() == f"Drop {db_name}":
-            with psycopg.connect(
-                f"user='{superuser}' password='{superpassword}' host='{host}' port='{port}'",
-                autocommit=True,
-            ).cursor() as cur:
+        if input(f"Enter 'Drop {db_name}' to confirm: ") == f"Drop {db_name}":
+            conn = f"user='{su}' password='{su_pw}' host='{host}' port='{port}'"
+            with psycopg.connect(conn, autocommit=True).cursor() as cur:
                 cur.execute(f"DROP DATABASE {db_name};")
-            self.stdout.write(
-                self.style.SUCCESS(f"Postgres database '{db_name}' is dropped.")
-            )
+            msg = f"Postgres database '{db_name}' is dropped."
+            self.stdout.write(self.style.SUCCESS(msg))
         else:
-            self.stdout.write(
-                self.style.WARNING(f"Confirmation declied. Not dropping '{db_name}'.")
-            )
+            msg = f"Confirmation declied. Not dropping '{db_name}'."
+            self.stdout.write(self.style.WARNING(msg))

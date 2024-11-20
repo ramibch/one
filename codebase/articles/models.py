@@ -6,9 +6,9 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from ..utils.abstracts import (
-    AbstractPageFileModel,
-    AbstractPageModel,
-    AbstractSubmoduleFolderModel,
+    PageFileModel,
+    PageModel,
+    SubmodulesFolder,
 )
 
 User = get_user_model()
@@ -18,11 +18,11 @@ def upload_article_file(obj, filename: str):
     return f"articles/{obj.parent_page.folder}/{obj.parent_page.subfolder}/{filename}"
 
 
-class ArticlesFolder(AbstractSubmoduleFolderModel):
+class ArticlesFolder(SubmodulesFolder):
     submodule_name = "articles"
 
 
-class Article(AbstractPageModel):
+class Article(PageModel):
     """
     File-based article model
     """
@@ -43,7 +43,7 @@ class Article(AbstractPageModel):
         return reverse_lazy("article-detail", kwargs={"slug": self.slug})
 
 
-class ArticleFile(AbstractPageFileModel):
+class ArticleFile(PageFileModel):
     parent_page = ForeignKey(Article, on_delete=models.CASCADE)
 
 

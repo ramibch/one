@@ -7,7 +7,7 @@ from django.core.management import call_command
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from ..utils.abstracts import AbstractSubmoduleFolderModel
+from ..utils.abstracts import SubmodulesFolder
 from ..utils.telegram import Bot
 
 
@@ -62,4 +62,4 @@ def check_sites_without_extended_sites_daily():
 def sync_submodule_folders_every_1_hour(hour="/*"):
     """Syncs all submodule folders"""
 
-    AbstractSubmoduleFolderModel.sync_all_folders()
+    SubmodulesFolder.sync_all_folders()

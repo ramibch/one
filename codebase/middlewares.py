@@ -5,7 +5,6 @@ from django.core.management import call_command
 from django.http import HttpRequest, HttpResponse
 from django.urls import reverse
 from django.utils.functional import cached_property
-from huey.contrib import djhuey as huey
 
 from .base.models import Traffic
 from .utils.telegram import Bot
@@ -91,54 +90,10 @@ class CountryDetails:
 
 class TrafficProcessor:
     @staticmethod
-    def process(request: HttpRequest, response: HttpResponse) -> None:
-        request_params = TrafficProcessor.get_request_params(request)
-        response_params = TrafficProcessor.get_response_params(response)
-        TrafficProcessor.save_traffic_data(request_params, response_params)
-
-    @staticmethod
-    def get_request_params(request: HttpRequest):
-        return {
-            "path": request.path,
-            "method": request.method,
-            "GET": request.GET,
-            "POST": request.POST,
-            "headers": request.headers,
-            "user": request.user if request.user.is_authenticated else None,
-            "site": get_current_site(request),
-            "country_code": request.country.code,
-        }
-
-    @staticmethod
-    def get_response_params(response: HttpResponse):
-        return {
-            "headers": response.headers,
-            "status_code": response.status_code,
-        }
-
-    @staticmethod
-    @huey.task()
-    def save_traffic_data(request_params: dict, response_params: dict):
-        status_code = response_params.get("status_code")
-        site = request_params.get("site")
-
-        obj = Traffic.objects.create(
-            user=request_params.get("user"),
-            site=site,
-            request_path=request_params.get("path"),
-            request_method=request_params.get("method"),
-            request_GET=request_params.get("GET"),
-            request_POST=request_params.get("POST"),
-            request_GET_ref=request_params.get("GET").get("ref", None),
-            request_headers=request_params.get("headers"),
-            request_country_code=request_params.get("country_code"),
-            response_code=status_code,
-            response_headers=response_params.get("headers"),
-        )
-
+    def process(request: HttpRequest, response: HttpResponse):
+        status_code = response.status_code
+        obj = Traffic.objects.create_object_from_request_and_response(request, response)
         if status_code >= 400:
             # There is an HTTP Error -> inform admin
-            url = site.extendedsite.get_object_full_admin_url(obj)
-            Bot.to_admin(
-                f"🔴 {status_code} HTTP Error \n\n" f"Check traffic object: {url}"
-            )
+            url = get_current_site(request).extendedsite.get_object_full_admin_url(obj)
+            Bot.to_admin(f"🔴 {status_code} HTTP Error\n\nCheck traffic object: {url}")

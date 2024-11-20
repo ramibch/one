@@ -2,14 +2,14 @@ from auto_prefetch import ForeignKey
 from django.db import models
 from django.urls import reverse_lazy
 
-from ..utils.abstracts import AbstractPageModel, AbstractSubmoduleFolderModel
+from ..utils.abstracts import PageModel, SubmodulesFolder
 
 
-class PagesFolder(AbstractSubmoduleFolderModel):
+class PagesFolder(SubmodulesFolder):
     submodule_name = "pages"
 
 
-class Page(AbstractPageModel):
+class Page(PageModel):
     """File-based page model"""
 
     submodule_folder_model = PagesFolder

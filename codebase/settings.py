@@ -33,23 +33,12 @@ if command != "test":  # pragma: no cover
 
 
 # Activate settings for HTTPS connections
-
 HTTPS = os.environ.get("HTTPS", "") == "1"
 
 
 # Use a S3 service to store static and media files
-
 USE_S3_FOR_MEDIA_FILES = os.environ.get("USE_S3_FOR_MEDIA_FILES", "") == "1"
-
 USE_S3_FOR_STATIC_FILES = os.environ.get("USE_S3_FOR_STATIC_FILES", "") == "1"
-
-
-PRODUCTION = os.environ.get("PRODUCTION", "") == "1"
-
-
-# Use Postgres database
-
-USE_POSTGRES = os.environ.get("USE_POSTGRES", "") == "1"
 
 
 # Quick-start development settings - unsuitable for production
@@ -69,11 +58,12 @@ DEBUG = os.environ.get("DEBUG", "") == "1"
 """
 
 
-ALLOWED_HOSTS = ["127.0.0.1", "10.10.10.30", "*"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+]
 
 INTERNAL_IPS = [
     "127.0.0.1",
-    "10.10.10.30",
 ]
 
 # Application definition
@@ -103,9 +93,9 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.db.migrations",
     "django.contrib.admindocs",
-    # "allauth.socialaccount",
-    # "allauth.socialaccount.providers.google",
-    # "allauth.socialaccount.providers.linkedin_oauth2",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.linkedin_oauth2",
     # Project apps
     "codebase.base",
     "codebase.articles",
@@ -168,46 +158,29 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = "codebase.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+DB_SUPERUSER = os.environ.get("POSTGRES_SUPERUSER")
+DB_SUPERPASSWORD = os.environ.get("POSTGRES_SUPERPASSWORD")
+DB_NAME = os.environ.get("POSTGRES_DB")
+DB_USER = os.environ.get("POSTGRES_USER")
+DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+DB_HOST = os.environ.get("POSTGRES_HOST")
+DB_PORT = os.environ.get("POSTGRES_PORT")
 
-if USE_POSTGRES:
-    POSTGRES_SUPERUSER = os.environ.get("POSTGRES_SUPERUSER")
-    POSTGRES_SUPERPASSWORD = os.environ.get("POSTGRES_SUPERPASSWORD")
-    POSTGRES_DB = os.environ.get("POSTGRES_DB")
-    POSTGRES_USER = os.environ.get("POSTGRES_USER")
-    POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
-    POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
-    POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
-
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("POSTGRES_DB"),
-            "USER": os.environ.get("POSTGRES_USER"),
-            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-            "HOST": os.environ.get("POSTGRES_HOST"),
-            "PORT": os.environ.get("POSTGRES_PORT"),
-            "TEST": {
-                "NAME": "test_db",
-            },
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": DB_NAME,
+        "USER": DB_USER,
+        "PASSWORD": DB_PASSWORD,
+        "HOST": DB_HOST,
+        "PORT": DB_PORT,
+        "TEST": {"NAME": "test_db"},
     }
-
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-            "TEST": {
-                "NAME": BASE_DIR / "db_test.sqlite3",
-            },
-        }
-    }
+}
 
 
 # Password validation
@@ -331,7 +304,7 @@ O365_MAIL_SAVE_TO_SENT = True
 ## Translations
 
 # DeepL
-DEEPL_AUTH_KEY = os.environ.get("DEEPL_AUTH_KEY", "")
+DEEPL_AUTH_KEY = os.environ.get("DEEPL_AUTH_KEY")
 
 
 # Rosetta
@@ -468,34 +441,29 @@ S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL")
 
 # S3 media
 S3_MEDIA_LOCATION = "media"  # "" or "media"
-S3_MEDIA_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_MEDIA_BUCKET_NAME}/"
-S3_MEDIA_URL = (
-    S3_MEDIA_BASE_URL
-    if S3_MEDIA_LOCATION == ""
-    else S3_MEDIA_BASE_URL + f"{S3_MEDIA_LOCATION}/"
-)
 S3_MEDIA_STORAGE_BACKEND = "codebase.s3.PublicMediaStorage"
+S3_MEDIA_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_MEDIA_BUCKET_NAME}/"
+if S3_MEDIA_LOCATION == "":
+    S3_MEDIA_URL = S3_MEDIA_BASE_URL
+else:
+    S3_MEDIA_URL = S3_MEDIA_BASE_URL + f"{S3_MEDIA_LOCATION}/"
 
 # S3 static
 S3_STATIC_LOCATION = "static"  # "" or "static"
-S3_STATIC_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_STATIC_BUCKET_NAME}/"
-S3_STATIC_URL = (
-    S3_STATIC_BASE_URL
-    if S3_STATIC_LOCATION == ""
-    else S3_STATIC_BASE_URL + f"{S3_STATIC_LOCATION}/"
-)
 S3_STATIC_STORAGE_BACKEND = "codebase.s3.StaticStorage"
+S3_STATIC_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_STATIC_BUCKET_NAME}/"
+if S3_STATIC_LOCATION == "":
+    S3_STATIC_URL = S3_STATIC_BASE_URL
+else:
+    S3_STATIC_URL = S3_STATIC_BASE_URL + f"{S3_STATIC_LOCATION}/"
+
 
 # Local
 LOCAL_MEDIA_ROOT = BASE_DIR / "media"
 LOCAL_MEDIA_URL = "/media/"
 LOCAL_STATIC_ROOT = BASE_DIR / "staticfiles"
 LOCAL_STATIC_URL = "/static/"
-# TODO: Fix
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_URL = "/static/"
+
 
 # Storage backends
 
@@ -510,24 +478,21 @@ STORAGES = {
     },
 }
 
-
 if USE_S3_FOR_MEDIA_FILES:
     STORAGES["default"] = {"BACKEND": S3_MEDIA_STORAGE_BACKEND}
-# TODO: Fix this
-#     MEDIA_ROOT = S3_MEDIA_BASE_URL
-#     MEDIA_URL = S3_MEDIA_URL
-# else:
-#     MEDIA_ROOT = LOCAL_MEDIA_ROOT
-#     MEDIA_URL = LOCAL_MEDIA_URL
+    MEDIA_ROOT = None
+    MEDIA_URL = S3_MEDIA_URL
+else:
+    MEDIA_ROOT = LOCAL_MEDIA_ROOT
+    MEDIA_URL = LOCAL_MEDIA_URL
 
 if USE_S3_FOR_STATIC_FILES:
     STORAGES["staticfiles"] = {"BACKEND": S3_STATIC_STORAGE_BACKEND}
-# TODO: Fix this
-#    STATIC_ROOT = S3_STATIC_BASE_URL
-#    STATIC_URL = S3_STATIC_URL
-# else:
-#    STATIC_ROOT = LOCAL_STATIC_ROOT
-#    STATIC_URL = LOCAL_STATIC_URL
+    STATIC_ROOT = None
+    STATIC_URL = S3_STATIC_URL
+else:
+    STATIC_ROOT = LOCAL_STATIC_ROOT
+    STATIC_URL = LOCAL_STATIC_URL
 
 # Https
 if HTTPS:  # pragma: no cover
@@ -538,9 +503,3 @@ if HTTPS:  # pragma: no cover
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_PRELOAD = True
-
-
-# Test mode (override values)
-
-if command == "test":
-    pass
