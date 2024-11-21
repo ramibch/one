@@ -10,15 +10,19 @@ from ..utils.mixins import PageMixin
 
 class HomePage(Model, PageMixin):
     sites = models.ManyToManyField(Site)
-    title = models.CharField(max_length=64)
+
+    # Management
     is_active = models.BooleanField(default=True)
+    display_last_articles = models.BooleanField(default=False)
+    display_faqs = models.BooleanField(default=False)
     enable_section_changing = models.BooleanField(default=False)
-    show_last_articles = models.BooleanField(default=False)
     allow_field_translation = models.BooleanField(default=False)
+
+    # Titles
+    title = models.CharField(max_length=64)
     benefits_title = models.CharField(max_length=64, null=True, blank=True)
     steps_title = models.CharField(max_length=64, null=True, blank=True)
     faqs_title = models.CharField(max_length=64, null=True, blank=True)
-    faqs = models.ManyToManyField(FAQ)
 
     @cached_property
     def active_hero_section(self):
@@ -28,9 +32,11 @@ class HomePage(Model, PageMixin):
     def active_problem_section(self):
         return self.problemsection_set.filter(is_active=True).first()
 
-
-class FAQsSection(Model):
-    title = models.CharField(max_length=64)
+    @cached_property
+    def faqs(self):
+        return FAQ.objects.filter(
+            sites=self.sites, can_be_shown_in_home=True, is_active=True
+        ).distinct()
 
 
 class HeroSection(Model):
@@ -82,4 +88,5 @@ class StepAction(Model):
 
 
 class UserHomePage(Model, PageMixin):
-    pass
+    sites = models.ForeignKey(Site, on_delete=models.CASCADE)
+    allow_field_translation = models.BooleanField(default=False)

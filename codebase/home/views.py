@@ -13,9 +13,11 @@ def home(request: HttpRequest) -> HttpResponse:
     site = get_current_site(request)
     context = {}
 
-    if request.user.is_authenticated and False:  # remove False  # noqa: SIM222, SIM223
-        template = "home/home.html"
-        home = site.userhomepage_set.filter(is_active=True).first()
+    if (
+        request.user.is_authenticated
+    ):  # and False:  # remove False  # noqa: SIM222, SIM223
+        template = "home/userhome.html"
+        home = site.userhomepage_set.filter().first()
     else:
         template = "home/home.html"
         home = site.homepage_set.filter(is_active=True).first()

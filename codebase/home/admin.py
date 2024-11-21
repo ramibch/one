@@ -1,25 +1,20 @@
 from django.contrib import admin
-from modeltranslation.admin import TranslationAdmin, TranslationStackedInline
+from modeltranslation.admin import TranslationAdmin
 
 from ..utils.actions import translation_actions
 from ..utils.admin import FORMFIELD_OVERRIDES_DICT
 from .models import HeroSection, HomePage
 
 
-class HomePageHeroInline(TranslationStackedInline):
-    model = HeroSection
-    extra = 1
-
-
 @admin.register(HomePage)
-class HomeAdmin(TranslationAdmin):
-    inlines = (HomePageHeroInline,)
+class HomePageAdmin(TranslationAdmin):
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT
     actions = translation_actions
+    list_display = ("title",)
 
 
 @admin.register(HeroSection)
 class HomePageHeroAdmin(TranslationAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = (
         "headline",
         "cta_link",

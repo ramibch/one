@@ -5,7 +5,7 @@ from .models import HeroSection, HomePage
 
 @register(HomePage)
 class HomePageOptions(TranslationOptions):
-    fields = ("title",)
+    fields = ("title", "benefits_title", "steps_title", "faqs_title")
 
 
 @register(HeroSection)

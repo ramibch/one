@@ -38,6 +38,7 @@ class Article(PageModel):
     )
     allow_comments = models.BooleanField(default=True)
     is_premium = models.BooleanField(default=False)
+    can_be_shown_in_home = models.BooleanField(default=True)
 
     def get_absolute_url(self):
         return reverse_lazy("article-detail", kwargs={"slug": self.slug})

@@ -57,7 +57,7 @@ class ExtendedSite(Site):
 
     # Management
     allow_field_translation = models.BooleanField(default=False)
-    last_huey_flush = models.DateTimeField(null=True)
+    last_huey_flush: models.DateTimeField = models.DateTimeField(null=True)
     has_user_home = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
@@ -166,7 +166,7 @@ class Traffic(Model):
     # Others
     time = models.DateTimeField(_("time"), default=timezone.now, db_index=True)
 
-    objects = TrafficManager()
+    objects: TrafficManager = TrafficManager()
 
     def __str__(self):
         return (
