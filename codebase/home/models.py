@@ -88,5 +88,5 @@ class StepAction(Model):
 
 
 class UserHomePage(Model, PageMixin):
-    sites = models.ForeignKey(Site, on_delete=models.CASCADE)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
     allow_field_translation = models.BooleanField(default=False)

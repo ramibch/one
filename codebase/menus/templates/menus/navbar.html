@@ -3,8 +3,8 @@
   <ul>
     <li>
       <strong> <a href="{% url "home" %}?ref=brandheader">
-        {% if site.extendedsite.emoji and site.extendedsite.emoji_in_brand %}{{ site.extendedsite.emoji }}{% endif %}
-      {{ site.name }}</a>
+        {% if request.extendedsite.emoji and request.extendedsite.emoji_in_brand %}{{ request.extendedsite.emoji }}{% endif %}
+      {{ request.extendedsite.name }}</a>
     </strong>
   </li>
 </ul>

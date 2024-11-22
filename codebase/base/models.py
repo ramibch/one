@@ -2,7 +2,6 @@ from auto_prefetch import ForeignKey, Manager, Model
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
-from django.contrib.sites.shortcuts import get_current_site
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -96,6 +95,18 @@ class ExtendedSite(Site):
         schema = "https" if settings.HTTPS else "http"
         return f"{schema}://{self.domain}"
 
+    @cached_property
+    def site(self):
+        return Site.objects.get(id=self.id)
+
+    @cached_property
+    def home(self):
+        return self.site.homepage_set.filter(is_active=True).first()
+
+    @cached_property
+    def userhome(self):
+        return self.site.userhomepage_set.filter().first()
+
     def get_object_admin_url(self, obj):
         # the url to the Django admin form for the model instance
         info = (obj._meta.app_label, obj._meta.model_name)
@@ -122,12 +133,11 @@ class ExtendedSite(Site):
 
 
 class TrafficManager(Manager):
-    def create_object_from_request_and_response(self, request, response):
+    def create_from_request_and_response(self, request, response):
         status_code = response.status_code
-        site = get_current_site(request)
         return self.create(
             user=request.user if request.user.is_authenticated else None,
-            site=site,
+            site=request.extendedsite.site,
             request_path=request.path,
             request_method=request.method,
             request_GET=request.GET,

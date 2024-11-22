@@ -48,6 +48,7 @@ class Bot:
     def to_group(cls, group_id, text, file_url=None):
         """Send text and optionally an image to a group"""
         chat_id = "@" + group_id if not group_id.startswith("@") else group_id
+
         Bot.to_chat(chat_id, text, file_url)
 
     @staticmethod

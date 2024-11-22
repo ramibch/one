@@ -18,15 +18,17 @@ class Middlewares:
         # Assign coutry to request object
         request.country = CountryDetails(request)
 
+        # Assign extended site to request
+        request.extendedsite = get_current_site(request).extendedsite
+
         # Clear cache in development
         self.clear_cache_if_dev()
 
+        # Get response (view process)
         response = self.get_response(request)
 
         # Process traffic data
-        if self.can_we_process_traffic(request.path, request.user):
-            TrafficProcessor.process(request, response)
-
+        self.process_traffic(request, response)
         return response
 
     def clear_cache_if_dev(self):
@@ -38,18 +40,17 @@ class Middlewares:
         ):
             call_command("clear_cache")
 
-    def can_we_process_traffic(self, path: str, user) -> bool:
+    def process_traffic(self, request, response) -> None:
         """Ignore traffic from staff and for certain urls."""
         exempt_paths = [
             reverse("django_browser_reload:events"),
             reverse("admin:index"),
             reverse("favicon"),
         ]
-
-        path_ok = not any(path.startswith(exempt) for exempt in exempt_paths)
-        user_ok = not user.is_staff
-
-        return path_ok and user_ok
+        path_ok = not any(request.path.startswith(exempt) for exempt in exempt_paths)
+        user_ok = not request.user.is_staff
+        if path_ok and user_ok:
+            TrafficProcessor.process(request, response)
 
 
 class CountryDetails:
@@ -92,8 +93,8 @@ class TrafficProcessor:
     @staticmethod
     def process(request: HttpRequest, response: HttpResponse):
         status_code = response.status_code
-        obj = Traffic.objects.create_object_from_request_and_response(request, response)
+        obj = Traffic.objects.create_from_request_and_response(request, response)
         if status_code >= 400:
             # There is an HTTP Error -> inform admin
-            url = get_current_site(request).extendedsite.get_object_full_admin_url(obj)
+            url = request.extendedsite.get_object_full_admin_url(obj)
             Bot.to_admin(f"🔴 {status_code} HTTP Error\n\nCheck traffic object: {url}")

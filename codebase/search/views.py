@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
@@ -25,7 +24,7 @@ def hx_seach_results(request: HttpRequest) -> HttpResponse:
         {
             "user": request.user if isinstance(request.user, User) else None,
             "country_code": request.country.code,
-            "site": get_current_site(request),
+            "site": request.extendedsite.site,
             "query": q,
         }
     )
