@@ -46,10 +46,10 @@
       <i>&copy; <span x-text="new Date().getFullYear()"></span> {{ request.extendedsite.name }}
       </i>
     </small>
-    {% if site.extendedsite.change_theme_light_in_footer %}
+    {% if request.extendedsite.change_theme_light_in_footer %}
       {% include "elements/theme_light.html" %}
     {% endif %}
-    {% if site.extendedsite.change_language_in_footer %}
+    {% if request.extendedsite.change_language_in_footer and request.extendedsite.languages.count > 1 %}
       {% include "elements/change_language.html" %}
     {% endif %}
   </center>

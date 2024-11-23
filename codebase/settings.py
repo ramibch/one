@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     "geoip2",
     "djmoney",
     "debug_toolbar",
+    "django_fastdev",
     # Django apps
     "django_browser_reload",
     "django.contrib.admin",
@@ -215,7 +216,29 @@ USE_I18N = True
 
 USE_TZ = True
 
-LANGUAGES = [("en", _("English")), ("de", _("German")), ("es", _("Spanish"))]
+LANGUAGES = [
+    ("en", _("English")),
+    ("de", _("German")),
+    ("es", _("Spanish")),
+    ("fr", _("French")),
+    ("el", _("Greek")),
+    ("eo", _("Esperanto")),
+    ("fi", _("Finnish")),
+    ("it", _("Italian")),
+    ("nl", _("Dutch")),
+    ("nn", _("Norwegian Nynorsk")),
+    ("pl", _("Polish")),
+    ("pt", _("Portuguese")),
+    ("pt-br", _("Brazilian Portuguese")),
+    ("ru", _("Russian")),
+    ("sk", _("Slovak")),
+    ("sl", _("Slovenian")),
+    ("sq", _("Albanian")),
+    ("sr", _("Serbian")),
+    ("sv", _("Swedish")),
+    ("tr", _("Turkish")),
+    ("uk", _("Ukrainian")),
+]
 
 LANGUAGE_CODES = ["en", "de", "es"]
 
@@ -322,6 +345,8 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
+
+
 ACCOUNT_LOGOUT_REDIRECT = "/"
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True

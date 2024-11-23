@@ -1,23 +1,22 @@
 {% load i18n %}
-<dialog x-bind:open="open_language_modal" >
-  <article >
+<dialog x-bind:open="open_language_modal">
+  <article>
     <header>
-      <button aria-label="Close" rel="prev" x-on:click="open_language_modal = false"></button>
-        <h2>🌐 {% trans "Change language" %}</h2>
+      <button aria-label="Close"
+              rel="prev"
+              x-on:click="open_language_modal = false"></button>
+      <h2>🌐 {% trans "Change language" %}</h2>
     </header>
-    <form  action="{% url 'set_language' %}" method="post">
+    <form action="{% url 'set_language' %}" method="post">
       {% csrf_token %}
-      <input name="next" type="hidden" value="{{ redirect_to }}">
-      <select  name="language">
-        {% for language in languages %}
-          <option value="{{ language.code }}"
-                  {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
-            {{ language.name_local }} ({{ language.code }})
-          </option>
+      {% if redirect_to %}<input name="next" type="hidden" value="{{ redirect_to }}">{% endif %}
+      <select name="language">
+        {% for language in request.extendedsite.languages.all %}
+          <option value="{{ language.id }}"
+                  {% if language.id == LANGUAGE_CODE %}selected{% endif %}>{{ language.name_local }}</option>
         {% endfor %}
       </select>
-        <button type="submit" class="col-7">
-          {% trans "Save" %}
-        </button>
+      <button type="submit" class="col-7">{% trans "Save" %}</button>
+    </form>
   </article>
 </dialog>

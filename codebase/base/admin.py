@@ -15,12 +15,16 @@ from .models import ArticlesFolder, ExtendedSite, PagesFolder, Traffic
 @admin.register(ArticlesFolder)
 @admin.register(PagesFolder)
 class ArticleFolderAdmin(admin.ModelAdmin):
+    """
+    Leave this here in the base app, because it applies to more than 1 app
+    """
+
     pass
 
 
 @admin.register(ExtendedSite)
 class ExtendedSiteAdmin(TranslationAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT  # type: ignore
     list_display = ("__str__", "domain", "name")
     search_fields = ("domain", "name")
     readonly_fields = ("last_huey_flush",)
@@ -34,7 +38,15 @@ class ExtendedSiteAdmin(TranslationAdmin):
         ),
         (
             _("Management"),
-            {"fields": ("remarks", "last_huey_flush", "allow_field_translation")},
+            {
+                "fields": (
+                    "remarks",
+                    "last_huey_flush",
+                    "allow_translation",
+                    "language",
+                    "languages",
+                )
+            },
         ),
         (
             _("Submodules"),

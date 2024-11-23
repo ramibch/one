@@ -1,5 +1,3 @@
-import sys
-
 import psycopg
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -23,7 +21,9 @@ class Command(BaseCommand):
                 msg = f"Database '{db_name}' already exists"
                 self.stdout.write(self.style.WARNING(msg))
                 cur.close()
-                sys.exit(1)
+
+            if cur.closed:
+                return
 
             try:
                 cur.execute(f"CREATE USER {u} WITH PASSWORD '{pw}';")

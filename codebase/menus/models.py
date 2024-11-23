@@ -56,7 +56,7 @@ class FooterItem(Model):
     title = models.CharField(max_length=64)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
     site = models.ManyToManyField(Site)
-    allow_field_translation = models.BooleanField(default=False)
+    allow_translation = models.BooleanField(default=False)
 
     class Meta(Model.Meta):
         ordering = ("order",)

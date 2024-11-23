@@ -1,20 +1,22 @@
 from django.conf import settings
-from huey.contrib import djhuey as huey
+from django.db.models import QuerySet
+from huey.contrib import djhuey as huey  # type: ignore
 
 from .telegram import Bot
 from .translation import translate_text
 
 
 @huey.task()
-def translate_modeltranslation_objects(queryset, translation_fields):
+def translate_modeltranslation_objects(
+    queryset: QuerySet,
+    translation_fields: list[str],
+):
     from_lang = settings.LANGUAGE_CODE
     out = "🈂️ Translating a multilanguage queryset:\n\n"
     for db_obj in queryset:
         out += f"Object {str(db_obj)}\n"
-        if not getattr(db_obj, "allow_field_translation", False):
-            out += (
-                "⚠️ Object not allowed to translate. Check: allow_field_translation.\n\n"
-            )
+        if not getattr(db_obj, "allow_translation", False):
+            out += "⚠️ Object not allowed to translate. Check: allow_translation.\n\n"
             continue
 
         for translation_field in translation_fields:

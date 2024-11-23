@@ -1,21 +1,22 @@
 from django.contrib.auth import get_user_model
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 
 from ..articles.models import Article
 from ..faqs.models import FAQ
 from ..pages.models import Page
+from ..utils.http import CustomHttpRequest
 from .tasks import save_search_query
 
 User = get_user_model()
 
 
-def search(request: HttpRequest) -> HttpResponse:
+def search(request: CustomHttpRequest) -> HttpResponse:
     return render(request, "search/index.html", {"page_title": _("Search")})
 
 
-def hx_seach_results(request: HttpRequest) -> HttpResponse:
+def hx_seach_results(request: CustomHttpRequest) -> HttpResponse:
     q = request.GET.get("q")
     if q in ["", None]:
         return HttpResponse()

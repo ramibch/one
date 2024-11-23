@@ -48,6 +48,8 @@ dependencies = [
   "djade",
   "djlint",
   "ipdb",
+  "django-stubs[compatible-mypy]>=5.1.1",
+  "django-fastdev>=1.12.0",
 ]
 
 
@@ -56,21 +58,14 @@ exclude = [".venv", "venv", "migrations", "submodules"]
 line-length = 88
 
 [tool.ruff.lint]
-select = [
-  # pycodestyle
-  "E",
-  # Pyflakes
-  "F",
-  # pyupgrade
-  "UP",
-  # flake8-bugbear
-  "B",
-  # flake8-simplify
-  "SIM",
-  # isort
-  "I",
-]
+select = ["E", "F", "UP", "B", "SIM", "I"]
 
 [tool.coverage.run]
 branch = true
 omit = ["manage.py"]
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "codebase.settings"

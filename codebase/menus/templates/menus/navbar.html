@@ -16,10 +16,10 @@
          class="contrast">{{ navlink.display_title }}</a>
     </li>
   {% endfor %}
-  {% if site.extendedsite.change_theme_light_in_navbar %}
+  {% if request.extendedsite.change_theme_light_in_navbar %}
     <li>{% include "elements/theme_light.html" %}</li>
   {% endif %}
-  {% if site.extendedsite.change_language_in_navbar %}
+  {% if request.extendedsite.change_language_in_navbar and request.extendedsite.languages.count > 1 %}
     <li>{% include "elements/change_language.html" %}</li>
   {% endif %}
 </ul>

@@ -1,9 +1,14 @@
+from typing import TypeVar
+
 from auto_prefetch import Model
 from django.conf import settings
 from django.db import models
+from django_stubs_ext.db.models import TypedModelMeta
 
 from .exceptions import SubmoduleException
 from .mixins import PageMixin
+
+M = TypeVar("M", bound="Model")
 
 
 def get_page_file_path(obj, filename: str):
@@ -15,10 +20,10 @@ def get_page_file_path(obj, filename: str):
 
 
 class SubmodulesFolder(Model):
-    submodule_name = None  # Override in the subclass.
+    submodule_name: str  # Override in the subclass.
     name = models.CharField(max_length=64, unique=True)
 
-    class Meta(Model.Meta):
+    class Meta(Model.Meta, TypedModelMeta):
         abstract = True
 
     def __str__(self):
@@ -59,8 +64,8 @@ class SubmodulesFolder(Model):
 
 
 class PageModel(Model, PageMixin):
-    submodule_folder_model = None  # Override in the subclass.
-    submodule_folder = None  # Override in the subclass.
+    submodule_folder_model: type[M]  # Override in the subclass.
+    submodule_folder: str  # Override in the subclass.
 
     title = models.CharField(max_length=256, editable=False)
     slug = models.SlugField(max_length=128, unique=True, editable=False, db_index=True)

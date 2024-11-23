@@ -14,12 +14,12 @@ class Middlewares:
     def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request):
+    def __call__(self, request: HttpRequest):
         # Assign coutry to request object
-        request.country = CountryDetails(request)
+        request.country = CountryDetails(request)  # type: ignore
 
         # Assign extended site to request
-        request.extendedsite = get_current_site(request).extendedsite
+        request.extendedsite = get_current_site(request).extendedsite  # type: ignore
 
         # Clear cache in development
         self.clear_cache_if_dev()
@@ -27,9 +27,21 @@ class Middlewares:
         # Get response (view process)
         response = self.get_response(request)
 
+        self.check_language(request, response)
+
         # Process traffic data
         self.process_traffic(request, response)
         return response
+
+    def check_language(self, request, response):
+        """
+        If the site has just one language, set that one
+        """
+        if request.extendedsite.languages_count == 1:
+            response.set_cookie(
+                settings.LANGUAGE_COOKIE_NAME,
+                request.extendedsite.language,
+            )
 
     def clear_cache_if_dev(self):
         """This is better than restarting the http server"""
@@ -96,5 +108,5 @@ class TrafficProcessor:
         obj = Traffic.objects.create_from_request_and_response(request, response)
         if status_code >= 400:
             # There is an HTTP Error -> inform admin
-            url = request.extendedsite.get_object_full_admin_url(obj)
+            url = request.extendedsite.get_object_full_admin_url(obj)  # type: ignore
             Bot.to_admin(f"🔴 {status_code} HTTP Error\n\nCheck traffic object: {url}")

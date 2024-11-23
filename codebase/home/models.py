@@ -16,7 +16,7 @@ class HomePage(Model, PageMixin):
     display_last_articles = models.BooleanField(default=False)
     display_faqs = models.BooleanField(default=False)
     enable_section_changing = models.BooleanField(default=False)
-    allow_field_translation = models.BooleanField(default=False)
+    allow_translation = models.BooleanField(default=False)
 
     # Titles
     title = models.CharField(max_length=64)
@@ -25,11 +25,11 @@ class HomePage(Model, PageMixin):
     faqs_title = models.CharField(max_length=64, null=True, blank=True)
 
     @cached_property
-    def active_hero_section(self):
+    def hero_section(self):
         return self.herosection_set.filter(is_active=True).first()
 
     @cached_property
-    def active_problem_section(self):
+    def problem_section(self):
         return self.problemsection_set.filter(is_active=True).first()
 
     @cached_property
@@ -48,7 +48,7 @@ class HeroSection(Model):
     cta_new_tab = models.BooleanField(default=False)
     image = models.ImageField(upload_to="homepages/hero/")
     is_active = models.BooleanField()
-    allow_field_translation = models.BooleanField(default=False)
+    allow_translation = models.BooleanField(default=False)
 
     def display_cta_title(self):
         return self.cta_title if self.cta_title else self.cta_link.title
@@ -73,7 +73,7 @@ class SolutionSection(Model):
     is_active = models.BooleanField()
 
 
-class Benefit(Model):
+class BenefitsSection(Model):
     homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
     emoji = models.CharField(max_length=8)
     is_active = models.BooleanField()
@@ -88,5 +88,5 @@ class StepAction(Model):
 
 
 class UserHomePage(Model, PageMixin):
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    allow_field_translation = models.BooleanField(default=False)
+    sites = models.ManyToManyField(Site)
+    allow_translation = models.BooleanField(default=False)

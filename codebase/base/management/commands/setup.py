@@ -12,6 +12,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         envs = options["environments"]
+
+        # Make migrations just in case
+        call_command("makemigrations")
+
         # Create database
         call_command("createdb")
 
@@ -20,6 +24,9 @@ class Command(BaseCommand):
 
         # Collect static
         call_command("collectstatic", interactive=False)
+
+        # Languages sync from settings to db
+        call_command("synclanguages")
 
         # Create sites
         call_command("createsites", *envs)

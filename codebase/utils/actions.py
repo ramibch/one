@@ -21,17 +21,17 @@ def translate_from_default_language(modeladmin, request, queryset):
 
 
 @admin.action(description="☑️ Allow field translation")
-def allow_field_translation_for_qs(modeladmin, request, queryset):
-    queryset.update(allow_field_translation=True)
+def allow_translation_for_qs(modeladmin, request, queryset):
+    queryset.update(allow_translation=True)
 
 
 @admin.action(description="⏹️ Disallow field translation")
-def disallow_field_translation_for_qs(modeladmin, request, queryset):
-    queryset.update(allow_field_translation=False)
+def disallow_translation_for_qs(modeladmin, request, queryset):
+    queryset.update(allow_translation=False)
 
 
 translation_actions = [
     translate_from_default_language,
-    allow_field_translation_for_qs,
-    disallow_field_translation_for_qs,
+    allow_translation_for_qs,
+    disallow_translation_for_qs,
 ]

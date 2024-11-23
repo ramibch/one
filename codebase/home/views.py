@@ -1,12 +1,13 @@
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 
 from ..articles.models import Article
+from ..utils.http import CustomHttpRequest
 
 
 @require_GET
-def home(request: HttpRequest) -> HttpResponse:
+def home(request: CustomHttpRequest) -> HttpResponse:
     # https://www.youtube.com/watch?v=g3cmNDlwGEg
 
     if request.user.is_authenticated:

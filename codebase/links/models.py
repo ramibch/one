@@ -32,7 +32,7 @@ class Link(Model):
     page = ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True)
     plan = ForeignKey(Plan, on_delete=models.CASCADE, null=True, blank=True)
     article = ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
-    allow_field_translation = models.BooleanField(default=False)
+    allow_translation = models.BooleanField(default=False)
 
     def __str__(self):
         return f"<Link to {self.title}>"
