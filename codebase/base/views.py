@@ -4,8 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_GET
 
-from ..utils.http import CustomHttpRequest
-from ..utils.telegram import Bot
+from codebase.base.utils.http import CustomHttpRequest
+from codebase.base.utils.telegram import Bot
 
 
 @require_GET

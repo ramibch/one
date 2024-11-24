@@ -1,8 +1,9 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from ..utils.actions import translation_actions
-from ..utils.admin import FORMFIELD_OVERRIDES_DICT
+from codebase.base.utils.actions import translation_actions
+from codebase.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+
 from .models import FAQ
 
 

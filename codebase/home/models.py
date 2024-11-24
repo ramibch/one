@@ -3,12 +3,14 @@ from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.functional import cached_property
 
+from codebase.base.utils.mixins import PageMixin
+
+from ..base.utils.abstracts import TranslatableModel
 from ..faqs.models import FAQ
 from ..links.models import Link
-from ..utils.mixins import PageMixin
 
 
-class HomePage(Model, PageMixin):
+class HomePage(TranslatableModel, PageMixin):
     sites = models.ManyToManyField(Site)
 
     # Management
@@ -16,7 +18,6 @@ class HomePage(Model, PageMixin):
     display_last_articles = models.BooleanField(default=False)
     display_faqs = models.BooleanField(default=False)
     enable_section_changing = models.BooleanField(default=False)
-    allow_translation = models.BooleanField(default=False)
 
     # Titles
     title = models.CharField(max_length=64)
@@ -39,7 +40,7 @@ class HomePage(Model, PageMixin):
         ).distinct()
 
 
-class HeroSection(Model):
+class HeroSection(TranslatableModel):
     homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
     headline = models.TextField(max_length=256)
     subheadline = models.TextField(max_length=256)
@@ -48,7 +49,6 @@ class HeroSection(Model):
     cta_new_tab = models.BooleanField(default=False)
     image = models.ImageField(upload_to="homepages/hero/")
     is_active = models.BooleanField()
-    allow_translation = models.BooleanField(default=False)
 
     def display_cta_title(self):
         return self.cta_title if self.cta_title else self.cta_link.title
@@ -87,6 +87,5 @@ class StepAction(Model):
     is_active = models.BooleanField()
 
 
-class UserHomePage(Model, PageMixin):
+class UserHomePage(TranslatableModel, PageMixin):
     sites = models.ManyToManyField(Site)
-    allow_translation = models.BooleanField(default=False)

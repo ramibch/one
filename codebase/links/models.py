@@ -1,4 +1,4 @@
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse_lazy
@@ -6,6 +6,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from ..articles.models import Article
+from ..base.utils.abstracts import TranslatableModel
 from ..pages.models import Page
 from ..plans.models import Plan
 
@@ -23,7 +24,7 @@ DJANGO_URL_PATHS = (
 )
 
 
-class Link(Model):
+class Link(TranslatableModel):
     custom_title = models.CharField(max_length=128, null=True, blank=True)
     external_url = models.URLField(max_length=256, null=True, blank=True)
     django_url_path = models.CharField(
@@ -32,7 +33,6 @@ class Link(Model):
     page = ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True)
     plan = ForeignKey(Plan, on_delete=models.CASCADE, null=True, blank=True)
     article = ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
-    allow_translation = models.BooleanField(default=False)
 
     def __str__(self):
         return f"<Link to {self.title}>"

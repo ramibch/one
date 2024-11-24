@@ -1,7 +1,8 @@
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from ..utils.db_sync import sync_page_objects
+from codebase.base.utils.db_sync import sync_page_objects
+
 from .models import Article, ArticleFile
 
 

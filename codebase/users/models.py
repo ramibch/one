@@ -1,3 +1,4 @@
+from auto_prefetch import ForeignKey
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -7,6 +8,7 @@ from django.utils.functional import cached_property
 class User(AbstractUser):
     asked_to_verify_email = models.BooleanField(default=False)
     country_code = models.CharField(max_length=8, null=True)
+    language = ForeignKey("base.Language", on_delete=models.SET_DEFAULT, default="en")
 
     @cached_property
     def delete_account_url(self):

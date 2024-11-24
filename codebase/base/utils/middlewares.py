@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.gis.geoip2 import GeoIP2
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.management import call_command
@@ -6,8 +7,10 @@ from django.http import HttpRequest, HttpResponse
 from django.urls import reverse
 from django.utils.functional import cached_property
 
-from .base.models import Traffic
-from .utils.telegram import Bot
+from ..models import Language, Traffic
+from .telegram import Bot
+
+User = get_user_model()
 
 
 class Middlewares:
@@ -27,21 +30,29 @@ class Middlewares:
         # Get response (view process)
         response = self.get_response(request)
 
-        self.check_language(request, response)
+        # Check and set language
+        self.check_and_set_language(request, response)
 
         # Process traffic data
         self.process_traffic(request, response)
         return response
 
-    def check_language(self, request, response):
-        """
-        If the site has just one language, set that one
-        """
-        if request.extendedsite.languages_count == 1:
-            response.set_cookie(
-                settings.LANGUAGE_COOKIE_NAME,
-                request.extendedsite.language,
-            )
+    def check_and_set_language(self, request, response):
+        lang = None
+        if request.user.is_authenticated:
+            # If the request has user, set the user language
+            if request.path == reverse("set_language") and request.method == "POST":
+                # User is changing the language
+                lang = Language.objects.get(id=request.POST.get("language"))
+                User.objects.filter(id=request.user.id).update(language=lang)
+            else:
+                lang = request.user.language
+        elif request.extendedsite.languages_count == 1:
+            # If the site has just one language, set that one
+            lang = request.extendedsite.default_language
+
+        if lang is not None:
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang.id)
 
     def clear_cache_if_dev(self):
         """This is better than restarting the http server"""

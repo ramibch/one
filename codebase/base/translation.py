@@ -5,8 +5,4 @@ from .models import ExtendedSite
 
 @register(ExtendedSite)
 class ExtendedSiteOptions(TranslationOptions):
-    fields = (
-        "default_page_title",
-        "default_page_description",
-        "default_page_keywords",
-    )
+    fields = ("page_title", "page_description", "page_keywords")

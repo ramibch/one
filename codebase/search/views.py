@@ -3,10 +3,11 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 
+from codebase.base.utils.http import CustomHttpRequest
+
 from ..articles.models import Article
 from ..faqs.models import FAQ
 from ..pages.models import Page
-from ..utils.http import CustomHttpRequest
 from .tasks import save_search_query
 
 User = get_user_model()

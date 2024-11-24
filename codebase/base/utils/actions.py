@@ -1,7 +1,7 @@
 from django.contrib import admin
 from modeltranslation.translator import translator
 
-from .tasks import translate_modeltranslation_objects
+from ..tasks import translate_modeltranslation_objects
 from .telegram import Bot
 
 

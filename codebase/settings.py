@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 # 0. Setup
 import os
 import sys
+from copy import copy
 from pathlib import Path
 
 import dotenv
@@ -124,7 +125,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.admindocs.middleware.XViewMiddleware",
     # own middlewares
-    "codebase.middlewares.Middlewares",
+    "codebase.base.utils.middlewares.Middlewares",
     # third-party middlewares
     "django_browser_reload.middleware.BrowserReloadMiddleware",
     "allauth.account.middleware.AccountMiddleware",
@@ -143,7 +144,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "codebase.context_processors.site_utilities",
+                "codebase.base.utils.context_processors.site_utilities",
             ],
             "debug": DEBUG,
         },
@@ -240,9 +241,11 @@ LANGUAGES = [
     ("uk", _("Ukrainian")),
 ]
 
-LANGUAGE_CODES = ["en", "de", "es"]
+LANGUAGE_CODES = [items[0] for items in LANGUAGES]
 
-LANGUAGE_CODES_WITHOUT_DEFAULT = ["de", "es"]
+LANGUAGE_CODES_WITHOUT_DEFAULT = copy(LANGUAGE_CODES)
+LANGUAGE_CODES_WITHOUT_DEFAULT.remove(LANGUAGE_CODE)
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -438,7 +441,7 @@ SUBMODULES_PATH = BASE_DIR / "submodules"
 # Telegram
 # 1. Use BotFather to get API KEY: https://telegram.me/BotFather
 # 2. (Admin): Write something to Bot in Telegram
-# 3. Read the updates: codebase.utils.telegram.Bot.get_updates
+# 3. Read the updates: codebase.base.utils.telegram.Bot.get_updates
 
 TELEGRAM_BOT_API_KEY = os.environ.get("TELEGRAM_BOT_API_KEY")
 TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID", "1777934566")
@@ -466,7 +469,7 @@ S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL")
 
 # S3 media
 S3_MEDIA_LOCATION = "media"  # "" or "media"
-S3_MEDIA_STORAGE_BACKEND = "codebase.s3.PublicMediaStorage"
+S3_MEDIA_STORAGE_BACKEND = "codebase.base.utils.s3.PublicMediaStorage"
 S3_MEDIA_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_MEDIA_BUCKET_NAME}/"
 if S3_MEDIA_LOCATION == "":
     S3_MEDIA_URL = S3_MEDIA_BASE_URL
@@ -475,7 +478,7 @@ else:
 
 # S3 static
 S3_STATIC_LOCATION = "static"  # "" or "static"
-S3_STATIC_STORAGE_BACKEND = "codebase.s3.StaticStorage"
+S3_STATIC_STORAGE_BACKEND = "codebase.base.utils.s3.StaticStorage"
 S3_STATIC_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_STATIC_BUCKET_NAME}/"
 if S3_STATIC_LOCATION == "":
     S3_STATIC_URL = S3_STATIC_BASE_URL

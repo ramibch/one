@@ -1,7 +1,7 @@
 {% load i18n static django_browser_reload %}
-{% firstof page_title object.title request.extendedsite.default_page_title as title %}
-{% firstof page_keywords object.keywords request.extendedsite.default_page_keywords as keywords %}
-{% firstof page_description object.description request.extendedsite.default_page_description as description %}
+{% firstof page_title object.title request.extendedsite.page_title as title %}
+{% firstof page_keywords object.keywords request.extendedsite.page_keywords as keywords %}
+{% firstof page_description object.description request.extendedsite.page_description as description %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 {% get_language_info_list for LANGUAGES as languages %}

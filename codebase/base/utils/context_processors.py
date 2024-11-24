@@ -1,4 +1,7 @@
-def site_utilities(request):
+from .http import CustomHttpRequest
+
+
+def site_utilities(request: CustomHttpRequest) -> dict:
     show_types = ["user" if request.user.is_authenticated else "no_user", "always"]
     return {
         "request": request,

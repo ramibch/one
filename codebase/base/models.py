@@ -9,21 +9,22 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import get_language_info
 from django.utils.translation import gettext_lazy as _
-from django_stubs_ext.db.models import TypedModelMeta
+
+from codebase.base.utils.exceptions import SubmoduleFolderModelUnknow
 
 from ..articles.models import ArticlesFolder
 from ..home.models import HomePage, UserHomePage
 from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 from ..pages.models import PagesFolder
-from ..utils.exceptions import SubmoduleFolderModelUnknow
+from .utils.abstracts import TranslatableModel
 
 User = get_user_model()
 
 
 class LanguageManager(Manager):
     def sync(self):
-        for code, _ in settings.LANGUAGES:
-            self.get_or_create(id=code)
+        for lang_info in settings.LANGUAGES:
+            self.get_or_create(id=lang_info[0])
 
 
 class Language(Model):
@@ -58,7 +59,7 @@ class Language(Model):
         return self.language_info.get("name_translated")  # type: ignore
 
 
-class ExtendedSite(Site):
+class ExtendedSite(Site, TranslatableModel):
     PICOCSS = (
         ("amber", _("Amber")),
         ("blue", _("Blue")),
@@ -85,9 +86,9 @@ class ExtendedSite(Site):
 
     emoji = models.CharField(max_length=8, null=True)
     emoji_in_brand = models.BooleanField(default=True)
-    default_page_title = models.CharField(max_length=64, null=True)
-    default_page_description = models.TextField(max_length=256, null=True)
-    default_page_keywords = models.TextField(max_length=128, null=True)
+    page_title = models.CharField(max_length=64, null=True)
+    page_description = models.TextField(max_length=256, null=True)
+    page_keywords = models.TextField(max_length=128, null=True)
 
     picocss_color = models.CharField(max_length=16, choices=PICOCSS, default="orange")
     footer_links_separator = models.CharField(max_length=4, default="|")
@@ -98,17 +99,21 @@ class ExtendedSite(Site):
     change_language_in_footer = models.BooleanField(default=True)
 
     # Management
-    allow_translation = models.BooleanField(default=False)
     last_huey_flush: models.DateTimeField = models.DateTimeField(null=True)
     has_user_home = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    language = ForeignKey(
+    default_language = ForeignKey(
         Language,
-        verbose_name=_("Default languages"),
-        on_delete=models.CASCADE,
         default="en",
+        on_delete=models.SET_DEFAULT,
+        verbose_name=_("Default language"),
+        related_name="extendedsites_with_default_languages",
     )
-    languages = ManyToManyField(Language, related_name="+")  # type: ignore
+    rest_languages = ManyToManyField(
+        Language,
+        verbose_name=_("Rest of languages"),
+        related_name="extendedsites_with_rest_languages",
+    )
 
     # Submodules
     article_folders: QuerySet[ArticlesFolder] = ManyToManyField(ArticlesFolder)  # type: ignore
@@ -117,8 +122,11 @@ class ExtendedSite(Site):
     def __str__(self):
         return self.name
 
-    class Meta(TypedModelMeta):
-        pass
+    @cached_property
+    def languages(self) -> QuerySet[Language]:
+        qs1 = self.rest_languages.all()
+        qs2 = Language.objects.filter(id=self.default_language_id)
+        return (qs1 | qs2).distinct()
 
     @cached_property
     def languages_count(self) -> int:

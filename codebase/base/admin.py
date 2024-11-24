@@ -5,10 +5,11 @@ from django.utils.translation import gettext_lazy as _
 from huey.contrib.djhuey import HUEY
 from modeltranslation.admin import TranslationAdmin
 
+from codebase.base.utils.actions import translation_actions
+from codebase.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+
 from ..articles.tasks import trigger_sync_articles
 from ..pages.tasks import trigger_sync_pages
-from ..utils.actions import translation_actions
-from ..utils.admin import FORMFIELD_OVERRIDES_DICT
 from .models import ArticlesFolder, ExtendedSite, PagesFolder, Traffic
 
 
@@ -43,8 +44,9 @@ class ExtendedSiteAdmin(TranslationAdmin):
                     "remarks",
                     "last_huey_flush",
                     "allow_translation",
-                    "language",
-                    "languages",
+                    "override_translated_fields",
+                    "default_language",
+                    "rest_languages",
                 )
             },
         ),
@@ -58,13 +60,7 @@ class ExtendedSiteAdmin(TranslationAdmin):
         ),
         (
             _("Defaults"),
-            {
-                "fields": (
-                    "default_page_title",
-                    "default_page_description",
-                    "default_page_keywords",
-                )
-            },
+            {"fields": ("page_title", "page_description", "page_keywords")},
         ),
         (
             _("Appearance and design"),

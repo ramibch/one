@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 
-from ..base.models import ExtendedSite
-from ..middlewares import CountryDetails
+from ..models import ExtendedSite
+from .middlewares import CountryDetails
 
 
 class PDFResponse(HttpResponse):

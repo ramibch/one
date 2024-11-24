@@ -9,6 +9,7 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from ..base.utils.abstracts import TranslatableModel
 from ..links.models import Link
 
 SHOW_CHOICES = (
@@ -48,15 +49,14 @@ class NavbarLink(Model):
             )
 
 
-class FooterItem(Model):
+class FooterItem(TranslatableModel):
     order = models.PositiveSmallIntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(8)]
     )
     emoji = models.CharField(max_length=8, null=True, blank=True)
     title = models.CharField(max_length=64)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
-    site = models.ManyToManyField(Site)
-    allow_translation = models.BooleanField(default=False)
+    sites = models.ManyToManyField(Site)
 
     class Meta(Model.Meta):
         ordering = ("order",)
@@ -96,7 +96,7 @@ class SocialMediaLink(Model):
     url = models.URLField(max_length=256)
     new_tab = models.BooleanField(default=True)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
-    site = models.ManyToManyField(Site)
+    sites = models.ManyToManyField(Site)
 
     @cached_property
     def static_icon_url(self) -> str:

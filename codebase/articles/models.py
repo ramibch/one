@@ -5,10 +5,11 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
-from ..utils.abstracts import (
+from codebase.base.utils.abstracts import (
     PageFileModel,
     PageModel,
     SubmodulesFolder,
+    TranslatableModel,
 )
 
 User = get_user_model()
@@ -22,7 +23,7 @@ class ArticlesFolder(SubmodulesFolder):
     submodule_name = "articles"
 
 
-class Article(PageModel):
+class Article(PageModel, TranslatableModel):
     """
     File-based article model
     """

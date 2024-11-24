@@ -1,7 +1,8 @@
-from auto_prefetch import Model
 from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from ..base.utils.abstracts import TranslatableModel
 
 
 class FAQCategories(models.TextChoices):
@@ -12,7 +13,7 @@ class FAQCategories(models.TextChoices):
     LEGAL = "legal", _("Legal concerns")
 
 
-class FAQ(Model):
+class FAQ(TranslatableModel):
     sites = models.ManyToManyField(Site)
     category = models.CharField(max_length=32, choices=FAQCategories)
     question = models.CharField(max_length=256)

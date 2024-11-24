@@ -5,7 +5,7 @@ from django.core.files import File
 from django.db.models import Q
 from django.utils.text import slugify
 
-from ..base.models import ExtendedSite
+from ..models import ExtendedSite
 from .telegram import Bot
 
 
@@ -120,9 +120,14 @@ def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
                     # Adjust body if markdown file includes files
                     for local, remote in body_replacements.items():
                         for lang_code in settings.LANGUAGE_CODES:
-                            new_value = getattr(db_object, f"body_{lang_code}").replace(
-                                local, remote
-                            )
+                            field = f"body_{lang_code}"
+                            if (
+                                not hasattr(db_object, field)
+                                or getattr(db_object, field) is None
+                            ):
+                                continue
+
+                            new_value = getattr(db_object, field).replace(local, remote)
                             setattr(db_object, f"body_{lang_code}", new_value)
 
                 # Save all object attributes in the database

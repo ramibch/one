@@ -3,7 +3,8 @@ from django.db import models
 from django.forms import CheckboxSelectMultiple
 from modeltranslation.admin import TranslationAdmin
 
-from ..utils.actions import translation_actions
+from codebase.base.utils.actions import translation_actions
+
 from .models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
 FORMFIELD_OVERRIDES_DICT = {

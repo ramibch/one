@@ -1,29 +1,25 @@
-from typing import TypeVar
-
 from auto_prefetch import Model
 from django.conf import settings
 from django.db import models
-from django_stubs_ext.db.models import TypedModelMeta
+from django.utils.functional import cached_property
 
 from .exceptions import SubmoduleException
 from .mixins import PageMixin
 
-M = TypeVar("M", bound="Model")
-
 
 def get_page_file_path(obj, filename: str):
     PageModel = obj.parent_page._meta.model
-    sm_name = PageModel.submodule_folder_model.submodule_name
+    submodule_name = PageModel.submodule_folder_model.submodule_name
     folder = obj.parent_page.folder
     subfolder = obj.parent_page.subfolder
-    return f"{sm_name}/{folder}/{subfolder}/{filename}"
+    return f"{submodule_name}/{folder}/{subfolder}/{filename}"
 
 
 class SubmodulesFolder(Model):
     submodule_name: str  # Override in the subclass.
     name = models.CharField(max_length=64, unique=True)
 
-    class Meta(Model.Meta, TypedModelMeta):
+    class Meta(Model.Meta):
         abstract = True
 
     def __str__(self):
@@ -64,7 +60,7 @@ class SubmodulesFolder(Model):
 
 
 class PageModel(Model, PageMixin):
-    submodule_folder_model: type[M]  # Override in the subclass.
+    submodule_folder_model: type[Model]  # Override in the subclass.
     submodule_folder: str  # Override in the subclass.
 
     title = models.CharField(max_length=256, editable=False)
@@ -105,3 +101,40 @@ class SingletonModel(Model):
     @classmethod
     def get(cls):
         return cls.load()
+
+
+class TranslatableModel(Model):
+    allow_translation = models.BooleanField(default=False)
+    override_translated_fields = models.BooleanField(default=False)
+
+    class Meta(Model.Meta):
+        abstract = True
+
+    @cached_property
+    def extendedsite(self):
+        from codebase.base.models import ExtendedSite
+
+        if isinstance(self, ExtendedSite):
+            return self
+
+        if hasattr(self, "sites"):
+            site = self.sites.first()
+        elif hasattr(self, "site"):
+            site = self.site
+        return site.extendedsite
+
+    @cached_property
+    def default_language(self):
+        return self.extendedsite.default_language
+
+    @cached_property
+    def rest_languages(self):
+        return self.extendedsite.rest_languages
+
+    @cached_property
+    def languages(self):
+        return self.extendedsite.languages
+
+    @cached_property
+    def languages_count(self):
+        return self.extendedsite.languages_count

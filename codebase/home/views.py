@@ -2,8 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 
+from codebase.base.utils.http import CustomHttpRequest
+
 from ..articles.models import Article
-from ..utils.http import CustomHttpRequest
 
 
 @require_GET

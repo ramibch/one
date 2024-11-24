@@ -1,6 +1,7 @@
 from django.views.generic.list import ListView
 
-from ..utils.generic_views import MultilinguageDetailView
+from codebase.base.utils.generic_views import MultilinguageDetailView
+
 from .models import Article
 
 
