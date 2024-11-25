@@ -21,8 +21,8 @@
     {% endwith %}
   {% endif %}
   <!-- Last articles if available -->
-  {% if last_articles %}
-    {% for article in last_articles %}
+  {% if object.display_last_articles == true %}
+    {% for article in object.last_articles %}
       <details>
         <header>
           {{ article.title }}

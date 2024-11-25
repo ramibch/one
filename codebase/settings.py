@@ -11,17 +11,18 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 # 0. Setup
-import os
 import sys
 from copy import copy
 from pathlib import Path
 
-import dotenv
 from django.utils.translation import gettext_lazy as _
+from environs import Env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+env = Env()
 
 # Load env vars from .env file if not testing
 try:
@@ -30,26 +31,26 @@ except IndexError:  # pragma: no cover
     command = "help"
 
 if command != "test":  # pragma: no cover
-    dotenv.load_dotenv(dotenv_path=BASE_DIR / ".env")
+    env.read_env()  # read .env file, if it exists
 
 
 # Activate settings for HTTPS connections
-HTTPS = os.environ.get("HTTPS", "") == "1"
+HTTPS = env.bool("HTTPS")
 
 
 # Use a S3 service to store static and media files
-USE_S3_FOR_MEDIA_FILES = os.environ.get("USE_S3_FOR_MEDIA_FILES", "") == "1"
-USE_S3_FOR_STATIC_FILES = os.environ.get("USE_S3_FOR_STATIC_FILES", "") == "1"
+USE_S3_FOR_MEDIA_FILES = env.bool("USE_S3_FOR_MEDIA_FILES")
+USE_S3_FOR_STATIC_FILES = env.bool("USE_S3_FOR_STATIC_FILES", "")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", "some-tests-need-a-secret-key")
+SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "") == "1"
+DEBUG = env("DEBUG", "") == "1"
 
 
 """
@@ -164,13 +165,13 @@ WSGI_APPLICATION = "codebase.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-DB_SUPERUSER = os.environ.get("POSTGRES_SUPERUSER")
-DB_SUPERPASSWORD = os.environ.get("POSTGRES_SUPERPASSWORD")
-DB_NAME = os.environ.get("POSTGRES_DB")
-DB_USER = os.environ.get("POSTGRES_USER")
-DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
-DB_HOST = os.environ.get("POSTGRES_HOST")
-DB_PORT = os.environ.get("POSTGRES_PORT")
+DB_SUPERUSER = env("POSTGRES_SUPERUSER")
+DB_SUPERPASSWORD = env("POSTGRES_SUPERPASSWORD")
+DB_NAME = env("POSTGRES_DB")
+DB_USER = env("POSTGRES_USER")
+DB_PASSWORD = env("POSTGRES_PASSWORD")
+DB_HOST = env("POSTGRES_HOST")
+DB_PORT = env("POSTGRES_PORT")
 
 DATABASES = {
     "default": {
@@ -262,9 +263,9 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Superuser without input
 
-DJANGO_SUPERUSER_USERNAME = os.environ.get("DJANGO_SUPERUSER_USERNAME")
-DJANGO_SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
-DJANGO_SUPERUSER_EMAIL = os.environ.get("DJANGO_SUPERUSER_EMAIL")
+DJANGO_SUPERUSER_USERNAME = env("DJANGO_SUPERUSER_USERNAME")
+DJANGO_SUPERUSER_PASSWORD = env("DJANGO_SUPERUSER_PASSWORD")
+DJANGO_SUPERUSER_EMAIL = env("DJANGO_SUPERUSER_EMAIL")
 
 
 """
@@ -317,12 +318,12 @@ MARKDOWNIFY = {
 }
 
 # Email and django-o365
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_BACKEND = "django_o365mail.EmailBackend"
-O365_MAIL_CLIENT_ID = os.environ.get("O365_MAIL_CLIENT_ID")
-O365_MAIL_CLIENT_SECRET = os.environ.get("O365_MAIL_CLIENT_SECRET")
-O365_MAIL_TENANT_ID = os.environ.get("O365_MAIL_TENANT_ID")
+O365_MAIL_CLIENT_ID = env("O365_MAIL_CLIENT_ID")
+O365_MAIL_CLIENT_SECRET = env("O365_MAIL_CLIENT_SECRET")
+O365_MAIL_TENANT_ID = env("O365_MAIL_TENANT_ID")
 O365_MAIL_MAILBOX_KWARGS = {"resource": EMAIL_HOST_USER}
 O365_MAIL_SAVE_TO_SENT = True
 
@@ -330,7 +331,7 @@ O365_MAIL_SAVE_TO_SENT = True
 ## Translations
 
 # DeepL
-DEEPL_AUTH_KEY = os.environ.get("DEEPL_AUTH_KEY")
+DEEPL_AUTH_KEY = env("DEEPL_AUTH_KEY")
 
 
 # Rosetta
@@ -371,15 +372,15 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         "APP": {
-            "client_id": os.environ.get("SOCIALACCOUNT_GOOGLE_CLIENT_ID"),
-            "secret": os.environ.get("SOCIALACCOUNT_GOOGLE_SECRET_KEY"),
+            "client_id": env("SOCIALACCOUNT_GOOGLE_CLIENT_ID"),
+            "secret": env("SOCIALACCOUNT_GOOGLE_SECRET_KEY"),
             "key": "",
         }
     },
     "linkedin_oauth2": {
         "APP": {
-            "client_id": os.environ.get("SOCIALACCOUNT_LINKEDIN_CLIENT_ID"),
-            "secret": os.environ.get("SOCIALACCOUNT_LINKEDIN_SECRET_KEY"),
+            "client_id": env("SOCIALACCOUNT_LINKEDIN_CLIENT_ID"),
+            "secret": env("SOCIALACCOUNT_LINKEDIN_SECRET_KEY"),
             "key": "",
         },
         "SCOPE": ["r_liteprofile", "r_emailaddress", "w_member_social"],
@@ -443,14 +444,14 @@ SUBMODULES_PATH = BASE_DIR / "submodules"
 # 2. (Admin): Write something to Bot in Telegram
 # 3. Read the updates: codebase.base.utils.telegram.Bot.get_updates
 
-TELEGRAM_BOT_API_KEY = os.environ.get("TELEGRAM_BOT_API_KEY")
-TELEGRAM_ADMIN_CHAT_ID = os.environ.get("TELEGRAM_ADMIN_CHAT_ID", "1777934566")
+TELEGRAM_BOT_API_KEY = env("TELEGRAM_BOT_API_KEY")
+TELEGRAM_ADMIN_CHAT_ID = env("TELEGRAM_ADMIN_CHAT_ID", "1777934566")
 
 
 # Whatsapp
 # https://developers.facebook.com/docs/whatsapp/cloud-api/messages/text-messages
-WHATSAPP_API_ACCESS_TOKEN = os.environ.get("WHATSAPP_BUSINESS_PHONE_NUMBER_ID")
-WHATSAPP_BUSINESS_PHONE_NUMBER_ID = os.environ.get("WHATSAPP_BUSINESS_PHONE_NUMBER_ID")
+WHATSAPP_API_ACCESS_TOKEN = env("WHATSAPP_API_ACCESS_TOKEN")
+WHATSAPP_BUSINESS_PHONE_NUMBER_ID = env("WHATSAPP_BUSINESS_PHONE_NUMBER_ID")
 
 
 # Storage of static and media files
@@ -461,11 +462,11 @@ STATICFILES_DIRS = [
 ]
 
 # S3 auth and bucket parameters
-S3_ACCESS_KEY = os.environ.get("S3_ACCESS_KEY")
-S3_SECRET_KEY = os.environ.get("S3_SECRET_KEY")
-S3_MEDIA_BUCKET_NAME = os.environ.get("S3_MEDIA_BUCKET_NAME")
-S3_STATIC_BUCKET_NAME = os.environ.get("S3_STATIC_BUCKET_NAME")
-S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL")
+S3_ACCESS_KEY = env("S3_ACCESS_KEY")
+S3_SECRET_KEY = env("S3_SECRET_KEY")
+S3_MEDIA_BUCKET_NAME = env("S3_MEDIA_BUCKET_NAME")
+S3_STATIC_BUCKET_NAME = env("S3_STATIC_BUCKET_NAME")
+S3_ENDPOINT_URL = env("S3_ENDPOINT_URL")
 
 # S3 media
 S3_MEDIA_LOCATION = "media"  # "" or "media"

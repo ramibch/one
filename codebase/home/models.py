@@ -5,6 +5,7 @@ from django.utils.functional import cached_property
 
 from codebase.base.utils.mixins import PageMixin
 
+from ..articles.models import Article, ArticlesFolder
 from ..base.utils.abstracts import TranslatableModel
 from ..faqs.models import FAQ
 from ..links.models import Link
@@ -16,6 +17,7 @@ class HomePage(TranslatableModel, PageMixin):
     # Management
     is_active = models.BooleanField(default=True)
     display_last_articles = models.BooleanField(default=False)
+    number_of_last_articles = models.PositiveSmallIntegerField(default=6)
     display_faqs = models.BooleanField(default=False)
     enable_section_changing = models.BooleanField(default=False)
 
@@ -38,6 +40,16 @@ class HomePage(TranslatableModel, PageMixin):
         return FAQ.objects.filter(
             sites=self.sites, can_be_shown_in_home=True, is_active=True
         ).distinct()
+
+    @cached_property
+    def articles(self):
+        extended_sites = self.sites.values_list("extendedsite", flat=True)
+        article_folders = ArticlesFolder.objects.filter(extendedsite__in=extended_sites)
+        return Article.objects.filter(submodule_folder__in=article_folders).distinct()
+
+    @cached_property
+    def last_articles(self):
+        return self.articles[: self.number_of_last_articles]
 
 
 class HeroSection(TranslatableModel):

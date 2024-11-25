@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 
 from codebase.base.utils.exceptions import SubmoduleFolderModelUnknow
 
-from ..articles.models import ArticlesFolder
+from ..articles.models import Article, ArticlesFolder
 from ..home.models import HomePage, UserHomePage
 from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 from ..pages.models import PagesFolder
@@ -131,6 +131,12 @@ class ExtendedSite(Site, TranslatableModel):
     @cached_property
     def languages_count(self) -> int:
         return self.languages.count()
+
+    @cached_property
+    def articles(self):
+        return Article.objects.filter(
+            submodule_folder__in=self.article_folders.all()
+        ).distinct()
 
     @cached_property
     def picocss_static_url(self) -> str:

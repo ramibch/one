@@ -36,7 +36,6 @@ dependencies = [
   "stripe",
   "python-barcode[images]",
   "django-taggit",
-  "python-dotenv",
   "gunicorn",
   "ipython",
   "coverage[toml]",
@@ -50,6 +49,7 @@ dependencies = [
   "ipdb",
   "django-stubs[compatible-mypy]>=5.1.1",
   "django-fastdev>=1.12.0",
+  "environs>=11.2.1",
 ]
 
 
