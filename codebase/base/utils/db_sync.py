@@ -6,10 +6,13 @@ from django.db.models import Q
 from django.utils.text import slugify
 
 from ..models import ExtendedSite
+from .abstracts import BasePageModel
 from .telegram import Bot
 
 
-def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
+def sync_page_objects(
+    PageModel: type[BasePageModel], PageModelFile=None, extended_sites=None
+):
     """
     Read the contents of the specified submodule and save them in the database.
     :param PageModel: Model class to save objects (Page or Article).
@@ -18,8 +21,8 @@ def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
     """
 
     # Definitions and checks
-    SubmoduleFolderModel = PageModel.submodule_folder_model
-    submodule_name = SubmoduleFolderModel.submodule_name
+    SubmoduleModel = PageModel.submodule_model
+    submodule_name = SubmoduleModel.submodule_name
     submodule_path = settings.SUBMODULES_PATH / submodule_name
 
     if not isinstance(submodule_path, Path):
@@ -38,7 +41,7 @@ def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
     for extsite in extended_sites:
         to_admin = f"🔄 Syncing {submodule_name} for {extsite.name}\n\n"
 
-        folder_list = extsite.get_submodule_folders_as_list(Model=SubmoduleFolderModel)
+        folder_list = extsite.get_submodule_folders_as_list(Model=SubmoduleModel)
 
         if not folder_list or folder_list == []:
             to_admin += (
@@ -62,9 +65,7 @@ def sync_page_objects(PageModel, PageModelFile=None, extended_sites=None):
                 to_admin += f"✍ {folder}/{subfolder_path.name}\n"
 
                 db_object = PageModel.objects.get_or_create(
-                    submodule_folder=SubmoduleFolderModel.objects.get_or_create(
-                        name=folder
-                    )[0],
+                    submodule=SubmoduleModel.objects.get_or_create(name=folder)[0],
                     subfolder=subfolder_path.name,
                     folder=folder,
                 )[0]

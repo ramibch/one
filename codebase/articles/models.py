@@ -1,42 +1,28 @@
 from auto_prefetch import ForeignKey, Model
 from django.contrib.auth import get_user_model
-from django.contrib.sites.models import Site
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from codebase.base.utils.abstracts import (
+    BasePageModel,
+    BaseSubmodule,
     PageFileModel,
-    PageModel,
-    SubmodulesFolder,
-    TranslatableModel,
 )
 
 User = get_user_model()
 
 
-def upload_article_file(obj, filename: str):
-    return f"articles/{obj.parent_page.folder}/{obj.parent_page.subfolder}/{filename}"
+class ArticlesFolder(BaseSubmodule, submodule_name="articles"):
+    """Submodule"""
+
+    pass
 
 
-class ArticlesFolder(SubmodulesFolder):
-    submodule_name = "articles"
+class Article(BasePageModel, submodule_model=ArticlesFolder):
+    """Article model"""
 
-
-class Article(PageModel, TranslatableModel):
-    """
-    File-based article model
-    """
-
-    submodule_folder_model = ArticlesFolder
-    submodule_folder = ForeignKey(ArticlesFolder, on_delete=models.SET_NULL, null=True)
-
-    sites = models.ManyToManyField(Site)
-    featured = models.BooleanField(
-        _("Featured article"),
-        help_text=_("If featured it will be showed in home "),
-        default=False,
-    )
+    submodule = ForeignKey(ArticlesFolder, on_delete=models.CASCADE)
     allow_comments = models.BooleanField(default=True)
     is_premium = models.BooleanField(default=False)
     can_be_shown_in_home = models.BooleanField(default=True)
@@ -46,6 +32,8 @@ class Article(PageModel, TranslatableModel):
 
 
 class ArticleFile(PageFileModel):
+    """Article file model"""
+
     parent_page = ForeignKey(Article, on_delete=models.CASCADE)
 
 

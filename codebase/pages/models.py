@@ -2,18 +2,19 @@ from auto_prefetch import ForeignKey
 from django.db import models
 from django.urls import reverse_lazy
 
-from codebase.base.utils.abstracts import PageModel, SubmodulesFolder, TranslatableModel
+from codebase.base.utils.abstracts import BasePageModel, BaseSubmodule
 
 
-class PagesFolder(SubmodulesFolder):
-    submodule_name = "pages"
+class PagesSubmodule(BaseSubmodule, submodule_name="pages"):
+    """Pages submodule"""
+
+    pass
 
 
-class Page(PageModel, TranslatableModel):
-    """File-based page model"""
+class Page(BasePageModel, submodule_model=PagesSubmodule):
+    """Page model"""
 
-    submodule_folder_model = PagesFolder
-    submodule_folder = ForeignKey("pages.PagesFolder", on_delete=models.CASCADE)
+    submodule = ForeignKey(PagesSubmodule, on_delete=models.CASCADE)
 
     def get_absolute_url(self):
         return reverse_lazy("page-detail", kwargs={"slug": self.slug})

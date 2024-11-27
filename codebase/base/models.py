@@ -15,7 +15,7 @@ from codebase.base.utils.exceptions import SubmoduleFolderModelUnknow
 from ..articles.models import Article, ArticlesFolder
 from ..home.models import HomePage, UserHomePage
 from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
-from ..pages.models import PagesFolder
+from ..pages.models import PagesSubmodule
 from .utils.abstracts import TranslatableModel
 
 User = get_user_model()
@@ -116,8 +116,8 @@ class ExtendedSite(Site, TranslatableModel):
     )
 
     # Submodules
-    article_folders: QuerySet[ArticlesFolder] = ManyToManyField(ArticlesFolder)  # type: ignore
-    page_folders = ManyToManyField(PagesFolder)  # type: ignore
+    article_folders = ManyToManyField(ArticlesFolder)  # type: ignore
+    page_folders = ManyToManyField(PagesSubmodule)  # type: ignore
 
     def __str__(self):
         return self.name
@@ -142,20 +142,21 @@ class ExtendedSite(Site, TranslatableModel):
     def picocss_static_url(self) -> str:
         return f"{settings.STATIC_URL}css/picocss/pico.{self.picocss_color}.min.css"
 
-    def get_attr_name_for_submodule_folder_model(self, Model) -> str:
+    def get_attr_name_for_submodule_model(self, Model) -> str:
         if Model == ArticlesFolder:
             return "article_folders"
-        if Model == PagesFolder:
+        if Model == PagesSubmodule:
             return "page_folders"
         raise SubmoduleFolderModelUnknow(
             f"The model {Model} is not recodnied in the application."
         )
 
-    def get_submodule_folders(self, Model):
-        attr_name = self.get_attr_name_for_submodule_folder_model(Model)
+    def get_submodule_folders(self, Model, sites_filter=True):
+        attr_name = self.get_attr_name_for_submodule_model(Model)
         submodule_folder_attr = getattr(self, attr_name)
-        if submodule_folder_attr:
-            return submodule_folder_attr.all()
+        if sites_filter:
+            return submodule_folder_attr.filter(sites__in=[self.site])
+        return submodule_folder_attr.all()
 
     def get_submodule_folders_as_list(self, Model):
         objs = self.get_submodule_folders(Model)

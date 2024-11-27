@@ -17,7 +17,7 @@ class HomePage(TranslatableModel, PageMixin):
     # Management
     is_active = models.BooleanField(default=True)
     display_last_articles = models.BooleanField(default=False)
-    number_of_last_articles = models.PositiveSmallIntegerField(default=6)
+    num_articles = models.PositiveSmallIntegerField(default=6)
     display_faqs = models.BooleanField(default=False)
     enable_section_changing = models.BooleanField(default=False)
 
@@ -42,14 +42,10 @@ class HomePage(TranslatableModel, PageMixin):
         ).distinct()
 
     @cached_property
-    def articles(self):
-        extended_sites = self.sites.values_list("extendedsite", flat=True)
-        article_folders = ArticlesFolder.objects.filter(extendedsite__in=extended_sites)
-        return Article.objects.filter(submodule_folder__in=article_folders).distinct()
-
-    @cached_property
     def last_articles(self):
-        return self.articles[: self.number_of_last_articles]
+        extended_sites = self.sites.values_list("extendedsite", flat=True)
+        folders = ArticlesFolder.objects.filter(extendedsite__in=extended_sites)
+        return Article.objects.filter(submodule_folder__in=folders)[: self.num_articles]
 
 
 class HeroSection(TranslatableModel):

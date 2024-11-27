@@ -8,7 +8,7 @@ from django.db.models import Model, QuerySet
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from .utils.abstracts import SubmodulesFolder
+from .utils.abstracts import BaseSubmodule
 from .utils.telegram import Bot
 from .utils.translation import translate_text
 
@@ -63,7 +63,7 @@ def check_extendedsites_without_userhome_daily():
 def sync_submodule_folders_every_1_hour(hour="/*"):
     """Syncs all submodule folders"""
 
-    SubmodulesFolder.sync_all_folders()
+    BaseSubmodule.sync_all_folders()
 
 
 @huey.task()

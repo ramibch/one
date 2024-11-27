@@ -10,11 +10,11 @@ from codebase.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
 from ..articles.tasks import trigger_sync_articles
 from ..pages.tasks import trigger_sync_pages
-from .models import ArticlesFolder, ExtendedSite, PagesFolder, Traffic
+from .models import ArticlesFolder, ExtendedSite, PagesSubmodule, Traffic
 
 
 @admin.register(ArticlesFolder)
-@admin.register(PagesFolder)
+@admin.register(PagesSubmodule)
 class ArticleFolderAdmin(admin.ModelAdmin):
     """
     Leave this here in the base app, because it applies to more than 1 app

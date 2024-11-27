@@ -6,19 +6,11 @@ from .models import Article, ArticleFile
 
 @admin.register(Article)
 class ArticleAdmin(TranslationAdmin):
-    list_display = (
-        "title",
-        "featured",
-        "folder",
-        "subfolder",
-        "created_on",
-        "updated_on",
-    )
-    list_editable = ("featured",)
+    list_display = ("title", "folder", "subfolder", "created_on", "updated_on")
     readonly_fields = (
         "title",
         "sites",
-        "submodule_folder",
+        "submodule",
         "folder",
         "subfolder",
         "body",
