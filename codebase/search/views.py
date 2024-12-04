@@ -38,6 +38,7 @@ def hx_seach_results(request: CustomHttpRequest) -> HttpResponse:
     context = {
         "pages": pages,
         "articles": articles,
+        "products": [],
         "faqs": faqs,
         "total": total,
     }

@@ -16,16 +16,18 @@ class HomePage(TranslatableModel, PageMixin):
 
     # Management
     is_active = models.BooleanField(default=True)
+    enable_section_changing = models.BooleanField(default=False)
     display_last_articles = models.BooleanField(default=False)
     num_articles = models.PositiveSmallIntegerField(default=6)
     display_faqs = models.BooleanField(default=False)
-    enable_section_changing = models.BooleanField(default=False)
 
     # Titles
     title = models.CharField(max_length=64)
     benefits_title = models.CharField(max_length=64, null=True, blank=True)
     steps_title = models.CharField(max_length=64, null=True, blank=True)
     faqs_title = models.CharField(max_length=64, null=True, blank=True)
+
+    # Sections
 
     @cached_property
     def hero_section(self):
@@ -36,16 +38,16 @@ class HomePage(TranslatableModel, PageMixin):
         return self.problemsection_set.filter(is_active=True).first()
 
     @cached_property
+    def last_articles(self):
+        extsites = self.sites.values_list("extendedsite", flat=True)
+        folders = ArticlesFolder.objects.filter(extendedsite__in=extsites).distinct()
+        return Article.objects.filter(submodule_folder__in=folders)[: self.num_articles]
+
+    @cached_property
     def faqs(self):
         return FAQ.objects.filter(
             sites=self.sites, can_be_shown_in_home=True, is_active=True
         ).distinct()
-
-    @cached_property
-    def last_articles(self):
-        extended_sites = self.sites.values_list("extendedsite", flat=True)
-        folders = ArticlesFolder.objects.filter(extendedsite__in=extended_sites)
-        return Article.objects.filter(submodule_folder__in=folders)[: self.num_articles]
 
 
 class HeroSection(TranslatableModel):

@@ -5,9 +5,6 @@
 - [ ] payments and stripe checkout
 - [ ] Plans (TimeFixedPlan, SubscriptionPlan, ....)
 - [ ] Add [zabbix](https://www.zabbix.com/download)
-- [ ] Add sentry
-- [ ] use `__init_subclass__` for `SubmoduleFolder`. Check [PEP 487](https://peps.python.org/pep-0487/)
-- [ ]
 
 ## Conventions
 
