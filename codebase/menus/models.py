@@ -1,7 +1,6 @@
 from urllib.parse import urlparse
 
 from auto_prefetch import ForeignKey, Model, OneToOneField
-from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -43,7 +42,7 @@ class NavbarLink(Model):
         return self.emoji if self.show_as_emoji else self.title
 
     def clean_show_as_emoji(self):
-        if self.show_as_emoji and not self.emoji:
+        if self.show_as_emoji and self.emoji is None:
             raise ValidationError(
                 _("Insert an emoji if you want to show it as emoji."), code="invalid"
             )
@@ -93,22 +92,20 @@ class SocialMediaLink(Model):
     order = models.PositiveSmallIntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(10)]
     )
+    sites = models.ManyToManyField(Site)
     url = models.URLField(max_length=256)
     new_tab = models.BooleanField(default=True)
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)
-    sites = models.ManyToManyField(Site)
-
-    @cached_property
-    def static_icon_url(self) -> str:
-        return f"img/social/small/{self.platform}.svg"
 
     class Meta(Model.Meta):
         ordering = ("order",)
 
     def __str__(self) -> str:
-        if self.url:
-            return self.url
-        return getattr(self, f"url_{settings.LANGUAGE_CODE}")
+        return self.url
+
+    @cached_property
+    def static_icon_url(self) -> str:
+        return f"img/social/small/{self.platform}.svg"
 
     @cached_property
     def platform(self) -> str:
