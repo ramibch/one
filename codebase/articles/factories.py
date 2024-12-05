@@ -2,7 +2,7 @@ import factory
 
 
 class ArticlesFolderFactory(factory.django.DjangoModelFactory):
-    name = factory.faker("word")
+    name = factory.Faker("word")
 
     class Meta:
         model = "articles.ArticlesFolder"
@@ -11,11 +11,11 @@ class ArticlesFolderFactory(factory.django.DjangoModelFactory):
 
 class ArticleFactory(factory.django.DjangoModelFactory):
     submodule = factory.SubFactory(ArticlesFolderFactory)
-    title = factory.faker("sentence")
-    slug = factory.faker("slug")
-    folder = factory.faker("word")
-    subfolder = factory.faker("slug")
-    body = factory.faker("text")
+    title = factory.Faker("sentence")
+    slug = factory.Faker("slug")
+    folder = factory.Faker("word")
+    subfolder = factory.Faker("slug")
+    body = factory.Faker("text")
 
     class Meta:
         model = "articles.Article"
