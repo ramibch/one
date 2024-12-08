@@ -70,20 +70,3 @@ plugins = ["mypy_django_plugin.main"]
 
 [tool.django-stubs]
 django_settings_module = "codebase.settings"
-
-[allowed_hosts]
-dev = ["127.0.0.1"]
-stage = [
-  "test1.ramiboutas.com",
-  "test2.ramiboutas.com",
-  "test1.nicecv.online",
-  "test2.nicecv.online",
-]
-prod = [
-  "ramiboutas.com",
-  "www.ramiboutas.com",
-  "englishstuff.online",
-  "www.englishstuff.online",
-  "nicecv.online",
-  "www.nicecv.online",
-]

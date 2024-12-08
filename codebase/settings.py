@@ -15,15 +15,12 @@ import sys
 from copy import copy
 from pathlib import Path
 
-import toml
 from django.utils.translation import gettext_lazy as _
 from environs import Env
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = Env()
-
-pyproject = toml.load((BASE_DIR / "pyproject.toml").open())
 
 try:
     command = sys.argv[1]
@@ -48,8 +45,27 @@ USE_S3_FOR_STATIC_FILES = env.bool("USE_S3_FOR_STATIC_FILES")
 ##################
 """
 
+ALLOWED_HOSTS_DICT = {
+    "dev": ["127.0.0.1"],
+    "stage": [
+        "test1.ramiboutas.com",
+        "test2.ramiboutas.com",
+        "test1.nicecv.online",
+        "test2.nicecv.online",
+    ],
+    "prod": [
+        "127.0.0.1",
+        "ramiboutas.com",
+        "www.ramiboutas.com",
+        "englishstuff.online",
+        "www.englishstuff.online",
+        "nicecv.online",
+        "www.nicecv.online",
+    ],
+}
+
 try:
-    ALLOWED_HOSTS = pyproject.get("allowed_hosts")[ENV]
+    ALLOWED_HOSTS = ALLOWED_HOSTS_DICT[ENV]
 except KeyError:
     raise
 
