@@ -1,7 +1,12 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from .models import Article, ArticleFile
+from .models import Article, ArticleFile, ArticlesSubmodule
+
+
+@admin.register(ArticlesSubmodule)
+class ArticlesSubmoduleAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Article)

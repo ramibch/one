@@ -1,7 +1,6 @@
 from auto_prefetch import Model
 from django.conf import settings
 from django.db import models
-from django.utils.functional import cached_property
 
 from .exceptions import SubmoduleException
 from .mixins import PageMixin
@@ -77,38 +76,11 @@ class SingletonModel(Model):
 class TranslatableModel(Model):
     allow_translation = models.BooleanField(default=False)
     override_translated_fields = models.BooleanField(default=False)
+    get_default_language = None  # Implement in the subclass
+    get_rest_languages = None  # Implement in the subclass
 
     class Meta(Model.Meta):
         abstract = True
-
-    @cached_property
-    def associated_site(self):
-        from codebase.sites.models import Site
-
-        if isinstance(self, Site):
-            return self
-        elif hasattr(self, "sites"):
-            return self.sites.first()
-        elif hasattr(self, "site"):
-            return self.site
-
-        raise NotImplementedError
-
-    @cached_property
-    def default_language(self):
-        return self.associated_site.default_language
-
-    @cached_property
-    def rest_languages(self):
-        return self.associated_site.rest_languages
-
-    @cached_property
-    def languages(self):
-        return self.associated_site.languages
-
-    @cached_property
-    def languages_count(self):
-        return self.associated_site.languages_count
 
 
 class BasePageModel(Model, PageMixin):

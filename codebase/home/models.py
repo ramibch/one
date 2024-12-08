@@ -7,11 +7,10 @@ from codebase.base.utils.mixins import PageMixin
 from ..articles.models import Article, ArticlesSubmodule
 from ..base.utils.abstracts import TranslatableModel
 from ..faqs.models import FAQ
-from ..links.models import Link
 
 
 class HomePage(TranslatableModel, PageMixin):
-    sites = models.ManyToManyField("sites.Site")
+    site = ForeignKey("sites.Site", on_delete=models.CASCADE)
 
     # Management
     is_active = models.BooleanField(default=True)
@@ -48,53 +47,97 @@ class HomePage(TranslatableModel, PageMixin):
             sites=self.sites, can_be_shown_in_home=True, is_active=True
         ).distinct()
 
+    # tranlation
+
+    def get_default_language(self):
+        return self.site.default_language
+
+    def get_rest_languages(self):
+        return self.site.rest_languages
+
 
 class HeroSection(TranslatableModel):
-    homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
+    homepage = ForeignKey("home.HomePage", on_delete=models.CASCADE)
     headline = models.TextField(max_length=256)
     subheadline = models.TextField(max_length=256)
-    cta_link = ForeignKey(Link, on_delete=models.CASCADE)
+    cta_link = ForeignKey("links.Link", on_delete=models.CASCADE)
     cta_title = models.CharField(max_length=64, null=True, blank=True)
     cta_new_tab = models.BooleanField(default=False)
     image = models.ImageField(upload_to="homepages/hero/")
     is_active = models.BooleanField()
 
+    def __str__(self):
+        return f"{self.headline} - {self.homepage}"
+
     def display_cta_title(self):
         return self.cta_title if self.cta_title else self.cta_link.title
 
-    def __str__(self):
-        return f"{self.headline} - {self.homepage}"
+    def get_default_language(self):
+        return self.homepage.site.default_language
+
+    def get_rest_languages(self):
+        return self.homepage.site.rest_languages
 
 
 class ProblemSection(Model):
     """ """
 
-    homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
+    homepage = ForeignKey("home.HomePage", on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     description = models.TextField()
     is_active = models.BooleanField()
 
+    def get_default_language(self):
+        return self.homepage.site.default_language
 
-class SolutionSection(Model):
-    homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
+    def get_rest_languages(self):
+        return self.homepage.site.rest_languages
+
+
+class SolutionSection(TranslatableModel):
+    homepage = ForeignKey("home.HomePage", on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     description = models.TextField()
     is_active = models.BooleanField()
 
+    def get_default_language(self):
+        return self.homepage.site.default_language
 
-class BenefitsSection(Model):
-    homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
+    def get_rest_languages(self):
+        return self.homepage.site.rest_languages
+
+
+class BenefitsSection(TranslatableModel):
+    homepage = ForeignKey("home.HomePage", on_delete=models.CASCADE)
     emoji = models.CharField(max_length=8)
     is_active = models.BooleanField()
 
+    def get_default_language(self):
+        return self.homepage.site.default_language
 
-class StepAction(Model):
-    homepage = ForeignKey(HomePage, on_delete=models.CASCADE)
+    def get_rest_languages(self):
+        return self.homepage.site.rest_languages
+
+
+class StepAction(TranslatableModel):
+    homepage = ForeignKey("home.HomePage", on_delete=models.CASCADE)
     step_label = models.CharField(max_length=4, default="01")
     title = models.CharField(max_length=64)
     description = models.TextField()
     is_active = models.BooleanField()
 
+    def get_default_language(self):
+        return self.homepage.site.default_language
+
+    def get_rest_languages(self):
+        return self.homepage.site.rest_languages
+
 
 class UserHomePage(TranslatableModel, PageMixin):
-    sites = models.ManyToManyField("sites.Site")
+    site = ForeignKey("sites.Site", on_delete=models.CASCADE)
+
+    def get_default_language(self):
+        return self.site.default_language
+
+    def get_rest_languages(self):
+        return self.site.rest_languages

@@ -13,7 +13,9 @@
       <select name="language">
         {% for language in request.site.languages.all %}
           <option value="{{ language.id }}"
-                  {% if language.id == LANGUAGE_CODE %}selected{% endif %}>{{ language.name_local }}</option>
+                  {% if language.id == LANGUAGE_CODE %}selected{% endif %}>
+            {{ language.capitalize_name_local }}
+          </option>
         {% endfor %}
       </select>
       <button type="submit" class="col-7">{% trans "Save" %}</button>

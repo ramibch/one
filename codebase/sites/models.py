@@ -111,7 +111,7 @@ class Site(TranslatableModel):
     is_active = models.BooleanField(default=True)
     default_language = ForeignKey(
         "base.Language",
-        default="en",
+        default=settings.LANGUAGE_CODE,
         on_delete=models.SET_DEFAULT,
         verbose_name=_("Default language"),
         related_name="sites_with_default_languages",
@@ -144,6 +144,12 @@ class Site(TranslatableModel):
     @cached_property
     def languages_count(self) -> int:
         return self.languages.count()
+
+    def get_default_language(self):
+        return self.default_language
+
+    def get_rest_languages(self):
+        return self.rest_languages
 
     @cached_property
     def articles(self):

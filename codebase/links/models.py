@@ -1,14 +1,13 @@
 from auto_prefetch import ForeignKey, Manager
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..articles.models import Article
+from ..base.models import Language
 from ..base.utils.abstracts import TranslatableModel
-from ..pages.models import Page
-from ..plans.models import Plan
 
 DJANGO_URL_PATHS = (
     # Only url paths without path arguments
@@ -41,9 +40,11 @@ class Link(TranslatableModel):
     django_url_path = models.CharField(
         blank=True, null=True, max_length=32, choices=DJANGO_URL_PATHS
     )
-    page = ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True)
-    plan = ForeignKey(Plan, on_delete=models.CASCADE, null=True, blank=True)
-    article = ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
+    page = ForeignKey("pages.Page", on_delete=models.CASCADE, null=True, blank=True)
+    plan = ForeignKey("plans.Plan", on_delete=models.CASCADE, null=True, blank=True)
+    article = ForeignKey(
+        "articles.Article", on_delete=models.CASCADE, null=True, blank=True
+    )
 
     objects: LinkManager = LinkManager()
 
@@ -102,3 +103,9 @@ class Link(TranslatableModel):
 
         if self.model_obj:
             return self.model_obj.title
+
+    def get_default_language(self):
+        return Language.objects.get_or_create(id=settings.LANGUAGE_CODE)[0]
+
+    def get_rest_languages(self):
+        return Language.objects.exclude(id=settings.LANGUAGE_CODE)

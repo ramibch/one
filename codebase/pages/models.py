@@ -14,7 +14,7 @@ class PagesSubmodule(BaseSubmodule, submodule_name="pages"):
 class Page(BasePageModel, submodule_model=PagesSubmodule):
     """Page model"""
 
-    submodule = ForeignKey(PagesSubmodule, on_delete=models.CASCADE)
+    submodule = ForeignKey("pages.PagesSubmodule", on_delete=models.CASCADE)
 
     def get_absolute_url(self):
         return reverse_lazy("page-detail", kwargs={"slug": self.slug})

@@ -80,14 +80,14 @@ def translate_modeltranslation_objects(
             continue
 
         for translation_field in translation_fields:
-            from_field = f"{translation_field}_{db_obj.default_language.id}"
+            from_field = f"{translation_field}_{db_obj.get_default_language().id}"
             from_field_value = getattr(db_obj, from_field)
             if from_field_value is None:
                 out += f"Not translating the field {from_field} since it is null.\n"
                 continue
 
             out += f"{db_obj.default_language}: {from_field_value}\n"
-            for to_language in db_obj.rest_languages.all():
+            for to_language in db_obj.get_rest_languages():
                 to_field = f"{translation_field}_{to_language.id}"
                 if (
                     not hasattr(db_obj, to_field)

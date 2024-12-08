@@ -47,8 +47,11 @@ class Language(Model):
 
     @cached_property
     def name_local(self) -> str:
-        local: str = self.language_info.get("name_local", "")  # type: ignore
-        return local.capitalize()
+        return self.language_info.get("name_local", "")  # type: ignore
+
+    @cached_property
+    def capitalize_name_local(self) -> str:
+        return self.name_local.capitalize()
 
     @cached_property
     def name_translated(self) -> str:

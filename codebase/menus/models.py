@@ -1,12 +1,14 @@
 from urllib.parse import urlparse
 
 from auto_prefetch import ForeignKey, Model, OneToOneField
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from ..base.models import Language
 from ..base.utils.abstracts import TranslatableModel
 from ..links.models import Link
 
@@ -66,6 +68,12 @@ class FooterItem(TranslatableModel):
     def display_title(self) -> str:
         return f"{self.emoji} {self.title}" if self.emoji else self.title
 
+    def get_default_language(self):
+        return Language.objects.get_or_create(id=settings.LANGUAGE_CODE)[0]
+
+    def get_rest_languages(self):
+        return Language.objects.exclude(id=settings.LANGUAGE_CODE)
+
 
 class FooterLink(Model):
     order = models.PositiveSmallIntegerField(
@@ -73,7 +81,7 @@ class FooterLink(Model):
     )
     link = OneToOneField(Link, on_delete=models.CASCADE)
     footer_item = ForeignKey(
-        FooterItem, on_delete=models.SET_NULL, null=True, blank=True
+        "menus.FooterItem", on_delete=models.SET_NULL, null=True, blank=True
     )
     sites = models.ManyToManyField("sites.Site")
     show_type = models.CharField(default="always", choices=SHOW_CHOICES, max_length=16)

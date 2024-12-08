@@ -18,5 +18,5 @@ class HomePageAdmin(TranslationAdmin):
 class HomePageHeroAdmin(TranslationAdmin):
     list_display = ("headline", "cta_link", "image", "is_active", "allow_translation")
     list_editable = ("is_active", "cta_link", "image", "allow_translation")
-    list_filter = ("homepage", "homepage__sites", "is_active", "allow_translation")
+    list_filter = ("homepage", "homepage__site", "is_active", "allow_translation")
     actions = translation_actions

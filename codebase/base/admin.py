@@ -1,13 +1,18 @@
 from django.contrib import admin
 from django.db.migrations.recorder import MigrationRecorder
 
-from .models import Traffic
+from .models import Language, Traffic
 
 
 @admin.register(MigrationRecorder.Migration)
 class MigrationRecorderAdmin(admin.ModelAdmin):
     list_display = ("name", "app", "applied")
     list_filter = ("app", "applied")
+
+
+@admin.register(Language)
+class LanguageAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Traffic)

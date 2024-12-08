@@ -22,7 +22,7 @@ class ArticlesSubmodule(BaseSubmodule, submodule_name="articles"):
 class Article(BasePageModel, submodule_model=ArticlesSubmodule):
     """Article model"""
 
-    submodule = ForeignKey(ArticlesSubmodule, on_delete=models.CASCADE)
+    submodule = ForeignKey("articles.ArticlesSubmodule", on_delete=models.CASCADE)
     allow_comments = models.BooleanField(default=True)
     is_premium = models.BooleanField(default=False)
     can_be_shown_in_home = models.BooleanField(default=True)
@@ -34,11 +34,11 @@ class Article(BasePageModel, submodule_model=ArticlesSubmodule):
 class ArticleFile(PageFileModel):
     """Article file model"""
 
-    parent_page = ForeignKey(Article, on_delete=models.CASCADE)
+    parent_page = ForeignKey("articles.Article", on_delete=models.CASCADE)
 
 
 class Comment(Model):
-    article = ForeignKey(Article, on_delete=models.CASCADE)
+    article = ForeignKey("articles.Article", on_delete=models.CASCADE)
     author = ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(_("Comment"), max_length=512)
 

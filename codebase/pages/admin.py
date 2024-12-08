@@ -1,7 +1,12 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from .models import Page
+from .models import Page, PagesSubmodule
+
+
+@admin.register(PagesSubmodule)
+class PagesSubmoduleAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Page)
