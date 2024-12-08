@@ -13,16 +13,16 @@ from codebase.base.utils.abstracts import (
 User = get_user_model()
 
 
-class ArticlesFolder(BaseSubmodule, submodule_name="articles"):
+class ArticlesSubmodule(BaseSubmodule, submodule_name="articles"):
     """Submodule"""
 
     pass
 
 
-class Article(BasePageModel, submodule_model=ArticlesFolder):
+class Article(BasePageModel, submodule_model=ArticlesSubmodule):
     """Article model"""
 
-    submodule = ForeignKey(ArticlesFolder, on_delete=models.CASCADE)
+    submodule = ForeignKey(ArticlesSubmodule, on_delete=models.CASCADE)
     allow_comments = models.BooleanField(default=True)
     is_premium = models.BooleanField(default=False)
     can_be_shown_in_home = models.BooleanField(default=True)

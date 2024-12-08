@@ -1,5 +1,6 @@
-from django.contrib.sites.models import Site
 from django.core.management.base import BaseCommand
+
+from codebase.sites.models import Site
 
 from ....links.models import Link
 from ...models import FooterLink, NavbarLink

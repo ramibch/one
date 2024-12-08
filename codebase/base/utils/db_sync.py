@@ -5,19 +5,17 @@ from django.core.files import File
 from django.db.models import Q
 from django.utils.text import slugify
 
-from ..models import ExtendedSite
+from ...sites.models import Site
 from .abstracts import BasePageModel
 from .telegram import Bot
 
 
-def sync_page_objects(
-    PageModel: type[BasePageModel], PageModelFile=None, extended_sites=None
-):
+def sync_page_objects(PageModel: type[BasePageModel], PageModelFile=None, sites=None):
     """
     Read the contents of the specified submodule and save them in the database.
     :param PageModel: Model class to save objects (Page or Article).
     :param PageModelFile: Optional, file model class (Example: ArticleFile).
-    :extended_sites Iterable[ExtendedSite]: Optional, extended sites to sync.
+    :sites Iterable[Site]: Optional, extended sites to sync.
     """
 
     # Definitions and checks
@@ -35,10 +33,10 @@ def sync_page_objects(
         )
         return
 
-    if extended_sites is None:
-        extended_sites = ExtendedSite.objects.filter()
+    if sites is None:
+        sites = Site.objects.filter()
 
-    for extsite in extended_sites:
+    for extsite in sites:
         to_admin = f"🔄 Syncing {submodule_name} for {extsite.name}\n\n"
 
         folder_list = extsite.get_submodule_folders_as_list(Model=SubmoduleModel)

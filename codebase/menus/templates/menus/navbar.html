@@ -3,8 +3,8 @@
   <ul>
     <li>
       <strong> <a href="{% url "home" %}?ref=brandheader">
-        {% if request.extendedsite.emoji and request.extendedsite.emoji_in_brand %}{{ request.extendedsite.emoji }}{% endif %}
-      {{ request.extendedsite.name }}</a>
+        {% if request.site.emoji and request.site.emoji_in_brand %}{{ request.site.emoji }}{% endif %}
+      {{ request.site.name }}</a>
     </strong>
   </li>
 </ul>
@@ -16,10 +16,10 @@
          class="contrast">{{ navlink.display_title }}</a>
     </li>
   {% endfor %}
-  {% if request.extendedsite.change_theme_light_in_navbar %}
+  {% if request.site.change_theme_light_in_navbar %}
     <li>{% include "elements/theme_light.html" %}</li>
   {% endif %}
-  {% if request.extendedsite.change_language_in_navbar and request.extendedsite.languages.count > 1 %}
+  {% if request.site.change_language_in_navbar and request.site.languages.count > 1 %}
     <li>{% include "elements/change_language.html" %}</li>
   {% endif %}
 </ul>

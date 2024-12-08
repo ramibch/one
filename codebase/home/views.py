@@ -12,10 +12,10 @@ def home(request: CustomHttpRequest) -> HttpResponse:
     # https://www.youtube.com/watch?v=g3cmNDlwGEg
 
     if request.user.is_authenticated:
-        userhome = request.extendedsite.userhome
+        userhome = request.site.userhome
         return render(request, "home/userhome.html", {"object": userhome})
 
-    home = request.extendedsite.home
+    home = request.site.home
     context = {"object": home}
     if home.display_last_articles:
         context["last_articles"] = Article.objects.filter()[:5]

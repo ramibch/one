@@ -2,11 +2,12 @@ import subprocess
 from io import StringIO
 
 from django.conf import settings
-from django.contrib.sites.models import Site
 from django.core.management import call_command
 from django.db.models import Model, QuerySet
 from huey import crontab
 from huey.contrib import djhuey as huey
+
+from codebase.sites.models import Site
 
 from .utils.abstracts import BaseSubmodule
 from .utils.telegram import Bot
@@ -42,7 +43,7 @@ def fetch_submodules_daily():
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="15"))
-def check_extendedsites_without_home_daily():
+def check_sites_without_home_daily():
     sites = Site.objects.filter(homepage__isnull=True)
     if sites.count() == 0:
         return
@@ -51,7 +52,7 @@ def check_extendedsites_without_home_daily():
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="16"))
-def check_extendedsites_without_userhome_daily():
+def check_sites_without_userhome_daily():
     sites = Site.objects.filter(userhomepage__isnull=True)
     if sites.count() == 0:
         return

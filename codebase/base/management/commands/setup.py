@@ -7,12 +7,7 @@ from ...utils.abstracts import BaseSubmodule
 class Command(BaseCommand):
     help = "Seed data in the database"
 
-    def add_arguments(self, parser):
-        parser.add_argument("environments", nargs="+", type=str)
-
     def handle(self, *args, **options):
-        envs = options["environments"]
-
         # Make migrations just in case
         call_command("makemigrations")
 
@@ -24,15 +19,6 @@ class Command(BaseCommand):
 
         # Collect static
         call_command("collectstatic", interactive=False)
-
-        # Languages sync from settings to db
-        call_command("synclanguages")
-
-        # Create sites
-        call_command("createsites", *envs)
-
-        # Create links
-        call_command("createlinks")
 
         # Sync submodule folders
         BaseSubmodule.sync_all_folders()

@@ -1,18 +1,17 @@
 from auto_prefetch import ForeignKey, Model
-from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.functional import cached_property
 
 from codebase.base.utils.mixins import PageMixin
 
-from ..articles.models import Article, ArticlesFolder
+from ..articles.models import Article, ArticlesSubmodule
 from ..base.utils.abstracts import TranslatableModel
 from ..faqs.models import FAQ
 from ..links.models import Link
 
 
 class HomePage(TranslatableModel, PageMixin):
-    sites = models.ManyToManyField(Site)
+    sites = models.ManyToManyField("sites.Site")
 
     # Management
     is_active = models.BooleanField(default=True)
@@ -39,8 +38,8 @@ class HomePage(TranslatableModel, PageMixin):
 
     @cached_property
     def last_articles(self):
-        extsites = self.sites.values_list("extendedsite", flat=True)
-        folders = ArticlesFolder.objects.filter(extendedsite__in=extsites).distinct()
+        sites = self.sites.values_list("site", flat=True)
+        folders = ArticlesSubmodule.objects.filter(site__in=sites).distinct()
         return Article.objects.filter(submodule_folder__in=folders)[: self.num_articles]
 
     @cached_property
@@ -98,4 +97,4 @@ class StepAction(Model):
 
 
 class UserHomePage(TranslatableModel, PageMixin):
-    sites = models.ManyToManyField(Site)
+    sites = models.ManyToManyField("sites.Site")

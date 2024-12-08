@@ -1,4 +1,4 @@
-from auto_prefetch import ForeignKey
+from auto_prefetch import ForeignKey, Manager
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse_lazy
@@ -24,6 +24,17 @@ DJANGO_URL_PATHS = (
 )
 
 
+class LinkManager(Manager):
+    def sync_django_paths(self):
+        new_links = []
+        for url_path in DJANGO_URL_PATHS:
+            if self.filter(django_url_path=url_path[0]).exists():
+                continue
+            new_links.append(Link(django_url_path=url_path[0]))
+
+        self.bulk_create(new_links)
+
+
 class Link(TranslatableModel):
     custom_title = models.CharField(max_length=128, null=True, blank=True)
     external_url = models.URLField(max_length=256, null=True, blank=True)
@@ -33,6 +44,8 @@ class Link(TranslatableModel):
     page = ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True)
     plan = ForeignKey(Plan, on_delete=models.CASCADE, null=True, blank=True)
     article = ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
+
+    objects: LinkManager = LinkManager()
 
     def __str__(self):
         return f"<Link to {self.title}>"
@@ -89,18 +102,3 @@ class Link(TranslatableModel):
 
         if self.model_obj:
             return self.model_obj.title
-
-    def get_link_from_path(path):
-        pass
-
-
-def create_initial_django_links() -> list[Link]:
-    links = []
-    for url_path in DJANGO_URL_PATHS:
-        if Link.objects.filter(django_url_path=url_path[0]).exists():
-            continue
-        links.append(Link(django_url_path=url_path[0]))
-
-    Link.objects.bulk_create(links)
-
-    return links

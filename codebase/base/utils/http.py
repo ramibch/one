@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 
-from ..models import ExtendedSite
+from ...sites.models import Site
 from .middlewares import CountryDetails
 
 
@@ -13,4 +13,4 @@ class PDFResponse(HttpResponse):
 
 class CustomHttpRequest(HttpRequest):
     country: CountryDetails
-    extendedsite: ExtendedSite
+    site: Site

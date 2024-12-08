@@ -15,42 +15,31 @@ import sys
 from copy import copy
 from pathlib import Path
 
+import toml
 from django.utils.translation import gettext_lazy as _
 from environs import Env
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 env = Env()
 
-# Load env vars from .env file if not testing
+pyproject = toml.load((BASE_DIR / "pyproject.toml").open())
+
 try:
     command = sys.argv[1]
 except IndexError:  # pragma: no cover
     command = "help"
 
 if command != "test":  # pragma: no cover
-    env.read_env()  # read .env file, if it exists
+    env.read_env()
 
-
-# Activate settings for HTTPS connections
+SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
+ENV = env("ENV")
+DEBUG = env.bool("DEBUG")
 HTTPS = env.bool("HTTPS")
 
-
-# Use a S3 service to store static and media files
 USE_S3_FOR_MEDIA_FILES = env.bool("USE_S3_FOR_MEDIA_FILES")
-USE_S3_FOR_STATIC_FILES = env.bool("USE_S3_FOR_STATIC_FILES", "")
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG", "") == "1"
+USE_S3_FOR_STATIC_FILES = env.bool("USE_S3_FOR_STATIC_FILES")
 
 
 """
@@ -59,16 +48,12 @@ DEBUG = env("DEBUG", "") == "1"
 ##################
 """
 
+try:
+    ALLOWED_HOSTS = pyproject.get("allowed_hosts")[ENV]
+except KeyError:
+    raise
 
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-]
-
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
-
-# Application definition
+INTERNAL_IPS = ["127.0.0.1"]
 
 INSTALLED_APPS = [
     # Third-party apps
@@ -93,7 +78,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
-    "django.contrib.sites",
     "django.db.migrations",
     "django.contrib.admindocs",
     "allauth.socialaccount",
@@ -112,6 +96,7 @@ INSTALLED_APPS = [
     "codebase.tools",
     "codebase.links",
     "codebase.faqs",
+    "codebase.sites",
 ]
 
 MIDDLEWARE = [
@@ -164,7 +149,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "codebase.wsgi.application"
 
 # Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DB_SUPERUSER = env("POSTGRES_SUPERUSER")
 DB_SUPERPASSWORD = env("POSTGRES_SUPERPASSWORD")
 DB_NAME = env("POSTGRES_DB")
@@ -185,9 +169,7 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -208,8 +190,6 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = "users.User"
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = "en"  # default language
 
 TIME_ZONE = "Europe/Zurich"
@@ -243,14 +223,10 @@ LANGUAGES = [
 ]
 
 LANGUAGE_CODES = [items[0] for items in LANGUAGES]
-
 LANGUAGE_CODES_WITHOUT_DEFAULT = copy(LANGUAGE_CODES)
 LANGUAGE_CODES_WITHOUT_DEFAULT.remove(LANGUAGE_CODE)
 
-
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
@@ -403,7 +379,6 @@ Project settings
 ################
 """
 
-
 # Cache clear
 CLEAR_CACHE_IN_DEVELOPMENT = True
 
@@ -411,28 +386,6 @@ CLEAR_CACHE_IN_DEVELOPMENT = True
 # Tex
 # TODO: check if it is posible to pass an arg. to run tex without this setting.
 LATEX_GRAPHICSPATH = []
-
-
-# Initial sites
-
-SITES = {
-    # Environment Key : tupple( tupple(site name, site_domain))
-    "dev": (
-        ("Site 8000", "127.0.0.1:8000"),
-        ("Site 8001", "127.0.0.1:8001"),
-        ("Site 8002", "127.0.0.1:8002"),
-    ),
-    "prod": (
-        ("Rami Site", "ramiboutas.com"),
-        ("English Stuff", "englishstuff.online"),
-        ("Nice CV", "nicecv.online"),
-    ),
-    "testprod": (
-        ("Site test 1", "sitetest1.ramiboutas.com"),
-        ("Site test 2", "sitetest2.ramiboutas.com"),
-        ("Site test 3", "sitetest3.ramiboutas.com"),
-    ),
-}
 
 
 # Submodules

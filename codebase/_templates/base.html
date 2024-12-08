@@ -1,7 +1,7 @@
 {% load i18n static django_browser_reload %}
-{% firstof page_title object.title request.extendedsite.page_title as title %}
-{% firstof page_keywords object.keywords request.extendedsite.page_keywords as keywords %}
-{% firstof page_description object.description request.extendedsite.page_description as description %}
+{% firstof page_title object.title request.site.page_title as title %}
+{% firstof page_keywords object.keywords request.site.page_keywords as keywords %}
+{% firstof page_description object.description request.site.page_description as description %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 {% get_language_info_list for LANGUAGES as languages %}
@@ -46,7 +46,7 @@
     <!-- css -->
     <link href="{% static "css/bootstrap-grid.min.css" %}" rel="stylesheet" />
     <link href="{% static "css/rb.css" %}" rel="stylesheet" />
-    <link href="{{ request.extendedsite.picocss_static_url }}" rel="stylesheet" />
+    <link href="{{ request.site.picocss_static_url }}" rel="stylesheet" />
     {% block head_extra %}{% endblock %}
   </head>
   <body class="container">

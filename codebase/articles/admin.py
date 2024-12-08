@@ -9,7 +9,6 @@ class ArticleAdmin(TranslationAdmin):
     list_display = ("title", "folder", "subfolder", "created_on", "updated_on")
     readonly_fields = (
         "title",
-        "sites",
         "submodule",
         "folder",
         "subfolder",
@@ -17,7 +16,7 @@ class ArticleAdmin(TranslationAdmin):
         "created_on",
         "updated_on",
     )
-    list_filter = ("folder", "created_on", "updated_on")
+    list_filter = ("submodule", "folder", "created_on", "updated_on")
     search_fields = ("title", "folder", "subfolder", "body")
 
 

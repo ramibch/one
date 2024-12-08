@@ -21,8 +21,6 @@ class Command(BaseCommand):
                 msg = f"Database '{db_name}' already exists"
                 self.stdout.write(self.style.WARNING(msg))
                 cur.close()
-
-            if cur.closed:
                 return
 
             try:

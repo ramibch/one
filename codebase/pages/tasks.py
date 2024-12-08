@@ -14,4 +14,4 @@ def sync_pages_daily():
 
 @huey.task()
 def trigger_sync_pages(extsites):
-    sync_page_objects(PageModel=Page, extended_sites=extsites)
+    sync_page_objects(PageModel=Page, sites=extsites)

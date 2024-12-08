@@ -1,6 +1,5 @@
 from auto_prefetch import Model
 from django.conf import settings
-from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.functional import cached_property
 
@@ -18,7 +17,7 @@ def get_page_file_path(obj, filename: str):
 
 class BaseSubmodule(Model):
     name = models.CharField(max_length=64, unique=True)
-    sites = models.ManyToManyField(Site)
+    sites = models.ManyToManyField("sites.Site")
 
     def __init_subclass__(cls, submodule_name, **kwargs):
         cls.submodule_name = submodule_name
@@ -83,41 +82,37 @@ class TranslatableModel(Model):
         abstract = True
 
     @cached_property
-    def extendedsite(self):
-        from codebase.base.models import ExtendedSite
+    def associated_site(self):
+        from codebase.sites.models import Site
 
-        if isinstance(self, ExtendedSite):
+        if isinstance(self, Site):
             return self
         elif hasattr(self, "sites"):
-            site = self.sites.first()
+            return self.sites.first()
         elif hasattr(self, "site"):
-            site = self.site.extendedsite
-
-        if site:
-            return site.extendedsite
+            return self.site
 
         raise NotImplementedError
 
     @cached_property
     def default_language(self):
-        return self.extendedsite.default_language
+        return self.associated_site.default_language
 
     @cached_property
     def rest_languages(self):
-        return self.extendedsite.rest_languages
+        return self.associated_site.rest_languages
 
     @cached_property
     def languages(self):
-        return self.extendedsite.languages
+        return self.associated_site.languages
 
     @cached_property
     def languages_count(self):
-        return self.extendedsite.languages_count
+        return self.associated_site.languages_count
 
 
 class BasePageModel(Model, PageMixin):
     submodule = None  # define in the subclass
-    sites = models.ManyToManyField(Site)
     title = models.CharField(max_length=256, editable=False)
     slug = models.SlugField(max_length=128, unique=True, editable=False, db_index=True)
     folder = models.CharField(max_length=128, editable=False)

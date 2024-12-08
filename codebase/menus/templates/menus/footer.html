@@ -24,7 +24,7 @@
       {% for footerlink in footer_links %}
         <a href="{{ footerlink.link.url }}?ref=footerlink"
            {% if footerlink.new_tab %}target="_blank"{% endif %}>{{ footerlink.display_title }}</a>
-        {% if not forloop.last %}{{ request.extendedsite.footer_links_separator }}{% endif %}
+        {% if not forloop.last %}{{ request.site.footer_links_separator }}{% endif %}
       {% endfor %}
     </p>
     <!-- Social media links -->
@@ -43,13 +43,13 @@
       {% endfor %}
     </p>
     <small>
-      <i>&copy; <span x-text="new Date().getFullYear()"></span> {{ request.extendedsite.name }}
+      <i>&copy; <span x-text="new Date().getFullYear()"></span> {{ request.site.name }}
       </i>
     </small>
-    {% if request.extendedsite.change_theme_light_in_footer %}
+    {% if request.site.change_theme_light_in_footer %}
       {% include "elements/theme_light.html" %}
     {% endif %}
-    {% if request.extendedsite.change_language_in_footer and request.extendedsite.languages.count > 1 %}
+    {% if request.site.change_language_in_footer and request.site.languages.count > 1 %}
       {% include "elements/change_language.html" %}
     {% endif %}
   </center>

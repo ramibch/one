@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = "Create a Postgres db"
+    help = "Drop a Postgres db"
 
     def handle(self, *args, **options):
         db_name, host, port = settings.DB_NAME, settings.DB_HOST, settings.DB_PORT

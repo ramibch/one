@@ -1,12 +1,12 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geoip2 import GeoIP2
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.management import call_command
 from django.http import HttpRequest, HttpResponse
 from django.urls import reverse
 from django.utils.functional import cached_property
 
+from ...sites.models import Domain
 from ..models import Language, Traffic
 from .telegram import Bot
 
@@ -21,8 +21,8 @@ class Middlewares:
         # Assign coutry to request object
         request.country = CountryDetails(request)  # type: ignore
 
-        # Assign extended site to request
-        request.extendedsite = get_current_site(request).extendedsite  # type: ignore
+        # Assign site attribute to request object
+        request.site = Domain.objects.get(name=request.get_host()).site
 
         # Clear cache in development
         self.clear_cache_if_dev()
@@ -47,9 +47,9 @@ class Middlewares:
                 User.objects.filter(id=request.user.id).update(language=lang)
             else:
                 lang = request.user.language
-        elif request.extendedsite.languages_count == 1:
+        elif request.site.languages_count == 1:
             # If the site has just one language, set that one
-            lang = request.extendedsite.default_language
+            lang = request.site.default_language
 
         if lang is not None:
             response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang.id)
@@ -119,5 +119,5 @@ class TrafficProcessor:
         obj = Traffic.objects.create_from_request_and_response(request, response)
         if status_code >= 400:
             # There is an HTTP Error -> inform admin
-            url = request.extendedsite.get_object_full_admin_url(obj)  # type: ignore
+            url = request.site.get_object_full_admin_url(obj)  # type: ignore
             Bot.to_admin(f"🔴 {status_code} HTTP Error\n\nCheck traffic object: {url}")
