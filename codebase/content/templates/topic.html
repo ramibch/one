@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load i18n humanize %}
+{% block content %}
+  <section>
+    <h1>
+      <center> {{ object.name }}</center>
+    </h1>
+  </section>
+  <section class="row mb-2">
+    {% for product_page in object.related_products %}
+      <div class="col-md-4">
+        <article>
+          <h2>
+            <a href="{{ product_page.page_url }}" title="{{ product_page.title }}">{{ product_page.title }}</a>
+          </h2>
+          <a href="{{ product_page.page_url }}">
+            <img src="{{ product_page.product.image.url }}"
+                 alt="{{ product_page.title }}">
+          </a>
+        </article>
+      </div>
+    {% endfor %}
+    {% for article in object.related_articles %}
+      <div class="col-md-4">
+        <article>
+          <h2>
+            <a href="{{ article.page_url }}" title="{{ article.title }}">{{ article.title }}</a>
+          </h2>
+          <footer>
+            {{ article.created_on |naturaltime }}
+          </footer>
+        </article>
+      </div>
+    {% endfor %}
+  </section>
+  <!-- Telegram groups -->
+  <section class="row">
+    {% for telegram_group in object.related_telegram_groups %}
+      <div class="col-md-4">
+        <article>
+          <a href="{{ telegram_group.url }}" class="row" target="_blank">
+            <div class="col-3">
+              <img src="{{ telegram_group.image.url }}" alt="{{ telegram_group.name }}">
+            </div>
+            <div class="col-9">
+              <i class="bi bi-telegram"></i> {{ telegram_group.name }}
+            </div>
+          </a>
+        </article>
+      </div>
+    {% endfor %}
+  </section>
+{% endblock content %}

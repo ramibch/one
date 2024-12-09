@@ -1,0 +1,192 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Developer CV
+% LaTeX Template
+% Version 1.0 (28/1/19)
+%
+% This template originates from:
+% http://www.LaTeXTemplates.com
+%
+% Authors:
+% Jan Vorisek (jan@vorisek.me)
+% Based on a template by Jan Küster (info@jankuester.com)
+% Modified for LaTeX Templates by Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% The MIT License (see included LICENSE file)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[9pt]{developercv} % Default font size, values from 8-12pt are recommended
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE AND CONTACT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}[t]{0.33\textwidth}
+	\vspace{-\baselineskip} % Required for vertically aligning minipages
+	
+	% fullname
+	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {{- profile.get_tex_value("fullname") -}} }}}}
+	\vspace{6pt}
+	% job title
+	{% if profile.jobtitle_active %}
+	{\huge {{ profile.get_tex_value("jobtitle") }} }
+	{% endif %}
+\end{minipage}
+\begin{minipage}[t]{0.33\textwidth} % 27.5% of the page width for the first row of icons
+	\vspace{-\baselineskip} % Required for vertically aligning minipages
+	{% if profile.location_active %}
+	\icon{MapMarker}{12}{ {{ profile.get_tex_value("location") }} }\newline
+	{% endif %}
+
+	{% if profile.phone_active %}
+	\icon{Phone}{12}{ {{- profile.get_tex_value("phone") -}} }\newline
+	{% endif %}
+
+\end{minipage}
+\begin{minipage}[t]{0.33\textwidth} % 27.5% of the page width for the second row of icons
+	\vspace{-\baselineskip} % Required for vertically aligning minipages
+	% email
+	{% if profile.email_active %}
+	\icon{At}{12}{\href{mailto: {{- profile.get_tex_value("email") -}} }{ {{- profile.get_tex_value("email") -}} }}\newline
+	{% endif %}
+	% website
+	{% if profile.website_active %}
+	\icon{Globe}{12}{\href{ {{- profile.get_tex_value("website") -}} }{ {{- profile.get_tex_value("website") -}} }}\newline
+	{% endif %}
+
+\end{minipage}
+
+\vspace{0.3cm}
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION, SKILLS AND TECHNOLOGIES
+%----------------------------------------------------------------------------------------
+
+{% if profile.about_active %}
+\cvsect{ {{- profile.get_tex_value("about_label") -}} }
+\begin{minipage}[t]{\textwidth}
+	\vspace{-\baselineskip}
+	\vspace{0.3cm}
+	{{ profile.get_tex_value("about") }}
+\end{minipage}
+{% endif %}
+
+\vspace{0.8cm}
+
+{% if profile.skill_active and profile.skill_set.count() > 0 %}
+\begin{minipage}[t]{0.5\textwidth}
+	\vspace{-\baselineskip}
+	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {{- profile.get_tex_value("skill_label") -}} }}}}
+	\begin{barchart}{4.5}
+		{% for skill in profile.skill_set.all() %}
+			\baritem{ {{- skill.get_tex_value("name") -}} }{ {{- skill.level -}} }
+		{% endfor %}
+	\end{barchart}
+\end{minipage} {% endif %}{% if profile.language_active and profile.languageability_set.count() > 0 %}
+\begin{minipage}[t]{0.5\textwidth}
+	\vspace{-\baselineskip}
+	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {{- profile.get_tex_value("language_label") -}} }}}}
+	\begin{barchart}{4.5}
+		{% for language in profile.languageability_set.all() %}
+			\baritem{ {{- language.get_tex_value("name") -}} }{ {{- language.level -}} }
+		{% endfor %}
+	\end{barchart}
+\end{minipage} {% endif %}
+
+
+% \begin{center}
+%	\bubbles{5/Eclipse, 6/git, 4/Office, 3/Inkscape, 3/Blender}
+% \end{center}
+
+%----------------------------------------------------------------------------------------
+%	EXPERIENCE
+%----------------------------------------------------------------------------------------
+{% if profile.experience_active and profile.experience_set.count() > 0 %}
+\cvsect{ {{- profile.experience_label -}} }
+{% for experience in profile.experience_set.all() %}
+\begin{entrylist}
+	\entry
+	{ {{ experience.get_tex_value("start_date") }} -- {{ experience.get_tex_value("end_date") }} }
+	{ {{- experience.get_tex_value("title") -}} }
+	{ {{- experience.get_tex_value("company") -}} }
+	{ {{- experience.get_tex_value("description") | linebreaks -}} }
+	\vspace{3mm}
+\end{entrylist}
+{% endfor %}
+{% endif %}
+
+%----------------------------------------------------------------------------------------
+%	EDUCATION
+%----------------------------------------------------------------------------------------
+
+{% if profile.education_active and profile.education_set.count() > 0 %}
+\cvsect{ {{- profile.get_tex_value("education_label") -}} }
+
+{% for education in profile.education_set.all() %}
+\begin{entrylist}
+	\entry
+	{ {{ education.get_tex_value("start_date") }} -- {{ education.get_tex_value("end_date") }} }
+	{ {{- education.get_tex_value("title") -}} }
+	{ {{- education.get_tex_value("institution") -}} }
+	{ {{- education.get_tex_value("description") | linebreaks -}} }
+	\vspace{3mm} 
+\end{entrylist}
+{% endfor %}
+{% endif %}
+
+
+{% if profile.achievement_active and profile.achievement_set.count() > 0 %}
+\cvsect{ {{- profile.achievement_label -}} }
+{% for achievement in profile.achievement_set.all() %}
+\begin{entrylist}
+	\entry
+	{ {{ achievement.get_tex_value("date") }} }
+	{ {{- achievement.get_tex_value("title") -}} }
+	{ }
+	{ }
+	\vspace{3mm} 
+\end{entrylist}
+{% endfor %}
+{% endif %}
+
+{% if profile.project_active and profile.project_set.count() > 0 %}
+\cvsect{ {{- profile.get_tex_value("project_label") -}} }
+{% for project in profile.project_set.all() %}
+\begin{entrylist}
+	\entry
+	{ {{- project.get_tex_value("role") -}} }
+	{ {{- project.get_tex_value("title") -}} }
+	{ {{- project.get_tex_value("organization") -}} }
+	{ }
+	\vspace{3mm} 
+\end{entrylist}
+{% endfor %}
+{% endif %}
+
+
+
+
+{% if profile.publication_active and profile.publication_set.count() > 0 %}
+\cvsect{ {{- profile.get_tex_value("publication_label") -}} }
+{% for publication in profile.publication_set.all() %}
+\begin{entrylist}
+	\entry
+	{ {{- publication.get_tex_value("date") -}} }
+	{ {{- publication.get_tex_value("title") -}} }
+	{ {{- publication.get_tex_value("publisher") -}} }
+	{ {{- publication.get_tex_value("authors") -}} }
+	\vspace{3mm} 
+\end{entrylist}
+{% endfor %}
+{% endif %}
+
+\end{document}

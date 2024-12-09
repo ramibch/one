@@ -1,0 +1,138 @@
+{% with color=color|default("orange"), holiday_color=holiday_color|default("red") %}
+
+\documentclass[landscape,a4paper, {{ doc_language }}, 10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[{{ doc_language }}]{babel}
+\usepackage[{{ doc_language }}]{translator}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+
+\usepackage{translator}
+\usepackage{fancyhdr}
+\usepackage{fix-cm}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+
+\usepackage[landscape, headheight = 2cm, margin=.5cm,
+  top = 3.2cm, nofoot]{geometry}
+\usetikzlibrary{calc}
+\usetikzlibrary{calendar}
+\renewcommand*\familydefault{\sfdefault}
+\def\year{ {{- year -}} }
+
+{% raw %}
+\newcommand{\link}[1]{{\color{blue}\href{#1}{#1}}}
+\def\termin#1#2{
+    \node [anchor=north west, text width= 3.4cm] at
+    ($(cal-#1.north west)+(3em, 0em)$) {\tiny{#2}};
+    }
+    
+{% endraw %}
+
+\renewcommand{\headrulewidth}{0.0pt}
+\setlength{\headheight}{10ex}
+\chead{
+  \fontsize{60}{70}\selectfont\textbf{\year}
+  \Large\textbf{ {{ title }} }\hfill
+}
+{% if footer_url %}
+\cfoot{\footnotesize\texttt{  \link{ {{- footer_url -}} } }}
+{% else %}
+\cfoot{\footnotesize\texttt{  }}
+{% endif %}
+
+\begin{document}
+\pagestyle{fancy}
+\begin{center}
+\begin{tikzpicture}[every day/.style={anchor = north}]
+\calendar[
+  dates=\year-01-01 to \year-06-30,
+  name=cal,
+  day yshift = 3em,
+  day code=
+  {
+    \node[name=\pgfcalendarsuggestedname,every day,shape=rectangle,
+    minimum height= .53cm, text width = 4.4cm, draw = gray]{\tikzdaytext};
+    \draw (-1.8cm, -.1ex) node[anchor = west]{\footnotesize%
+      \pgfcalendarweekdayshortname{\pgfcalendarcurrentweekday}};
+  },
+  execute before day scope=
+  {
+    \ifdate{day of month=1}
+    {
+      \pgftransformxshift{4.8cm}
+      \draw (0,0)node [shape=rectangle, minimum height= .53cm,
+        text width = 4.4cm, fill = {{ color }}, text= white, draw = gray, text centered]
+        {\textbf{\pgfcalendarmonthname{\pgfcalendarcurrentmonth}}};
+    }{}
+    \ifdate{workday}
+    {
+      \tikzset{every day/.style={fill=white}}
+    }{}
+    \ifdate{Saturday}{\tikzset{every day/.style={fill={{color}}!10}}}{}
+    \ifdate{Sunday}{\tikzset{every day/.style={fill={{color}}!20}}}{}
+    {%- for holiday in holidays_part1 -%}
+    \ifdate{equals= {{- holiday.tex_date() -}} }{\tikzset{every day/.style={fill={{holiday_color}}!20}}}{}
+    {%- endfor -%}
+    },
+ execute at begin day scope=
+  {
+    \pgftransformyshift{-.53*\pgfcalendarcurrentday cm}
+  }
+];
+{%- for holiday in holidays_part1 -%}
+\termin{ {{- holiday.tex_date() -}} }{ {{- holiday.title -}} }
+{%- endfor -%}
+\end{tikzpicture}
+\pagebreak
+\begin{tikzpicture}[every day/.style={anchor = north}]
+    
+
+\calendar[dates=\year-07-01 to \year-12-31,
+  name=cal,
+  day yshift = 3em,
+  day code=
+  {
+    \node[name=\pgfcalendarsuggestedname,every day,shape=rectangle, 
+      minimum height= .53cm, text width = 4.4cm, draw = gray]{\tikzdaytext};
+    \draw (-1.8cm, -.1ex) node[anchor = west]
+    {
+      \footnotesize\pgfcalendarweekdayshortname{\pgfcalendarcurrentweekday}
+    };
+  },
+  execute before day scope=
+  {
+    \ifdate{day of month=1} {
+    \pgftransformxshift{4.8cm}
+    \draw (0,0)node [shape=rectangle, minimum height= .53cm, 
+      text width = 4.4cm, fill = {{color}}, text= white, draw = gray, text centered]
+    {
+      \textbf{\pgfcalendarmonthname{\pgfcalendarcurrentmonth}}
+    };
+  }{}
+  \ifdate{workday}
+  {
+    \tikzset{every day/.style={fill=white}}
+  }{}
+  \ifdate{Saturday}{\tikzset{every day/.style={fill={{color}}!10}}}{}
+  \ifdate{Sunday}{\tikzset{every day/.style={fill={{color}}!20}}}{}
+  {%- for holiday in holidays_part2 -%}
+    \ifdate{equals= {{- holiday.tex_date() -}} }{\tikzset{every day/.style={fill={{holiday_color}}!20}}}{}
+  {%- endfor -%}
+  },
+  execute at begin day scope=
+  {
+    \pgftransformyshift{-.53*\pgfcalendarcurrentday cm}
+  }
+];
+
+{%- for holiday in holidays_part2 -%}
+\termin{ {{- holiday.tex_date() -}} }{ {{- holiday.title -}} }
+{%- endfor -%}
+\end{tikzpicture}
+\end{center}
+\end{document}
+
+
+{% endwith %}

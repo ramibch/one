@@ -46,11 +46,15 @@ dependencies = [
   "djade",
   "djlint",
   "ipdb",
-  "django-stubs[compatible-mypy]>=5.1.1",
-  "django-fastdev>=1.12.0",
-  "environs>=11.2.1",
-  "django-allauth[socialaccount]>=65.3.0",
-  "toml>=0.10.2",
+  "django-stubs[compatible-mypy]",
+  "django-fastdev",
+  "environs",
+  "django-allauth[socialaccount]",
+  "channels-redis",
+  "channels[daphne]",
+  "pdf2image",
+  "django-dbbackup",
+  "etsyv3",
 ]
 
 

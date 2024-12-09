@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load markdown_extras %}
+{% block content %}
+    <h1>
+        <center>
+            {{ object.title }}
+        </center>
+    </h1>
+    {{ object.body | markdown | safe }}
+{% endblock content %}

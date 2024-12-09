@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}
+    {% trans "Order link expired" %}
+{% endblock head_title %}
+{% block content %}
+    <center>
+        <h1>{% trans "Order link expired" %}</h1>
+        <p>{% trans "This link has expired. If you did order something, please contact me." %}</p>
+    </center>
+{% endblock content %}

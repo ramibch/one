@@ -2,10 +2,17 @@ from auto_prefetch import ForeignKey, Manager, Model
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils import timezone
+from django.urls import reverse_lazy
+from django.utils import timezone, translation
 from django.utils.functional import cached_property
+from django.utils.text import slugify
 from django.utils.translation import get_language_info
 from django.utils.translation import gettext_lazy as _
+
+from ..articles.models import Article
+from ..products.models import Product
+from .utils.abstracts import TranslatableModel
+from .utils.telegram import Bot
 
 User = get_user_model()
 
@@ -19,6 +26,9 @@ class LanguageManager(Manager):
             update_fields=["id"],
             ignore_conflicts=True,
         )
+        for lang in self.all():
+            if lang.id not in settings.LANGUAGE_CODES:
+                Bot.to_admin(f"Language '{lang.id}' not available anymore in settings.")
 
 
 class Language(Model):
@@ -58,7 +68,7 @@ class Language(Model):
         return self.language_info.get("name_translated")  # type: ignore
 
 
-class TrafficManager(Manager["Traffic"]):
+class TrafficManager(Manager):
     def create_from_request_and_response(self, request, response) -> "Traffic":
         status_code = response.status_code
         return self.create(
@@ -109,3 +119,48 @@ class Traffic(Model):
             f"[{self.time}] {self.request_method} "
             f"{self.request_path} {self.response_status_code}"
         )
+
+
+class Topic(TranslatableModel):
+    name = models.CharField(max_length=32)
+    slug = models.SlugField(max_length=32, unique=True, blank=True)
+    is_public = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    def title(self):
+        return self.name
+
+    @cached_property
+    def related_articles(self):
+        return Article.objects.filter(public=True, topic=self)
+
+    @cached_property
+    def related_products(self):
+        return Product.objects.filter(topics__id=self.id)[:6]
+
+    def get_absolute_url(self):
+        return reverse_lazy("topic-detail", kwargs={"slug": self.slug})
+
+    @cached_property
+    def url(self):
+        return self.get_absolute_url()
+
+    @cached_property
+    def article_count(self):
+        return Article.objects.filter(topic=self).count()
+
+    def __str__(self) -> str:
+        return self.name
+
+    def save(self, *args, **kwargs):
+        for lang in settings.LANGUAGE_CODES:
+            with translation.override(lang):
+                setattr(self, f"slug_{lang}", slugify(self.name))
+        super().save(*args, **kwargs)
+
+    def get_default_language(self):
+        return Language.objects.get_or_create(id=settings.LANGUAGE_CODE)[0]
+
+    def get_rest_languages(self):
+        return Language.objects.exclude(id=settings.LANGUAGE_CODE)

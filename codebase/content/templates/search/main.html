@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}
+  {% translate 'Search' %}
+{% endblock head_title %}
+{% block content %}
+  <center>
+    <h1>{% translate 'Search' %}</h1>
+    <input type="search"
+           name="q"
+           hx-get="{% url 'search-results' %}"
+           hx-target="#results"
+           {% if request.GET.q %} value="{{ request.GET.q }}" hx-trigger="keyup changed delay:500ms, load" {% else %} hx-trigger="keyup changed delay:500ms" {% endif %} />
+  </center>
+  <div id="results"></div>
+{% endblock content %}

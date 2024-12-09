@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from ..base.models import Language
 from ..base.utils.abstracts import TranslatableModel
 
-DJANGO_URL_PATHS = (
+DJ_PATHS = (
     # Only url paths without path arguments
     ("home", _("Home")),
     ("search", _("Search")),
@@ -26,7 +26,7 @@ DJANGO_URL_PATHS = (
 class LinkManager(Manager):
     def sync_django_paths(self):
         new_links = []
-        for url_path in DJANGO_URL_PATHS:
+        for url_path in DJ_PATHS:
             if self.filter(django_url_path=url_path[0]).exists():
                 continue
             new_links.append(Link(django_url_path=url_path[0]))
@@ -35,16 +35,15 @@ class LinkManager(Manager):
 
 
 class Link(TranslatableModel):
-    custom_title = models.CharField(max_length=128, null=True, blank=True)
-    external_url = models.URLField(max_length=256, null=True, blank=True)
-    django_url_path = models.CharField(
-        blank=True, null=True, max_length=32, choices=DJANGO_URL_PATHS
-    )
-    page = ForeignKey("pages.Page", on_delete=models.CASCADE, null=True, blank=True)
-    plan = ForeignKey("plans.Plan", on_delete=models.CASCADE, null=True, blank=True)
-    article = ForeignKey(
-        "articles.Article", on_delete=models.CASCADE, null=True, blank=True
-    )
+    optional = {"null": True, "blank": True}
+    foreignkey_args = optional | {"on_delete": models.CASCADE}
+    custom_title = models.CharField(max_length=128, **optional)
+    external_url = models.URLField(max_length=256, **optional)
+    django_url_path = models.CharField(max_length=32, choices=DJ_PATHS, **optional)
+    page = ForeignKey("pages.Page", **foreignkey_args)
+    plan = ForeignKey("plans.Plan", **foreignkey_args)
+    article = ForeignKey("articles.Article", **foreignkey_args)
+    topic = ForeignKey("base.Topic", **foreignkey_args)
 
     objects: LinkManager = LinkManager()
 
@@ -64,7 +63,7 @@ class Link(TranslatableModel):
 
     @cached_property
     def model_object_fields(self):
-        return [self.page, self.plan, self.article]
+        return [self.page, self.plan, self.article, self.topic]
 
     @cached_property
     def other_link_fields(self):

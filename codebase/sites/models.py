@@ -88,7 +88,7 @@ class Site(TranslatableModel):
         ("pink", _("Pink")),
         ("green", _("Green")),
     )
-    name = models.CharField(_("display name"), max_length=50)
+    name = models.CharField(_("display name"), max_length=50, unique=True)
     remarks = models.TextField(null=True, blank=True)
 
     emoji = models.CharField(max_length=8, null=True)

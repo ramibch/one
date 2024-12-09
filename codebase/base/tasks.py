@@ -69,8 +69,7 @@ def sync_submodule_folders_every_1_hour(hour="/*"):
 
 @huey.task()
 def translate_modeltranslation_objects(
-    queryset: QuerySet[type[Model]],
-    translation_fields: list[str],
+    queryset: QuerySet[type[Model]], translation_fields: list[str]
 ):
     out = "🈂️ Translating a multilanguage queryset:\n\n"
     for db_obj in queryset:
@@ -86,17 +85,17 @@ def translate_modeltranslation_objects(
                 out += f"Not translating the field {from_field} since it is null.\n"
                 continue
 
-            out += f"{db_obj.default_language}: {from_field_value}\n"
+            out += f"{db_obj.get_default_language()}: {from_field_value}\n"
             for to_language in db_obj.get_rest_languages():
                 to_field = f"{translation_field}_{to_language.id}"
                 if (
                     not hasattr(db_obj, to_field)
                     or not db_obj.override_translated_fields
-                    or to_language.id == db_obj.default_language.id
+                    or to_language.id == db_obj.get_default_language().id
                 ):
                     continue
                 to_field_value = translate_text(
-                    from_language=db_obj.default_language.id,
+                    from_language=db_obj.get_default_language().id,
                     to_lang=to_language.id,
                     text=from_field_value,
                 )

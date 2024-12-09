@@ -11,10 +11,6 @@ HOSTS: list[str] = settings.ALLOWED_HOSTS
 def create_default_sites(app_config, apps=global_apps, **kwargs):
     from .models import Domain, Site
 
-    if Site.objects.exists():
-        print("Site objects exist already")
-        return
-
     sites_and_domains = []
     for host in HOSTS:
         if host in ["localhost", "127.0.0.1"] and settings.ENV == "dev":
@@ -26,11 +22,8 @@ def create_default_sites(app_config, apps=global_apps, **kwargs):
 
     # There may be a better way to do this, but for few objects is fine.
     for site_name, domain_name in sites_and_domains:
-        site = Site(name=site_name)
-        site.save()
-        domain = Domain(site=site, name=domain_name)
-        domain.save()
-
-        if f"www.{domain_name}" in HOSTS:
-            wwwdomain = Domain(site=site, name=f"www.{domain_name}")
-            wwwdomain.save()
+        wwwhost = f"www.{domain_name}"
+        site = Site.objects.get_or_create(name=site_name)[0]
+        Domain.objects.get_or_create(site=site, name=domain_name)
+        if wwwhost in HOSTS:
+            Domain.objects.get_or_create(site=site, name=wwwhost, is_main=False)

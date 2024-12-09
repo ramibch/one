@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load i18n l10n djmoney pricing %}
+{% block head_title %}
+  {% translate "Pricing" %}
+{% endblock %}
+{% block content %}
+  <h1>{% translate "Pricing" %}</h1>
+  <p class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+    {% translate "Choose the right plan for you" %}
+  </p>
+</div>
+{% for plan in plans %}
+  {% get_plan_price request=request plan=plan as plan_price %}
+  <div class="pt-16 lg:px-8 lg:pt-0 xl:px-14">
+    <h3 id="tier-basic"
+        class="text-base font-semibold leading-7 text-gray-900">{{ plan.name }}</h3>
+    <p class="mt-6 flex items-baseline gap-x-1">
+      <span class="text-5xl font-bold tracking-tight text-gray-900">{% money_localize plan_price %}</span>
+    </p>
+    <a href="{{ plan.checkout_url }}"
+       aria-describedby="tier-basic"
+       class="mt-10 block rounded-md bg-indigo-600 py-2 px-3 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+      {% translate "Buy plan" %}
+    </a>
+    <p class="mt-10 text-sm font-semibold leading-6 text-gray-900">{{ plan.description }}</p>
+    <ul role="list" class="mt-6 space-y-3 text-sm leading-6 text-gray-600">
+      <li class="flex gap-x-3">
+        ✅
+        {{ plan.months }} {% translate "Months" %}
+      </li>
+      <li class="flex gap-x-3">
+        ✅
+        {{ plan.profiles }} {% translate "Profiles" %}
+      </li>
+      {% if plan.includes_support %}
+        <li class="flex gap-x-3">
+          ✅
+          {% translate "Technical support" %}
+        </li>
+      {% endif %}
+      {% if plan.profile_translation %}
+        <li class="flex gap-x-3">
+          ✅
+          {% translate "Translate your profile" %}
+        </li>
+      {% endif %}
+      {% if plan.profile_manual %}
+        <li class="flex gap-x-3">
+          ✅
+          {% translate "We create a profile for you" %}
+        </li>
+      {% endif %}
+      {% if plan.premium_templates %}
+        <li class="flex gap-x-3">
+          ✅
+          {% translate "Premium templates" %}
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+{% endfor %}
+<div x-data="{ active: 1 }"
+     class="mx-auto max-w-3xl w-full min-h-[16rem] space-y-4">
+  <h2 class="text-2xl font-bold leading-10 tracking-tight text-gray-900">
+    {% translate "Frequently asked questions" %}
+  </h2>
+  {% for faq in faqs %}
+    <div x-data="{ id: {{ forloop.counter }}, get expanded() { return this.active === this.id }, set expanded(value) { this.active = value ? this.id : null }, }"
+         role="region"
+         class="rounded-lg bg-white shadow">
+      <h2>
+        <button x-on:click="expanded = !expanded"
+                :aria-expanded="expanded"
+                class="flex w-full items-center justify-between px-6 py-4 text-xl font-bold">
+          <span class="text-base font-semibold leading-7 text-gray-900">{{ faq.question }}</span>
+          <span x-show="expanded" aria-hidden="true" class="ml-4">&minus;</span>
+          <span x-show="!expanded" aria-hidden="true" class="ml-4">&plus;</span>
+        </button>
+      </h2>
+      <div x-show="expanded" x-collapse>
+        <div class="px-6 pb-4 text-base leading-7 text-gray-600">{{ faq.answer }}</div>
+      </div>
+    </div>
+  {% endfor %}
+  <p class="mt-10 max-w-2xl text-base leading-7 text-gray-600">
+    {% translate "Do you have a different question? Contact us." %}
+  </p>
+</dl>
+</div>
+</div>
+{% endblock content %}

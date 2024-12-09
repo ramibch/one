@@ -1,0 +1,19 @@
+{% load i18n %}
+<h2>{% translate "Total items found" %}: {{ total }}</h2>
+<div>
+  {% for product in products %}
+    <p>
+      <a href="{{ product.page_url }}" title="{{ product.title }}">✅ {{ product.title }}</a>
+    </p>
+  {% endfor %}
+  {% for article in articles %}
+    <p>
+      <a href="{{ article.page_url }}" title="{{ article.title }}">📝 {{ article.title }}</a>
+    </p>
+  {% endfor %}
+  {% for page in pages %}
+    <p>
+      <a href="{{ page.page_url }}" title="{{ page.title }}">🔗 {{ page.title }}</a>
+    </p>
+  {% endfor %}
+</div>

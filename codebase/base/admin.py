@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.db.migrations.recorder import MigrationRecorder
+from modeltranslation.admin import TranslationAdmin
 
-from .models import Language, Traffic
+from .models import Language, Topic, Traffic
+from .utils.actions import translation_actions
 
 
 @admin.register(MigrationRecorder.Migration)
@@ -13,6 +15,11 @@ class MigrationRecorderAdmin(admin.ModelAdmin):
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Topic)
+class TopicAdmin(TranslationAdmin):
+    actions = translation_actions
 
 
 @admin.register(Traffic)

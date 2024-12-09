@@ -45,29 +45,20 @@ USE_S3_FOR_STATIC_FILES = env.bool("USE_S3_FOR_STATIC_FILES")
 ##################
 """
 
-ALLOWED_HOSTS_DICT = {
-    "dev": ["127.0.0.1"],
-    "stage": [
-        "test1.ramiboutas.com",
-        "test2.ramiboutas.com",
-        "test1.nicecv.online",
-        "test2.nicecv.online",
-    ],
-    "prod": [
-        "127.0.0.1",
-        "ramiboutas.com",
-        "www.ramiboutas.com",
-        "englishstuff.online",
-        "www.englishstuff.online",
-        "nicecv.online",
-        "www.nicecv.online",
-    ],
-}
+ALLOWED_HOSTS = [
+    "test1.ramiboutas.com",
+    "test2.ramiboutas.com",
+    "test1.nicecv.online",
+    "test2.nicecv.online",
+    "127.0.0.1",
+    "ramiboutas.com",
+    "www.ramiboutas.com",
+    "englishstuff.online",
+    "www.englishstuff.online",
+    "nicecv.online",
+    "www.nicecv.online",
+]
 
-try:
-    ALLOWED_HOSTS = ALLOWED_HOSTS_DICT[ENV]
-except KeyError:
-    raise
 
 INTERNAL_IPS = ["127.0.0.1"]
 
@@ -113,6 +104,8 @@ INSTALLED_APPS = [
     "codebase.links",
     "codebase.faqs",
     "codebase.sites",
+    "codebase.products",
+    # "codebase.topics",
 ]
 
 MIDDLEWARE = [
@@ -220,19 +213,13 @@ LANGUAGES = [
     ("es", _("Spanish")),
     ("fr", _("French")),
     ("el", _("Greek")),
-    ("eo", _("Esperanto")),
-    ("fi", _("Finnish")),
     ("it", _("Italian")),
     ("nl", _("Dutch")),
-    ("nn", _("Norwegian Nynorsk")),
     ("pl", _("Polish")),
     ("pt", _("Portuguese")),
-    ("pt-br", _("Brazilian Portuguese")),
     ("ru", _("Russian")),
     ("sk", _("Slovak")),
     ("sl", _("Slovenian")),
-    ("sq", _("Albanian")),
-    ("sr", _("Serbian")),
     ("sv", _("Swedish")),
     ("tr", _("Turkish")),
     ("uk", _("Ukrainian")),
@@ -394,9 +381,6 @@ SOCIALACCOUNT_PROVIDERS = {
 Project settings
 ################
 """
-
-# Cache clear
-CLEAR_CACHE_IN_DEVELOPMENT = True
 
 
 # Tex

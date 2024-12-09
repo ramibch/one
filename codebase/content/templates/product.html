@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load markdown_extras i18n %}
+{% block content %}
+  <!-- Hero Section -->
+  <section class="grid">
+    <div>
+      <h1>{{ object.title }}</h1>
+      <p>
+        <strong>{{ object.price }} €</strong>
+      </p>
+      <br>
+      <center>
+        <a role="button" class="col-6" href="{{ object.checkout_url }}">🏆 {% translate 'Buy now' %}</a>
+      </center>
+      <br>
+    </div>
+    <div>
+      <img src="{{ object.image.url }}" width="100%" />
+    </div>
+  </section>
+  <br>
+  <br>
+  <section id="product-body">
+    {{ object.description | linebreaks }}
+  </section>
+  <!-- CTA final -->
+  <br>
+  <section>
+    <center>
+      <p>
+        <i>{{ object.title }}</i>
+      </p>
+      <a role="button"  href="{{ object.checkout_url }}">🏆 {% translate 'Buy now' %} <strong>{{ object.price }} €</strong></a>
+      {% if object.etsy_url %}<a role="button" class="secondary"  href="{{ object.etsy_url }}">👉 Etsy</a>{% endif %}
+      {% if object.gumroad_url %}<a role="button" class="contrast"  href="{{ object.gumroad_url }}">👉 Gumroad</a>{% endif %}
+    </center>
+  </section>
+{% endblock %}

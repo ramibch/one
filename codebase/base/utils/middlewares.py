@@ -6,7 +6,7 @@ from django.http import HttpRequest, HttpResponse
 from django.urls import reverse
 from django.utils.functional import cached_property
 
-from ...sites.models import Domain
+from ...sites.models import Site
 from ..models import Language, Traffic
 from .telegram import Bot
 
@@ -22,10 +22,11 @@ class Middlewares:
         request.country = CountryDetails(request)  # type: ignore
 
         # Assign site attribute to request object
-        request.site = Domain.objects.get(name=request.get_host()).site
+        request.site = Site.objects.get(domain__name=request.get_host())
 
         # Clear cache in development
-        self.clear_cache_if_dev()
+        if settings.DEBUG and settings.ENV == "dev":
+            call_command("clear_cache")
 
         # Get response (view process)
         response = self.get_response(request)
@@ -53,15 +54,6 @@ class Middlewares:
 
         if lang is not None:
             response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang.id)
-
-    def clear_cache_if_dev(self):
-        """This is better than restarting the http server"""
-        if (
-            settings.CLEAR_CACHE_IN_DEVELOPMENT
-            and settings.DEBUG
-            and "django_extensions" in settings.INSTALLED_APPS
-        ):
-            call_command("clear_cache")
 
     def process_traffic(self, request, response) -> None:
         """Ignore traffic from staff and for certain urls."""
