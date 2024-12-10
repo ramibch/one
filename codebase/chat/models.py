@@ -1,12 +1,14 @@
 import auto_prefetch
+from auto_prefetch import ForeignKey, Model
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
 
-from users.models import User
+User = get_user_model()
 
 
-class Chat(auto_prefetch.Model):
+class Chat(Model):
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
@@ -26,9 +28,12 @@ class Chat(auto_prefetch.Model):
 
 class Message(auto_prefetch.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    chat = auto_prefetch.ForeignKey(Chat, on_delete=models.CASCADE)
-    author = auto_prefetch.ForeignKey(User, on_delete=models.CASCADE)
+    chat = ForeignKey(Chat, on_delete=models.CASCADE)
+    author = ForeignKey(User, on_delete=models.CASCADE)
     body = models.CharField(max_length=512)
 
     def __str__(self):
         return str(self.body)
+
+    class Meta(Model.Meta):
+        ordering = ["-id"]

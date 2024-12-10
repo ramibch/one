@@ -63,6 +63,8 @@ ALLOWED_HOSTS = [
 INTERNAL_IPS = ["127.0.0.1"]
 
 INSTALLED_APPS = [
+    # Apps that need to be on top
+    "daphne",
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
     "django_extensions",
@@ -76,6 +78,8 @@ INSTALLED_APPS = [
     "djmoney",
     "debug_toolbar",
     "django_fastdev",
+    "channels",
+    "dbbackup",
     # Django apps
     "django_browser_reload",
     "django.contrib.admin",
@@ -105,7 +109,7 @@ INSTALLED_APPS = [
     "codebase.faqs",
     "codebase.sites",
     "codebase.products",
-    # "codebase.topics",
+    "codebase.chat",
 ]
 
 MIDDLEWARE = [
@@ -156,6 +160,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "codebase.wsgi.application"
+
+ASGI_APPLICATION = "codebase.asgi.application"
 
 # Database
 DB_SUPERUSER = env("POSTGRES_SUPERUSER")
@@ -376,6 +382,19 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
+# channels
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+
 """
 ################
 Project settings
@@ -475,6 +494,26 @@ if USE_S3_FOR_STATIC_FILES:
 else:
     STATIC_ROOT = LOCAL_STATIC_ROOT
     STATIC_URL = LOCAL_STATIC_URL
+
+
+# DB Backups
+USE_S3_FOR_DB_BACKUPS = env.bool("USE_S3_FOR_DB_BACKUPS")
+S3_DBBACKUP_BUCKET_NAME = env("S3_DBBACKUP_BUCKET_NAME")
+LOCAL_DBBACKUP_LOCATION = env("LOCAL_DBBACKUP_LOCATION")
+if USE_S3_FOR_DB_BACKUPS:
+    DBBACKUP_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    DBBACKUP_STORAGE_OPTIONS = {
+        "access_key": S3_ACCESS_KEY,
+        "secret_key": S3_SECRET_KEY,
+        "bucket_name": S3_DBBACKUP_BUCKET_NAME,
+        "location": "backups/",
+        "default_acl": "private",
+    }
+
+else:
+    DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
+    DBBACKUP_STORAGE_OPTIONS = {"location": LOCAL_DBBACKUP_LOCATION}
+
 
 # Https
 if HTTPS:  # pragma: no cover

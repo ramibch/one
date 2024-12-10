@@ -42,6 +42,7 @@ urlpatterns = [
     path("🚀/", include("codebase.plans.urls")),
     path("🔨/", include("codebase.tools.urls")),
     path("🤔/", include("codebase.faqs.urls")),
+    path("💬/", include("codebase.chat.urls")),
     path("", include("codebase.base.urls")),
     path("", include("codebase.home.urls")),
 ] + debug_toolbar_urls()

@@ -60,10 +60,6 @@ class SiteManager(Manager):
         global SITE_CACHE
         SITE_CACHE = {}
 
-    def default(self):
-        # TODO: Improve. Dummy method...
-        return self.first()
-
 
 class Site(TranslatableModel):
     PICOCSS = (

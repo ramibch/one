@@ -14,7 +14,7 @@ def chat_detail(request):
 
 
 @login_required
-def chat_join(request, name, chat=None):
+def chat_join(request, name):
     if not request.user.is_staff:
         return HttpResponseForbidden()
 
