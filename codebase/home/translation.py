@@ -1,13 +1,13 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import HeroSection, HomePage
+from .models import Home, HomeHeroSection
 
 
-@register(HomePage)
-class HomePageOptions(TranslationOptions):
+@register(Home)
+class HomeOptions(TranslationOptions):
     fields = ("title", "benefits_title", "steps_title", "faqs_title")
 
 
-@register(HeroSection)
-class HomePageHeroOptions(TranslationOptions):
+@register(HomeHeroSection)
+class HomeHeroOptions(TranslationOptions):
     fields = ("headline", "subheadline", "cta_title")

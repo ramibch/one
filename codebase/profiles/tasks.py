@@ -4,7 +4,6 @@ from django.utils import translation
 from django.utils.translation import gettext as _
 from huey import crontab
 from huey.contrib.djhuey import db_periodic_task
-
 from utils.email import send_simple_email
 from utils.telegram import report_to_admin
 
@@ -30,7 +29,7 @@ def notify_to_complete_profile():
     for profile in profiles_to_email:
         with translation.override(profile.language):
             subject = "Nice CV | " + _("Complete your profile")
-            body = _("Hello")
+            body = _("Hello x")
             if p.fullname is not None:
                 body += " " + p.fullname
             body += ",\n\n"

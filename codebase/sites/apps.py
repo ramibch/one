@@ -2,7 +2,7 @@ from django.apps import AppConfig
 from django.db.models.signals import post_migrate
 from django.utils.translation import gettext_lazy as _
 
-from .management import create_default_sites
+from .management import create_sites_and_necessary_objects
 
 
 class SitesConfig(AppConfig):
@@ -11,4 +11,4 @@ class SitesConfig(AppConfig):
     verbose_name = _("Sites")
 
     def ready(self):
-        post_migrate.connect(create_default_sites, sender=self)
+        post_migrate.connect(create_sites_and_necessary_objects, sender=self)

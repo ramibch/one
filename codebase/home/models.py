@@ -1,4 +1,4 @@
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.db import models
 from django.utils.functional import cached_property
 
@@ -9,8 +9,8 @@ from ..base.utils.abstracts import TranslatableModel
 from ..faqs.models import FAQ
 
 
-class HomePage(TranslatableModel, PageMixin):
-    site = ForeignKey("sites.Site", on_delete=models.CASCADE)
+class Home(TranslatableModel, PageMixin):
+    site = OneToOneField("sites.Site", on_delete=models.CASCADE)
 
     # Management
     is_active = models.BooleanField(default=True)
@@ -56,8 +56,8 @@ class HomePage(TranslatableModel, PageMixin):
         return self.site.rest_languages
 
 
-class HeroSection(TranslatableModel):
-    homepage = ForeignKey("home.HomePage", on_delete=models.CASCADE)
+class HomeHeroSection(TranslatableModel):
+    home = ForeignKey("home.Home", on_delete=models.CASCADE)
     headline = models.TextField(max_length=256)
     subheadline = models.TextField(max_length=256)
     cta_link = ForeignKey("links.Link", on_delete=models.CASCADE)
@@ -67,74 +67,74 @@ class HeroSection(TranslatableModel):
     is_active = models.BooleanField()
 
     def __str__(self):
-        return f"{self.headline} - {self.homepage}"
+        return f"{self.headline} - {self.home}"
 
     def display_cta_title(self):
         return self.cta_title if self.cta_title else self.cta_link.title
 
     def get_default_language(self):
-        return self.homepage.site.default_language
+        return self.home.site.default_language
 
     def get_rest_languages(self):
-        return self.homepage.site.rest_languages
+        return self.home.site.rest_languages
 
 
 class ProblemSection(Model):
     """ """
 
-    homepage = ForeignKey("home.HomePage", on_delete=models.CASCADE)
+    home = ForeignKey("home.Home", on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     description = models.TextField()
     is_active = models.BooleanField()
 
     def get_default_language(self):
-        return self.homepage.site.default_language
+        return self.home.site.default_language
 
     def get_rest_languages(self):
-        return self.homepage.site.rest_languages
+        return self.home.site.rest_languages
 
 
 class SolutionSection(TranslatableModel):
-    homepage = ForeignKey("home.HomePage", on_delete=models.CASCADE)
+    home = ForeignKey("home.Home", on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     description = models.TextField()
     is_active = models.BooleanField()
 
     def get_default_language(self):
-        return self.homepage.site.default_language
+        return self.home.site.default_language
 
     def get_rest_languages(self):
-        return self.homepage.site.rest_languages
+        return self.home.site.rest_languages
 
 
 class BenefitsSection(TranslatableModel):
-    homepage = ForeignKey("home.HomePage", on_delete=models.CASCADE)
+    home = ForeignKey("home.Home", on_delete=models.CASCADE)
     emoji = models.CharField(max_length=8)
     is_active = models.BooleanField()
 
     def get_default_language(self):
-        return self.homepage.site.default_language
+        return self.home.site.default_language
 
     def get_rest_languages(self):
-        return self.homepage.site.rest_languages
+        return self.home.site.rest_languages
 
 
 class StepAction(TranslatableModel):
-    homepage = ForeignKey("home.HomePage", on_delete=models.CASCADE)
+    home = ForeignKey("home.Home", on_delete=models.CASCADE)
     step_label = models.CharField(max_length=4, default="01")
     title = models.CharField(max_length=64)
     description = models.TextField()
     is_active = models.BooleanField()
 
     def get_default_language(self):
-        return self.homepage.site.default_language
+        return self.home.site.default_language
 
     def get_rest_languages(self):
-        return self.homepage.site.rest_languages
+        return self.home.site.rest_languages
 
 
-class UserHomePage(TranslatableModel, PageMixin):
-    site = ForeignKey("sites.Site", on_delete=models.CASCADE)
+class UserHome(TranslatableModel, PageMixin):
+    site = OneToOneField("sites.Site", on_delete=models.CASCADE)
 
     def get_default_language(self):
         return self.site.default_language

@@ -11,7 +11,6 @@ dependencies = [
   "django-extensions",
   "django-rosetta",
   "django-o365mail",
-  "django-modeltranslation",
   "django-money[exchange]",
   "django-upgrade",
   "django-markdownify",
@@ -55,6 +54,7 @@ dependencies = [
   "pdf2image",
   "django-dbbackup",
   "etsyv3",
+  "django-modeltranslation>=0.19.11",
 ]
 
 

@@ -16,7 +16,6 @@ from codebase.articles.models import Article, ArticlesSubmodule
 from codebase.pages.models import PagesSubmodule
 
 from ..base.utils.abstracts import TranslatableModel
-from ..home.models import HomePage, UserHomePage
 from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
 SITE_CACHE = {}
@@ -179,14 +178,6 @@ class Site(TranslatableModel):
     def url(self) -> str:
         schema = "https" if settings.HTTPS else "http"
         return f"{schema}://{self.main_domain}"
-
-    @cached_property
-    def home(self) -> HomePage | None:
-        return self.homepage_set.filter(is_active=True).first()
-
-    @cached_property
-    def userhome(self) -> UserHomePage | None:
-        return self.userhomepage_set.filter().first()
 
     def get_object_admin_url(self, obj) -> str:
         # the url to the Django admin form for the model instance

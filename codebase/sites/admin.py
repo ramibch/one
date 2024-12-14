@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from huey.contrib.djhuey import HUEY
@@ -8,6 +8,7 @@ from codebase.base.utils.actions import translation_actions
 from codebase.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
 from ..articles.tasks import trigger_sync_articles
+from ..menus.models import create_initial_menu_objects
 from ..pages.tasks import trigger_sync_pages
 from .models import Domain, Site
 
@@ -24,7 +25,12 @@ class SiteAdmin(TranslationAdmin):
     search_fields = ("domain__name", "name")
     readonly_fields = ("last_huey_flush",)
     list_editable = ("name",)
-    actions = translation_actions + ["flush_huey", "sync_articles", "sync_pages"]
+    actions = translation_actions + [
+        "flush_huey",
+        "sync_articles",
+        "sync_pages",
+        "create_menus",
+    ]
     inlines = (DomainInline,)
 
     fieldsets = (
@@ -84,3 +90,14 @@ class SiteAdmin(TranslationAdmin):
     @admin.action(description="🔄 Sync pages")
     def sync_pages(modeladmin, request, queryset):
         trigger_sync_pages(queryset)
+
+    @admin.action(description="☰ Create initial menus")
+    def create_menus(modeladmin, request, queryset):
+        created = create_initial_menu_objects(queryset)
+        if created:
+            messages.info(request, _("Menus objects were created!"))
+        else:
+            messages.warning(
+                request,
+                _("Not created! Check menu objects associated with the selected sites"),
+            )
