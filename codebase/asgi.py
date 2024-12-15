@@ -9,13 +9,16 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
 
 import os
 
-from channels.auth import AuthMiddlewareStack
-from channels.routing import ProtocolTypeRouter, URLRouter
-from django.core.asgi import get_asgi_application
-
-from .chat import routing
+import django
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "codebase.settings")
+django.setup()
+
+from channels.auth import AuthMiddlewareStack  # noqa: E402
+from channels.routing import ProtocolTypeRouter, URLRouter  # noqa: E402
+from django.core.asgi import get_asgi_application  # noqa: E402
+
+from .chat import routing  # noqa: E402
 
 application = get_asgi_application()
 

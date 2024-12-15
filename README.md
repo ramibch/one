@@ -5,6 +5,7 @@
 - [ ] payments and stripe checkout
 - [ ] Plans (TimeFixedPlan, SubscriptionPlan, ....)
 - [ ] Add [zabbix](https://www.zabbix.com/download)
+- [ ] static folder not as a submodule.
 
 ## Conventions
 
