@@ -44,8 +44,8 @@
     <meta name="twitter:title" content="{{ title }}" />
     <meta name="twitter:description" content="{{ description }}" />
     <!-- css -->
-    <link href="{% static "css/bootstrap-grid.min.css" %}" rel="stylesheet" />
-    <link href="{% static "css/rb.css" %}" rel="stylesheet" />
+    <link href="{% static 'css/bootstrap-grid.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/rb.css' %}" rel="stylesheet" />
     <link href="{{ request.site.picocss_static_url }}" rel="stylesheet" />
     {% block head_extra %}{% endblock %}
   </head>
@@ -67,13 +67,13 @@
     {% block extra_body %}
     {% endblock extra_body %}
     <!-- js -->
-    <script defer src="{% static "js/htmx.js" %}"></script>
-    <script defer src="{% static "js/htmx-ext-ws.js" %}"></script>
-    <script defer src="{% static "js/hyperscript.js" %}"></script>
-    <script defer src="{% static "js/cropper.js" %}"></script>
-    <script defer src="{% static "js/alpine_persist.js" %}"></script>
-    <script defer src="{% static "js/alpine.js" %}"></script>
-    <script defer src="{% static "js/sortable.js" %}"></script>
+    <script defer src="{% static 'js/htmx.js' %}"></script>
+    <script defer src="{% static 'js/htmx-ext-ws.js' %}"></script>
+    <script defer src="{% static 'js/hyperscript.js' %}"></script>
+    <script defer src="{% static 'js/cropper.js' %}"></script>
+    <script defer src="{% static 'js/alpine_persist.js' %}"></script>
+    <script defer src="{% static 'js/alpine.js' %}"></script>
+    <script defer src="{% static 'js/sortable.js' %}"></script>
     {% django_browser_reload_script %}
     {% block extra_js %}
     {% endblock extra_js %}

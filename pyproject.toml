@@ -14,7 +14,6 @@ dependencies = [
   "django-money[exchange]",
   "django-upgrade",
   "django-markdownify",
-  "django-storages",
   "django_htmx",
   "boto3",
   "psycopg",
@@ -55,6 +54,8 @@ dependencies = [
   "django-dbbackup",
   "etsyv3",
   "django-modeltranslation>=0.19.11",
+  "django-cors-headers>=4.6.0",
+  "django-storages>=1.14.4",
 ]
 
 

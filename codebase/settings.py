@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = Env()
 
+
 try:
     command = sys.argv[1]
 except IndexError:  # pragma: no cover
@@ -30,13 +31,10 @@ except IndexError:  # pragma: no cover
 if command != "test":  # pragma: no cover
     env.read_env()
 
+
 SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
 ENV = env("ENV")
 DEBUG = env.bool("DEBUG")
-HTTPS = env.bool("HTTPS")
-
-USE_S3_FOR_MEDIA_FILES = env.bool("USE_S3_FOR_MEDIA_FILES")
-USE_S3_FOR_STATIC_FILES = env.bool("USE_S3_FOR_STATIC_FILES")
 
 
 """
@@ -82,6 +80,7 @@ INSTALLED_APPS = [
     "django_fastdev",
     "channels",
     "dbbackup",
+    "corsheaders",
     # Django apps
     "django_browser_reload",
     "django.contrib.admin",
@@ -428,97 +427,101 @@ WHATSAPP_API_ACCESS_TOKEN = env("WHATSAPP_API_ACCESS_TOKEN")
 WHATSAPP_BUSINESS_PHONE_NUMBER_ID = env("WHATSAPP_BUSINESS_PHONE_NUMBER_ID")
 
 
-# Storage of static and media files
-
 # Static files that Django needs to find because they are not in the app static folders
 STATICFILES_DIRS = [
     BASE_DIR / "submodules" / "static" / "src",
 ]
 
-# S3 auth and bucket parameters
-S3_ACCESS_KEY = env("S3_ACCESS_KEY")
-S3_SECRET_KEY = env("S3_SECRET_KEY")
-S3_MEDIA_BUCKET_NAME = env("S3_MEDIA_BUCKET_NAME")
-S3_STATIC_BUCKET_NAME = env("S3_STATIC_BUCKET_NAME")
-S3_ENDPOINT_URL = env("S3_ENDPOINT_URL")
 
-# S3 media
-S3_MEDIA_LOCATION = "media"  # "" or "media"
-S3_MEDIA_STORAGE_BACKEND = "codebase.base.utils.s3.PublicMediaStorage"
-S3_MEDIA_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_MEDIA_BUCKET_NAME}/"
-if S3_MEDIA_LOCATION == "":
-    S3_MEDIA_URL = S3_MEDIA_BASE_URL
-else:
-    S3_MEDIA_URL = S3_MEDIA_BASE_URL + f"{S3_MEDIA_LOCATION}/"
+if ENV == "dev":
+    MEDIA_ROOT = BASE_DIR / "media"
+    MEDIA_URL = "/media/"
 
-# S3 static
-S3_STATIC_LOCATION = "static"  # "" or "static"
-S3_STATIC_STORAGE_BACKEND = "codebase.base.utils.s3.StaticStorage"
-S3_STATIC_BASE_URL = f"{S3_ENDPOINT_URL}/{S3_STATIC_BUCKET_NAME}/"
-if S3_STATIC_LOCATION == "":
-    S3_STATIC_URL = S3_STATIC_BASE_URL
-else:
-    S3_STATIC_URL = S3_STATIC_BASE_URL + f"{S3_STATIC_LOCATION}/"
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    STATIC_URL = "/static/"
 
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+            "OPTIONS": {"location": MEDIA_ROOT, "base_url": MEDIA_URL},
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+            "OPTIONS": {"location": STATIC_ROOT, "base_url": STATIC_URL},
+        },
+    }
 
-# Local
-LOCAL_MEDIA_ROOT = BASE_DIR / "media"
-LOCAL_MEDIA_URL = "/media/"
-LOCAL_STATIC_ROOT = BASE_DIR / "staticfiles"
-LOCAL_STATIC_URL = "/static/"
+    # DB backups
 
+    DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
+    DBBACKUP_STORAGE_OPTIONS = {"location": env("LOCAL_DBBACKUP_LOCATION")}
 
-# Storage backends
+elif ENV == "prod":
+    from datetime import datetime
 
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-        "OPTIONS": {"location": LOCAL_MEDIA_ROOT, "base_url": LOCAL_MEDIA_URL},
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-        "OPTIONS": {"location": LOCAL_STATIC_ROOT, "base_url": LOCAL_STATIC_URL},
-    },
-}
+    now = datetime.now()
 
-if USE_S3_FOR_MEDIA_FILES:
-    STORAGES["default"] = {"BACKEND": S3_MEDIA_STORAGE_BACKEND}
-    MEDIA_ROOT = None
-    MEDIA_URL = S3_MEDIA_URL
-else:
-    MEDIA_ROOT = LOCAL_MEDIA_ROOT
-    MEDIA_URL = LOCAL_MEDIA_URL
+    # S3 auth and bucket parameters
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
 
-if USE_S3_FOR_STATIC_FILES:
-    STORAGES["staticfiles"] = {"BACKEND": S3_STATIC_STORAGE_BACKEND}
-    STATIC_ROOT = None
-    STATIC_URL = S3_STATIC_URL
-else:
-    STATIC_ROOT = LOCAL_STATIC_ROOT
-    STATIC_URL = LOCAL_STATIC_URL
+    AWS_S3_ACCESS_KEY_ID = env("AWS_S3_ACCESS_KEY_ID")
+    AWS_S3_SECRET_ACCESS_KEY = env("AWS_S3_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
 
+    S3_STORAGE_BACKEND = "storages.backends.s3boto3.S3Boto3Storage"
+    S3_BASE_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
 
-# DB Backups
-USE_S3_FOR_DB_BACKUPS = env.bool("USE_S3_FOR_DB_BACKUPS")
-S3_DBBACKUP_BUCKET_NAME = env("S3_DBBACKUP_BUCKET_NAME")
-LOCAL_DBBACKUP_LOCATION = env("LOCAL_DBBACKUP_LOCATION")
-if USE_S3_FOR_DB_BACKUPS:
-    DBBACKUP_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    S3_PRIVATE_LOCATION = "private"
+
+    S3_MEDIA_LOCATION = "media"
+    MEDIA_URL = S3_BASE_URL + f"{S3_MEDIA_LOCATION}/"
+
+    S3_STATIC_LOCATION = "static"
+    STATIC_URL = S3_BASE_URL + f"{S3_STATIC_LOCATION}/"
+
+    STORAGES = {
+        "default": {
+            "BACKEND": S3_STORAGE_BACKEND,
+            "OPTIONS": {
+                "gzip": False,
+                "default_acl": "public-read",
+                "location": S3_MEDIA_LOCATION,
+                "querystring_auth": False,
+            },
+        },
+        "private": {
+            "BACKEND": S3_STORAGE_BACKEND,
+            "OPTIONS": {
+                "gzip": False,
+                "default_acl": "private",
+                "location": "private",
+                "querystring_auth": True,
+            },
+        },
+        "staticfiles": {
+            "BACKEND": S3_STORAGE_BACKEND,
+            "OPTIONS": {
+                "gzip": True,
+                "default_acl": "public-read",
+                "location": S3_STATIC_LOCATION,
+                "querystring_auth": False,
+            },
+        },
+    }
+
+    # DB backups
+    # https://django-dbbackup.readthedocs.io/en/stable/storage.html#amazon-s3
+    DBBACKUP_STORAGE = S3_STORAGE_BACKEND
     DBBACKUP_STORAGE_OPTIONS = {
-        "access_key": S3_ACCESS_KEY,
-        "secret_key": S3_SECRET_KEY,
-        "bucket_name": S3_DBBACKUP_BUCKET_NAME,
-        "location": "backups/",
+        "access_key": AWS_S3_ACCESS_KEY_ID,
+        "secret_key": AWS_S3_SECRET_ACCESS_KEY,
+        "bucket_name": AWS_STORAGE_BUCKET_NAME,
+        "location": f"db_backups/{now.year}/{now.month}/",
         "default_acl": "private",
     }
 
-else:
-    DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
-    DBBACKUP_STORAGE_OPTIONS = {"location": LOCAL_DBBACKUP_LOCATION}
-
-
-# Https
-if HTTPS:  # pragma: no cover
+    # https in production
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_HSTS_SECONDS = 31_536_000  # 31536000 # usual: 31536000 (1 year)
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
