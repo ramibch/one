@@ -42,13 +42,13 @@ class SiteManager(Manager):
         try:
             # First attempt to look up the site by host with or without port.
             if host not in SITE_CACHE:
-                SITE_CACHE[host] = self.get(domain__name__iexact=host)
+                SITE_CACHE[host] = self.get(host__name__iexact=host)
             return SITE_CACHE[host]
         except Site.DoesNotExist:
             # Fallback to looking up site after stripping port from the host.
             domain, port = split_domain_port(host)
             if domain not in SITE_CACHE:
-                SITE_CACHE[domain] = self.get(domain__name__iexact=domain)
+                SITE_CACHE[domain] = self.get(host__name__iexact=domain)
             return SITE_CACHE[domain]
 
     def get_current(self, request):
@@ -208,10 +208,10 @@ class Site(TranslatableModel):
     class Meta(TranslatableModel.Meta):
         verbose_name = _("site")
         verbose_name_plural = _("sites")
-        ordering = ["domain__name"]
+        ordering = ["host__name"]
 
 
-class Domain(Model):
+class Host(Model):
     site = ForeignKey("sites.Site", on_delete=models.CASCADE)
     name = models.CharField(
         _("domain name"),

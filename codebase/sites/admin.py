@@ -10,11 +10,11 @@ from codebase.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 from ..articles.tasks import trigger_sync_articles
 from ..menus.models import create_initial_menu_objects
 from ..pages.tasks import trigger_sync_pages
-from .models import Domain, Site
+from .models import Host, Site
 
 
 class DomainInline(admin.TabularInline):
-    model = Domain
+    model = Host
     extra = 0
 
 
@@ -22,7 +22,7 @@ class DomainInline(admin.TabularInline):
 class SiteAdmin(TranslationAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT  # type: ignore
     list_display = ("__str__", "name")
-    search_fields = ("domain__name", "name")
+    search_fields = ("host__name", "name")
     readonly_fields = ("last_huey_flush",)
     list_editable = ("name",)
     actions = translation_actions + [

@@ -22,7 +22,7 @@ class Middlewares:
         request.country = CountryDetails(request)  # type: ignore
 
         # Assign site attribute to request object
-        request.site = Site.objects.get(domain__name=request.get_host())
+        request.site = Site.objects.get(host__name=request.get_host())
 
         # Clear cache in development
         if settings.DEBUG and settings.ENV == "dev":

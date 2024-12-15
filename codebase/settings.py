@@ -51,12 +51,14 @@ ALLOWED_HOSTS = [
     "test1.nicecv.online",
     "test2.nicecv.online",
     "127.0.0.1",
+    "ramib.ch",
     "ramiboutas.com",
-    "www.ramiboutas.com",
     "englishstuff.online",
-    "www.englishstuff.online",
     "nicecv.online",
+    "www.ramiboutas.com",
+    "www.englishstuff.online",
     "www.nicecv.online",
+    "www.ramib.ch",
 ]
 
 
