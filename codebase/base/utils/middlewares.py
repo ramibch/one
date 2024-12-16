@@ -57,7 +57,11 @@ class Middlewares:
 
     def process_traffic(self, request, response) -> None:
         """Ignore traffic from staff and for certain urls."""
-        exempt_paths = [reverse("admin:index"), reverse("favicon")]
+        exempt_paths = [
+            reverse("django_browser_reload:events"),
+            reverse("admin:index"),
+            reverse("favicon"),
+        ]
         path_ok = not any(request.path.startswith(exempt) for exempt in exempt_paths)
         user_ok = not request.user.is_staff
         if path_ok and user_ok:

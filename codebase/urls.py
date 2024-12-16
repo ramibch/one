@@ -33,6 +33,7 @@ urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
     # Third-party
     path("allauth/", include("allauth.urls")),  # if changes -> check base.html
+    path("__reload__/", include("django_browser_reload.urls")),
     # Own
     path("🔎/", include("codebase.search.urls")),
     path("search/", include("codebase.search.urls")),
@@ -57,8 +58,3 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-if settings.ENV == "dev":
-    urlpatterns += [
-        path("__reload__/", include("django_browser_reload.urls")),
-    ]

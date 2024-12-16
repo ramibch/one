@@ -81,6 +81,8 @@ INSTALLED_APPS = [
     "channels",
     "dbbackup",
     "corsheaders",
+    "debug_toolbar",
+    "django_browser_reload",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -112,21 +114,21 @@ INSTALLED_APPS = [
     "codebase.chat",
 ]
 
-# MIDDLEWARE = [
-#     "debug_toolbar.middleware.DebugToolbarMiddleware",
-#     "django.middleware.security.SecurityMiddleware",
-#     "django.contrib.sessions.middleware.SessionMiddleware",
-#     "django.middleware.locale.LocaleMiddleware",
-#     "django.middleware.common.CommonMiddleware",
-#     "django.middleware.csrf.CsrfViewMiddleware",
-#     "django.contrib.auth.middleware.AuthenticationMiddleware",
-#     "django.contrib.messages.middleware.MessageMiddleware",
-#     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-#     "django.contrib.admindocs.middleware.XViewMiddleware",
-#     "codebase.base.utils.middlewares.Middlewares",
-#     "django_browser_reload.middleware.BrowserReloadMiddleware",
-#     "allauth.account.middleware.AccountMiddleware",
-# ]
+MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.contrib.admindocs.middleware.XViewMiddleware",
+    "codebase.base.utils.middlewares.Middlewares",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
+]
 
 ROOT_URLCONF = "codebase.urls"
 
@@ -433,24 +435,6 @@ STATICFILES_DIRS = [
 if ENV == "dev":
     INSTALLED_APPS = INSTALLED_APPS + [
         "django_fastdev",
-        "debug_toolbar",
-        "django_browser_reload",
-    ]
-
-    MIDDLEWARE = [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
-        "django.middleware.security.SecurityMiddleware",
-        "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.middleware.locale.LocaleMiddleware",
-        "django.middleware.common.CommonMiddleware",
-        "django.middleware.csrf.CsrfViewMiddleware",
-        "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "django.contrib.messages.middleware.MessageMiddleware",
-        "django.middleware.clickjacking.XFrameOptionsMiddleware",
-        "django.contrib.admindocs.middleware.XViewMiddleware",
-        "codebase.base.utils.middlewares.Middlewares",
-        "allauth.account.middleware.AccountMiddleware",
-        "django_browser_reload.middleware.BrowserReloadMiddleware",
     ]
 
     # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-middleware
@@ -486,22 +470,7 @@ if ENV == "dev":
     DBBACKUP_STORAGE_OPTIONS = {"location": env("LOCAL_DBBACKUP_LOCATION")}
 
 elif ENV == "prod":
-    MIDDLEWARE = [
-        "django.middleware.security.SecurityMiddleware",
-        "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.middleware.locale.LocaleMiddleware",
-        "django.middleware.common.CommonMiddleware",
-        "django.middleware.csrf.CsrfViewMiddleware",
-        "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "django.contrib.messages.middleware.MessageMiddleware",
-        "django.middleware.clickjacking.XFrameOptionsMiddleware",
-        "django.contrib.admindocs.middleware.XViewMiddleware",
-        "codebase.base.utils.middlewares.Middlewares",
-        "allauth.account.middleware.AccountMiddleware",
-    ]
-
     # Media and static files (S3)
-
     AWS_S3_ACCESS_KEY_ID = env("AWS_S3_ACCESS_KEY_ID")
     AWS_S3_SECRET_ACCESS_KEY = env("AWS_S3_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
