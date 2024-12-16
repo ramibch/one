@@ -33,16 +33,23 @@ urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
     # Third-party
     path("allauth/", include("allauth.urls")),  # if changes -> check base.html
-    path("__reload__/", include("django_browser_reload.urls")),
     # Own
     path("🔎/", include("codebase.search.urls")),
+    path("search/", include("codebase.search.urls")),
     path("📝/", include("codebase.articles.urls")),
+    path("articles/", include("codebase.articles.urls")),
     path("🌐/", include("codebase.pages.urls")),
+    path("pages/", include("codebase.pages.urls")),
     path("👤/", include("codebase.users.urls")),
+    path("account/", include("codebase.users.urls")),
     path("🚀/", include("codebase.plans.urls")),
+    path("plans/", include("codebase.plans.urls")),
     path("🔨/", include("codebase.tools.urls")),
+    path("tools/", include("codebase.tools.urls")),
     path("🤔/", include("codebase.faqs.urls")),
+    path("faqs/", include("codebase.faqs.urls")),
     path("💬/", include("codebase.chat.urls")),
+    path("chat/", include("codebase.chat.urls")),
     path("", include("codebase.base.urls")),
     path("", include("codebase.home.urls")),
 ] + debug_toolbar_urls()
@@ -50,3 +57,8 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.ENV == "dev":
+    urlpatterns += [
+        path("__reload__/", include("django_browser_reload.urls")),
+    ]

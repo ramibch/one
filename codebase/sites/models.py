@@ -12,8 +12,8 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from codebase.articles.models import Article, ArticlesSubmodule
-from codebase.pages.models import PagesSubmodule
+from codebase.articles.models import Article, ArticleParentFolder
+from codebase.pages.models import PageParentFolder
 
 from ..base.utils.abstracts import TranslatableModel
 from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
@@ -118,8 +118,8 @@ class Site(TranslatableModel):
     )
 
     # Submodules
-    article_folders = ManyToManyField("articles.ArticlesSubmodule")
-    page_folders = ManyToManyField("pages.PagesSubmodule")
+    article_folders = ManyToManyField("articles.ArticleParentFolder")
+    page_folders = ManyToManyField("pages.PageParentFolder")
 
     def __str__(self):
         return self.name
@@ -157,9 +157,9 @@ class Site(TranslatableModel):
         return f"{settings.STATIC_URL}css/picocss/pico.{self.picocss_color}.min.css"
 
     def get_attr_name_for_submodule_model(self, Model) -> str:
-        if Model == ArticlesSubmodule:
+        if Model == ArticleParentFolder:
             return "article_folders"
-        if Model == PagesSubmodule:
+        if Model == PageParentFolder:
             return "page_folders"
         raise TypeError(f"The model {Model} is not recognised in the application.")
 

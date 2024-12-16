@@ -1,10 +1,10 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from .models import Page, PagesSubmodule
+from .models import Page, PageParentFolder
 
 
-@admin.register(PagesSubmodule)
+@admin.register(PageParentFolder)
 class PagesSubmoduleAdmin(admin.ModelAdmin):
     pass
 

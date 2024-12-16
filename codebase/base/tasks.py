@@ -7,15 +7,13 @@ from django.db.models import Model, QuerySet
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from codebase.sites.models import Site
-
 from .utils.abstracts import BaseSubmodule
 from .utils.telegram import Bot
 from .utils.translation import translate_text
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="0"))
-def django_commands_daily():
+def commands_daily():
     """
     Typical django commands to run daily
 
@@ -31,7 +29,19 @@ def django_commands_daily():
     call_command("check", deploy=True, stdout=out, stderr=err)
     call_command("update_rates", verbosity=0, stdout=out, stderr=err)
     Bot.to_admin(
-        f"Django commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n"
+        f"Daily commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n"
+    )
+
+
+@huey.db_periodic_task(crontab(hour="0", minute="0"))
+def commands_weekly():
+    """
+    Some commands to run weekly
+    """
+    out, err = StringIO(), StringIO()
+    call_command("dbbackup", verbosity=0, stdout=out, stderr=err)
+    Bot.to_admin(
+        f"Weekly commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n"
     )
 
 
@@ -40,24 +50,6 @@ def fetch_submodules_daily():
     ok = subprocess.call(["git", "submodule", "update", "--remote"]) == 0
     emoji_ok = "✅" if ok else "🔴"
     Bot.to_admin(f"{emoji_ok} Submodules fetched")
-
-
-@huey.db_periodic_task(crontab(hour="0", minute="15"))
-def check_sites_without_home_daily():
-    sites = Site.objects.filter(homepage__isnull=True)
-    if sites.count() == 0:
-        return
-    sites_str = "\n".join(site.domain for site in sites)
-    Bot.to_admin(f"⚠️ These sites have no Home associated:\n\n{sites_str}")
-
-
-@huey.db_periodic_task(crontab(hour="0", minute="16"))
-def check_sites_without_userhome_daily():
-    sites = Site.objects.filter(userhomepage__isnull=True)
-    if sites.count() == 0:
-        return
-    sites_str = "\n".join(site.domain for site in sites)
-    Bot.to_admin(f"⚠️ These sites have no UserHome associated:\n\n{sites_str}")
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="20"))

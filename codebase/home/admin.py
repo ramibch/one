@@ -11,7 +11,7 @@ from .models import Home, HomeHeroSection
 class HomeAdmin(TranslationAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     actions = translation_actions
-    list_display = ("title",)
+    list_display = ("__str__", "title", "site")
 
 
 @admin.register(HomeHeroSection)

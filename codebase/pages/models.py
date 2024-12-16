@@ -5,16 +5,16 @@ from django.urls import reverse_lazy
 from codebase.base.utils.abstracts import BasePageModel, BaseSubmodule
 
 
-class PagesSubmodule(BaseSubmodule, submodule_name="pages"):
+class PageParentFolder(BaseSubmodule, submodule_name="pages"):
     """Pages submodule"""
 
     pass
 
 
-class Page(BasePageModel, submodule_model=PagesSubmodule):
+class Page(BasePageModel, parent_model=PageParentFolder):
     """Page model"""
 
-    submodule = ForeignKey("pages.PagesSubmodule", on_delete=models.CASCADE)
+    parent = ForeignKey("pages.PageParentFolder", on_delete=models.CASCADE)
 
     def get_absolute_url(self):
         return reverse_lazy("page-detail", kwargs={"slug": self.slug})

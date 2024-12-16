@@ -4,7 +4,7 @@ from django.utils.functional import cached_property
 
 from codebase.base.utils.mixins import PageMixin
 
-from ..articles.models import Article, ArticlesSubmodule
+from ..articles.models import Article, ArticleParentFolder
 from ..base.utils.abstracts import TranslatableModel
 from ..faqs.models import FAQ
 
@@ -20,10 +20,13 @@ class Home(TranslatableModel, PageMixin):
     display_faqs = models.BooleanField(default=False)
 
     # Titles
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=64, default="")
     benefits_title = models.CharField(max_length=64, null=True, blank=True)
     steps_title = models.CharField(max_length=64, null=True, blank=True)
     faqs_title = models.CharField(max_length=64, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.title} 🌐{self.site}"
 
     # Sections
 
@@ -38,7 +41,7 @@ class Home(TranslatableModel, PageMixin):
     @cached_property
     def last_articles(self):
         sites = self.sites.values_list("site", flat=True)
-        folders = ArticlesSubmodule.objects.filter(site__in=sites).distinct()
+        folders = ArticleParentFolder.objects.filter(site__in=sites).distinct()
         return Article.objects.filter(submodule_folder__in=folders)[: self.num_articles]
 
     @cached_property

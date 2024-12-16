@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 # 0. Setup
 import sys
 from copy import copy
+from datetime import datetime
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
@@ -21,6 +22,7 @@ from environs import Env
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = Env()
+now = datetime.now()
 
 
 try:
@@ -76,13 +78,10 @@ INSTALLED_APPS = [
     "allauth.account",
     "geoip2",
     "djmoney",
-    "debug_toolbar",
-    "django_fastdev",
     "channels",
     "dbbackup",
     "corsheaders",
     # Django apps
-    "django_browser_reload",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -113,23 +112,21 @@ INSTALLED_APPS = [
     "codebase.chat",
 ]
 
-MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",  # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-middleware
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.contrib.admindocs.middleware.XViewMiddleware",
-    # own middlewares
-    "codebase.base.utils.middlewares.Middlewares",
-    # third-party middlewares
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
-]
+# MIDDLEWARE = [
+#     "debug_toolbar.middleware.DebugToolbarMiddleware",
+#     "django.middleware.security.SecurityMiddleware",
+#     "django.contrib.sessions.middleware.SessionMiddleware",
+#     "django.middleware.locale.LocaleMiddleware",
+#     "django.middleware.common.CommonMiddleware",
+#     "django.middleware.csrf.CsrfViewMiddleware",
+#     "django.contrib.auth.middleware.AuthenticationMiddleware",
+#     "django.contrib.messages.middleware.MessageMiddleware",
+#     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+#     "django.contrib.admindocs.middleware.XViewMiddleware",
+#     "codebase.base.utils.middlewares.Middlewares",
+#     "django_browser_reload.middleware.BrowserReloadMiddleware",
+#     "allauth.account.middleware.AccountMiddleware",
+# ]
 
 ROOT_URLCONF = "codebase.urls"
 
@@ -429,13 +426,41 @@ WHATSAPP_BUSINESS_PHONE_NUMBER_ID = env("WHATSAPP_BUSINESS_PHONE_NUMBER_ID")
 
 # Static files that Django needs to find because they are not in the app static folders
 STATICFILES_DIRS = [
-    BASE_DIR / "submodules" / "static" / "src",
+    BASE_DIR / "static",
 ]
 
 
 if ENV == "dev":
+    INSTALLED_APPS = INSTALLED_APPS + [
+        "django_fastdev",
+        "debug_toolbar",
+        "django_browser_reload",
+    ]
+
+    MIDDLEWARE = [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        "django.middleware.security.SecurityMiddleware",
+        "django.contrib.sessions.middleware.SessionMiddleware",
+        "django.middleware.locale.LocaleMiddleware",
+        "django.middleware.common.CommonMiddleware",
+        "django.middleware.csrf.CsrfViewMiddleware",
+        "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "django.contrib.messages.middleware.MessageMiddleware",
+        "django.middleware.clickjacking.XFrameOptionsMiddleware",
+        "django.contrib.admindocs.middleware.XViewMiddleware",
+        "codebase.base.utils.middlewares.Middlewares",
+        "allauth.account.middleware.AccountMiddleware",
+        "django_browser_reload.middleware.BrowserReloadMiddleware",
+    ]
+
+    # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-middleware
+
+    # Media and static files (local)
     MEDIA_ROOT = BASE_DIR / "media"
     MEDIA_URL = "/media/"
+
+    MEDIA_ROOT = BASE_DIR / "private"
+    PRIVATE_URL = "/private/"
 
     STATIC_ROOT = BASE_DIR / "staticfiles"
     STATIC_URL = "/static/"
@@ -444,6 +469,10 @@ if ENV == "dev":
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
             "OPTIONS": {"location": MEDIA_ROOT, "base_url": MEDIA_URL},
+        },
+        "private": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+            "OPTIONS": {"location": MEDIA_ROOT, "base_url": PRIVATE_URL},
         },
         "staticfiles": {
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
@@ -457,12 +486,21 @@ if ENV == "dev":
     DBBACKUP_STORAGE_OPTIONS = {"location": env("LOCAL_DBBACKUP_LOCATION")}
 
 elif ENV == "prod":
-    from datetime import datetime
+    MIDDLEWARE = [
+        "django.middleware.security.SecurityMiddleware",
+        "django.contrib.sessions.middleware.SessionMiddleware",
+        "django.middleware.locale.LocaleMiddleware",
+        "django.middleware.common.CommonMiddleware",
+        "django.middleware.csrf.CsrfViewMiddleware",
+        "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "django.contrib.messages.middleware.MessageMiddleware",
+        "django.middleware.clickjacking.XFrameOptionsMiddleware",
+        "django.contrib.admindocs.middleware.XViewMiddleware",
+        "codebase.base.utils.middlewares.Middlewares",
+        "allauth.account.middleware.AccountMiddleware",
+    ]
 
-    now = datetime.now()
-
-    # S3 auth and bucket parameters
-    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
+    # Media and static files (S3)
 
     AWS_S3_ACCESS_KEY_ID = env("AWS_S3_ACCESS_KEY_ID")
     AWS_S3_SECRET_ACCESS_KEY = env("AWS_S3_SECRET_ACCESS_KEY")

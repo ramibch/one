@@ -2,7 +2,6 @@ from pathlib import Path
 
 from django.conf import settings
 from django.core.files import File
-from django.db.models import Q
 from django.utils.text import slugify
 
 from ...sites.models import Site
@@ -131,17 +130,5 @@ def sync_page_objects(PageModel: type[BasePageModel], PageModelFile=None, sites=
 
                 # Save all object attributes in the database
                 db_object.save()
-
-        # Delete objects that could not be processed
-        qs_to_delete = PageModel.objects.filter(
-            Q(title__in=[None, ""]) | Q(body__in=[None, ""])
-        )
-        if qs_to_delete.exists():
-            to_admin += (
-                f"\n{submodule_name.capitalize()} not possible to create/sync:\n"
-            )
-        for obj in qs_to_delete:
-            to_admin += f"{obj.folder}/{obj.subfolder}\n"
-        qs_to_delete.delete()
 
         Bot.to_admin(to_admin)

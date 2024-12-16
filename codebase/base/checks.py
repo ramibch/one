@@ -1,6 +1,6 @@
 from django.core.checks import Error
 
-from .utils.abstracts import BasePageModel, PageFileModel, TranslatableModel
+from .utils.abstracts import BasePageFileModel, BasePageModel, TranslatableModel
 
 
 def check_abstract_models(*, app_configs, databases, **kwargs):
@@ -27,21 +27,21 @@ def check_abstract_models(*, app_configs, databases, **kwargs):
             )
 
     for model_class in BasePageModel.__subclasses__():
-        if model_class.submodule is None:
+        if model_class.parent is None:
             errors.append(
                 Error(
-                    "submodule not present",
-                    hint=f"Add a field `submodule` to {model_class}",
+                    "parent not present",
+                    hint=f"Add a field `parent` to {model_class}",
                     obj=model_class,
                     id="BasePageModel.E001",
                 )
             )
-    for model_class in PageFileModel.__subclasses__():
-        if model_class.parent_page is None:
+    for model_class in BasePageFileModel.__subclasses__():
+        if model_class.parent is None:
             errors.append(
                 Error(
-                    "parent_page not present",
-                    hint=f"Add a field `parent_page` to {model_class}",
+                    "parent not present",
+                    hint=f"Add a field `parent` to {model_class}",
                     obj=model_class,
                     id="PageFileModel.E001",
                 )

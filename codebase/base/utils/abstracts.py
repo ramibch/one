@@ -84,7 +84,7 @@ class TranslatableModel(Model):
 
 
 class BasePageModel(Model, PageMixin):
-    submodule = None  # define in the subclass
+    parent = None  # define in the subclass
     title = models.CharField(max_length=256, editable=False)
     slug = models.SlugField(max_length=128, unique=True, editable=False, db_index=True)
     folder = models.CharField(max_length=128, editable=False)
@@ -93,9 +93,9 @@ class BasePageModel(Model, PageMixin):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
-    def __init_subclass__(cls, submodule_model, **kwargs):
+    def __init_subclass__(cls, parent_model, **kwargs):
         super().__init_subclass__(**kwargs)
-        cls.submodule_model = submodule_model
+        cls.submodule_model = parent_model
 
     class Meta(Model.Meta):
         unique_together = ["folder", "subfolder"]
@@ -103,8 +103,8 @@ class BasePageModel(Model, PageMixin):
         abstract = True
 
 
-class PageFileModel(Model):
-    parent_page = None  # define in the subclass
+class BasePageFileModel(Model):
+    parent = None  # define in the subclass
     name = models.CharField(max_length=128)
     file = models.FileField(upload_to=get_page_file_path)
 
