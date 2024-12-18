@@ -4,9 +4,8 @@
 ## TODO:
 - [ ] payments and stripe checkout
 - [ ] Plans (TimeFixedPlan, SubscriptionPlan, ....)
-- [ ] Add [zabbix](https://www.zabbix.com/download)
-- [ ] static folder not as a submodule.
-
+- [ ] Remove the abstraction of Submodules.
+- [ ] Create a task in `base.tasks` to sync folders...
 ## Conventions
 
 

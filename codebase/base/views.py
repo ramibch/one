@@ -27,14 +27,14 @@ def favicon(request: CustomHttpRequest) -> HttpResponse:
 
 
 def error_404(request: CustomHttpRequest, exception):
-    Bot.to_admin(f"404 Error: {exception}\n\n{request}\n{request.user}")
+    Bot.to_admin(f"404 Error\n{request}\n{request.user}")
     return render(
         request, "error.html", {"page_title": _("Page not found")}, status=404
     )
 
 
 def error_500(request: CustomHttpRequest):
-    Bot.to_admin(f"500 Error: {request}\n{request.user}")
+    Bot.to_admin(f"500 Error\n{request}\n{request.user}")
     return render(
         request, "error.html", {"page_title": _("Internal Server Error")}, status=500
     )
