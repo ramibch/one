@@ -31,7 +31,13 @@ class TrafficAdmin(admin.ModelAdmin):
         "request_method",
         "user",
     )
-    list_filter = ("time", "site", "request_method", "response_status_code")
+    list_filter = (
+        "request_path",
+        "site",
+        "response_status_code",
+        "request_method",
+        "time",
+    )
     readonly_fields = (
         "request_GET",
         "request_GET_ref",
