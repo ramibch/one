@@ -12,8 +12,7 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from codebase.articles.models import Article, ArticleParentFolder
-from codebase.pages.models import PageParentFolder
+from codebase.articles.models import Article
 
 from ..base.utils.abstracts import TranslatableModel
 from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
@@ -118,15 +117,16 @@ class Site(TranslatableModel):
     )
 
     # Submodules
-    article_folders = ManyToManyField("articles.ArticleParentFolder")
-    page_folders = ManyToManyField("pages.PageParentFolder")
+    article_folders = ManyToManyField("articles.ArticleParentFolder", blank=True)
+    page_folders = ManyToManyField("pages.PageParentFolder", blank=True)
+    books = ManyToManyField("books.Book", blank=True)
 
     def __str__(self):
         return self.name
 
     @cached_property
     def main_domain(self):
-        return self.domain_set.filter(is_main=True).first()
+        return self.host_set.filter(is_main=True).first()
 
     @cached_property
     def languages(self):
@@ -155,24 +155,6 @@ class Site(TranslatableModel):
     @cached_property
     def picocss_static_url(self) -> str:
         return f"{settings.STATIC_URL}css/picocss/pico.{self.picocss_color}.min.css"
-
-    def get_attr_name_for_submodule_model(self, Model) -> str:
-        if Model == ArticleParentFolder:
-            return "article_folders"
-        if Model == PageParentFolder:
-            return "page_folders"
-        raise TypeError(f"The model {Model} is not recognised in the application.")
-
-    def get_submodule_folders(self, Model, sites_filter=True):
-        attr_name = self.get_attr_name_for_submodule_model(Model)
-        submodule_folder_attr = getattr(self, attr_name)
-        if sites_filter:
-            return submodule_folder_attr.filter(sites__in=[self])
-        return submodule_folder_attr.all()
-
-    def get_submodule_folders_as_list(self, Model):
-        objs = self.get_submodule_folders(Model)
-        return [f.name for f in objs] if objs else []
 
     @cached_property
     def url(self) -> str:

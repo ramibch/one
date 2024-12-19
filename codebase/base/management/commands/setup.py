@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
-from ...utils.abstracts import BaseSubmodule
+from ...utils.abstracts import BaseSubmoduleFolder
 
 User = get_user_model()
 
@@ -31,4 +31,4 @@ class Command(BaseCommand):
             call_command("collectstatic", interactive=False)
 
         # Sync submodule folders
-        BaseSubmodule.sync_all_folders()
+        BaseSubmoduleFolder.sync_all_folders()

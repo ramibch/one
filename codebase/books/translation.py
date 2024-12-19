@@ -1,8 +1,8 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import ExampleModel
+from .models import Chapter
 
 
-@register(ExampleModel)
-class ExampleModelOptions(TranslationOptions):
-    fields = ()
+@register(Chapter)
+class ChapterOptions(TranslationOptions):
+    fields = ("title", "body", "slug")

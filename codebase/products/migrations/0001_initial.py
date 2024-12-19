@@ -8,11 +8,13 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = []
+    dependencies = [
+        ("base", "0001_initial"),
+    ]
 
     operations = [
         migrations.CreateModel(
-            name="Chat",
+            name="ProductTag",
             fields=[
                 (
                     "id",
@@ -23,7 +25,6 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=128, unique=True)),
             ],
             options={
                 "abstract": False,
@@ -35,7 +36,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name="Message",
+            name="Product",
             fields=[
                 (
                     "id",
@@ -46,11 +47,14 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("body", models.CharField(max_length=512)),
+                ("dirname", models.CharField(max_length=128, unique=True)),
+                ("image", models.ImageField(null=True, upload_to="listings")),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                ("updated_on", models.DateTimeField(auto_now=True)),
+                ("topics", models.ManyToManyField(to="base.topic")),
+                ("tags", models.ManyToManyField(to="products.producttag")),
             ],
             options={
-                "ordering": ["-id"],
                 "abstract": False,
                 "base_manager_name": "prefetch_manager",
             },

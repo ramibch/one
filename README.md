@@ -4,8 +4,6 @@
 ## TODO:
 - [ ] payments and stripe checkout
 - [ ] Plans (TimeFixedPlan, SubscriptionPlan, ....)
-- [ ] Remove the abstraction of Submodules.
-- [ ] Create a task in `base.tasks` to sync folders...
 ## Conventions
 
 

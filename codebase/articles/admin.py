@@ -11,21 +11,27 @@ class ArticlesSubmoduleAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(TranslationAdmin):
-    list_display = ("title", "folder", "subfolder", "created_on", "updated_on")
+    list_display = (
+        "title",
+        "folder_name",
+        "subfolder_name",
+        "created_on",
+        "updated_on",
+    )
     readonly_fields = (
         "title",
-        "parent",
-        "folder",
-        "subfolder",
+        "parent_folder",
+        "folder_name",
+        "subfolder_name",
         "body",
         "created_on",
         "updated_on",
     )
-    list_filter = ("parent", "folder", "created_on", "updated_on")
-    search_fields = ("title", "folder", "subfolder", "body")
+    list_filter = ("parent_folder", "folder_name", "created_on", "updated_on")
+    search_fields = ("title", "folder_name", "subfolder_name", "body")
 
 
 @admin.register(ArticleFile)
 class ArticleFileAdmin(admin.ModelAdmin):
-    list_display = ("name", "parent", "file")
-    readonly_fields = ("name", "parent", "file")
+    list_display = ("name", "article", "file")
+    readonly_fields = ("name", "article", "file")

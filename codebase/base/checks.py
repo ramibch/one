@@ -1,6 +1,6 @@
 from django.core.checks import Error
 
-from .utils.abstracts import BasePageFileModel, BasePageModel, TranslatableModel
+from .utils.abstracts import TranslatableModel
 
 
 def check_abstract_models(*, app_configs, databases, **kwargs):
@@ -26,24 +26,4 @@ def check_abstract_models(*, app_configs, databases, **kwargs):
                 )
             )
 
-    for model_class in BasePageModel.__subclasses__():
-        if model_class.parent is None:
-            errors.append(
-                Error(
-                    "parent not present",
-                    hint=f"Add a field `parent` to {model_class}",
-                    obj=model_class,
-                    id="BasePageModel.E001",
-                )
-            )
-    for model_class in BasePageFileModel.__subclasses__():
-        if model_class.parent is None:
-            errors.append(
-                Error(
-                    "parent not present",
-                    hint=f"Add a field `parent` to {model_class}",
-                    obj=model_class,
-                    id="PageFileModel.E001",
-                )
-            )
     return errors

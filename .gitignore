@@ -166,3 +166,4 @@ cython_debug/
 staticfiles
 media
 o365_token.txt
+private/*

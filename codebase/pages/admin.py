@@ -5,20 +5,26 @@ from .models import Page, PageParentFolder
 
 
 @admin.register(PageParentFolder)
-class PagesSubmoduleAdmin(admin.ModelAdmin):
+class PageParentFolderAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(Page)
 class PageAdmin(TranslationAdmin):
-    list_display = ("title", "folder", "subfolder", "created_on", "updated_on")
+    list_display = (
+        "title",
+        "folder_name",
+        "subfolder_name",
+        "created_on",
+        "updated_on",
+    )
     readonly_fields = (
         "title",
-        "folder",
-        "subfolder",
+        "folder_name",
+        "subfolder_name",
         "body",
         "created_on",
         "updated_on",
     )
-    list_filter = ("folder", "created_on", "updated_on")
-    search_fields = ("title", "folder", "subfolder", "body")
+    list_filter = ("subfolder_name", "created_on", "updated_on")
+    search_fields = ("title", "folder_name", "subfolder_name", "body")

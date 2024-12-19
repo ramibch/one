@@ -11,20 +11,23 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("articles", "0002_initial"),
+        ("chat", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="comment",
+            model_name="message",
             name="author",
             field=auto_prefetch.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
             ),
         ),
-        migrations.AlterUniqueTogether(
-            name="article",
-            unique_together={("folder", "subfolder")},
+        migrations.AddField(
+            model_name="message",
+            name="chat",
+            field=auto_prefetch.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="chat.chat"
+            ),
         ),
     ]

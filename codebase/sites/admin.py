@@ -53,7 +53,7 @@ class SiteAdmin(TranslationAdmin):
         ),
         (
             _("Submodules"),
-            {"fields": ("article_folders", "page_folders")},
+            {"fields": ("article_folders", "page_folders", "books")},
         ),
         (
             _("Brand"),

@@ -39,6 +39,8 @@ urlpatterns = [
     path("search/", include("codebase.search.urls")),
     path("📝/", include("codebase.articles.urls")),
     path("articles/", include("codebase.articles.urls")),
+    path("📚/", include("codebase.books.urls")),
+    path("books/", include("codebase.books.urls")),
     path("🌐/", include("codebase.pages.urls")),
     path("pages/", include("codebase.pages.urls")),
     path("👤/", include("codebase.users.urls")),
@@ -56,5 +58,6 @@ urlpatterns = [
 ] + debug_toolbar_urls()
 
 
-if settings.DEBUG:
+if settings.DEBUG and settings.ENV == "dev":
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.PRIVATE_URL, document_root=settings.PRIVATE_ROOT)
