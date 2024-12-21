@@ -4,7 +4,7 @@
     <li>
       <strong> <a href="{% url "home" %}?ref=brandheader">
         {% if request.site.emoji and request.site.emoji_in_brand %}{{ request.site.emoji }}{% endif %}
-      {{ request.site.name }}</a>
+      {{ request.site.brand_name }}</a>
     </strong>
   </li>
 </ul>

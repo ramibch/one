@@ -8,6 +8,12 @@ from .models import Page, PageParentFolder
 class PageParentFolderAdmin(admin.ModelAdmin):
     pass
 
+    def has_delete_permission(self, request, obj=...):
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
 
 @admin.register(Page)
 class PageAdmin(TranslationAdmin):
@@ -28,3 +34,9 @@ class PageAdmin(TranslationAdmin):
     )
     list_filter = ("subfolder_name", "created_on", "updated_on")
     search_fields = ("title", "folder_name", "subfolder_name", "body")
+
+    def has_delete_permission(self, request, obj=...):
+        return False
+
+    def has_add_permission(self, request):
+        return False

@@ -57,7 +57,7 @@ class SiteAdmin(TranslationAdmin):
         ),
         (
             _("Brand"),
-            {"fields": ("emoji", "emoji_in_brand")},
+            {"fields": ("brand_name", "emoji", "emoji_in_brand")},
         ),
         (
             _("Defaults"),

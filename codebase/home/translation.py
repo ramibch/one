@@ -1,13 +1,23 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import Home, HomeHeroSection
+from .models import ArticlesSection, FAQsSection, HeroSection, Home
 
 
 @register(Home)
 class HomeOptions(TranslationOptions):
-    fields = ("title", "benefits_title", "steps_title", "faqs_title")
+    fields = ("title",)
 
 
-@register(HomeHeroSection)
-class HomeHeroOptions(TranslationOptions):
+@register(HeroSection)
+class HeroSectionOptions(TranslationOptions):
     fields = ("headline", "subheadline", "cta_title")
+
+
+@register(ArticlesSection)
+class ArticlesSectionOptions(TranslationOptions):
+    fields = ("title",)
+
+
+@register(FAQsSection)
+class FAQsSectionOptions(TranslationOptions):
+    fields = ("title",)

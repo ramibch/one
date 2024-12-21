@@ -24,7 +24,7 @@ class Article(BasePageModel):
     parent_folder = ForeignKey("articles.ArticleParentFolder", on_delete=models.CASCADE)
     allow_comments = models.BooleanField(default=True)
     is_premium = models.BooleanField(default=False)
-    can_be_shown_in_home = models.BooleanField(default=True)
+    featured = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse_lazy("article-detail", kwargs={"slug": self.slug})

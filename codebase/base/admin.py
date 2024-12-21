@@ -14,7 +14,14 @@ class MigrationRecorderAdmin(admin.ModelAdmin):
 
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("__str__", "id", "name_local")
+    readonly_fields = ("id",)
+
+    def has_delete_permission(self, request, obj=...):
+        return False
+
+    def has_add_permission(self, request):
+        return False
 
 
 @admin.register(Topic)

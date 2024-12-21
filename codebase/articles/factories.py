@@ -1,22 +1,24 @@
 import factory
 
+from .models import Article, ArticleParentFolder
 
-class ArticlesFolderFactory(factory.django.DjangoModelFactory):
+
+class ArticleParentFolderFactory(factory.django.DjangoModelFactory):
     name = factory.Faker("word")
 
     class Meta:
-        model = "articles.ArticlesFolder"
+        model = ArticleParentFolder
         django_get_or_create = ("name",)
 
 
 class ArticleFactory(factory.django.DjangoModelFactory):
-    submodule = factory.SubFactory(ArticlesFolderFactory)
+    parent_folder = factory.SubFactory(ArticleParentFolderFactory)
     title = factory.Faker("sentence")
     slug = factory.Faker("slug")
-    folder = factory.Faker("word")
-    subfolder = factory.Faker("slug")
+    folder_name = factory.Faker("word")
+    subfolder_name = factory.Faker("slug")
     body = factory.Faker("text")
 
     class Meta:
-        model = "articles.Article"
+        model = Article
         django_get_or_create = ("slug",)

@@ -12,8 +12,6 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from codebase.articles.models import Article
-
 from ..base.utils.abstracts import TranslatableModel
 from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
@@ -59,41 +57,48 @@ class SiteManager(Manager):
         SITE_CACHE = {}
 
 
+class PicoCssColor(models.TextChoices):
+    AMBER = "amber", _("Amber")
+    BLUE = "blue", _("Blue")
+    FUCHSIA = "fuchsia", _("Fuchsia")
+    JADE = "jade", _("Jade")
+    GREY = "grey", _("Grey")
+    PURPLE = "purple", _("Purple")
+    CYAN = "cyan", _("Cyan")
+    RED = "red", _("Read")
+    VIOLET = "violet", _("Violet")
+    INDIGO = "indigo", _("Indigo")
+    SLATE = "slate", _("Slate")
+    LIME = "lime", _("Lime")
+    COLORS = "colors", _("Colors")
+    ORANGE = "orange", _("Orange")
+    PUMPKIN = "pumpkin", _("Pumpkin")
+    ZINC = "zinc", _("Zinc")
+    SAND = "sand", _("Sand")
+    YELLOW = "yellow", _("Yellow")
+    PINK = "pink", _("Pink")
+    GREEN = "green", _("Green")
+
+
 class Site(TranslatableModel):
-    PICOCSS = (
-        ("amber", _("Amber")),
-        ("blue", _("Blue")),
-        ("fuchsia", _("Fuchsia")),
-        ("jade", _("Jade")),
-        ("grey", _("Grey")),
-        ("purple", _("Purple")),
-        ("cyan", _("Cyan")),
-        ("red", _("Read")),
-        ("violet", _("Violet")),
-        ("indigo", _("Indigo")),
-        ("slate", _("Slate")),
-        ("lime", _("Lime")),
-        ("colors", _("Colors")),
-        ("orange", _("Orange")),
-        ("pumpkin", _("Pumpkin")),
-        ("zinc", _("Zinc")),
-        ("sand", _("Sand")),
-        ("yellow", _("Yellow")),
-        ("pink", _("Pink")),
-        ("green", _("Green")),
-    )
-    name = models.CharField(_("display name"), max_length=50, unique=True)
+    name = models.CharField(_("Name"), max_length=32, unique=True)
     remarks = models.TextField(null=True, blank=True)
 
+    # Brand
+    brand_name = models.CharField(max_length=32, null=True)
     emoji = models.CharField(max_length=8, null=True)
     emoji_in_brand = models.BooleanField(default=True)
     page_title = models.CharField(max_length=64, null=True)
     page_description = models.TextField(max_length=256, null=True)
     page_keywords = models.TextField(max_length=128, null=True)
 
-    picocss_color = models.CharField(max_length=16, choices=PICOCSS, default="orange")
-    footer_links_separator = models.CharField(max_length=4, default="|")
+    picocss_color = models.CharField(
+        max_length=16,
+        choices=PicoCssColor,
+        default=PicoCssColor.PUMPKIN,
+    )
 
+    footer_links_separator = models.CharField(max_length=4, default="|")
     change_theme_light_in_footer = models.BooleanField(default=True)
     change_theme_light_in_navbar = models.BooleanField(default=True)
     change_language_in_navbar = models.BooleanField(default=True)
@@ -102,7 +107,6 @@ class Site(TranslatableModel):
     # Management
     last_huey_flush: models.DateTimeField = models.DateTimeField(null=True)
     has_user_home = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
     default_language = ForeignKey(
         "base.Language",
         default=settings.LANGUAGE_CODE,
@@ -114,12 +118,15 @@ class Site(TranslatableModel):
         "base.Language",
         verbose_name=_("Rest of languages"),
         related_name="sites_with_rest_languages",
+        blank=True,
     )
 
     # Submodules
     article_folders = ManyToManyField("articles.ArticleParentFolder", blank=True)
     page_folders = ManyToManyField("pages.PageParentFolder", blank=True)
     books = ManyToManyField("books.Book", blank=True)
+
+    objects = SiteManager()
 
     def __str__(self):
         return self.name
@@ -145,12 +152,6 @@ class Site(TranslatableModel):
 
     def get_rest_languages(self):
         return self.rest_languages
-
-    @cached_property
-    def articles(self):
-        return Article.objects.filter(
-            submodule_folder__in=self.article_folders.all()
-        ).distinct()
 
     @cached_property
     def picocss_static_url(self) -> str:
@@ -184,8 +185,6 @@ class Site(TranslatableModel):
 
     def get_social_media_links(self, show_types: list) -> QuerySet[SocialMediaLink]:
         return self.socialmedialink_set.filter(show_type__in=show_types).distinct()
-
-    objects = SiteManager()
 
     class Meta(TranslatableModel.Meta):
         verbose_name = _("site")

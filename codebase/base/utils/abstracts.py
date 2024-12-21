@@ -86,5 +86,8 @@ class BasePageModel(Model, PageMixin):
 
     class Meta(Model.Meta):
         unique_together = ["folder_name", "subfolder_name"]
-        ordering = ["-created_on"]
+        ordering = ["folder_name", "-created_on"]
         abstract = True
+
+    def __str__(self):
+        return f"{self.folder_name}: {self.title}"

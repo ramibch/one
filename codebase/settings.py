@@ -37,7 +37,7 @@ if command != "test":  # pragma: no cover
 SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
 ENV = env("ENV")
 DEBUG = env.bool("DEBUG")
-
+HTTPS = env.bool("HTTPS")
 
 """
 ##################
@@ -66,7 +66,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 INSTALLED_APPS = [
     # Apps that need to be on top
-    "daphne",
+    # "daphne",
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
     "django_extensions",
@@ -111,8 +111,8 @@ INSTALLED_APPS = [
     "codebase.faqs",
     "codebase.sites",
     "codebase.products",
-    "codebase.chat",
     "codebase.books",
+    "codebase.chat",
 ]
 
 MIDDLEWARE = [
@@ -468,12 +468,6 @@ STATICFILES_DIRS = [
 
 
 if ENV == "dev":
-    INSTALLED_APPS = INSTALLED_APPS + [
-        "django_fastdev",
-    ]
-
-    # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-middleware
-
     # Media and static files (local)
     MEDIA_ROOT = BASE_DIR / "media"
     MEDIA_URL = "/media/"

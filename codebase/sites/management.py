@@ -10,7 +10,7 @@ HOSTS: list[str] = settings.ALLOWED_HOSTS
 
 
 def create_sites_and_necessary_objects(app_config, apps=global_apps, **kwargs):
-    from ..home.models import Home, UserHome
+    from ..home.models import Home
     from .models import Host, Site
 
     # Hosts with "www." are processed in an other way (check below).
@@ -36,4 +36,3 @@ def create_sites_and_necessary_objects(app_config, apps=global_apps, **kwargs):
             Host.objects.get_or_create(site=site, name=www_host_name, is_main=False)
 
         Home.objects.get_or_create(site=site)
-        UserHome.objects.get_or_create(site=site)
