@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.messages",
     "django.contrib.sitemaps",
+    "django.contrib.staticfiles",
     "django.db.migrations",
     "django.contrib.admindocs",
     "allauth.socialaccount",
