@@ -10,10 +10,10 @@ User = get_user_model()
 
 class Chat(Model):
     name = models.CharField(max_length=128, unique=True)
-    site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
+    site = ForeignKey("sites.Site", on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.id)
+        return self.name
 
     def get_absolute_url(self):
         return reverse_lazy("chat", kwargs={"slug": self.name})
@@ -25,6 +25,14 @@ class Chat(Model):
     @cached_property
     def ws_url(self):
         return f"/ws/chat/{self.name}/"
+
+    @cached_property
+    def join_url(self):
+        return reverse_lazy("chat_join", args=(self.name,))
+
+    @cached_property
+    def join_full_url(self):
+        return self.site.main_host.name + self.join_url
 
 
 class Message(auto_prefetch.Model):
@@ -50,7 +58,7 @@ class Message(auto_prefetch.Model):
         return reverse_lazy("chat_message_delete", args=(self.id,))
 
     def __str__(self):
-        return str(self.body)
+        return self.body[:40]
 
     class Meta(Model.Meta):
         ordering = ["-created_at"]

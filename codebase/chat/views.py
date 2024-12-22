@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
-from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -15,13 +14,13 @@ class ChatDetailView(LoginRequiredMixin, DetailView):
     model = Chat
 
     def get_object(self, queryset=...):
-        site = self.request.site
-        username = self.request.user.username
-        chat, created = Chat.objects.get_or_create(name=username)
+        chat, created = Chat.objects.get_or_create(
+            name=self.request.user.username,
+            site=self.request.site,
+        )
 
         if created:
-            join_url = site.main_host.name + reverse_lazy("chat_join", args=(username,))
-            Bot.to_admin(f"💬 New chat: {join_url}")
+            Bot.to_admin(f"💬 New chat: {chat.join_url}")
         return chat
 
 
