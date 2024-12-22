@@ -31,12 +31,13 @@ class MessageListView(LoginRequiredMixin, ListView):
     model = Message
 
     def get_queryset(self):
-        username = self.request.user.username
-        return self.model.objects.filter(chat__name=username, deleted=False)
+        chat_name = self.kwargs.get("chat_name")
+        return Message.objects.filter(chat__name=chat_name, deleted=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["user"] = self.request.user
+        context["chat"] = Chat.objects.get(name=self.kwargs.get("chat_name"))
         return context
 
 

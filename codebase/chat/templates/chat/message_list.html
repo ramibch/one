@@ -1,4 +1,4 @@
-<div hx-get="{% url 'chat_messages' %}"
+<div hx-get="{% url 'chat_messages' chat.name %}"
      hx-trigger="every 1s"
      hx-swap="outerHTML">
   {% for message in chat_messages %}
