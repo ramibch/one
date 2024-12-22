@@ -5,7 +5,6 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_GET
 
 from codebase.base.utils.http import CustomHttpRequest
-from codebase.base.utils.telegram import Bot
 
 
 @require_GET
@@ -27,14 +26,18 @@ def favicon(request: CustomHttpRequest) -> HttpResponse:
 
 
 def error_404(request: CustomHttpRequest, exception):
-    Bot.to_admin(f"404 Error\n{request}\n{request.user}")
     return render(
-        request, "error.html", {"page_title": _("Page not found")}, status=404
+        request,
+        "error.html",
+        {"page_title": _("Page not found")},
+        status=404,
     )
 
 
 def error_500(request: CustomHttpRequest):
-    Bot.to_admin(f"500 Error\n{request}\n{request.user}")
     return render(
-        request, "error.html", {"page_title": _("Internal Server Error")}, status=500
+        request,
+        "error.html",
+        {"page_title": _("Internal Server Error")},
+        status=500,
     )
