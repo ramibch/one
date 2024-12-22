@@ -131,7 +131,7 @@ class Site(TranslatableModel):
         return self.name
 
     @cached_property
-    def main_domain(self):
+    def main_host(self):
         return self.host_set.filter(is_main=True).first()
 
     @cached_property
@@ -157,7 +157,7 @@ class Site(TranslatableModel):
     @cached_property
     def url(self) -> str:
         schema = "https" if settings.HTTPS else "http"
-        return f"{schema}://{self.main_domain}"
+        return f"{schema}://{self.main_host}"
 
     def get_object_admin_url(self, obj) -> str:
         # the url to the Django admin form for the model instance
@@ -212,7 +212,7 @@ def clear_site_cache(sender, **kwargs):
     with contextlib.suppress(KeyError):
         del SITE_CACHE[instance.pk]
     with contextlib.suppress(KeyError, Site.DoesNotExist):
-        del SITE_CACHE[Site.objects.using(using).get(pk=instance.pk).main_domain]
+        del SITE_CACHE[Site.objects.using(using).get(pk=instance.pk).main_host]
 
 
 pre_save.connect(clear_site_cache, sender=Site)

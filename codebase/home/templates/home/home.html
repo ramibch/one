@@ -29,7 +29,9 @@
       </h2>
       {% for article in object.articlessection.articles.filter|slice:object.articlessection.number_of_articles %}
         <div class="col-md-4">
-          <article>
+          <article x-data="{ 'active': false }"
+                   x-on:mouseover="active = true;"
+                   x-bind:class="active ? 'animate__animated animate__flipInX' : '' ">
             <h3>
               <a href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a>
             </h3>

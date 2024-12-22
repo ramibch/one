@@ -54,9 +54,9 @@ dependencies = [
   "etsyv3",
   "django-modeltranslation>=0.19.11",
   "django-cors-headers>=4.6.0",
-  "django-storages>=1.14.4",
   "pydotplus>=2.0.2",
   "twisted[http2,tls]>=24.11.0",
+  "django-storages>=1.14.4",
 ]
 
 

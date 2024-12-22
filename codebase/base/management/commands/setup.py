@@ -27,8 +27,8 @@ class Command(BaseCommand):
             call_command("createsuperuser", "--noinput")
 
         # Collect static
-        if settings.ENV != "dev":
-            call_command("collectstatic", interactive=False)
+
+        call_command("collectstatic", interactive=False)
 
         # Sync submodule folders
         BaseSubmoduleFolder.sync_all_folders()

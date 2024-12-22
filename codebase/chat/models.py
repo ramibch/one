@@ -10,6 +10,7 @@ User = get_user_model()
 
 class Chat(Model):
     name = models.CharField(max_length=128, unique=True)
+    site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return str(self.id)
