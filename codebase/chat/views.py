@@ -52,5 +52,5 @@ def chat_join(request, name):
 
     chat = Chat.objects.get_or_create(name=name)[0]
     messages = chat.message_set.all()
-    context = {"chat": chat, "chat_messages": messages}
+    context = {"chat": chat, "chat_messages": messages, "user": request.user}
     return render(request, "chat/chat_detail.html", context)
