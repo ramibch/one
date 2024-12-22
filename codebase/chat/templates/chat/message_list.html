@@ -2,28 +2,29 @@
      hx-trigger="every 1s"
      hx-swap="outerHTML">
   {% for message in chat_messages %}
-    {% if message.user == user %}
-      <div x-data="{'actions' : false }"
-           x-on:mouseenter="actions = true"
-           x-on:mouseleave="actions = false"
-           id="chat-message-{{ message.id }}">
-        <p>
-          <span x-show="actions">
-            <span style="cursor: pointer"
-                  hx-delete="{{ message.delete_url }}"
-                  hx-target="#chat-message-{{ message.id }}"
-                  hx-swap="outerHTML">🗑️</span>
-          </span>
+    <div id="chat-message-{{ message.id }}">
+      <p>
+        {% if message.user == user %}
+          <div x-data="{'actions' : false }"
+               x-on:mouseenter="actions = true"
+               x-on:mouseleave="actions = false">
+            <div x-show="actions">
+              <span style="cursor: pointer"
+                    hx-delete="{{ message.delete_url }}"
+                    hx-target="#chat-message-{{ message.id }}"
+                    hx-swap="outerHTML">🗑️</span>
+            </div>
+          </div>
         {% endif %}
         <b>[<i>{{ message.time }}</i>] {{ message.user.display_name }}</b>: {{ message.body | linebreaks }}
       </p>
       <br>
+      {% if message.first_in_the_day %}
+        <center>
+          {{ message.created_at|date:"SHORT_DATE_FORMAT" }}
+          <hr />
+        </center>
+      {% endif %}
     </div>
-    {% if message.first_in_the_day %}
-      <center>
-        {{ message.created_at|date:"SHORT_DATE_FORMAT" }}
-        <hr />
-      </center>
-    {% endif %}
   {% endfor %}
 </div>

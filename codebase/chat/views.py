@@ -14,13 +14,15 @@ class ChatDetailView(LoginRequiredMixin, DetailView):
     model = Chat
 
     def get_object(self, queryset=...):
-        chat, created = Chat.objects.get_or_create(
-            name=self.request.user.username,
-            site=self.request.site,
-        )
+        site = self.request.site
+        username = self.request.user.username
 
-        if created:
+        try:
+            chat = Chat.objects.get(name=username)
+        except Chat.DoesNotExist:
+            chat = Chat.objects.create(name=username, site=site)
             Bot.to_admin(f"💬 New chat: {chat.join_url}")
+
         return chat
 
 
