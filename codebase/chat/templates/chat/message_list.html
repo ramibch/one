@@ -3,12 +3,16 @@
      hx-swap="outerHTML">
   {% for message in chat_messages %}
     {% if message.user == user %}
-      <p>
-        <div x-data="{'actions' : false }"
-             x-on:mouseenter="actions = true"
-             x-on:mouseleave="actions = false">
+      <div x-data="{'actions' : false }"
+           x-on:mouseenter="actions = true"
+           x-on:mouseleave="actions = false"
+           id="chat-message-{{ message.id }}">
+        <p>
           <span x-show="actions">
-            <span style="cursor: pointer" hx-delete="{{ message.delete_url }}">🗑️</span>
+            <span style="cursor: pointer"
+                  hx-delete="{{ message.delete_url }}"
+                  hx-target="#chat-message-{{ message.id }}"
+                  hx-swap="outerHTML">🗑️</span>
           </span>
         {% endif %}
         <b>[<i>{{ message.time }}</i>] {{ message.user.display_name }}</b>: {{ message.body | linebreaks }}

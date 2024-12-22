@@ -42,7 +42,7 @@ class MessageListView(LoginRequiredMixin, ListView):
 @require_http_methods(["DELETE"])
 def delete_message(request, id):
     Message.objects.filter(user=request.user, id=id).update(deleted=True)
-    return HttpResponse(status=204)
+    return HttpResponse(status=200)
 
 
 @login_required
