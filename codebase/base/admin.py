@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db.migrations.recorder import MigrationRecorder
 from modeltranslation.admin import TranslationAdmin
 
-from .models import Language, Topic, Traffic
+from .models import Topic, Traffic
 from .utils.actions import translation_actions
 
 
@@ -12,18 +12,6 @@ class MigrationRecorderAdmin(admin.ModelAdmin):
     list_filter = ("app", "applied")
 
 
-@admin.register(Language)
-class LanguageAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "id", "name_local")
-    readonly_fields = ("id",)
-
-    def has_delete_permission(self, request, obj=...):
-        return False
-
-    def has_add_permission(self, request):
-        return False
-
-
 @admin.register(Topic)
 class TopicAdmin(TranslationAdmin):
     actions = translation_actions
@@ -31,30 +19,18 @@ class TopicAdmin(TranslationAdmin):
 
 @admin.register(Traffic)
 class TrafficAdmin(admin.ModelAdmin):
-    list_display = (
-        "__str__",
-        "request_path",
-        "response_status_code",
-        "request_method",
-        "user",
-    )
-    list_filter = (
-        "request_path",
-        "site",
-        "response_status_code",
-        "request_method",
-        "time",
-    )
+    list_display = ("__str__", "path", "status_code", "method", "user")
+    list_filter = ("path", "site", "status_code", "method", "time")
     readonly_fields = (
-        "request_GET",
-        "request_GET_ref",
-        "request_POST",
-        "request_path",
-        "request_headers",
-        "request_country_code",
-        "response_headers",
-        "response_status_code",
-        "request_method",
+        "get",
+        "ref",
+        "post",
+        "path",
+        "headers",
+        "country_code",
+        "headers",
+        "status_code",
+        "method",
         "user",
         "site",
         "time",

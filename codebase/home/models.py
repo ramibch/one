@@ -135,6 +135,7 @@ class ArticlesSection(TranslatableModel):
     title = models.CharField(max_length=64)
     articles = models.ManyToManyField("articles.Article")
     auto_add_articles = models.BooleanField(default=False)
+    number_of_articles = models.PositiveSmallIntegerField(default=6)
 
     def get_default_language(self):
         return self.home.site.default_language

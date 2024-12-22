@@ -56,7 +56,7 @@ class FooterLinkAdmin(admin.ModelAdmin):
 
 
 @admin.register(SocialMediaLink)
-class SocialMediaLinkAdmin(TranslationAdmin):
+class SocialMediaLinkAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = ("platform", "new_tab", "show_type", "order")
     list_editable = ("show_type", "new_tab", "order")

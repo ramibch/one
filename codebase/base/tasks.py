@@ -61,7 +61,8 @@ def sync_submodule_folders_every_1_hour(hour="/*"):
 
 @huey.task()
 def translate_modeltranslation_objects(
-    queryset: QuerySet[type[Model]], translation_fields: list[str]
+    queryset: QuerySet[type[Model]],
+    fields: list[str],
 ):
     out = "🈂️ Translating a multilanguage queryset:\n\n"
     for db_obj in queryset:
@@ -70,29 +71,28 @@ def translate_modeltranslation_objects(
             out += "⚠️ Object not allowed to translate. Check: allow_translation.\n\n"
             continue
 
-        for translation_field in translation_fields:
-            from_field = f"{translation_field}_{db_obj.get_default_language().id}"
+        for field in fields:
+            from_field = f"{field}_{db_obj.get_default_language()}"
             from_field_value = getattr(db_obj, from_field)
             if from_field_value is None:
                 out += f"Not translating the field {from_field} since it is null.\n"
                 continue
 
             out += f"{db_obj.get_default_language()}: {from_field_value}\n"
-            for to_language in db_obj.get_rest_languages():
-                to_field = f"{translation_field}_{to_language.id}"
+            for to_language in db_obj.get_rest_language():
+                to_field = f"{field}_{to_language}"
                 if (
-                    not hasattr(db_obj, to_field)
-                    or not db_obj.override_translated_fields
-                    or to_language.id == db_obj.get_default_language().id
+                    hasattr(db_obj, to_field)
+                    and db_obj.override_translated_fields
+                    and to_language != db_obj.get_default_language()
                 ):
-                    continue
-                to_field_value = translate_text(
-                    from_language=db_obj.get_default_language().id,
-                    to_lang=to_language.id,
-                    text=from_field_value,
-                )
-                setattr(db_obj, to_field, to_field_value)
-                out += f"{to_language}: {to_field_value}\n"
+                    to_field_value = translate_text(
+                        from_language=db_obj.get_default_language(),
+                        to_lang=to_language,
+                        text=from_field_value,
+                    )
+                    setattr(db_obj, to_field, to_field_value)
+                    out += f"{to_language}: {to_field_value}\n"
         db_obj.save()
         out += "\n\n"
 

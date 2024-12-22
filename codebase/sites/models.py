@@ -1,5 +1,6 @@
 import contextlib
 import string
+from copy import copy
 
 from auto_prefetch import ForeignKey, Manager, Model
 from django.conf import settings
@@ -12,7 +13,9 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from ..base import Language
 from ..base.utils.abstracts import TranslatableModel
+from ..base.utils.db_fields import ChoiceArrayField
 from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
 SITE_CACHE = {}
@@ -107,19 +110,9 @@ class Site(TranslatableModel):
     # Management
     last_huey_flush: models.DateTimeField = models.DateTimeField(null=True)
     has_user_home = models.BooleanField(default=False)
-    default_language = ForeignKey(
-        "base.Language",
-        default=settings.LANGUAGE_CODE,
-        on_delete=models.SET_DEFAULT,
-        verbose_name=_("Default language"),
-        related_name="sites_with_default_languages",
-    )
-    rest_languages = ManyToManyField(
-        "base.Language",
-        verbose_name=_("Rest of languages"),
-        related_name="sites_with_rest_languages",
-        blank=True,
-    )
+
+    default_language = models.CharField(max_length=4, choices=Language)
+    rest_languages = ChoiceArrayField(models.CharField(max_length=4, choices=Language))
 
     # Submodules
     article_folders = ManyToManyField("articles.ArticleParentFolder", blank=True)
@@ -136,22 +129,20 @@ class Site(TranslatableModel):
         return self.host_set.filter(is_main=True).first()
 
     @cached_property
-    def languages(self):
-        from ..base.models import Language
-
-        qs1 = self.rest_languages.all()
-        qs2 = Language.objects.filter(id=self.default_language_id)
-        return (qs1 | qs2).distinct()
+    def languages(self) -> set:
+        langs = copy(set(self.rest_languages))
+        langs.add(self.default_language)
+        return langs
 
     @cached_property
-    def languages_count(self) -> int:
-        return self.languages.count()
+    def language_count(self):
+        return len(self.languages)
 
-    def get_default_language(self):
+    def get_default_language(self) -> str:
         return self.default_language
 
-    def get_rest_languages(self):
-        return self.rest_languages
+    def get_rest_languages(self) -> set:
+        return set(self.rest_languages)
 
     @cached_property
     def picocss_static_url(self) -> str:

@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 
 from ...sites.models import Site
-from ..models import Language, Traffic
+from ..models import Traffic
 from .telegram import Bot
 
 User = get_user_model()
@@ -25,7 +25,7 @@ class Middlewares:
         request.site = Site.objects.get(host__name=request.get_host())
 
         # Clear cache in development
-        if settings.DEBUG and settings.ENV == "dev":
+        if settings.DEBUG and settings.ENV == "dev" and settings.CLEAR_CACHE_IN_DEV:
             call_command("clear_cache")
 
         # Get response (view process)
@@ -44,16 +44,16 @@ class Middlewares:
             # If the request has user, set the user language
             if request.path == reverse("set_language") and request.method == "POST":
                 # User is changing the language
-                lang = Language.objects.get(id=request.POST.get("language"))
+                lang = request.POST.get("language")
                 User.objects.filter(id=request.user.id).update(language=lang)
             else:
                 lang = request.user.language
-        elif request.site.languages_count == 1:
+        elif request.site.language_count == 1:
             # If the site has just one language, set that one
             lang = request.site.default_language
 
         if lang is not None:
-            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang.id)
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
 
     def process_traffic(self, request, response) -> None:
         """Ignore traffic from staff and for certain urls."""

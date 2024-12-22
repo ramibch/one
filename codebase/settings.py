@@ -18,6 +18,7 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 from environs import Env
+from redis import ConnectionPool as RedisConnectionPool
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,6 +39,7 @@ SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
 ENV = env("ENV")
 DEBUG = env.bool("DEBUG")
 HTTPS = env.bool("HTTPS")
+REDIS_URL = env("REDIS_URL")
 
 """
 ##################
@@ -66,7 +68,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 INSTALLED_APPS = [
     # Apps that need to be on top
-    # "daphne",
+    "daphne",
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
     "django_extensions",
@@ -88,6 +90,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.humanize",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
@@ -253,6 +256,14 @@ DJANGO_SUPERUSER_USERNAME = env("DJANGO_SUPERUSER_USERNAME")
 DJANGO_SUPERUSER_PASSWORD = env("DJANGO_SUPERUSER_PASSWORD")
 DJANGO_SUPERUSER_EMAIL = env("DJANGO_SUPERUSER_EMAIL")
 
+# Caching
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": REDIS_URL,
+    }
+}
+
 
 """
 ####################
@@ -261,6 +272,9 @@ Third-party settings
 """
 
 # huey
+
+
+redis_connection_pool = RedisConnectionPool.from_url(url=REDIS_URL)
 
 HUEY = {
     "huey_class": "huey.RedisHuey",  # Huey implementation to use.
@@ -274,7 +288,7 @@ HUEY = {
         "host": "localhost",
         "port": 6379,
         "db": 0,
-        "connection_pool": None,  # Definitely you should use pooling!
+        "connection_pool": redis_connection_pool,  # Definitely you should use pooling!
         # ... tons of other options, see redis-py for details.
         # huey-specific connection parameters.
         "read_timeout": 1,  # If not polling (blocking pop), use timeout.
@@ -424,7 +438,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [REDIS_URL],
         },
     },
 }
@@ -435,6 +449,8 @@ CHANNEL_LAYERS = {
 Project settings
 ################
 """
+
+CLEAR_CACHE_IN_DEV = False
 
 
 # Tex

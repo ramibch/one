@@ -1,4 +1,3 @@
-import typing
 from urllib.parse import urlparse
 
 from auto_prefetch import ForeignKey, Model
@@ -9,12 +8,8 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..base.models import Language
 from ..base.utils.abstracts import TranslatableModel
 from ..links.models import Link
-
-if typing.TYPE_CHECKING:
-    pass
 
 
 class ShowTypes(models.TextChoices):
@@ -76,11 +71,11 @@ class FooterItem(TranslatableModel):
     def display_title(self) -> str:
         return f"{self.emoji} {self.title}" if self.emoji else self.title
 
-    def get_default_language(self):
-        return Language.objects.get_or_create(id=settings.LANGUAGE_CODE)[0]
+    def get_default_language(self) -> str:
+        return settings.LANGUAGE_CODE
 
-    def get_rest_languages(self):
-        return Language.objects.exclude(id=settings.LANGUAGE_CODE)
+    def get_rest_languages(self) -> set:
+        return {lang for site in self.sites.all() for lang in site.rest_languages}
 
 
 class FooterLink(Model):

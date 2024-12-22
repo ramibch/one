@@ -1,0 +1,28 @@
+{% load cache %}
+<div hx-get="{% url 'chat_messages' %}"
+     hx-trigger="every 1s"
+     hx-swap="outerHTML">
+  {% for message in messages %}
+    {% cache 3600 chat_messages message.id %}
+    {% if message.user == user %}
+      <p>
+        <div x-data="{'actions' : false }"
+             x-on:mouseenter="actions = true"
+             x-on:mouseleave="actions = false">
+          <span x-show="actions">
+            <span style="cursor: pointer" hx-delete="{{ message.delete_url }}">🗑️</span>
+          </span>
+        {% endif %}
+        <b>[<i>{{ message.time }}</i>] {{ message.user.display_name }}</b>: {{ message.body | linebreaks }}
+      </p>
+      <br>
+    </div>
+    {% if message.first_in_the_day %}
+      <center>
+        {{ message.created_at|date:"SHORT_DATE_FORMAT" }}
+        <hr />
+      </center>
+    {% endif %}
+  {% endcache %}
+{% endfor %}
+</div>

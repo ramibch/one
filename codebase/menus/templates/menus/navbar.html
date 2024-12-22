@@ -4,7 +4,8 @@
     <li>
       <strong> <a href="{% url "home" %}?ref=brandheader">
         {% if request.site.emoji and request.site.emoji_in_brand %}{{ request.site.emoji }}{% endif %}
-      {{ request.site.brand_name }}</a>
+        {{ request.site.brand_name }}
+      </a>
     </strong>
   </li>
 </ul>
@@ -19,7 +20,7 @@
   {% if request.site.change_theme_light_in_navbar %}
     <li>{% include "elements/theme_light.html" %}</li>
   {% endif %}
-  {% if request.site.change_language_in_navbar and request.site.languages.count > 1 %}
+  {% if request.site.change_language_in_navbar and request.site.language_count > 1 %}
     <li>{% include "elements/change_language.html" %}</li>
   {% endif %}
 </ul>

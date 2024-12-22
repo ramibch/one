@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n humanize %}
 {% block content %}
   <!-- Hero section -->
-  {% if object.active_hero %}
-    {% with hero=object.active_hero %}
+  {% if object.herosection %}
+    {% with hero=object.herosection %}
       <section class="row mt-5">
         <div class="col-md-6">
           <h1>{{ hero.headline | linebreaks }}</h1>
@@ -20,15 +21,25 @@
       </section>
     {% endwith %}
   {% endif %}
-  <!-- Last articles if available -->
-  {% if object.display_last_articles == true %}
-    {% for article in object.last_articles %}
-      <details>
-        <header>
-          {{ article.title }}
-        </header>
-        {% if article.description %}{{ article.description }}{% endif %}
-      </details>
-    {% endfor %}
+  <!-- Last articles -->
+  {% if object.articlessection %}
+    <section class="row mt-5">
+      <h2>
+        ✍ {% trans "Lastest articles" %} <span style="float: right;"> <a href="{% url 'article_list' %}">{% trans "All" %}</a> </span>
+      </h2>
+      {% for article in object.articlessection.articles.filter|slice:object.articlessection.number_of_articles %}
+        <div class="col-md-4">
+          <article>
+            <h3>
+              <a href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a>
+            </h3>
+            {% if article.description %}{{ article.description }}{% endif %}
+            <footer>
+              {{ article.created_on |naturaltime }}
+            </footer>
+          </article>
+        </div>
+      {% endfor %}
+    </section>
   {% endif %}
 {% endblock content %}
