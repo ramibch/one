@@ -117,7 +117,7 @@ class Site(TranslatableModel):
         default=Language.EN,
     )
     rest_languages = ChoiceArrayField(
-        models.CharField(max_length=4, choices=Language), null=True
+        models.CharField(max_length=4, choices=Language), default=list
     )
 
     # Submodules
