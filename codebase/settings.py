@@ -39,7 +39,9 @@ SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
 ENV = env("ENV")
 DEBUG = env.bool("DEBUG")
 HTTPS = env.bool("HTTPS")
+
 REDIS_URL = env("REDIS_URL")
+REDIS_CONNECTION_POOL = RedisConnectionPool.from_url(url=REDIS_URL)
 
 """
 ##################
@@ -274,28 +276,17 @@ Third-party settings
 # huey
 
 
-redis_connection_pool = RedisConnectionPool.from_url(url=REDIS_URL)
-
 HUEY = {
     "huey_class": "huey.RedisHuey",  # Huey implementation to use.
     "name": DATABASES["default"]["NAME"],  # Use db name for huey.
     "results": True,  # Store return values of tasks.
     "store_none": False,  # If a task returns None, do not save to results.
-    "immediate": DEBUG or ENV == "dev",  # If DEBUG=True, run synchronously.
+    "immediate": ENV == "dev",  # If DEBUG=True, run synchronously.
     "utc": True,  # Use UTC for all times internally.
     "blocking": True,  # Perform blocking pop rather than poll Redis.
-    "connection": {
-        "host": "localhost",
-        "port": 6379,
-        "db": 0,
-        "connection_pool": redis_connection_pool,  # Definitely you should use pooling!
-        # ... tons of other options, see redis-py for details.
-        # huey-specific connection parameters.
-        "read_timeout": 1,  # If not polling (blocking pop), use timeout.
-        "url": None,  # Allow Redis config via a DSN.
-    },
+    "connection": {"connection_pool": REDIS_CONNECTION_POOL},
     "consumer": {
-        "workers": 1,
+        "workers": 2,
         "worker_type": "thread",
         "initial_delay": 0.1,  # Smallest polling interval, same as -d.
         "backoff": 1.15,  # Exponential backoff using this rate, -b.
