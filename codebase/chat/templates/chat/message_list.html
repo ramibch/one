@@ -1,9 +1,7 @@
-{% load cache %}
 <div hx-get="{% url 'chat_messages' %}"
      hx-trigger="every 1s"
      hx-swap="outerHTML">
   {% for message in chat_messages %}
-    {% cache 3600 chat_messages message.id %}
     {% if message.user == user %}
       <p>
         <div x-data="{'actions' : false }"
@@ -23,6 +21,5 @@
         <hr />
       </center>
     {% endif %}
-  {% endcache %}
-{% endfor %}
+  {% endfor %}
 </div>
