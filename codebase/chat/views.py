@@ -25,7 +25,7 @@ class ChatDetailView(LoginRequiredMixin, DetailView):
 
 
 class MessageListView(LoginRequiredMixin, ListView):
-    context_object_name = "messages"
+    context_object_name = "chat_messages"
     model = Message
 
     def get_queryset(self):
