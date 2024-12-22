@@ -111,8 +111,14 @@ class Site(TranslatableModel):
     last_huey_flush: models.DateTimeField = models.DateTimeField(null=True)
     has_user_home = models.BooleanField(default=False)
 
-    default_language = models.CharField(max_length=4, choices=Language)
-    rest_languages = ChoiceArrayField(models.CharField(max_length=4, choices=Language))
+    default_language = models.CharField(
+        max_length=4,
+        choices=Language,
+        default=Language.EN,
+    )
+    rest_languages = ChoiceArrayField(
+        models.CharField(max_length=4, choices=Language), null=True
+    )
 
     # Submodules
     article_folders = ManyToManyField("articles.ArticleParentFolder", blank=True)
