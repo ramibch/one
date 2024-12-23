@@ -44,7 +44,7 @@
     <link href="{% static 'css/bootstrap-grid.min.css' %}" rel="stylesheet" />
     <link href="{% static 'css/rb.css' %}" rel="stylesheet" />
     <link href="{% static 'css/animate.css' %}" rel="stylesheet" />
-    <link href="{{ request.site.picocss_static_url }}" rel="stylesheet" />
+    <link href="{% static request.site.picocss_static_file %}" rel="stylesheet" />
     {% block head_extra %}{% endblock %}
   </head>
   <body class="container" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>

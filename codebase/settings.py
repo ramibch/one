@@ -502,7 +502,6 @@ STORAGES = {
         "OPTIONS": {
             "gzip": True,
             "default_acl": "public-read",
-            "location": "static",
             "querystring_auth": False,
         },
     },

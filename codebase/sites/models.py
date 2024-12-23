@@ -151,8 +151,8 @@ class Site(TranslatableModel):
         return set(self.rest_languages)
 
     @cached_property
-    def picocss_static_url(self) -> str:
-        return f"{settings.STATIC_URL}css/picocss/pico.{self.picocss_color}.min.css"
+    def picocss_static_file(self) -> str:
+        return f"css/picocss/pico.{self.picocss_color}.min.css"
 
     @cached_property
     def url(self) -> str:

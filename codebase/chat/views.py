@@ -12,6 +12,7 @@ from .models import Chat, Message
 
 class ChatDetailView(LoginRequiredMixin, DetailView):
     model = Chat
+    context_object_name = "chat"
 
     def get_object(self, queryset=...):
         site = self.request.site
@@ -24,6 +25,11 @@ class ChatDetailView(LoginRequiredMixin, DetailView):
             Bot.to_admin(f"💬 New chat: {chat.join_url}")
 
         return chat
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
 
 
 class MessageListView(LoginRequiredMixin, ListView):

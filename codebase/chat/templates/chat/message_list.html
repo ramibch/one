@@ -1,20 +1,20 @@
 <div hx-get="{% url 'chat_messages' chat.name %}"
-     hx-trigger="every 1s"
+     hx-trigger="every 2s"
      hx-swap="outerHTML">
   {% for message in chat_messages %}
-    <div id="chat-message-{{ message.id }}">
+    <div id="chat-message-{{ message.id }}"
+         x-data="{'actions' : false }"
+         x-on:touchstart="actions = !actions"
+         x-on:mouseover="actions = true"
+         x-on:mouseleave="actions = false">
       <p>
         {% if message.user == user %}
-          <div x-data="{'actions' : false }"
-               x-on:mouseenter="actions = true"
-               x-on:mouseleave="actions = false">
-            <div x-show="actions">
-              <span style="cursor: pointer"
-                    hx-delete="{{ message.delete_url }}"
-                    hx-target="#chat-message-{{ message.id }}"
-                    hx-swap="outerHTML">🗑️</span>
-            </div>
-          </div>
+          <span x-show="actions">
+            <span style="cursor: pointer"
+                  hx-delete="{{ message.delete_url }}"
+                  hx-target="#chat-message-{{ message.id }}"
+                  hx-swap="outerHTML">🗑️</span>
+          </span>
         {% endif %}
         <b>[<i>{{ message.time }}</i>] {{ message.user.display_name }}</b>: {{ message.body | linebreaks }}
       </p>
