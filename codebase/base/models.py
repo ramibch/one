@@ -17,7 +17,7 @@ User = get_user_model()
 
 
 class TrafficManager(Manager):
-    def create_from_request_and_response(self, request, response):
+    def create_from_request_reponse_and_ip(self, request, response, ip):
         return self.create(
             user=request.user if request.user.is_authenticated else None,
             site=request.site,
@@ -29,6 +29,7 @@ class TrafficManager(Manager):
             headers=request.headers,
             country_code=request.country.code,
             status_code=response.status_code,
+            ip=ip,
         )
 
 
@@ -50,6 +51,7 @@ class Traffic(Model):
     ref = models.CharField(max_length=255, null=True, db_index=True)
     headers = models.TextField(null=True)
     country_code = models.CharField(max_length=8, null=True, db_index=True)
+    ip = models.GenericIPAddressField(_("ip address"), null=True)
 
     # Response info
     status_code = models.PositiveSmallIntegerField(default=200)
