@@ -167,3 +167,4 @@ staticfiles
 media
 o365_token.txt
 private/*
+nginx/*

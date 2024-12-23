@@ -30,6 +30,7 @@ class TrafficManager(Manager):
             country_code=request.country.code,
             status_code=response.status_code,
             ip=ip,
+            ip_blocked=False,
         )
 
 
@@ -58,6 +59,7 @@ class Traffic(Model):
 
     # Others
     time = models.DateTimeField(_("time"), default=timezone.now, db_index=True)
+    ip_blocked = models.BooleanField(default=False)
 
     objects: TrafficManager = TrafficManager()
 

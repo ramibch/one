@@ -22,10 +22,10 @@ class Middlewares:
             x_forwarded_for = request.headers.get("X-Forwarded-For")
             x_real_ip = request.headers.get("X-Real-Ip")
             ip = (
-                x_forwarded_for.split(",")[0]
-                if x_forwarded_for
-                else x_real_ip
+                x_real_ip
                 if x_real_ip
+                else x_forwarded_for.split(",")[0]
+                if x_forwarded_for
                 else request.META.get("REMOTE_ADDR")
             )
         except Exception as e:
