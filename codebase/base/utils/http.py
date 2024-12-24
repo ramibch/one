@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 
+from ...clients.models import Client
 from ...sites.models import Site
-from .middlewares import CountryDetails
 
 
 class PDFResponse(HttpResponse):
@@ -12,5 +12,5 @@ class PDFResponse(HttpResponse):
 
 
 class CustomHttpRequest(HttpRequest):
-    country: CountryDetails
+    client: Client
     site: Site

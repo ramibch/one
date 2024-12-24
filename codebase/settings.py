@@ -103,6 +103,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.linkedin_oauth2",
     # Project apps
     "codebase.base",
+    "codebase.clients",
     "codebase.articles",
     "codebase.pages",
     "codebase.menus",
@@ -131,7 +132,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.admindocs.middleware.XViewMiddleware",
-    "codebase.base.utils.middlewares.Middlewares",
+    "codebase.middleware.OneMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
