@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..base import Language
+from ..base import Languages
 from ..base.utils.abstracts import TranslatableModel
 
 DJ_PATHS = (
@@ -107,4 +107,4 @@ class Link(TranslatableModel):
         return settings.LANGUAGE_CODE
 
     def get_rest_languages(self) -> set:
-        return set(Language.values)
+        return set(Languages.values)

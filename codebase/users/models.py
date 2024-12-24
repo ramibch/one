@@ -4,14 +4,14 @@ from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
 
-from ..base import Language
+from ..base import Languages
 
 
 class User(AbstractUser):
     asked_to_verify_email = models.BooleanField(default=False)
     country_code = models.CharField(max_length=8, null=True)
     language = models.CharField(
-        max_length=8, choices=Language.choices, default=settings.LANGUAGE_CODE
+        max_length=8, choices=Languages.choices, default=settings.LANGUAGE_CODE
     )
 
     @cached_property

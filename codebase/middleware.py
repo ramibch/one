@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .base.utils.telegram import Bot
 from .clients.models import Client, Request
+from .clients.tasks import update_client_task
 from .sites.models import Site
 
 User = get_user_model()
@@ -46,18 +47,18 @@ class OneMiddleware:
 
         return response
 
-    def get_ip_address(self, request) -> str | None:
+    def get_ip_address_or_none(self, request) -> str | None:
         x_forwarded_for_ips = request.headers.get("X-Forwarded-For").split(", ")
         x_real_ip = request.headers.get("X-Real-Ip")
         remote_addr = request.META.get("REMOTE_ADDR")
 
-        ip_addresses_raw = (x_real_ip, *x_forwarded_for_ips, remote_addr)
+        raw_addresses = (x_real_ip, *x_forwarded_for_ips, remote_addr)
+        exempt_addresses = (None, "127.0.0.1", "localhost")
+        addresses = {addr for addr in raw_addresses if addr not in exempt_addresses}
+        ips = {ipaddress.ip_address(addr) for addr in addresses}
 
-        ip_addresses = {ip_addr for ip_addr in ip_addresses_raw if ip_addr is not None}
-        ips = {ipaddress.ip_address(ip_addr) for ip_addr in ip_addresses}
-
-        ipsv4 = [ip for ip in ips if ip.version == 4]
-        ipsv6 = [ip for ip in ips if ip.version == 6]
+        ipsv4 = [str(ip) for ip in ips if ip.version == 4]
+        ipsv6 = [str(ip) for ip in ips if ip.version == 6]
 
         if ipsv4:
             return ipsv4[0]
@@ -66,16 +67,34 @@ class OneMiddleware:
 
         Bot.to_admin(f"No IPv4 or IPv6 Addresses found for {request}\n{ips}")
 
+    def get_user_agent(self, request):
+        http_user_agent = request.META.get("HTTP_USER_AGENT", "")[:256]
+        if http_user_agent != "":
+            return http_user_agent
+        else:
+            return request.headers.get("User-Agent", "")[:256]
+
     def get_client(self, request) -> Client:
-        ip = self.get_ip_address(request)
+        ip = self.get_ip_address_or_none(request)
+
+        if ip is None:
+            return Client.dummy_object()
+
         user_or_none = request.user if request.user.is_authenticated else None
 
         try:
-            return Client.objects.get(ip_address=ip)
+            client = Client.objects.get(ip_address=ip)
         except Client.DoesNotExist:
-            return Client.objects.create(
-                ip_address=ip, user=user_or_none, site=request.site, is_blocked=False
+            client = Client.objects.create(
+                ip_address=ip,
+                user=user_or_none,
+                site=request.site,
+                is_blocked=False,
+                user_agent=self.get_user_agent(request),
             )
+            update_client_task(client)
+
+        return client
 
     def process_language(self, request, response):
         lang = None

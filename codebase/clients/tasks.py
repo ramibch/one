@@ -1,13 +1,11 @@
-from huey import crontab
 from huey.contrib import djhuey as huey
 
 from .models import Client
 
 
-@huey.db_periodic_task(crontab(hour="45"))
-def assign_countries_to_clients(clients=None):
-    if clients is None:
-        clients = Client.objects.filter(country__isnull=True)
-
-    for client in clients:
-        client = client.update_country()
+@huey.db_task()
+def update_client_task(client: Client):
+    """
+    Update values of the client which were not proccessed in the `OneMiddleware`
+    """
+    client.update_values()

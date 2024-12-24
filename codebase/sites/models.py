@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..base import Language
+from ..base import Languages
 from ..base.utils.abstracts import TranslatableModel
 from ..base.utils.db_fields import ChoiceArrayField
 from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
@@ -113,11 +113,11 @@ class Site(TranslatableModel):
 
     default_language = models.CharField(
         max_length=4,
-        choices=Language,
-        default=Language.EN,
+        choices=Languages,
+        default=Languages.EN,
     )
     rest_languages = ChoiceArrayField(
-        models.CharField(max_length=4, choices=Language), default=list
+        models.CharField(max_length=4, choices=Languages), default=list
     )
 
     # Submodules

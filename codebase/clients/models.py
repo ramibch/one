@@ -6,27 +6,26 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from ..base import Countries
 from ..base.utils.telegram import Bot
 
 User = get_user_model()
 
 
-class Country(Model):
-    code = models.CharField(max_length=8, null=True, db_index=True)
-
-    def __str__(self):
-        return self.code
-
-
 class Client(Model):
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    country = ForeignKey(Country, null=True, on_delete=models.SET_NULL)
+    country = models.CharField(max_length=2, choices=Countries, default="CH")
     site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
     ip_address = models.GenericIPAddressField()
     is_blocked = models.BooleanField(default=False)
+    user_agent = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return self.ip_address
+
+    @classmethod
+    def dummy_object(cls):
+        return cls.objects.get_or_create(ip_address="10.10.10.10")[0]
 
     @cached_property
     def country_data(self) -> dict | None:
@@ -36,12 +35,12 @@ class Client(Model):
             Bot.to_admin(f"Client coutrny error: {e}")
             return {}
 
-    def get_country_object(self):
-        code = self.country_data.get("country_code")
-        return Country.objects.get_or_create(code=code)[0]
+    def get_country_code(self):
+        return self.country_data.get("country_code")
 
-    def update_country(self):
-        self.country = self.get_country_object()
+    def update_values(self):
+        # Country
+        self.country = self.get_country_code()
         self.save()
 
 
