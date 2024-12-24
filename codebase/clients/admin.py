@@ -1,14 +1,21 @@
 from django.conf import settings
 from django.contrib import admin
 
-from .models import Client, Request
+from .models import Client, GeoInfo, Request
 from .tasks import update_client_task
+
+
+@admin.register(GeoInfo)
+class GeoInfoAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "city", "postal_code", "latitude")
+    readonly_fields = tuple(field.name for field in GeoInfo._meta.fields)
+    list_filter = ("is_in_european_union", "country_code", "time_zone")
 
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ("ip_address", "is_blocked", "user", "country", "site")
-    readonly_fields = ("user", "country", "site", "ip_address", "user_agent")
+    readonly_fields = ("ip_address", "geoinfo", "user", "country", "site", "user_agent")
     list_filter = ("is_blocked", "request__path", "site", "country")
     search_fields = ("ip_address", "site", "country")
     actions = ["block_ips", "update_values"]
@@ -36,16 +43,6 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(Request)
 class RequestAdmin(admin.ModelAdmin):
-    readonly_fields = (
-        "client",
-        "path",
-        "method",
-        "get",
-        "post",
-        "ref",
-        "headers",
-        "status_code",
-        "time",
-    )
+    readonly_fields = tuple(field.name for field in Request._meta.fields)
     list_display = ("__str__", "client", "method", "status_code", "client__is_blocked")
     list_filter = ("ref", "status_code", "method", "path", "time")
