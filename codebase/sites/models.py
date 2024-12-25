@@ -84,14 +84,13 @@ class PicoCssColor(models.TextChoices):
 
 
 class Site(Model):
-    name = models.CharField(_("Name"), max_length=32, unique=True)  # , db_index=True
+    name = models.CharField(_("Name"), max_length=32, unique=True, db_index=True)
     remarks = models.TextField(null=True, blank=True)
 
     # Brand
     brand_name = models.CharField(max_length=32, null=True)
-    emoji = models.CharField(max_length=8, null=True)
-    emoji_in_brand = models.BooleanField(default=True)
-
+    emoji = models.CharField(max_length=8, null=True, blank=True)
+    emoji_in_brand = models.BooleanField(default=True, blank=True)
     picocss_color = models.CharField(
         max_length=16,
         choices=PicoCssColor,
@@ -110,7 +109,9 @@ class Site(Model):
         default=Languages.EN,
     )
     rest_languages = ChoiceArrayField(
-        models.CharField(max_length=4, choices=Languages), default=list
+        models.CharField(max_length=4, choices=Languages),
+        default=list,
+        blank=True,
     )
 
     # Submodules
@@ -122,6 +123,10 @@ class Site(Model):
 
     def __str__(self):
         return self.name
+
+    def clean_emoji(self):
+        if self.emoji_in_brand and self.emoji in [None, ""]:
+            raise ValidationError(_("Add an emoji."), code="invalid")
 
     @cached_property
     def main_host(self):
