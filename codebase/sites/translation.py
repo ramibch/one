@@ -1,8 +1,8 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import Site
+from .models import Seo
 
 
-@register(Site)
-class SiteOptions(TranslationOptions):
+@register(Seo)
+class SeoOptions(TranslationOptions):
     fields = ("page_title", "page_description", "page_keywords")

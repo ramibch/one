@@ -12,7 +12,7 @@ from .models import Article, ArticleFile
 
 
 @huey.task()
-def trigger_sync_articles(sites):
+def trigger_sync_articles_task(sites):
     sync_articles_daily(sites=sites)
 
 

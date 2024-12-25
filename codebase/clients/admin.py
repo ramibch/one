@@ -45,4 +45,4 @@ class ClientAdmin(admin.ModelAdmin):
 class RequestAdmin(admin.ModelAdmin):
     readonly_fields = tuple(field.name for field in Request._meta.fields)
     list_display = ("__str__", "client", "method", "status_code", "client__is_blocked")
-    list_filter = ("ref", "status_code", "method", "path", "time")
+    list_filter = ("ref", "status_code", "method", "client__site", "path", "time")

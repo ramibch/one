@@ -83,17 +83,14 @@ class PicoCssColor(models.TextChoices):
     GREEN = "green", _("Green")
 
 
-class Site(TranslatableModel):
-    name = models.CharField(_("Name"), max_length=32, unique=True, db_index=True)
+class Site(Model):
+    name = models.CharField(_("Name"), max_length=32, unique=True)  # , db_index=True
     remarks = models.TextField(null=True, blank=True)
 
     # Brand
     brand_name = models.CharField(max_length=32, null=True)
     emoji = models.CharField(max_length=8, null=True)
     emoji_in_brand = models.BooleanField(default=True)
-    page_title = models.CharField(max_length=64, null=True)
-    page_description = models.TextField(max_length=256, null=True)
-    page_keywords = models.TextField(max_length=128, null=True)
 
     picocss_color = models.CharField(
         max_length=16,
@@ -106,10 +103,6 @@ class Site(TranslatableModel):
     change_theme_light_in_navbar = models.BooleanField(default=True)
     change_language_in_navbar = models.BooleanField(default=True)
     change_language_in_footer = models.BooleanField(default=True)
-
-    # Management
-    last_huey_flush: models.DateTimeField = models.DateTimeField(null=True)
-    has_user_home = models.BooleanField(default=False)
 
     default_language = models.CharField(
         max_length=4,
@@ -144,12 +137,6 @@ class Site(TranslatableModel):
     def language_count(self):
         return len(self.languages)
 
-    def get_default_language(self) -> str:
-        return self.default_language
-
-    def get_rest_languages(self) -> set:
-        return set(self.rest_languages)
-
     @cached_property
     def picocss_static_file(self) -> str:
         return f"css/picocss/pico.{self.picocss_color}.min.css"
@@ -183,7 +170,7 @@ class Site(TranslatableModel):
     def get_social_media_links(self, show_types: list) -> QuerySet[SocialMediaLink]:
         return self.socialmedialink_set.filter(show_type__in=show_types).distinct()
 
-    class Meta(TranslatableModel.Meta):
+    class Meta(Model.Meta):
         verbose_name = _("site")
         verbose_name_plural = _("sites")
         ordering = ["host__name"]
@@ -192,7 +179,7 @@ class Site(TranslatableModel):
 class Host(Model):
     site = ForeignKey("sites.Site", on_delete=models.CASCADE)
     name = models.CharField(
-        _("domain name"),
+        _("host name"),
         max_length=100,
         validators=[_simple_domain_name_validator],
         primary_key=True,
@@ -214,6 +201,22 @@ def clear_site_cache(sender, **kwargs):
         del SITE_CACHE[instance.pk]
     with contextlib.suppress(KeyError, Site.DoesNotExist):
         del SITE_CACHE[Site.objects.using(using).get(pk=instance.pk).main_host]
+
+
+class Seo(TranslatableModel):
+    site = models.OneToOneField(Site, on_delete=models.CASCADE)
+    page_title = models.CharField(max_length=64)
+    page_description = models.TextField(max_length=256)
+    page_keywords = models.TextField(max_length=128)
+
+    def get_default_language(self) -> str:
+        return self.site.default_language
+
+    def get_rest_languages(self) -> set:
+        return set(self.site.rest_languages)
+
+    def __str__(self):
+        return self.page_title
 
 
 pre_save.connect(clear_site_cache, sender=Site)

@@ -50,19 +50,15 @@ REDIS_CONNECTION_POOL = RedisConnectionPool.from_url(url=REDIS_URL)
 """
 
 ALLOWED_HOSTS = [
-    "test1.ramiboutas.com",
-    "test2.ramiboutas.com",
-    "test1.nicecv.online",
-    "test2.nicecv.online",
     "127.0.0.1",
     "ramib.ch",
-    "ramiboutas.com",
-    "englishstuff.online",
-    "nicecv.online",
-    "www.ramiboutas.com",
-    "www.englishstuff.online",
-    "www.nicecv.online",
     "www.ramib.ch",
+    "ramiboutas.com",
+    "www.ramiboutas.com",
+    "englishstuff.online",
+    "www.englishstuff.online",
+    "nicecv.online",
+    "www.nicecv.online",
 ]
 
 

@@ -11,7 +11,7 @@ from .models import Page
 
 
 @huey.task()
-def trigger_sync_pages(sites):
+def trigger_sync_pages_task(sites):
     sync_pages_daily(sites=sites)
 
 
