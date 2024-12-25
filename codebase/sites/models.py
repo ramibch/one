@@ -84,7 +84,7 @@ class PicoCssColor(models.TextChoices):
 
 
 class Site(TranslatableModel):
-    name = models.CharField(_("Name"), max_length=32, unique=True)
+    name = models.CharField(_("Name"), max_length=32, unique=True, db_index=True)
     remarks = models.TextField(null=True, blank=True)
 
     # Brand
@@ -196,6 +196,7 @@ class Host(Model):
         max_length=100,
         validators=[_simple_domain_name_validator],
         primary_key=True,
+        db_index=True,
     )
     is_main = models.BooleanField(default=True)
 

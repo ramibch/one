@@ -1,4 +1,4 @@
-from auto_prefetch import ForeignKey, Model, OneToOneField
+from auto_prefetch import ForeignKey, Model
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geoip2 import GeoIP2
 from django.db import models
@@ -13,22 +13,25 @@ User = get_user_model()
 
 
 class GeoInfo(Model):
-    accuracy_radius = models.SmallIntegerField(null=True)  # 1000
-    city = models.CharField(max_length=64, null=True)  # "Mountain View"
-    continent_code = models.CharField(max_length=64, null=True)  # "NA"
-    continent_name = models.CharField(max_length=64, null=True)  # "North America"
-    country_code = models.CharField(max_length=64, null=True)  # "US"
-    country_name = models.CharField(max_length=64, null=True)  # "United States"
-    is_in_european_union = models.BooleanField(null=True)  # False
-    latitude = models.FloatField(null=True)  # 37.419200897216797
-    longitude = models.FloatField(null=True)  # -122.05740356445312
-    metro_code = models.SmallIntegerField(null=True)  # 807
-    postal_code = models.CharField(max_length=64, null=True)  # "94043"
-    region_code = models.CharField(max_length=64, null=True)  # "CA"
-    region_name = models.CharField(max_length=64, null=True)  # "California"
-    time_zone = models.CharField(max_length=64, null=True)  # "America/Los_Angeles"
-    dma_code = models.SmallIntegerField(null=True)  # 807
-    region = models.CharField(max_length=32, null=True)  # "CA"
+    accuracy_radius = models.SmallIntegerField(null=True)
+    city = models.CharField(max_length=128, null=True)
+    continent_code = models.CharField(max_length=64, null=True)
+    continent_name = models.CharField(max_length=128, null=True)
+    country_code = models.CharField(max_length=64, null=True)
+    country_name = models.CharField(max_length=64, null=True)
+    is_in_european_union = models.BooleanField(null=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    metro_code = models.SmallIntegerField(null=True)
+    postal_code = models.CharField(max_length=64, null=True)
+    region_code = models.CharField(max_length=64, null=True)
+    region_name = models.CharField(max_length=128, null=True)
+    time_zone = models.CharField(max_length=128, null=True)
+    dma_code = models.SmallIntegerField(null=True)
+    region = models.CharField(max_length=32, null=True)
+
+    class Meta(Model.Meta):
+        unique_together = ["latitude", "longitude"]
 
     def __str__(self):
         return f"{self.postal_code} {self.city}, {self.country_name}"
@@ -38,8 +41,8 @@ class Client(Model):
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
     country = models.CharField(max_length=2, choices=Countries, default="CH")
     site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
-    geoinfo = OneToOneField(GeoInfo, null=True, on_delete=models.CASCADE)
-    ip_address = models.GenericIPAddressField()
+    geoinfo = ForeignKey(GeoInfo, null=True, on_delete=models.SET_NULL)
+    ip_address = models.GenericIPAddressField(unique=True, db_index=True)
     is_blocked = models.BooleanField(default=False)
     user_agent = models.CharField(max_length=255, null=True)
 
@@ -72,8 +75,13 @@ class Client(Model):
             self.country = self.country_data.get("country_code")
 
         # Geo info
-        if self.city_data != {} and self.geoinfo is None:
-            self.geoinfo = GeoInfo.objects.create(**self.city_data)
+        lat, lon = self.city_data.get("latitude"), self.city_data.get("longitude")
+        if all((lat, lon)):
+            geoinfo = GeoInfo.objects.filter(latitude=lat, longitude=lon).first()
+            if geoinfo:
+                self.geoinfo = geoinfo
+            else:
+                self.geoinfo = GeoInfo.objects.create(**self.city_data)
 
         self.save()
 

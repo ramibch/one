@@ -7,7 +7,7 @@ from .tasks import update_client_task
 
 @admin.register(GeoInfo)
 class GeoInfoAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "city", "postal_code", "latitude")
+    list_display = ("__str__", "city", "postal_code", "latitude", "longitude")
     readonly_fields = tuple(field.name for field in GeoInfo._meta.fields)
     list_filter = ("is_in_european_union", "country_code", "time_zone")
 
