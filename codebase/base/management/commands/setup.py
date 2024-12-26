@@ -13,8 +13,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Make migrations only in development
-        if settings.ENV == "dev":
-            call_command("makemigrations")
+
+        call_command("makemigrations")
 
         # Create database
         call_command("createdb")
@@ -27,8 +27,8 @@ class Command(BaseCommand):
             call_command("createsuperuser", "--noinput")
 
         # Collect static
-
-        call_command("collectstatic", interactive=False)
+        if settings.ENV == "prod":
+            call_command("collectstatic", interactive=False)
 
         # Sync submodule folders
         BaseSubmoduleFolder.sync_all_folders()

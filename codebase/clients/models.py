@@ -12,6 +12,14 @@ from ..base.utils.telegram import Bot
 User = get_user_model()
 
 
+class AutoBlockPath(Model):
+    name = models.CharField(max_length=256, unique=True, db_index=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
 class GeoInfo(Model):
     accuracy_radius = models.SmallIntegerField(null=True)
     city = models.CharField(max_length=128, null=True)
@@ -38,6 +46,7 @@ class GeoInfo(Model):
 
 
 class Client(Model):
+    DUMMY_IP_ADDRESS = "10.10.10.10"
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
     country = models.CharField(max_length=2, choices=Countries, default="CH")
     site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
@@ -51,7 +60,7 @@ class Client(Model):
 
     @classmethod
     def dummy_object(cls):
-        return cls.objects.get_or_create(ip_address="10.10.10.10")[0]
+        return cls.objects.get_or_create(ip_address=cls.DUMMY_IP_ADDRESS)[0]
 
     @cached_property
     def country_data(self) -> dict:

@@ -12,16 +12,16 @@
 <ul>
   {% for navlink in navbar_links %}
     <li>
-      <a href="{{ navlink.link.url }}?ref=navbarlink"
-         {% if navlink.new_tab %}target="_blank"{% endif %}
-         class="contrast">{{ navlink.display_title }}</a>
+      <a class="contrast"
+         href="{{ navlink.link.url }}?ref=navbarlink"
+         {% if navlink.new_tab %}target="_blank"{% endif %}>{{ navlink.display_title }}</a>
     </li>
   {% endfor %}
   {% if request.site.change_theme_light_in_navbar %}
-    <li>{% include "elements/theme_light.html" %}</li>
+    <li>{% include "snippets/theme_light.html" %}</li>
   {% endif %}
   {% if request.site.change_language_in_navbar and request.site.language_count > 1 %}
-    <li>{% include "elements/change_language.html" %}</li>
+    <li>{% include "snippets/change_language.html" %}</li>
   {% endif %}
 </ul>
 </nav>

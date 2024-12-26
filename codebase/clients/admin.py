@@ -1,8 +1,13 @@
-from django.conf import settings
 from django.contrib import admin
 
-from .models import Client, GeoInfo, Request
-from .tasks import update_client_task
+from .models import AutoBlockPath, Client, GeoInfo, Request
+from .tasks import block_clients_task, update_client_task
+
+
+@admin.register(AutoBlockPath)
+class AutoBlockPathAdmin(admin.ModelAdmin):
+    list_display = ("name", "created_on")
+    readonly_fields = ("created_on",)
 
 
 @admin.register(GeoInfo)
@@ -20,20 +25,12 @@ class ClientAdmin(admin.ModelAdmin):
     search_fields = ("ip_address", "site", "country")
     actions = ["block_ips", "update_values"]
 
-    @admin.action(description="🚫 Block its IPs")
+    @admin.action(description="🚫 Block its IP Address")
     def block_ips(modeladmin, request, queryset):
-        clients = queryset.filter(ip_address__isnull=False)
-        new_ipaddrs = list(clients.values_list("ip_address", flat=True).distinct())
-        path = settings.BASE_DIR / "nginx/conf.d/blockips.conf"
-        actual_ipaddrs = [
-            line.replace("deny ", "").replace(";", "")
-            for line in path.read_text().split("\n")
-            if len(line) > 6
-        ]
-        ips = set(new_ipaddrs) | set(actual_ipaddrs)
-        output_text = "".join({f"deny {ip};\n" for ip in ips})
-        path.write_text(output_text)
-        clients.update(is_blocked=True)
+        qs = queryset.filter(ip_address__isnull=False).exclude(
+            ip_address=Client.DUMMY_IP_ADDRESS
+        )
+        block_clients_task(qs)
 
     @admin.action(description="🔄 Update values")
     def update_values(modeladmin, request, queryset):
@@ -46,3 +43,12 @@ class RequestAdmin(admin.ModelAdmin):
     readonly_fields = tuple(field.name for field in Request._meta.fields)
     list_display = ("__str__", "client", "method", "status_code", "client__is_blocked")
     list_filter = ("ref", "status_code", "method", "client__site", "path", "time")
+    actions = ["make_paths_autoblock"]
+
+    @admin.action(description="❗Create auto block paths from these")
+    def make_paths_autoblock(modeladmin, request, queryset):
+        paths = list(queryset.distinct().values_list("path", flat=True))
+        auto_block_paths = []
+        for path in paths:
+            auto_block_paths.append(AutoBlockPath(name=path))
+        AutoBlockPath.objects.bulk_create(auto_block_paths, ignore_conflicts=True)

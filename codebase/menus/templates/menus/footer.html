@@ -47,10 +47,10 @@
       </i>
     </small>
     {% if request.site.change_theme_light_in_footer %}
-      {% include "elements/theme_light.html" %}
+      {% include "snippets/theme_light.html" %}
     {% endif %}
     {% if request.site.change_language_in_footer and request.site.language_count > 1 %}
-      {% include "elements/change_language.html" %}
+      {% include "snippets/change_language.html" %}
     {% endif %}
   </center>
 </div>

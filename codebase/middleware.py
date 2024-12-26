@@ -3,9 +3,8 @@ import ipaddress
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
-from django.http import HttpRequest, HttpResponseForbidden
+from django.http import HttpRequest
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
 
 from .base.utils.telegram import Bot
 from .clients.models import Client, Request
@@ -26,11 +25,12 @@ class OneMiddleware:
         request.site = Site.objects.get(host__name=request.get_host())
 
         # Assign client attribute to request object
+
         request.client = self.get_client(request)
 
         # Check if client is blocked
-        if request.client.is_blocked:
-            return HttpResponseForbidden(_("Your IP Address is blocked."))
+        # if request.client.is_blocked:
+        #     return HttpResponseForbidden(_("Your IP Address is blocked."))
 
         # Clear cache in development
         if settings.DEBUG and settings.ENV == "dev" and settings.CLEAR_CACHE_IN_DEV:
@@ -48,12 +48,12 @@ class OneMiddleware:
         return response
 
     def get_ip_address_or_none(self, request) -> str | None:
-        x_forwarded_for_ips = request.headers.get("X-Forwarded-For").split(", ")
-        x_real_ip = request.headers.get("X-Real-Ip")
-        remote_addr = request.META.get("REMOTE_ADDR")
+        x_forwarded_for_ips = request.headers.get("X-Forwarded-For", "").split(", ")
+        x_real_ip = request.headers.get("X-Real-Ip", "")
+        remote_addr = request.META.get("REMOTE_ADDR", "")
 
         raw_addresses = (x_real_ip, *x_forwarded_for_ips, remote_addr)
-        exempt_addresses = (None, "127.0.0.1", "localhost")
+        exempt_addresses = (None, "", "127.0.0.1", "localhost")
         addresses = {addr for addr in raw_addresses if addr not in exempt_addresses}
         ips = {ipaddress.ip_address(addr) for addr in addresses}
 
@@ -65,7 +65,8 @@ class OneMiddleware:
         if ipsv6:
             return ipsv6[0]
 
-        Bot.to_admin(f"No IPv4 or IPv6 Addresses found for {request}\n{ips}")
+        if settings.ENV == "prod":
+            Bot.to_admin(f"No IPv4 or IPv6 Addresses found for {request}\n{ips}")
 
     def get_user_agent(self, request):
         http_user_agent = request.META.get("HTTP_USER_AGENT", "")[:256]

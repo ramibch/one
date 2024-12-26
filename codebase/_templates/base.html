@@ -49,7 +49,7 @@
   </head>
   <body class="container" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <header>
-      {% include "elements/messages.html" %}
+      {% include "snippets/messages.html" %}
       {% include "menus/navbar.html" %}
     </header>
     <main {% if request.path_info|slice:"0:9" == "/allauth/" %}class="offset-md-3 col-md-6"{% endif %}>
