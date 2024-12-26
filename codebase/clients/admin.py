@@ -43,12 +43,12 @@ class RequestAdmin(admin.ModelAdmin):
     readonly_fields = tuple(field.name for field in Request._meta.fields)
     list_display = ("__str__", "client", "method", "status_code", "client__is_blocked")
     list_filter = ("ref", "status_code", "method", "client__site", "path", "time")
-    actions = ["make_paths_autoblock"]
+    actions = ["create_spam_paths"]
 
-    @admin.action(description="❗Create auto block paths from these")
-    def make_paths_autoblock(modeladmin, request, queryset):
+    @admin.action(description="❗Create spam paths from these")
+    def create_spam_paths(modeladmin, request, queryset):
         paths = list(queryset.distinct().values_list("path", flat=True))
-        auto_block_paths = []
+        objs = []
         for path in paths:
-            auto_block_paths.append(SpamPath(name=path))
-        SpamPath.objects.bulk_create(auto_block_paths, ignore_conflicts=True)
+            objs.append(SpamPath(name=path))
+        SpamPath.objects.bulk_create(objs, ignore_conflicts=True)
