@@ -53,7 +53,7 @@ def fetch_submodules_daily():
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="20"))
-def sync_submodule_folders_every_1_hour(hour="/*"):
+def sync_submodule_folders_every_1_hour():
     """Syncs all submodule folders"""
 
     BaseSubmoduleFolder.sync_all_folders()
@@ -97,3 +97,24 @@ def translate_modeltranslation_objects(
         out += "\n\n"
 
     Bot.to_admin(out)
+
+
+@huey.db_periodic_task(crontab(minute="21"))
+def settings_check_task_hourly():
+    """
+    Checks the settings
+    """
+
+    msg = ""
+
+    if settings.ENV != "prod":
+        msg += "⚠️ ENV is not 'prod'\n\n"
+
+    if settings.DEBUG:
+        msg += "⚠️ DEBUG is True\n\n"
+
+    if not settings.HTTPS:
+        msg += "⚠️ HTTPS is False\n\n"
+
+    if msg != "":
+        Bot.to_admin(f"Settings checker:\n\n{msg}")
