@@ -12,7 +12,7 @@ from ..base.utils.telegram import Bot
 User = get_user_model()
 
 
-class AutoBlockPath(Model):
+class SpamPath(Model):
     name = models.CharField(max_length=256, unique=True, db_index=True)
     created_on = models.DateTimeField(auto_now_add=True)
 

@@ -11,6 +11,7 @@ from django.db.models.signals import pre_delete, pre_save
 from django.http.request import split_domain_port
 from django.urls import reverse
 from django.utils.functional import cached_property
+from django.utils.timezone import timedelta
 from django.utils.translation import gettext_lazy as _
 
 from ..base import Languages
@@ -113,6 +114,9 @@ class Site(Model):
         default=list,
         blank=True,
     )
+
+    spammy_requests_duration = models.DurationField(default=timedelta(days=1))
+    requests_duration = models.DurationField(default=timedelta(days=14))
 
     # Submodules
     article_folders = ManyToManyField("articles.ArticleParentFolder", blank=True)

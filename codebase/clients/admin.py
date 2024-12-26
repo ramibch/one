@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from .models import AutoBlockPath, Client, GeoInfo, Request
+from .models import Client, GeoInfo, Request, SpamPath
 from .tasks import block_clients_task, update_client_task
 
 
-@admin.register(AutoBlockPath)
-class AutoBlockPathAdmin(admin.ModelAdmin):
+@admin.register(SpamPath)
+class SpamPathAdmin(admin.ModelAdmin):
     list_display = ("name", "created_on")
     readonly_fields = ("created_on",)
 
@@ -50,5 +50,5 @@ class RequestAdmin(admin.ModelAdmin):
         paths = list(queryset.distinct().values_list("path", flat=True))
         auto_block_paths = []
         for path in paths:
-            auto_block_paths.append(AutoBlockPath(name=path))
-        AutoBlockPath.objects.bulk_create(auto_block_paths, ignore_conflicts=True)
+            auto_block_paths.append(SpamPath(name=path))
+        SpamPath.objects.bulk_create(auto_block_paths, ignore_conflicts=True)
