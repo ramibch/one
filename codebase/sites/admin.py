@@ -61,6 +61,8 @@ class SiteAdmin(admin.ModelAdmin):
                     "remarks",
                     "default_language",
                     "rest_languages",
+                    "requests_duration",
+                    "spammy_requests_duration",
                 )
             },
         ),
