@@ -39,9 +39,11 @@ SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
 ENV = env("ENV")
 DEBUG = env.bool("DEBUG")
 HTTPS = env.bool("HTTPS")
+STATIC_HOST = env("STATIC_HOST", "")
 
 REDIS_URL = env("REDIS_URL")
 REDIS_CONNECTION_POOL = RedisConnectionPool.from_url(url=REDIS_URL)
+
 
 """
 ##################
@@ -120,8 +122,10 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -294,6 +298,10 @@ HUEY = {
         "health_check_interval": 1,  # Check worker health every second.
     },
 }
+
+# cors
+
+CORS_ALLOWED_ORIGINS = []
 
 
 # geoip2
@@ -475,6 +483,9 @@ S3_BASE_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
 MEDIA_URL = S3_BASE_URL + "media/"
 STATIC_URL = S3_BASE_URL + "static/"
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = STATIC_HOST + "/static/"
+
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
@@ -495,13 +506,16 @@ STORAGES = {
         },
     },
     "staticfiles": {
-        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
-        "OPTIONS": {
-            "gzip": True,
-            "default_acl": "public-read",
-            "querystring_auth": False,
-        },
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
+    # "staticfiles": {
+    #     "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    #     "OPTIONS": {
+    #         "gzip": True,
+    #         "default_acl": "public-read",
+    #         "querystring_auth": False,
+    #     },
+    # },
 }
 
 # DB backups

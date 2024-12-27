@@ -2,9 +2,11 @@ import ipaddress
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.core.management import call_command
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponseForbidden
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from .base.utils.telegram import Bot
 from .clients.models import Client, Request
@@ -21,16 +23,18 @@ class OneMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: HttpRequest):
+        # Assign ip address to request
+        request.ip_address = self.get_ip_address_or_none(request)
+
+        # Check if client is blocked
+        if request.ip_address in cache.get("blocked_ips", set()):
+            return HttpResponseForbidden(_("Your IP Address is blocked."))
+
         # Assign site attribute to request object
         request.site = Site.objects.get(host__name=request.get_host())
 
         # Assign client attribute to request object
-
         request.client = self.get_client(request)
-
-        # Check if client is blocked
-        # if request.client.is_blocked:
-        #     return HttpResponseForbidden(_("Your IP Address is blocked."))
 
         # Clear cache in development
         if settings.DEBUG and settings.ENV == "dev" and settings.CLEAR_CACHE_IN_DEV:
@@ -76,18 +80,16 @@ class OneMiddleware:
             return request.headers.get("User-Agent", "")[:256]
 
     def get_client(self, request) -> Client:
-        ip = self.get_ip_address_or_none(request)
-
-        if ip is None:
+        if request.ip_address is None:
             return Client.dummy_object()
 
         user_or_none = request.user if request.user.is_authenticated else None
 
         try:
-            client = Client.objects.get(ip_address=ip)
+            client = Client.objects.get(ip_address=request.ip_address)
         except Client.DoesNotExist:
             client = Client.objects.create(
-                ip_address=ip,
+                ip_address=request.ip_address,
                 user=user_or_none,
                 site=request.site,
                 is_blocked=False,

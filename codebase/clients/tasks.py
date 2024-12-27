@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.cache import cache
 from django.utils import timezone
 from huey import crontab
 from huey.contrib import djhuey as huey
@@ -33,6 +34,9 @@ def block_clients_task(clients=None):
     """
     Block the selected clients
     """
+    if clients is None:
+        clients = Client.objects.filter(ip_address__isnull=False, is_blocked=True)
+
     new_ipaddrs = list(clients.values_list("ip_address", flat=True).distinct())
     path = settings.BASE_DIR / "nginx/conf.d/blockips.conf"
     actual_ipaddrs = [
@@ -41,6 +45,7 @@ def block_clients_task(clients=None):
         if len(line) > 6
     ]
     ips = set(new_ipaddrs) | set(actual_ipaddrs)
+    cache.set("blocked_ips", ips, 86400)
     output_text = "".join({f"deny {ip};\n" for ip in ips})
     path.write_text(output_text)
     clients.update(is_blocked=True)
