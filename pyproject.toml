@@ -58,6 +58,7 @@ dependencies = [
   "twisted[http2,tls]>=24.11.0",
   "django-storages>=1.14.4",
   "whitenoise[brotli]>=6.8.2",
+  "django-minify-html>=1.11.0",
 ]
 
 

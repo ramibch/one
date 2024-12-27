@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "debug_toolbar",
     "django_browser_reload",
+    "django_minify_html",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -133,6 +134,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.admindocs.middleware.XViewMiddleware",
     "codebase.middleware.OneMiddleware",
+    "django_minify_html.middleware.MinifyHtmlMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]

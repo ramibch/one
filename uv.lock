@@ -304,7 +304,7 @@ name = "click"
 version = "8.1.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "colorama", marker = "platform_system == 'Windows'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/96/d3/f04c7bfcf5c1862a2a5b845c6b2b360488cf47af55dfa79c98f6a6bf98b5/click-8.1.7.tar.gz", hash = "sha256:ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de", size = 336121 }
 wheels = [
@@ -594,6 +594,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/6c/33/3abb966e2b238af4c9a5d3ee38a7aa7e51b644b4b20bf8533b6fd1c1bf96/django_markdownify-0.9.5.tar.gz", hash = "sha256:34c34eba4a797282a5c5bd97b13cec84d6a4c0673ad47ce1c1d000d74dd8d4ab", size = 7939 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1b/35/c7a4bd957b279a8e7c808116bed399b73874ed3da78689993ee76f30d9f6/django_markdownify-0.9.5-py3-none-any.whl", hash = "sha256:2c4ae44e386c209453caf5e9ea1b74f64535985d338ad2d5ad5e7089cc94be86", size = 10342 },
+]
+
+[[package]]
+name = "django-minify-html"
+version = "1.11.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "asgiref" },
+    { name = "django" },
+    { name = "minify-html" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/7f/22/17973c75e7ace34f76a0248f6810ceb539d380d6d2901f9db79d7b1c4242/django_minify_html-1.11.0.tar.gz", hash = "sha256:50722ffa2c4cf83f7ac1848a00ecfa234b242bf76b4f33b5416cf37e244d6c5f", size = 9943 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/55/d5/88b1711a611f1dd5a0c10101b7d04bc520e28f906517d42e869788e62478/django_minify_html-1.11.0-py3-none-any.whl", hash = "sha256:de04c86d062f0c4922314985480974d6ecfad5256c1480bb328aa0d3093f820f", size = 7021 },
 ]
 
 [[package]]
@@ -1127,6 +1141,12 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/9f/9e/7806bf76d917182a4f4a08325f66eee6f32fe1123398789ba2547b5d3f3e/maxminddb-2.6.2.tar.gz", hash = "sha256:7d842d32e2620abc894b7d79a5a1007a69df2c6cf279a06b94c9c3913f66f264", size = 181286 }
 
 [[package]]
+name = "minify-html"
+version = "0.15.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0b/8a/c921cd4b3e364c871be418c1694b315e5fa823eb8180d89f99d9a61aa8fe/minify_html-0.15.0.tar.gz", hash = "sha256:cf4c36b6f9af3b0901bd2a0a29db3b09c0cdf0c38d3dde28e6835bce0f605d37", size = 96948 }
+
+[[package]]
 name = "msgpack"
 version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1245,6 +1265,7 @@ dependencies = [
     { name = "django-extensions" },
     { name = "django-htmx" },
     { name = "django-markdownify" },
+    { name = "django-minify-html" },
     { name = "django-modeltranslation" },
     { name = "django-money", extra = ["exchange"] },
     { name = "django-o365mail" },
@@ -1302,6 +1323,7 @@ requires-dist = [
     { name = "django-extensions" },
     { name = "django-htmx" },
     { name = "django-markdownify" },
+    { name = "django-minify-html", specifier = ">=1.11.0" },
     { name = "django-modeltranslation", specifier = ">=0.19.11" },
     { name = "django-money", extras = ["exchange"] },
     { name = "django-o365mail" },
@@ -1895,7 +1917,7 @@ name = "tqdm"
 version = "4.67.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "colorama", marker = "platform_system == 'Windows'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a8/4b/29b4ef32e036bb34e4ab51796dd745cdba7ed47ad142a9f4a1eb8e0c744d/tqdm-4.67.1.tar.gz", hash = "sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2", size = 169737 }
 wheels = [
@@ -1981,7 +2003,7 @@ name = "tzlocal"
 version = "5.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "tzdata", marker = "sys_platform == 'win32'" },
+    { name = "tzdata", marker = "platform_system == 'Windows'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/04/d3/c19d65ae67636fe63953b20c2e4a8ced4497ea232c43ff8d01db16de8dc0/tzlocal-5.2.tar.gz", hash = "sha256:8d399205578f1a9342816409cc1e46a93ebd5755e39ea2d85334bea911bf0e6e", size = 30201 }
 wheels = [
