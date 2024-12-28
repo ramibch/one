@@ -22,7 +22,7 @@ def block_spam_clients_task_hourly():
     Filter the clients which send requests to undesired paths and block them.
     """
     clients = Client.objects.filter(
-        request__path__in=SpamPath.objects.all(),
+        request__path__in=SpamPath.objects.values("name"),
         ip_address__isnull=False,
     ).exclude(ip_address=Client.DUMMY_IP_ADDRESS)
 
