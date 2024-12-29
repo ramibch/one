@@ -115,7 +115,7 @@ class Site(Model):
         blank=True,
     )
 
-    spammy_requests_duration = models.DurationField(default=timedelta(days=1))
+    spam_requests_duration = models.DurationField(default=timedelta(days=1))
     requests_duration = models.DurationField(default=timedelta(days=14))
 
     # Submodules

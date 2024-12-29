@@ -8,41 +8,18 @@ from django.utils.translation import gettext_lazy as _
 
 from ..base import Countries
 from ..base.utils.telegram import Bot
+from ..geo.models import GeoInfo
 
 User = get_user_model()
 
 
-class SpamPath(Model):
+class Path(Model):
     name = models.CharField(max_length=256, unique=True, db_index=True)
+    is_spam = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
-
-
-class GeoInfo(Model):
-    accuracy_radius = models.SmallIntegerField(null=True)
-    city = models.CharField(max_length=128, null=True)
-    continent_code = models.CharField(max_length=64, null=True)
-    continent_name = models.CharField(max_length=128, null=True)
-    country_code = models.CharField(max_length=64, null=True)
-    country_name = models.CharField(max_length=64, null=True)
-    is_in_european_union = models.BooleanField(null=True)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    metro_code = models.SmallIntegerField(null=True)
-    postal_code = models.CharField(max_length=64, null=True)
-    region_code = models.CharField(max_length=64, null=True)
-    region_name = models.CharField(max_length=128, null=True)
-    time_zone = models.CharField(max_length=128, null=True)
-    dma_code = models.SmallIntegerField(null=True)
-    region = models.CharField(max_length=32, null=True)
-
-    class Meta(Model.Meta):
-        unique_together = ["latitude", "longitude"]
-
-    def __str__(self):
-        return f"{self.postal_code} {self.city}, {self.country_name}"
 
 
 class Client(Model):
@@ -50,7 +27,7 @@ class Client(Model):
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
     country = models.CharField(max_length=2, choices=Countries, default="CH")
     site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
-    geoinfo = ForeignKey(GeoInfo, null=True, on_delete=models.SET_NULL)
+    geoinfo = ForeignKey("geo.GeoInfo", null=True, on_delete=models.SET_NULL)
     ip_address = models.GenericIPAddressField(unique=True, db_index=True)
     is_blocked = models.BooleanField(default=False)
     user_agent = models.CharField(max_length=255, null=True)
@@ -104,7 +81,7 @@ class Request(Model):
     """
 
     client = ForeignKey(Client, on_delete=models.CASCADE)
-    path = models.CharField(max_length=256, db_index=True)
+    path = ForeignKey(Path, on_delete=models.CASCADE, null=True)
     method = models.CharField(default="GET", max_length=7)
     get = models.TextField(null=True)
     post = models.TextField(null=True)
@@ -115,7 +92,7 @@ class Request(Model):
 
     def save_from_midddleware(self, request, response):
         self.client = request.client
-        self.path = request.path[:255]
+        self.path = Path.objects.get_or_create(name=request.path[:255])[0]
         self.method = request.method
         self.get = request.GET
         self.post = request.POST

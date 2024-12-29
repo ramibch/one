@@ -118,6 +118,7 @@ INSTALLED_APPS = [
     "codebase.products",
     "codebase.books",
     "codebase.chat",
+    "codebase.geo",
 ]
 
 MIDDLEWARE = [

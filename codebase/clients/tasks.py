@@ -4,8 +4,9 @@ from django.utils import timezone
 from huey import crontab
 from huey.contrib import djhuey as huey
 
+from ..base.utils.telegram import Bot
 from ..sites.models import Site
-from .models import Client, Request, SpamPath
+from .models import Client, Request
 
 
 @huey.db_task()
@@ -21,11 +22,9 @@ def block_spam_clients_task_hourly():
     """
     Filter the clients which send requests to undesired paths and block them.
     """
-    clients = Client.objects.filter(
-        request__path__in=SpamPath.objects.values("name"),
-        ip_address__isnull=False,
-    ).exclude(ip_address=Client.DUMMY_IP_ADDRESS)
-
+    clients = Client.objects.filter(request__path__is_spam=True).exclude(
+        ip_address=Client.DUMMY_IP_ADDRESS
+    )
     block_clients_task(clients)
 
 
@@ -35,8 +34,9 @@ def block_clients_task(clients=None):
     Block the selected clients
     """
     if clients is None:
-        clients = Client.objects.filter(ip_address__isnull=False, is_blocked=True)
+        clients = Client.objects.filter(is_blocked=True)
 
+    clients = clients.filter(ip_address__isnull=False)
     new_ipaddrs = list(clients.values_list("ip_address", flat=True).distinct())
     path = settings.BASE_DIR / "nginx/conf.d/blockips.conf"
     actual_ipaddrs = [
@@ -50,8 +50,10 @@ def block_clients_task(clients=None):
     path.write_text(output_text)
     clients.update(is_blocked=True)
 
+    Bot.to_admin(f"New Blocked IPs:\n{"\n".join(new_ipaddrs)}")
 
-@huey.db_periodic_task(crontab(minute="46"))
+
+@huey.db_periodic_task(crontab(minute="55"))
 def purge_requests_task():
     """Purge requests"""
     now = timezone.now()
@@ -60,8 +62,8 @@ def purge_requests_task():
     for site in Site.objects.all():
         qs = qs | Request.objects.filter(
             client__site=site,
-            path__in=SpamPath.objects.values_list("name"),
-            time__lt=now - site.spammy_requests_duration,
+            path__is_spam=True,
+            time__lt=now - site.spam_requests_duration,
         )
 
         qs = qs | Request.objects.filter(
@@ -69,4 +71,6 @@ def purge_requests_task():
             time__lt=now - site.requests_duration,
         )
 
-    qs.delete()
+    out = qs.distinct().delete()
+    if out[0] > 0:
+        Bot.to_admin(f"{out[0]} Requests purged")

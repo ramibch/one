@@ -1,20 +1,20 @@
 from django.contrib import admin
 
-from .models import Client, GeoInfo, Request, SpamPath
+from .models import Client, Path, Request
 from .tasks import block_clients_task, update_client_task
 
 
-@admin.register(SpamPath)
-class SpamPathAdmin(admin.ModelAdmin):
-    list_display = ("name", "created_on")
-    readonly_fields = ("created_on",)
+@admin.register(Path)
+class PathAdmin(admin.ModelAdmin):
+    search_fields = ("name",)
+    list_display = ("name", "is_spam", "created_on")
+    list_filter = ("is_spam", "created_on")
+    readonly_fields = ("name", "created_on")
+    actions = ["mark_as_spam"]
 
-
-@admin.register(GeoInfo)
-class GeoInfoAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "city", "postal_code", "latitude", "longitude")
-    readonly_fields = tuple(field.name for field in GeoInfo._meta.fields)
-    list_filter = ("is_in_european_union", "country_code", "time_zone")
+    @admin.action(description="❗Mark as spam")
+    def mark_as_spam(modeladmin, request, queryset):
+        queryset.update(is_spam=True)
 
 
 @admin.register(Client)
@@ -43,12 +43,3 @@ class RequestAdmin(admin.ModelAdmin):
     readonly_fields = tuple(field.name for field in Request._meta.fields)
     list_display = ("__str__", "client", "method", "status_code", "client__is_blocked")
     list_filter = ("ref", "status_code", "method", "client__site", "path", "time")
-    actions = ["create_spam_paths"]
-
-    @admin.action(description="❗Create spam paths from these")
-    def create_spam_paths(modeladmin, request, queryset):
-        paths = list(queryset.distinct().values_list("path", flat=True))
-        objs = []
-        for path in paths:
-            objs.append(SpamPath(name=path))
-        SpamPath.objects.bulk_create(objs, ignore_conflicts=True)
