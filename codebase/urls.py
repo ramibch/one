@@ -51,6 +51,7 @@ urlpatterns = [
     path("faqs/", include("codebase.faqs.urls")),
     path("💬/", include("codebase.chat.urls")),
     path("chat/", include("codebase.chat.urls")),
+    path("clients/", include("codebase.clients.urls")),
     path("", include("codebase.base.urls")),
     path("", include("codebase.home.urls")),
 ] + debug_toolbar_urls()

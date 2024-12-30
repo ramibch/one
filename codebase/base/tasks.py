@@ -1,4 +1,3 @@
-import subprocess
 from io import StringIO
 
 from django.conf import settings
@@ -45,15 +44,8 @@ def commands_weekly():
     )
 
 
-@huey.db_periodic_task(crontab(hour="0", minute="10"))
-def fetch_submodules_daily():
-    ok = subprocess.call(["git", "submodule", "update", "--remote"]) == 0
-    emoji_ok = "✅" if ok else "🔴"
-    Bot.to_admin(f"{emoji_ok} Submodules fetched")
-
-
 @huey.db_periodic_task(crontab(hour="0", minute="20"))
-def sync_submodule_folders_every_1_hour():
+def sync_submodule_folders_task():
     """Syncs all submodule folders"""
 
     BaseSubmoduleFolder.sync_all_folders()

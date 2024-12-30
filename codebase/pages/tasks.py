@@ -7,17 +7,17 @@ from huey.contrib import djhuey as huey
 
 from ..base.utils.telegram import Bot
 from ..sites.models import Site
-from .models import Page
-
-
-@huey.task()
-def trigger_sync_pages_task(sites):
-    sync_pages_daily(sites=sites)
+from .models import Page, PageParentFolder
 
 
 @huey.db_periodic_task(crontab(hour="2", minute="10"))
-def sync_pages_daily(sites=None):
-    """Sync of pages in the db."""
+def sync_pages(sites=None):
+    """
+    Sync of pages from specified sites
+    """
+
+    PageParentFolder.sync_folders()
+
     # Definitions and checks
     submodule = "pages"
     submodule_path = settings.SUBMODULES_PATH / submodule

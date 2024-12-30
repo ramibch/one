@@ -6,9 +6,9 @@ from modeltranslation.admin import TranslationAdmin
 from codebase.base.utils.actions import translation_actions
 from codebase.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from ..articles.tasks import trigger_sync_articles_task
+from ..articles.tasks import sync_articles
 from ..menus.models import create_initial_menu_objects
-from ..pages.tasks import trigger_sync_pages_task
+from ..pages.tasks import sync_pages
 from .models import Host, Seo, Site
 
 
@@ -62,7 +62,7 @@ class SiteAdmin(admin.ModelAdmin):
                     "default_language",
                     "rest_languages",
                     "requests_duration",
-                    "spammy_requests_duration",
+                    "spam_requests_duration",
                 )
             },
         ),
@@ -74,11 +74,11 @@ class SiteAdmin(admin.ModelAdmin):
 
     @admin.action(description="🔄 Sync articles")
     def sync_articles(modeladmin, request, queryset):
-        trigger_sync_articles_task(queryset)
+        sync_articles(queryset)
 
     @admin.action(description="🔄 Sync pages")
     def sync_pages(modeladmin, request, queryset):
-        trigger_sync_pages_task(queryset)
+        sync_pages(queryset)
 
     @admin.action(description="☰ Create initial menus")
     def create_menus(modeladmin, request, queryset):

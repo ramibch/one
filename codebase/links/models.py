@@ -20,6 +20,7 @@ DJ_PATHS = (
     ("account_signup", _("Sign Up")),
     ("user_dashboard", _("Account")),
     ("faq_list", _("FAQs")),
+    ("chat_detail", _("Chat")),
 )
 
 

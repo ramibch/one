@@ -3,19 +3,17 @@
 <div>
   {% for product in products %}
     <p>
-      <a href="{{ product.page_url }}?ref=searchresult"
-         title="{{ product.title }}">✅ {{ product.title }}</a>
+      <a href="{{ product.url }}?ref=searchresult" title="{{ product.title }}">✅ {{ product.title }}</a>
     </p>
   {% endfor %}
   {% for article in articles %}
     <p>
-      <a href="{{ article.page_url }}?ref=searchresult"
-         title="{{ article.title }}">📝 {{ article.title }}</a>
+      <a href="{{ article.url }}?ref=searchresult" title="{{ article.title }}">📝 {{ article.title }}</a>
     </p>
   {% endfor %}
   {% for page in pages %}
     <p>
-      <a href="{{ page.page_url }}?ref=searchresult" title="{{ page.title }}">🔗 {{ page.title }}</a>
+      <a href="{{ page.url }}?ref=searchresult" title="{{ page.title }}">🔗 {{ page.title }}</a>
     </p>
   {% endfor %}
 </div>

@@ -6,6 +6,6 @@ from .models import SearchTerm
 User = get_user_model()
 
 
-@huey.task()
+@huey.db_task()
 def save_search_query(params):
     SearchTerm.objects.create(**params)

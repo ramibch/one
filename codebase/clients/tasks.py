@@ -50,8 +50,6 @@ def block_clients_task(clients=None):
     path.write_text(output_text)
     clients.update(is_blocked=True)
 
-    Bot.to_admin(f"New Blocked IPs:\n{"\n".join(new_ipaddrs)}")
-
 
 @huey.db_periodic_task(crontab(minute="55"))
 def purge_requests_task():

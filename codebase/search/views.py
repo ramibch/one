@@ -25,7 +25,7 @@ def hx_seach_results(request: CustomHttpRequest) -> HttpResponse:
     save_search_query(
         {
             "user": request.user if isinstance(request.user, User) else None,
-            "country_code": request.country.code,
+            "client": request.client,
             "site": request.site,
             "query": q,
         }

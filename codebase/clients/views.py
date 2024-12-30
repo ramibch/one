@@ -1,1 +1,2 @@
-from django.shortcuts import render
+def change_client_theme(request):
+    pass

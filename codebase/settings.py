@@ -319,7 +319,7 @@ GEOIP_PATH = BASE_DIR / "geoip2dbs"
 
 MARKDOWNIFY = {
     "default": {
-        "WHITELIST_ATTRS": ["href", "src", "alt"],
+        "WHITELIST_ATTRS": ["href", "src", "alt", "class"],
         "WHITELIST_TAGS": [
             "a",
             "abbr",
@@ -334,10 +334,14 @@ MARKDOWNIFY = {
             "strong",
             "ul",
             "img",
+            "span",
+            "div",
+            "pre",
+            "code",
         ],
         "MARKDOWN_EXTENSIONS": [
             "markdown.extensions.codehilite",
-            "markdown.extensions.fenced_code",
+            "markdown.extensions.extra",
             "markdown.extensions.footnotes",
             "markdown.extensions.tables",
         ],
@@ -345,8 +349,7 @@ MARKDOWNIFY = {
             "markdown.extensions.codehilite": {
                 "css_class": "codehilite",
                 "linenums": False,
-                "guess_lang": False,
-            }
+            },
         },
     }
 }

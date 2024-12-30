@@ -8,7 +8,7 @@ User = get_user_model()
 class SearchTerm(Model):
     query = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
-    country_code = models.CharField(max_length=8, null=True)
+    client = ForeignKey("clients.Client", null=True, on_delete=models.SET_NULL)
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
     site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
 

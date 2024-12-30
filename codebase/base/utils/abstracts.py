@@ -1,3 +1,5 @@
+import subprocess
+
 from auto_prefetch import Model
 from django.conf import settings
 from django.db import models
@@ -20,8 +22,14 @@ class BaseSubmoduleFolder(Model):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def fetch_submodules():
+        subprocess.call(["git", "submodule", "update", "--remote"])
+
     @classmethod
     def sync_all_folders(cls):
+        cls.fetch_submodules()
+
         if cls == BaseSubmoduleFolder:
             for Submodule in cls.__subclasses__():
                 Submodule.sync_folders()
@@ -34,6 +42,8 @@ class BaseSubmoduleFolder(Model):
         if cls == BaseSubmoduleFolder:
             cls.sync_all_folders()
             return
+
+        cls.fetch_submodules()
 
         submodule_path = settings.SUBMODULES_PATH / cls._submodule
         if not submodule_path.is_dir():

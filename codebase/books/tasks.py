@@ -8,16 +8,17 @@ from huey.contrib import djhuey as huey
 
 from ..base.utils.telegram import Bot
 from ..sites.models import Site
-from .models import Chapter, ChapterFile
-
-
-@huey.task()
-def trigger_sync_articles(sites):
-    sync_books_daily(sites=sites)
+from .models import Book, Chapter, ChapterFile
 
 
 @huey.db_periodic_task(crontab(hour="3", minute="10"))
-def sync_books_daily(sites=None):
+def sync_books(sites=None):
+    """
+    Sync books from specified sites
+    """
+
+    Book.sync_folders()
+
     # Definitions and checks
     submodule = "books"
     submodule_path = settings.SUBMODULES_PATH / submodule
