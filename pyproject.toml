@@ -30,7 +30,6 @@ dependencies = [
   "Jinja2",
   "qrcode[pil]",
   "Pygments",
-  "stripe",
   "python-barcode[images]",
   "django-taggit",
   "gunicorn",
@@ -59,6 +58,7 @@ dependencies = [
   "django-storages>=1.14.4",
   "whitenoise[brotli]>=6.8.2",
   "django-minify-html>=1.11.0",
+  "stripe>=11.4.1",
 ]
 
 
