@@ -7,8 +7,8 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}"
       dir="ltr"
-      x-data="{ 'theme_light' : $persist(true), 'open_language_modal' : false, }"
-      x-bind:data-theme="theme_light ? 'light' : 'dark' ">
+      x-data="{'dark_theme' : $persist(true), 'open_language_modal' : false, }"
+      x-bind:data-theme="dark_theme ? 'dark' : 'light' ">
   <head>
     <title>
       {% block head_title %}
@@ -47,7 +47,7 @@
     <link href="{% static 'css/rb.css' %}" rel="stylesheet" />
     <link href="{% static 'css/animate.css' %}" rel="stylesheet" />
     <link href="{% static request.site.picocss_static_file %}" rel="stylesheet" />
-    {% if request.client.theme == 'dark' %}
+    {% if request.client.dark_theme %}
       <link href="{{ dark_pygments_css }}" rel="stylesheet" />
     {% else %}
       <link href="{{ light_pygments_css }}" rel="stylesheet" />

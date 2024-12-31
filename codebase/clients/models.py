@@ -31,6 +31,7 @@ class Client(Model):
     ip_address = models.GenericIPAddressField(unique=True, db_index=True)
     is_blocked = models.BooleanField(default=False)
     user_agent = models.CharField(max_length=255, null=True)
+    dark_theme = models.BooleanField(default=True)
 
     def __str__(self):
         return self.ip_address

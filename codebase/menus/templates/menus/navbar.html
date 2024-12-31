@@ -17,11 +17,5 @@
          {% if navlink.new_tab %}target="_blank"{% endif %}>{{ navlink.display_title }}</a>
     </li>
   {% endfor %}
-  {% if request.site.change_theme_light_in_navbar %}
-    <li>{% include "snippets/theme_light.html" %}</li>
-  {% endif %}
-  {% if request.site.change_language_in_navbar and request.site.language_count > 1 %}
-    <li>{% include "snippets/change_language.html" %}</li>
-  {% endif %}
 </ul>
 </nav>
