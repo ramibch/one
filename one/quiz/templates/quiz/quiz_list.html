@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block head_title %}Quizzes | English Stuff Online{% endblock %}
+{% block content %}
+  <center>
+    <h1 class="my-5">Learn English Online!</h1>
+    <h2 class="my-5">Learn and practice english with quizzes. Totally free and without registration</h2>
+    <form class="my-5"
+          hx-get="{% url 'search_quizzes' %}"
+          hx-trigger="change"
+          hx-target="#quizzes"
+          hx-indicator=".htmx-indicator">
+      <input type="search"
+             name="q"
+             placeholder="Search your quiz, eg: prepositions, phrasal verbs, ..."
+             hx-get="{% url 'search_quizzes' %}"
+             hx-trigger="keyup changed delay:500ms" />
+      <input type="checkbox"
+             id="inlineCheckbox1"
+             name="level_one"
+             value="3"
+             checked />
+      <label for="inlineCheckbox1">Elementary</label>
+      <input type="checkbox"
+             id="inlineCheckbox2"
+             name="level_two"
+             value="4"
+             checked />
+      <label for="inlineCheckbox2">Intermediate</label>
+      <input type="checkbox"
+             id="inlineCheckbox3"
+             name="level_three"
+             value="5"
+             checked />
+      <label for="inlineCheckbox3">Advanced</label>
+    </form>
+    <div class="row my-5" id="quizzes">{% include "quiz/partials/quiz_list.html" %}</div>
+  </center>
+{% endblock %}

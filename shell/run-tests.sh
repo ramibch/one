@@ -1,1 +1,1 @@
-coverage run manage.py test && coverage html
+uv run coverage run manage.py test --keepdb && uv run coverage html

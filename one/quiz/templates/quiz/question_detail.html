@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load question_related_tags %}
+{% block head_title %}
+  {{ question.lection.quiz.name }} | {{ question.lection.name }} | {{ question.text_one }} ___ {{ question.text_two }}
+{% endblock %}
+{% block content %}
+  <!-- when the answer is checked, we update the progress bar -->
+  <div hx-get="{{ question.update_progress_bar_url }}"
+       hx-target="#progress-bar"
+       hx-swap="innerHTML"
+       hx-trigger="answerCheckedEvent from:body"></div>
+  <div x-data="{quiz_question_modal : false }">
+    <a href="{{ question.lection.quiz.get_detail_url }}">Back</a>
+    <center class="row">
+      {% if not question.is_first %}
+        <a class="col-2" href="{{ question.previous_object.get_detail_url }}">Previous</a>
+      {% else %}
+        <div class="col-2"></div>
+      {% endif %}
+      <h1 class="col-8">{{ question.lection.quiz.name }} - {{ question.lection.name }}</h1>
+      {% if not question.is_last %}
+        <a class="col-2" href="{{ question.next_object.get_detail_url }}">Next</a>
+      {% else %}
+        <div class="col-2"></div>
+      {% endif %}
+    </center>
+    <form>
+      <div class="container mt-3">
+        <div class="col-md-8 offset-md-2">
+          <div class="row" id="answers">
+            {% if question.type == 1 %}
+              <p>
+                <span style="cursor: pointer" x-on:click="quiz_question_modal = true">🈳</span>
+                {% if question.text_one %}{{ question.text_one }}{% endif %}
+                <input style="all: unset;
+                              border-bottom: 5px solid;
+                              text-align: center"
+                       size="10px"
+                       onkeypress="this.style.width = ((this.value.length + 5) * 15) + 'px';"
+                       type="text"
+                       name="answer_input_one"
+                       value="">
+                {% if question.text_two %}{{ question.text_two }}{% endif %}
+              </p>
+            {% elif question.type == 2 %}
+              <p>
+                {% if question.text_one %}{{ question.text_one }}{% endif %}
+                <input style="all: unset;
+                              border-bottom: 5px solid;
+                              text-align: center"
+                       size="10px"
+                       onkeypress="this.style.width = ((this.value.length + 10) * 15) + 'px';"
+                       type="text"
+                       name="answer_input_one"
+                       value="">
+                {% if question.text_two %}{{ question.text_two }}{% endif %}
+                <input style="all: unset;
+                              border-bottom: 5px solid;
+                              text-align: center"
+                       size="10px"
+                       onkeypress="this.style.width = ((this.value.length + 10) * 15) + 'px';"
+                       type="text"
+                       name="answer_input_two"
+                       value="">
+                {% if question.text_three %}{{ question.text_three }}{% endif %}
+              </p>
+            {% elif question.type == 5 %}
+              <p>
+                <span style="cursor: pointer" x-on:click="quiz_question_modal = true">🈳</span> {{ question.text_one }}
+              </p>
+              {% if question.text_two %}<p>{{ question.text_two }}</p>{% endif %}
+              {% if question.text_three %}<p>{{ question.text_three }}</p>{% endif %}
+            {% endif %}
+            {% if question.type == 5 %}
+              {% for answer in question.answer_set.all %}
+                <p class="py-1">
+                  <input type="radio"
+                         name="selected_answer_id"
+                         value="{{ answer.id }}"
+                         id="option-{{ answer.id }}"
+                         autocomplete="off">
+                  <label for="option-{{ answer.id }}">{{ answer.name }}</label>
+                </p>
+              {% endfor %}
+            {% endif %}
+            <center>
+              <button hx-post="{{ question.check_answer_url }}"
+                      hx-trigger="click"
+                      hx-target="#answers"
+                      hx-boost="true"
+                      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                      hx-swap="innerHTML"
+                      title="Check my answer">Check</button>
+            </center>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- Translation Modal -->
+    <dialog x-bind:open="quiz_question_modal">
+      <article>
+        <header>
+          <button aria-label="Close"
+                  rel="prev"
+                  x-on:click="quiz_question_modal = false"></button>
+          <h3>Translation</h3>
+        </header>
+        <h4>{{ question.full_text }}</h4>
+        <h4 id="translated-text-here" class="text-warning mt-5">👇‍ Select language</h4>
+        {% for language_object in language_objects %}
+          <a hx-get="{% get_question_translation_url id_language=language_object.id id_question=question.id %}"
+             hx-target="#translated-text-here"
+             hx-swap="outerHTML"
+             class="m-1"
+             role="button">{{ language_object.name }}</a>
+        {% endfor %}
+      </article>
+    </dialog>
+  </div>
+  <div id="progress-bar" class="mt-5">{% include "quiz/partials/progress_bar.html" %}</div>
+{% endblock %}

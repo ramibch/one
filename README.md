@@ -4,3 +4,4 @@
 ## TODO:
 - [ ] payments and stripe checkout
 - [ ] Plans (TimeFixedPlan, SubscriptionPlan, ....)
+- [ ] https://holidays.readthedocs.io/en/latest/

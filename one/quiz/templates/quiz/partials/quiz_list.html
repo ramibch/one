@@ -1,0 +1,23 @@
+{% load humanize %}
+{% for quiz in quiz_list %}
+  <div class="col-md-4 col-sm-12">
+    <article>
+      <header>
+        <h3>
+          <a href="{{ quiz.get_detail_url }}">{{ quiz.name }}</a>
+        </h3>
+        <small class="text-secondary">Difficulty: {{ quiz.level }} / 6</small>
+      </header>
+      <a href="{{ quiz.get_detail_url }}">
+        <img src="{{ quiz.image_url }}"  alt="{{ quiz.name }}">
+      </a>
+      <footer>
+        <small class="text-muted">Photo by <a target="_blank" href="{{ quiz.image_credits_url }}">{{ quiz.image_credits_url }}</a> </small>
+      </footer>
+    </article>
+  </div>
+{% empty %}
+  <p>
+    Sorry, we didn't find anything for you <i class="bi bi-emoji-frown"></i>
+  </p>
+{% endfor %}

@@ -1,0 +1,7 @@
+<center>
+  {% if not question.is_last %}
+    <a type="button" href="{{ question.next_object.get_detail_url }}">Next</a>
+  {% else %}
+    <a type="button" href="{{ question.lection.quiz.get_detail_url }}">Done</a>
+  {% endif %}
+</center>

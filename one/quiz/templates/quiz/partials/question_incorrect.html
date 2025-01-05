@@ -1,0 +1,37 @@
+{% if question.type == 1 %}
+  <p>
+    {% if question.text_one %}{{ question.text_one }}{% endif %}
+    <strong {% if answer_one_is_correct %}class="text-success"{% else %}class="text-danger"{% endif %}><u>{{ correct_answer_one }}</u></strong>
+    {% if question.text_two %}{{ question.text_two }}{% endif %}
+  </p>
+{% elif question.type == 2 %}
+  <p>
+    {% if question.text_one %}{{ question.text_one }}{% endif %}
+    <strong {% if answer_one_is_correct %}class="text-success"{% else %}class="text-danger"{% endif %}><u>{{ correct_answer_one }}</u></strong>
+    {% if question.text_two %}{{ question.text_two }}{% endif %}
+    <strong {% if answer_two_is_correct %}class="text-success"{% else %}class="text-danger"{% endif %}><u>{{ correct_answer_two }}</u></strong>
+    {% if question.text_three %}{{ question.text_three }}{% endif %}
+  </p>
+{% elif question.type == 5 %}
+  <p>{{ question.text_one }}</p>
+  {% if question.text_two %}<p>{{ question.text_two }}</p>{% endif %}
+  {% if question.text_three %}<p>{{ question.text_three }}</p>{% endif %}
+{% endif %}
+</div>
+{% if question.type == 5 %}
+  {% for answer in question.answer_set.all %}
+    <p>
+      {% if answer.correct %}
+        ✅
+      {% elif answer == selected_answer %}
+        🔴
+      {% else %}
+        ⚪
+      {% endif %}
+      {{ answer.name }}
+    </p>
+  {% endfor %}
+{% endif %}
+<strong>{{ incorrect_message }}</strong>
+{% if question.explanation %}<p>{{ question.explanation }}</p>{% endif %}
+{% include "quiz/partials/check_or_next_button.html" %}

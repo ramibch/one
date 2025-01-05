@@ -59,6 +59,8 @@ dependencies = [
   "whitenoise[brotli]>=6.8.2",
   "django-minify-html>=1.11.0",
   "stripe>=11.4.1",
+  "unittest-parametrize>=1.5.0",
+  "django-nested-inline>=0.4.6",
 ]
 
 
@@ -77,4 +79,4 @@ omit = ["manage.py"]
 plugins = ["mypy_django_plugin.main"]
 
 [tool.django-stubs]
-django_settings_module = "codebase.settings"
+django_settings_module = "one.settings"
