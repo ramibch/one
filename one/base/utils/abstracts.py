@@ -34,22 +34,19 @@ class BaseSubmoduleFolder(Model):
         if cls == BaseSubmoduleFolder:
             for Submodule in cls.__subclasses__():
                 Submodule.sync_folders(fetch=False)
-
-        if not cls.submodule_path.is_dir():
-            raise SubmoduleException(f"{cls.submodule_path} is not a directory")
-
-        objs = []
-        folder_names = [p.name for p in cls.submodule_path.iterdir() if p.is_dir()]
-
-        for folder_name in folder_names:
-            objs.append(cls._meta.model(name=folder_name))
-
-        cls.objects.bulk_create(
-            objs,
-            update_fields=["name"],
-            unique_fields=["name"],
-            update_conflicts=True,
-        )
+        else:
+            if not cls.submodule_path.is_dir():
+                raise SubmoduleException(f"{cls.submodule_path} is not a directory")
+            objs = []
+            folder_names = [p.name for p in cls.submodule_path.iterdir() if p.is_dir()]
+            for folder_name in folder_names:
+                objs.append(cls._meta.model(name=folder_name))
+            cls.objects.bulk_create(
+                objs,
+                update_fields=["name"],
+                unique_fields=["name"],
+                update_conflicts=True,
+            )
 
 
 class SingletonModel(Model):
