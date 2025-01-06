@@ -45,7 +45,7 @@ class Link(TranslatableModel):
     page = ForeignKey("pages.Page", **__foreignkey_args)
     plan = ForeignKey("plans.Plan", **__foreignkey_args)
     article = ForeignKey("articles.Article", **__foreignkey_args)
-    #  topic = ForeignKey("base.Topic", **foreignkey_args)
+    topic = ForeignKey("base.Topic", **__foreignkey_args)
 
     objects: LinkManager = LinkManager()
 

@@ -196,7 +196,6 @@ class Site(Model):
     class Meta(Model.Meta):
         verbose_name = _("site")
         verbose_name_plural = _("sites")
-        ordering = ["host__name"]
 
 
 class Host(Model):

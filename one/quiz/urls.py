@@ -15,15 +15,27 @@ sitemap_dict = {"sitemaps": {"question": GenericSitemap(info_dict, priority=0.8)
 
 
 urlpatterns = [
-    path("", views.quiz_list, name="quiz_list"),
-    path("<slug:slug>/<int:level>/", views.quiz_detail, name="quiz_detail"),
+    path(
+        "",
+        views.quiz_list,
+        name="quiz_list",
+    ),
+    path(
+        "<slug:slug>/<int:level>/",
+        views.quiz_detail,
+        name="quiz_detail",
+    ),
     path(
         "<slug:slug_quiz>/<int:level_quiz>/<slug:slug_lection>/<int:id_question>/",
         views.question_detail,
         name="question_detail",
     ),
     # htmx
-    path("hx/search-quizzes/", views.search_quizzes, name="search_quizzes"),
+    path(
+        "hx/search-quizzes/",
+        views.search_quizzes,
+        name="search_quizzes",
+    ),
     path(
         "hx/<int:id_question>/check-answer/",
         views.check_answer,

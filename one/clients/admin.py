@@ -10,18 +10,22 @@ class PathAdmin(admin.ModelAdmin):
     list_display = ("name", "is_spam", "created_on")
     list_filter = ("is_spam", "created_on")
     readonly_fields = ("created_on",)
-    actions = ["mark_as_spam"]
+    actions = ["mark_as_spam", "mark_as_no_spam"]
 
     @admin.action(description="❗Mark as spam")
     def mark_as_spam(modeladmin, request, queryset):
         queryset.update(is_spam=True)
+
+    @admin.action(description="✅ Mark as no spam")
+    def mark_as_no_spam(modeladmin, request, queryset):
+        queryset.update(is_spam=False)
 
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ("ip_address", "is_blocked", "user", "country", "site")
     readonly_fields = ("ip_address", "geoinfo", "user", "country", "site", "user_agent")
-    list_filter = ("is_blocked", "request__path", "site", "country")
+    list_filter = ("is_blocked", "site", "country")
     search_fields = ("ip_address", "site", "country")
     actions = ["block_ips", "update_values"]
 
@@ -42,9 +46,10 @@ class ClientAdmin(admin.ModelAdmin):
 class RequestAdmin(admin.ModelAdmin):
     readonly_fields = tuple(field.name for field in Request._meta.fields)
     list_display = ("__str__", "client", "method", "status_code", "client__is_blocked")
-    list_filter = ("ref", "status_code", "method", "client__site", "path", "time")
+    list_filter = ("ref", "status_code", "time", "method", "client__site")
 
 
 @admin.register(PathRedirect)
 class LinkRedirectAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "site", "from_path", "to_path")
+    list_display = ("__str__", "site", "from_path", "from_path")
+    autocomplete_fields = ("from_path", "from_path")
