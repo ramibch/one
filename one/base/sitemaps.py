@@ -13,8 +13,8 @@ class ArticleSitemap(Sitemap):
     priority = 0.7
 
     def items(self):
-        article_folders = self.request.site.article_folders.all()
-        return Article.objects.filter(parent_folder__in=article_folders)
+        folders = self.request.site.article_folders.all()
+        return Article.objects.filter(parent_folder__in=folders)
 
     def lastmod(self, obj: Article):
         return obj.updated_on
@@ -27,7 +27,8 @@ class PageSitemap(Sitemap):
     priority = 0.5
 
     def items(self):
-        return Page.objects.filter()
+        folders = self.request.site.page_folders.all()
+        return Page.objects.filter(parent_folder__in=folders)
 
     def lastmod(self, obj: Page):
         return obj.updated_on
@@ -47,6 +48,6 @@ class ToolSitemap(Sitemap):
 def get_sitemaps(*args, **kwargs):
     return {
         "articles": ArticleSitemap(),
-        # "pages": PageSitemap(info_dict={}),
-        #  "tools": ToolSitemap(info_dict={}),
+        "pages": PageSitemap(),
+        "tools": ToolSitemap(),
     }

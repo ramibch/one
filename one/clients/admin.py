@@ -21,6 +21,14 @@ class PathAdmin(admin.ModelAdmin):
         queryset.update(is_spam=False)
 
 
+class RequestInline(admin.TabularInline):
+    model = Request
+    extra = 0
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ("ip_address", "is_blocked", "user", "country", "site")
@@ -28,6 +36,7 @@ class ClientAdmin(admin.ModelAdmin):
     list_filter = ("is_blocked", "site", "country")
     search_fields = ("ip_address", "site", "country")
     actions = ["block_ips", "update_values"]
+    inlines = (RequestInline,)
 
     @admin.action(description="🚫 Block its IP Address")
     def block_ips(modeladmin, request, queryset):
