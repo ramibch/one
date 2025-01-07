@@ -1,4 +1,4 @@
-from django.contrib.sitemaps import Sitemap
+from one.sitemaps import Sitemap
 
 from .models import Article, ListingProduct, Topic
 

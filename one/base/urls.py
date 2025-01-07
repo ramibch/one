@@ -1,9 +1,9 @@
-from django.contrib.sitemaps.views import sitemap
 from django.urls import path
 from django.views.generic.base import TemplateView
 
-from .sitemaps import get_sitemaps
-from .views import favicon
+from one.base.sitemaps import get_sitemaps
+
+from .views import favicon, sitemap
 
 urlpatterns = [
     # Sitemaps

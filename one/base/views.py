@@ -1,8 +1,11 @@
+from django.contrib.sitemaps.views import index as django_sitemap_index
+from django.contrib.sitemaps.views import sitemap as django_sitemap
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_GET
+
 from one.base.utils.http import CustomHttpRequest
 
 
@@ -40,3 +43,17 @@ def error_500(request: CustomHttpRequest):
         {"page_title": _("Internal Server Error")},
         status=500,
     )
+
+
+def sitemap_index(*args, **kwargs):
+    # https://stackoverflow.com/questions/9817856/django-sitemaps-get-only-pages-of-the-current-website
+    for key in kwargs.get("sitemaps", {}).keys():
+        kwargs["sitemaps"][key].request = args[0]
+    return django_sitemap_index(*args, **kwargs)
+
+
+def sitemap(*args, **kwargs):
+    # https://stackoverflow.com/questions/9817856/django-sitemaps-get-only-pages-of-the-current-website
+    for key in kwargs.get("sitemaps", {}).keys():
+        kwargs["sitemaps"][key].request = args[0]
+    return django_sitemap(*args, **kwargs)
