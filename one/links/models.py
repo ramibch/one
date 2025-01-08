@@ -96,11 +96,11 @@ class Link(TranslatableModel):
 
     @cached_property
     def title(self):
-        if self.django_url_path:
-            return self.get_django_url_path_display()
-
         if self.custom_title:
             return self.custom_title
+
+        if self.django_url_path:
+            return self.get_django_url_path_display()
 
         if self.model_obj:
             return self.model_obj.title
