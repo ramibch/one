@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+
 from one.sites.models import Site
 
 from ....articles.factories import ArticleFactory, ArticleParentFolderFactory
@@ -27,5 +28,3 @@ class Command(BaseCommand):
             # FAQs (multiple per site)
 
             # HomePage (one active per site?)
-
-            # UserHomePage

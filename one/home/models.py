@@ -1,6 +1,7 @@
 from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from one.base.utils.mixins import PageMixin
 
 from ..base.utils.abstracts import TranslatableModel
@@ -222,13 +223,3 @@ class ArticlesSection(TranslatableModel):
 
     def __str__(self):
         return self.title
-
-
-class UserHome(TranslatableModel, PageMixin):
-    site = OneToOneField("sites.Site", on_delete=models.CASCADE)
-
-    def get_default_language(self):
-        return self.site.default_language
-
-    def get_rest_languages(self):
-        return self.site.rest_languages

@@ -1,11 +1,9 @@
-import contextlib
-
 from django.conf import settings
 from django.core.management import call_command
 from django.http import HttpRequest, HttpResponseRedirect
 from django.urls import reverse
 
-from ...clients.models import Client, PathRedirect, Request
+from ...clients.models import Client, PathRedirect, RedirectTypes, Request
 from ...clients.tasks import update_client_task
 from ...sites.models import Site
 from ..utils.telegram import Bot
@@ -22,10 +20,8 @@ class OneMiddleware:
         request.site = Site.objects.get(host__name=request.get_host())
 
         # Check redirect
-        with contextlib.suppress(Exception):
-            redirect_obj = PathRedirect.objects.get(
-                site=request.site, from_path__name=request.path
-            )
+        redirect_obj = self.get_redirect_or_none(request)
+        if redirect_obj:
             return HttpResponseRedirect(redirect_obj.to_path.name)
 
         # Assign client attribute to request object
@@ -45,6 +41,19 @@ class OneMiddleware:
         self.save_request(request, response)
 
         return response
+
+    def get_redirect_or_none(self, request):
+        applicable = [
+            RedirectTypes.USER
+            if request.user.is_authenticated
+            else RedirectTypes.NO_USER,
+            RedirectTypes.ALWAYS,
+        ]
+        return PathRedirect.objects.filter(
+            site=request.site,
+            from_path__name=request.path,
+            applicable__in=applicable,
+        ).first()
 
     def get_client(self, request) -> Client:
         if request.ip_address is None:

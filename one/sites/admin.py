@@ -1,13 +1,11 @@
-from django.contrib import admin, messages
+from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
-from huey.contrib.djhuey import HUEY
 from modeltranslation.admin import TranslationAdmin
 
 from one.base.utils.actions import translation_actions
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
 from ..articles.tasks import sync_articles
-from ..menus.models import create_initial_menu_objects
 from ..pages.tasks import sync_pages
 from .models import Host, Seo, Site
 
@@ -27,7 +25,7 @@ class SiteAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = ("name", "brand_name", "picocss_color", "remarks")
     readonly_fields = ("name",)
-    actions = ["flush_huey", "sync_articles", "sync_pages", "create_menus"]
+    actions = ["sync_articles", "sync_pages"]
     inlines = (HostInline,)
     fieldsets = (
         (
@@ -68,10 +66,6 @@ class SiteAdmin(admin.ModelAdmin):
         ),
     )
 
-    @admin.action(description="🗑️ Flush Huey | revoke tasks")
-    def flush_huey(modeladmin, request, queryset):
-        HUEY.flush()
-
     @admin.action(description="🔄 Sync articles")
     def sync_articles(modeladmin, request, queryset):
         sync_articles(queryset)
@@ -79,17 +73,6 @@ class SiteAdmin(admin.ModelAdmin):
     @admin.action(description="🔄 Sync pages")
     def sync_pages(modeladmin, request, queryset):
         sync_pages(queryset)
-
-    @admin.action(description="☰ Create initial menus")
-    def create_menus(modeladmin, request, queryset):
-        created = create_initial_menu_objects(queryset)
-        if created:
-            messages.info(request, _("Menus objects were created!"))
-        else:
-            messages.warning(
-                request,
-                _("Not created! Check menu objects associated with the selected sites"),
-            )
 
 
 @admin.register(Seo)
