@@ -18,7 +18,7 @@ Including another URLconf
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 
 if settings.ENV == "prod":
     # Custom 404 error view
@@ -57,4 +57,9 @@ urlpatterns = [
     path("englishquizzes/", include("one.quiz.urls")),
     path("", include("one.base.urls")),
     path("", include("one.home.urls")),
-] + debug_toolbar_urls()
+]
+
+
+if settings.ENV == "dev":
+    urlpatterns += [re_path(r"^rosetta/", include("rosetta.urls"))]
+    urlpatterns += debug_toolbar_urls()

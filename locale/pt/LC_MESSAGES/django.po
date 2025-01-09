@@ -1,0 +1,2401 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-09 19:13+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: one/_templates/allauth/layouts/base.html:18
+msgid "Messages:"
+msgstr ""
+
+#: one/_templates/allauth/layouts/base.html:25
+msgid "Menu:"
+msgstr ""
+
+#: one/_templates/allauth/layouts/base.html:31
+#: one/users/templates/users/dashboard.html:8
+msgid "Change Email"
+msgstr ""
+
+#: one/_templates/allauth/layouts/base.html:37
+#: one/users/templates/users/dashboard.html:14
+msgid "Change Password"
+msgstr ""
+
+#: one/_templates/allauth/layouts/base.html:43
+#: one/users/templates/users/dashboard.html:20
+msgid "Account Connections"
+msgstr ""
+
+#: one/_templates/allauth/layouts/base.html:49
+#: one/users/templates/users/dashboard.html:26
+msgid "Two-Factor Authentication"
+msgstr ""
+
+#: one/_templates/allauth/layouts/base.html:55
+#: one/users/templates/users/dashboard.html:33
+msgid "Sessions"
+msgstr ""
+
+#: one/_templates/allauth/layouts/base.html:61
+#: one/users/templates/users/dashboard.html:39
+msgid "Sign Out"
+msgstr ""
+
+#: one/_templates/allauth/layouts/base.html:68 one/links/models.py:19
+msgid "Sign In"
+msgstr ""
+
+#: one/_templates/allauth/layouts/base.html:74 one/links/models.py:20
+msgid "Sign Up"
+msgstr ""
+
+#: one/_templates/error.html:7 one/links/models.py:14
+msgid "Home"
+msgstr ""
+
+#: one/_templates/error.html:10 one/content/templates/search/main.html:4
+#: one/content/templates/search/main.html:8 one/links/models.py:15
+#: one/search/views.py:16
+msgid "Search"
+msgstr ""
+
+#: one/_templates/modals/language.html:8
+msgid "Change language"
+msgstr ""
+
+#: one/_templates/modals/language.html:21
+#: one/profiles/templates/profiles/partials/options.html:70
+#: one/profiles/templates/profiles/partials/options.html:90
+#: one/profiles/templates/profiles/photo/crop_form.html:22
+msgid "Save"
+msgstr ""
+
+#: one/_templates/snippets/messages.html:11
+msgid "Error"
+msgstr ""
+
+#: one/_templates/snippets/messages.html:13
+msgid "Warning"
+msgstr ""
+
+#: one/_templates/snippets/messages.html:15
+msgid "Infomation"
+msgstr ""
+
+#: one/_templates/snippets/messages.html:19
+msgid "OK"
+msgstr ""
+
+#: one/articles/models.py:53
+msgid "Comment"
+msgstr ""
+
+#: one/base/__init__.py:6 one/base/tests/__init__.py:6 one/settings.py:220
+msgid "English"
+msgstr ""
+
+#: one/base/__init__.py:7 one/base/tests/__init__.py:7 one/settings.py:221
+msgid "German"
+msgstr ""
+
+#: one/base/__init__.py:8 one/base/tests/__init__.py:8 one/settings.py:222
+msgid "Spanish"
+msgstr ""
+
+#: one/base/__init__.py:9 one/base/tests/__init__.py:9 one/settings.py:223
+msgid "French"
+msgstr ""
+
+#: one/base/__init__.py:10 one/base/tests/__init__.py:10 one/settings.py:224
+msgid "Greek"
+msgstr ""
+
+#: one/base/__init__.py:11 one/base/tests/__init__.py:11 one/settings.py:225
+msgid "Italian"
+msgstr ""
+
+#: one/base/__init__.py:12 one/base/tests/__init__.py:12 one/settings.py:226
+msgid "Dutch"
+msgstr ""
+
+#: one/base/__init__.py:13 one/base/tests/__init__.py:13 one/settings.py:227
+msgid "Polish"
+msgstr ""
+
+#: one/base/__init__.py:14 one/base/tests/__init__.py:14 one/settings.py:228
+msgid "Portuguese"
+msgstr ""
+
+#: one/base/__init__.py:15 one/base/tests/__init__.py:15 one/settings.py:229
+msgid "Russian"
+msgstr ""
+
+#: one/base/__init__.py:16 one/base/tests/__init__.py:16 one/settings.py:230
+msgid "Slovak"
+msgstr ""
+
+#: one/base/__init__.py:17 one/base/tests/__init__.py:17 one/settings.py:231
+msgid "Slovenian"
+msgstr ""
+
+#: one/base/__init__.py:18 one/base/tests/__init__.py:18 one/settings.py:232
+msgid "Swedish"
+msgstr ""
+
+#: one/base/__init__.py:19 one/base/tests/__init__.py:19 one/settings.py:233
+msgid "Turkish"
+msgstr ""
+
+#: one/base/__init__.py:20 one/base/tests/__init__.py:20 one/settings.py:234
+msgid "Ukrainian"
+msgstr ""
+
+#: one/base/__init__.py:24 one/base/tests/__init__.py:24
+msgid "Afghanistan"
+msgstr ""
+
+#: one/base/__init__.py:25 one/base/tests/__init__.py:25
+msgid "Albania"
+msgstr ""
+
+#: one/base/__init__.py:26 one/base/tests/__init__.py:26
+msgid "Algeria"
+msgstr ""
+
+#: one/base/__init__.py:27 one/base/tests/__init__.py:27
+msgid "American Samoa"
+msgstr ""
+
+#: one/base/__init__.py:28 one/base/tests/__init__.py:28
+msgid "Andorra"
+msgstr ""
+
+#: one/base/__init__.py:29 one/base/tests/__init__.py:29
+msgid "Angola"
+msgstr ""
+
+#: one/base/__init__.py:30 one/base/tests/__init__.py:30
+msgid "Anguilla"
+msgstr ""
+
+#: one/base/__init__.py:31 one/base/tests/__init__.py:31
+msgid "Antarctica"
+msgstr ""
+
+#: one/base/__init__.py:32 one/base/tests/__init__.py:32
+msgid "Antigua and Barbuda"
+msgstr ""
+
+#: one/base/__init__.py:33 one/base/tests/__init__.py:33
+msgid "Argentina"
+msgstr ""
+
+#: one/base/__init__.py:34 one/base/tests/__init__.py:34
+msgid "Armenia"
+msgstr ""
+
+#: one/base/__init__.py:35 one/base/tests/__init__.py:35
+msgid "Aruba"
+msgstr ""
+
+#: one/base/__init__.py:36 one/base/tests/__init__.py:36
+msgid "Australia"
+msgstr ""
+
+#: one/base/__init__.py:37 one/base/tests/__init__.py:37
+msgid "Austria"
+msgstr ""
+
+#: one/base/__init__.py:38 one/base/tests/__init__.py:38
+msgid "Azerbaijan"
+msgstr ""
+
+#: one/base/__init__.py:39 one/base/tests/__init__.py:39
+msgid "Bahamas"
+msgstr ""
+
+#: one/base/__init__.py:40 one/base/tests/__init__.py:40
+msgid "Bahrain"
+msgstr ""
+
+#: one/base/__init__.py:41 one/base/tests/__init__.py:41
+msgid "Bangladesh"
+msgstr ""
+
+#: one/base/__init__.py:42 one/base/tests/__init__.py:42
+msgid "Barbados"
+msgstr ""
+
+#: one/base/__init__.py:43 one/base/tests/__init__.py:43
+msgid "Belarus"
+msgstr ""
+
+#: one/base/__init__.py:44 one/base/tests/__init__.py:44
+msgid "Belgium"
+msgstr ""
+
+#: one/base/__init__.py:45 one/base/tests/__init__.py:45
+msgid "Belize"
+msgstr ""
+
+#: one/base/__init__.py:46 one/base/tests/__init__.py:46
+msgid "Benin"
+msgstr ""
+
+#: one/base/__init__.py:47 one/base/tests/__init__.py:47
+msgid "Bermuda"
+msgstr ""
+
+#: one/base/__init__.py:48 one/base/tests/__init__.py:48
+msgid "Bhutan"
+msgstr ""
+
+#: one/base/__init__.py:49 one/base/tests/__init__.py:49
+msgid "Bolivia"
+msgstr ""
+
+#: one/base/__init__.py:50 one/base/tests/__init__.py:50
+msgid "Bosnia and Herzegovina"
+msgstr ""
+
+#: one/base/__init__.py:51 one/base/tests/__init__.py:51
+msgid "Botswana"
+msgstr ""
+
+#: one/base/__init__.py:52 one/base/tests/__init__.py:52
+msgid "Brazil"
+msgstr ""
+
+#: one/base/__init__.py:53 one/base/tests/__init__.py:53
+msgid "British Indian Ocean Territory"
+msgstr ""
+
+#: one/base/__init__.py:54 one/base/tests/__init__.py:54
+msgid "Brunei Darussalam"
+msgstr ""
+
+#: one/base/__init__.py:55 one/base/tests/__init__.py:55
+msgid "Bulgaria"
+msgstr ""
+
+#: one/base/__init__.py:56 one/base/tests/__init__.py:56
+msgid "Burkina Faso"
+msgstr ""
+
+#: one/base/__init__.py:57 one/base/tests/__init__.py:57
+msgid "Burundi"
+msgstr ""
+
+#: one/base/__init__.py:58 one/base/tests/__init__.py:58
+msgid "Cabo Verde"
+msgstr ""
+
+#: one/base/__init__.py:59 one/base/tests/__init__.py:59
+msgid "Cambodia"
+msgstr ""
+
+#: one/base/__init__.py:60 one/base/tests/__init__.py:60
+msgid "Cameroon"
+msgstr ""
+
+#: one/base/__init__.py:61 one/base/tests/__init__.py:61
+msgid "Canada"
+msgstr ""
+
+#: one/base/__init__.py:62 one/base/tests/__init__.py:62
+msgid "Cayman Islands"
+msgstr ""
+
+#: one/base/__init__.py:63 one/base/tests/__init__.py:63
+msgid "Central African Republic"
+msgstr ""
+
+#: one/base/__init__.py:64 one/base/tests/__init__.py:64
+msgid "Chad"
+msgstr ""
+
+#: one/base/__init__.py:65 one/base/tests/__init__.py:65
+msgid "Chile"
+msgstr ""
+
+#: one/base/__init__.py:66 one/base/tests/__init__.py:66
+msgid "China"
+msgstr ""
+
+#: one/base/__init__.py:67 one/base/tests/__init__.py:67
+msgid "Christmas Island"
+msgstr ""
+
+#: one/base/__init__.py:68 one/base/tests/__init__.py:68
+msgid "Cocos (Keeling) Islands"
+msgstr ""
+
+#: one/base/__init__.py:69 one/base/tests/__init__.py:69
+msgid "Colombia"
+msgstr ""
+
+#: one/base/__init__.py:70 one/base/tests/__init__.py:70
+msgid "Comoros"
+msgstr ""
+
+#: one/base/__init__.py:71 one/base/tests/__init__.py:71
+msgid "Congo"
+msgstr ""
+
+#: one/base/__init__.py:72 one/base/tests/__init__.py:72
+msgid "Congo, Democratic Republic of the"
+msgstr ""
+
+#: one/base/__init__.py:73 one/base/tests/__init__.py:73
+msgid "Cook Islands"
+msgstr ""
+
+#: one/base/__init__.py:74 one/base/tests/__init__.py:74
+msgid "Costa Rica"
+msgstr ""
+
+#: one/base/__init__.py:75 one/base/tests/__init__.py:75
+msgid "Croatia"
+msgstr ""
+
+#: one/base/__init__.py:76 one/base/tests/__init__.py:76
+msgid "Cuba"
+msgstr ""
+
+#: one/base/__init__.py:77 one/base/tests/__init__.py:77
+msgid "Cyprus"
+msgstr ""
+
+#: one/base/__init__.py:78 one/base/tests/__init__.py:78
+msgid "Czech Republic"
+msgstr ""
+
+#: one/base/__init__.py:79 one/base/tests/__init__.py:79
+msgid "Denmark"
+msgstr ""
+
+#: one/base/__init__.py:80 one/base/tests/__init__.py:80
+msgid "Djibouti"
+msgstr ""
+
+#: one/base/__init__.py:81 one/base/tests/__init__.py:81
+msgid "Dominica"
+msgstr ""
+
+#: one/base/__init__.py:82 one/base/tests/__init__.py:82
+msgid "Dominican Republic"
+msgstr ""
+
+#: one/base/__init__.py:83 one/base/tests/__init__.py:83
+msgid "Ecuador"
+msgstr ""
+
+#: one/base/__init__.py:84 one/base/tests/__init__.py:84
+msgid "Egypt"
+msgstr ""
+
+#: one/base/__init__.py:85 one/base/tests/__init__.py:85
+msgid "El Salvador"
+msgstr ""
+
+#: one/base/__init__.py:86 one/base/tests/__init__.py:86
+msgid "Equatorial Guinea"
+msgstr ""
+
+#: one/base/__init__.py:87 one/base/tests/__init__.py:87
+msgid "Eritrea"
+msgstr ""
+
+#: one/base/__init__.py:88 one/base/tests/__init__.py:88
+msgid "Estonia"
+msgstr ""
+
+#: one/base/__init__.py:89 one/base/tests/__init__.py:89
+msgid "Eswatini"
+msgstr ""
+
+#: one/base/__init__.py:90 one/base/tests/__init__.py:90
+msgid "Ethiopia"
+msgstr ""
+
+#: one/base/__init__.py:91 one/base/tests/__init__.py:91
+msgid "Fiji"
+msgstr ""
+
+#: one/base/__init__.py:92 one/base/tests/__init__.py:92
+msgid "Finland"
+msgstr ""
+
+#: one/base/__init__.py:93 one/base/tests/__init__.py:93
+msgid "France"
+msgstr ""
+
+#: one/base/__init__.py:94 one/base/tests/__init__.py:94
+msgid "French Guiana"
+msgstr ""
+
+#: one/base/__init__.py:95 one/base/tests/__init__.py:95
+msgid "French Polynesia"
+msgstr ""
+
+#: one/base/__init__.py:96 one/base/tests/__init__.py:96
+msgid "French Southern Territories"
+msgstr ""
+
+#: one/base/__init__.py:97 one/base/tests/__init__.py:97
+msgid "Gabon"
+msgstr ""
+
+#: one/base/__init__.py:98 one/base/tests/__init__.py:98
+msgid "Gambia"
+msgstr ""
+
+#: one/base/__init__.py:99 one/base/tests/__init__.py:99
+msgid "Georgia"
+msgstr ""
+
+#: one/base/__init__.py:100 one/base/tests/__init__.py:100
+msgid "Germany"
+msgstr ""
+
+#: one/base/__init__.py:101 one/base/tests/__init__.py:101
+msgid "Ghana"
+msgstr ""
+
+#: one/base/__init__.py:102 one/base/tests/__init__.py:102
+msgid "Gibraltar"
+msgstr ""
+
+#: one/base/__init__.py:103 one/base/tests/__init__.py:103
+msgid "Greece"
+msgstr ""
+
+#: one/base/__init__.py:104 one/base/tests/__init__.py:104
+msgid "Greenland"
+msgstr ""
+
+#: one/base/__init__.py:105 one/base/tests/__init__.py:105
+msgid "Grenada"
+msgstr ""
+
+#: one/base/__init__.py:106 one/base/tests/__init__.py:106
+msgid "Guadeloupe"
+msgstr ""
+
+#: one/base/__init__.py:107 one/base/tests/__init__.py:107
+msgid "Guam"
+msgstr ""
+
+#: one/base/__init__.py:108 one/base/tests/__init__.py:108
+msgid "Guatemala"
+msgstr ""
+
+#: one/base/__init__.py:109 one/base/tests/__init__.py:109
+msgid "Guernsey"
+msgstr ""
+
+#: one/base/__init__.py:110 one/base/tests/__init__.py:110
+msgid "Guinea"
+msgstr ""
+
+#: one/base/__init__.py:111 one/base/tests/__init__.py:111
+msgid "Guinea-Bissau"
+msgstr ""
+
+#: one/base/__init__.py:112 one/base/tests/__init__.py:112
+msgid "Guyana"
+msgstr ""
+
+#: one/base/__init__.py:113 one/base/tests/__init__.py:113
+msgid "Haiti"
+msgstr ""
+
+#: one/base/__init__.py:114 one/base/tests/__init__.py:114
+msgid "Heard Island and McDonald Islands"
+msgstr ""
+
+#: one/base/__init__.py:115 one/base/tests/__init__.py:115
+msgid "Holy See"
+msgstr ""
+
+#: one/base/__init__.py:116 one/base/tests/__init__.py:116
+msgid "Honduras"
+msgstr ""
+
+#: one/base/__init__.py:117 one/base/tests/__init__.py:117
+msgid "Hong Kong"
+msgstr ""
+
+#: one/base/__init__.py:118 one/base/tests/__init__.py:118
+msgid "Hungary"
+msgstr ""
+
+#: one/base/__init__.py:119 one/base/tests/__init__.py:119
+msgid "Iceland"
+msgstr ""
+
+#: one/base/__init__.py:120 one/base/tests/__init__.py:120
+msgid "India"
+msgstr ""
+
+#: one/base/__init__.py:121 one/base/tests/__init__.py:121
+msgid "Indonesia"
+msgstr ""
+
+#: one/base/__init__.py:122 one/base/tests/__init__.py:122
+msgid "Iran"
+msgstr ""
+
+#: one/base/__init__.py:123 one/base/tests/__init__.py:123
+msgid "Iraq"
+msgstr ""
+
+#: one/base/__init__.py:124 one/base/tests/__init__.py:124
+msgid "Ireland"
+msgstr ""
+
+#: one/base/__init__.py:125 one/base/tests/__init__.py:125
+msgid "Isle of Man"
+msgstr ""
+
+#: one/base/__init__.py:126 one/base/tests/__init__.py:126
+msgid "Israel"
+msgstr ""
+
+#: one/base/__init__.py:127 one/base/tests/__init__.py:127
+msgid "Italy"
+msgstr ""
+
+#: one/base/__init__.py:128 one/base/tests/__init__.py:128
+msgid "Jamaica"
+msgstr ""
+
+#: one/base/__init__.py:129 one/base/tests/__init__.py:129
+msgid "Japan"
+msgstr ""
+
+#: one/base/__init__.py:130 one/base/tests/__init__.py:130
+msgid "Jersey"
+msgstr ""
+
+#: one/base/__init__.py:131 one/base/tests/__init__.py:131
+msgid "Jordan"
+msgstr ""
+
+#: one/base/__init__.py:132 one/base/tests/__init__.py:132
+msgid "Kazakhstan"
+msgstr ""
+
+#: one/base/__init__.py:133 one/base/tests/__init__.py:133
+msgid "Kenya"
+msgstr ""
+
+#: one/base/__init__.py:134 one/base/tests/__init__.py:134
+msgid "Kiribati"
+msgstr ""
+
+#: one/base/__init__.py:135 one/base/tests/__init__.py:135
+msgid "Korea (North)"
+msgstr ""
+
+#: one/base/__init__.py:136 one/base/tests/__init__.py:136
+msgid "Korea (South)"
+msgstr ""
+
+#: one/base/__init__.py:137 one/base/tests/__init__.py:137
+msgid "Kuwait"
+msgstr ""
+
+#: one/base/__init__.py:138 one/base/tests/__init__.py:138
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: one/base/__init__.py:139 one/base/tests/__init__.py:139
+msgid "Lao People's Democratic Republic"
+msgstr ""
+
+#: one/base/__init__.py:140 one/base/tests/__init__.py:140
+msgid "Latvia"
+msgstr ""
+
+#: one/base/__init__.py:141 one/base/tests/__init__.py:141
+msgid "Lebanon"
+msgstr ""
+
+#: one/base/__init__.py:142 one/base/tests/__init__.py:142
+msgid "Lesotho"
+msgstr ""
+
+#: one/base/__init__.py:143 one/base/tests/__init__.py:143
+msgid "Liberia"
+msgstr ""
+
+#: one/base/__init__.py:144 one/base/tests/__init__.py:144
+msgid "Libya"
+msgstr ""
+
+#: one/base/__init__.py:145 one/base/tests/__init__.py:145
+msgid "Liechtenstein"
+msgstr ""
+
+#: one/base/__init__.py:146 one/base/tests/__init__.py:146
+msgid "Lithuania"
+msgstr ""
+
+#: one/base/__init__.py:147 one/base/tests/__init__.py:147
+msgid "Luxembourg"
+msgstr ""
+
+#: one/base/__init__.py:148 one/base/tests/__init__.py:148
+msgid "Macao"
+msgstr ""
+
+#: one/base/__init__.py:149 one/base/tests/__init__.py:149
+msgid "Madagascar"
+msgstr ""
+
+#: one/base/__init__.py:150 one/base/tests/__init__.py:150
+msgid "Malawi"
+msgstr ""
+
+#: one/base/__init__.py:151 one/base/tests/__init__.py:151
+msgid "Malaysia"
+msgstr ""
+
+#: one/base/__init__.py:152 one/base/tests/__init__.py:152
+msgid "Maldives"
+msgstr ""
+
+#: one/base/__init__.py:153 one/base/tests/__init__.py:153
+msgid "Mali"
+msgstr ""
+
+#: one/base/__init__.py:154 one/base/tests/__init__.py:154
+msgid "Malta"
+msgstr ""
+
+#: one/base/__init__.py:155 one/base/tests/__init__.py:155
+msgid "Marshall Islands"
+msgstr ""
+
+#: one/base/__init__.py:156 one/base/tests/__init__.py:156
+msgid "Martinique"
+msgstr ""
+
+#: one/base/__init__.py:157 one/base/tests/__init__.py:157
+msgid "Mauritania"
+msgstr ""
+
+#: one/base/__init__.py:158 one/base/tests/__init__.py:158
+msgid "Mauritius"
+msgstr ""
+
+#: one/base/__init__.py:159 one/base/tests/__init__.py:159
+msgid "Mayotte"
+msgstr ""
+
+#: one/base/__init__.py:160 one/base/tests/__init__.py:160
+msgid "Mexico"
+msgstr ""
+
+#: one/base/__init__.py:161 one/base/tests/__init__.py:161
+msgid "Micronesia"
+msgstr ""
+
+#: one/base/__init__.py:162 one/base/tests/__init__.py:162
+msgid "Moldova"
+msgstr ""
+
+#: one/base/__init__.py:163 one/base/tests/__init__.py:163
+msgid "Monaco"
+msgstr ""
+
+#: one/base/__init__.py:164 one/base/tests/__init__.py:164
+msgid "Mongolia"
+msgstr ""
+
+#: one/base/__init__.py:165 one/base/tests/__init__.py:165
+msgid "Montenegro"
+msgstr ""
+
+#: one/base/__init__.py:166 one/base/tests/__init__.py:166
+msgid "Montserrat"
+msgstr ""
+
+#: one/base/__init__.py:167 one/base/tests/__init__.py:167
+msgid "Morocco"
+msgstr ""
+
+#: one/base/__init__.py:168 one/base/tests/__init__.py:168
+msgid "Mozambique"
+msgstr ""
+
+#: one/base/__init__.py:169 one/base/tests/__init__.py:169
+msgid "Myanmar"
+msgstr ""
+
+#: one/base/__init__.py:170 one/base/tests/__init__.py:170
+msgid "Namibia"
+msgstr ""
+
+#: one/base/__init__.py:171 one/base/tests/__init__.py:171
+msgid "Nauru"
+msgstr ""
+
+#: one/base/__init__.py:172 one/base/tests/__init__.py:172
+msgid "Nepal"
+msgstr ""
+
+#: one/base/__init__.py:173 one/base/tests/__init__.py:173
+msgid "Netherlands"
+msgstr ""
+
+#: one/base/__init__.py:174 one/base/tests/__init__.py:174
+msgid "New Caledonia"
+msgstr ""
+
+#: one/base/__init__.py:175 one/base/tests/__init__.py:175
+msgid "New Zealand"
+msgstr ""
+
+#: one/base/__init__.py:176 one/base/tests/__init__.py:176
+msgid "Nicaragua"
+msgstr ""
+
+#: one/base/__init__.py:177 one/base/tests/__init__.py:177
+msgid "Niger"
+msgstr ""
+
+#: one/base/__init__.py:178 one/base/tests/__init__.py:178
+msgid "Nigeria"
+msgstr ""
+
+#: one/base/__init__.py:179 one/base/tests/__init__.py:179
+msgid "Niue"
+msgstr ""
+
+#: one/base/__init__.py:180 one/base/tests/__init__.py:180
+msgid "Norfolk Island"
+msgstr ""
+
+#: one/base/__init__.py:181 one/base/tests/__init__.py:181
+msgid "North Macedonia"
+msgstr ""
+
+#: one/base/__init__.py:182 one/base/tests/__init__.py:182
+msgid "Northern Mariana Islands"
+msgstr ""
+
+#: one/base/__init__.py:183 one/base/tests/__init__.py:183
+msgid "Norway"
+msgstr ""
+
+#: one/base/__init__.py:184 one/base/tests/__init__.py:184
+msgid "Oman"
+msgstr ""
+
+#: one/base/__init__.py:185 one/base/tests/__init__.py:185
+msgid "Pakistan"
+msgstr ""
+
+#: one/base/__init__.py:186 one/base/tests/__init__.py:186
+msgid "Palau"
+msgstr ""
+
+#: one/base/__init__.py:187 one/base/tests/__init__.py:187
+msgid "Palestine, State of"
+msgstr ""
+
+#: one/base/__init__.py:188 one/base/tests/__init__.py:188
+msgid "Panama"
+msgstr ""
+
+#: one/base/__init__.py:189 one/base/tests/__init__.py:189
+msgid "Papua New Guinea"
+msgstr ""
+
+#: one/base/__init__.py:190 one/base/tests/__init__.py:190
+msgid "Paraguay"
+msgstr ""
+
+#: one/base/__init__.py:191 one/base/tests/__init__.py:191
+msgid "Peru"
+msgstr ""
+
+#: one/base/__init__.py:192 one/base/tests/__init__.py:192
+msgid "Philippines"
+msgstr ""
+
+#: one/base/__init__.py:193 one/base/tests/__init__.py:193
+msgid "Pitcairn"
+msgstr ""
+
+#: one/base/__init__.py:194 one/base/tests/__init__.py:194
+msgid "Poland"
+msgstr ""
+
+#: one/base/__init__.py:195 one/base/tests/__init__.py:195
+msgid "Portugal"
+msgstr ""
+
+#: one/base/__init__.py:196 one/base/tests/__init__.py:196
+msgid "Puerto Rico"
+msgstr ""
+
+#: one/base/__init__.py:197 one/base/tests/__init__.py:197
+msgid "Qatar"
+msgstr ""
+
+#: one/base/__init__.py:198 one/base/tests/__init__.py:198
+msgid "Réunion"
+msgstr ""
+
+#: one/base/__init__.py:199 one/base/tests/__init__.py:199
+msgid "Romania"
+msgstr ""
+
+#: one/base/__init__.py:200 one/base/tests/__init__.py:200
+msgid "Russian Federation"
+msgstr ""
+
+#: one/base/__init__.py:201 one/base/tests/__init__.py:201
+msgid "Rwanda"
+msgstr ""
+
+#: one/base/__init__.py:202 one/base/tests/__init__.py:202
+msgid "Saint Barthélemy"
+msgstr ""
+
+#: one/base/__init__.py:203 one/base/tests/__init__.py:203
+msgid "Saint Helena"
+msgstr ""
+
+#: one/base/__init__.py:204 one/base/tests/__init__.py:204
+msgid "Saint Kitts and Nevis"
+msgstr ""
+
+#: one/base/__init__.py:205 one/base/tests/__init__.py:205
+msgid "Saint Lucia"
+msgstr ""
+
+#: one/base/__init__.py:206 one/base/tests/__init__.py:206
+msgid "Saint Martin"
+msgstr ""
+
+#: one/base/__init__.py:207 one/base/tests/__init__.py:207
+msgid "Saint Pierre and Miquelon"
+msgstr ""
+
+#: one/base/__init__.py:208 one/base/tests/__init__.py:208
+msgid "Saint Vincent and the Grenadines"
+msgstr ""
+
+#: one/base/__init__.py:209 one/base/tests/__init__.py:209
+msgid "Samoa"
+msgstr ""
+
+#: one/base/__init__.py:210 one/base/tests/__init__.py:210
+msgid "San Marino"
+msgstr ""
+
+#: one/base/__init__.py:211 one/base/tests/__init__.py:211
+msgid "Sao Tome and Principe"
+msgstr ""
+
+#: one/base/__init__.py:212 one/base/tests/__init__.py:212
+msgid "Saudi Arabia"
+msgstr ""
+
+#: one/base/__init__.py:213 one/base/tests/__init__.py:213
+msgid "Senegal"
+msgstr ""
+
+#: one/base/__init__.py:214 one/base/tests/__init__.py:214
+msgid "Serbia"
+msgstr ""
+
+#: one/base/__init__.py:215 one/base/tests/__init__.py:215
+msgid "Seychelles"
+msgstr ""
+
+#: one/base/__init__.py:216 one/base/tests/__init__.py:216
+msgid "Sierra Leone"
+msgstr ""
+
+#: one/base/__init__.py:217 one/base/tests/__init__.py:217
+msgid "Singapore"
+msgstr ""
+
+#: one/base/__init__.py:218 one/base/tests/__init__.py:218
+msgid "Sint Maarten"
+msgstr ""
+
+#: one/base/__init__.py:219 one/base/tests/__init__.py:219
+msgid "Slovakia"
+msgstr ""
+
+#: one/base/__init__.py:220 one/base/tests/__init__.py:220
+msgid "Slovenia"
+msgstr ""
+
+#: one/base/__init__.py:221 one/base/tests/__init__.py:221
+msgid "Solomon Islands"
+msgstr ""
+
+#: one/base/__init__.py:222 one/base/tests/__init__.py:222
+msgid "Somalia"
+msgstr ""
+
+#: one/base/__init__.py:223 one/base/tests/__init__.py:223
+msgid "South Africa"
+msgstr ""
+
+#: one/base/__init__.py:224 one/base/tests/__init__.py:224
+msgid "South Georgia and the South Sandwich Islands"
+msgstr ""
+
+#: one/base/__init__.py:225 one/base/tests/__init__.py:225
+msgid "South Sudan"
+msgstr ""
+
+#: one/base/__init__.py:226 one/base/tests/__init__.py:226
+msgid "Spain"
+msgstr ""
+
+#: one/base/__init__.py:227 one/base/tests/__init__.py:227
+msgid "Sri Lanka"
+msgstr ""
+
+#: one/base/__init__.py:228 one/base/tests/__init__.py:228
+msgid "Sudan"
+msgstr ""
+
+#: one/base/__init__.py:229 one/base/tests/__init__.py:229
+msgid "Suriname"
+msgstr ""
+
+#: one/base/__init__.py:230 one/base/tests/__init__.py:230
+msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+#: one/base/__init__.py:231 one/base/tests/__init__.py:231
+msgid "Sweden"
+msgstr ""
+
+#: one/base/__init__.py:232 one/base/tests/__init__.py:232
+msgid "Switzerland"
+msgstr ""
+
+#: one/base/__init__.py:233 one/base/tests/__init__.py:233
+msgid "Syrian Arab Republic"
+msgstr ""
+
+#: one/base/__init__.py:234 one/base/tests/__init__.py:234
+msgid "Taiwan"
+msgstr ""
+
+#: one/base/__init__.py:235 one/base/tests/__init__.py:235
+msgid "Tajikistan"
+msgstr ""
+
+#: one/base/__init__.py:236 one/base/tests/__init__.py:236
+msgid "Tanzania"
+msgstr ""
+
+#: one/base/__init__.py:237 one/base/tests/__init__.py:237
+msgid "Thailand"
+msgstr ""
+
+#: one/base/__init__.py:238 one/base/tests/__init__.py:238
+msgid "Timor-Leste"
+msgstr ""
+
+#: one/base/__init__.py:239 one/base/tests/__init__.py:239
+msgid "Togo"
+msgstr ""
+
+#: one/base/__init__.py:240 one/base/tests/__init__.py:240
+msgid "Tokelau"
+msgstr ""
+
+#: one/base/__init__.py:241 one/base/tests/__init__.py:241
+msgid "Tonga"
+msgstr ""
+
+#: one/base/__init__.py:242 one/base/tests/__init__.py:242
+msgid "Trinidad and Tobago"
+msgstr ""
+
+#: one/base/__init__.py:243 one/base/tests/__init__.py:243
+msgid "Tunisia"
+msgstr ""
+
+#: one/base/__init__.py:244 one/base/tests/__init__.py:244
+msgid "Turkey"
+msgstr ""
+
+#: one/base/__init__.py:245 one/base/tests/__init__.py:245
+msgid "Turkmenistan"
+msgstr ""
+
+#: one/base/__init__.py:246 one/base/tests/__init__.py:246
+msgid "Turks and Caicos Islands"
+msgstr ""
+
+#: one/base/__init__.py:247 one/base/tests/__init__.py:247
+msgid "Tuvalu"
+msgstr ""
+
+#: one/base/__init__.py:248 one/base/tests/__init__.py:248
+msgid "Uganda"
+msgstr ""
+
+#: one/base/__init__.py:249 one/base/tests/__init__.py:249
+msgid "Ukraine"
+msgstr ""
+
+#: one/base/__init__.py:250 one/base/tests/__init__.py:250
+msgid "United Arab Emirates"
+msgstr ""
+
+#: one/base/__init__.py:251 one/base/tests/__init__.py:251
+msgid "United Kingdom"
+msgstr ""
+
+#: one/base/__init__.py:252 one/base/tests/__init__.py:252
+msgid "United States of America"
+msgstr ""
+
+#: one/base/__init__.py:253 one/base/tests/__init__.py:253
+msgid "United States Minor Outlying Islands"
+msgstr ""
+
+#: one/base/__init__.py:254 one/base/tests/__init__.py:254
+msgid "Uruguay"
+msgstr ""
+
+#: one/base/__init__.py:255 one/base/tests/__init__.py:255
+msgid "Uzbekistan"
+msgstr ""
+
+#: one/base/__init__.py:256 one/base/tests/__init__.py:256
+msgid "Vanuatu"
+msgstr ""
+
+#: one/base/__init__.py:257 one/base/tests/__init__.py:257
+msgid "Venezuela"
+msgstr ""
+
+#: one/base/__init__.py:258 one/base/tests/__init__.py:258
+msgid "Viet Nam"
+msgstr ""
+
+#: one/base/__init__.py:259 one/base/tests/__init__.py:259
+msgid "Virgin Islands (British)"
+msgstr ""
+
+#: one/base/__init__.py:260 one/base/tests/__init__.py:260
+msgid "Virgin Islands (U.S.)"
+msgstr ""
+
+#: one/base/__init__.py:261 one/base/tests/__init__.py:261
+msgid "Wallis and Futuna"
+msgstr ""
+
+#: one/base/__init__.py:262 one/base/tests/__init__.py:262
+msgid "Western Sahara"
+msgstr ""
+
+#: one/base/__init__.py:263 one/base/tests/__init__.py:263
+msgid "Yemen"
+msgstr ""
+
+#: one/base/__init__.py:264 one/base/tests/__init__.py:264
+msgid "Zambia"
+msgstr ""
+
+#: one/base/__init__.py:265 one/base/tests/__init__.py:265
+msgid "Zimbabwe"
+msgstr ""
+
+#: one/base/middleware/ip.py:21
+msgid "Request blocked"
+msgstr ""
+
+#: one/base/views.py:34
+msgid "Page not found"
+msgstr ""
+
+#: one/base/views.py:43
+msgid "Internal Server Error"
+msgstr ""
+
+#: one/chat/templates/chat/chat_detail.html:14
+msgid "Write something"
+msgstr ""
+
+#: one/chat/templates/chat/chat_detail.html:16
+#: one/content/templates/feedback.html:12
+msgid "Send"
+msgstr ""
+
+#: one/clients/models.py:101
+msgid "time"
+msgstr ""
+
+#: one/clients/models.py:120
+msgid "For logged users"
+msgstr ""
+
+#: one/clients/models.py:121
+msgid "For anonymous users"
+msgstr ""
+
+#: one/clients/models.py:122
+msgid "Always"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:22
+msgid "Light blue"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:23
+msgid "Light brown"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:24
+msgid "Gray"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:25
+msgid "Brick color"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:26
+msgid "Green"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:27
+msgid "Blue"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:32
+msgid "Quad paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:33
+msgid "Graph paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:34
+msgid "Dot grid paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:35
+msgid "Hexagonal paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:36
+msgid "Hexagonal paper rotated 90 degree"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:37
+msgid "Triangle grid"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:38
+msgid "Isometric grid"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:39
+msgid "Ruled page"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:40
+msgid "Double ruled page"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:45
+msgid "Squared paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:46
+msgid "Square graph"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:47
+msgid "Square grid"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:48
+msgid "Cartesian graph"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:52
+msgid "Quadrille paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:53
+msgid "Quadrille"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:54
+msgid "Grid notes"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:58
+msgid "Coordinate paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:59
+msgid "Engineering paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:60
+msgid "Engineering graph"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:61
+msgid "Architect paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:65
+msgid "Hexagon grid paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:66
+msgid "Hexagon paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:67
+msgid "Hexagon grid"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:68
+msgid "Hexagonal graph"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:69
+msgid "Chemistry paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:70
+msgid "Hex paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:71
+msgid "Hex map"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:72
+msgid "Hex board"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:73
+msgid "Hex grid"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:77
+msgid "Ternary plot"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:78
+msgid "Simplex plot"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:79
+msgid "Ternary graph"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:80
+msgid "De Finetti diagram"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:83
+msgid "Bullet journal"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:83
+msgid "Dotted paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:83
+msgid "Dots"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:83
+msgid "Dot Grid"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:84
+msgid "Isometric graph"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:84
+msgid "Isometric"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:84
+msgid "Iso"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:84
+msgid "Iso paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:86
+msgid "Line paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:87
+msgid "Ruled pages"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:88
+msgid "Lined paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:89
+msgid "Paper with lines"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:127
+msgid "Grid paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:128
+msgid "Grid graph"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:129
+msgid "Digital Grid paper"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:130
+msgid "Digital Graph"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:131
+msgid "Printable Graph"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:155
+msgid ""
+"Make your notes, drawings and your artistic pieces stand out with our "
+"digital graph paper bundle. You can customize your note-taking experience to "
+"suit your style with a variety of layout options, grid sizes, and colours to "
+"choose from."
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:159
+msgid ""
+"Graph paper is indispensable for anyone seeking precision, organization, and "
+"visualization in their work or hobbies. Whether you are working on "
+"mathematics, engineering, art, or gaming, graph paper can help you bring "
+"your ideas to life with accuracy and clarity. With this graph paper you will "
+"be able to do the following:"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:163
+msgid ""
+"- Organize your thoughts by taking notes.\n"
+"- Sketch geometric shapes with precision.\n"
+"- Create your floorplans and architectural designs.\n"
+"- Draw to-scale diagrams for buildings, bridges, and mechanical parts\n"
+"- Plot experimental data points."
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:170
+msgid ""
+"- Organize your tasks, goals, and schedules with flexibility and "
+"creativity.\n"
+"- Create precise sketches and drawings effortlessly.\n"
+"- Improve handwriting with dot grid paper's guidance.\n"
+"- Create complex patterns with ease."
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:176
+msgid ""
+"- Graph the relationships between three variables on an equilateral "
+"triangle.\n"
+"- Plot the compositions of mixtures in chemistry, petrology, mineralogy and "
+"metallurgy.\n"
+"- Create de Finetti diagrams to graph the genotype frequencies of "
+"populations.\n"
+"- Use as a guide for precise designs and sketches."
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:182
+msgid ""
+"- Easily create precise three-dimensional drawings.\n"
+"- Visualize layouts and furniture arrangements with accuracy.\n"
+"- Design immersive game levels and landscapes effortlessly.\n"
+"- Explore three-dimensional concepts with clarity and depth.\n"
+"- Achieve consistent perspective and depth in your artwork.\n"
+"- Plan and design 3D models and sculptures with ease.\n"
+"- Enhance spatial reasoning and problem-solving skills intuitively."
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:191
+msgid ""
+"- Easily sketch and visualize organic molecules with precision.\n"
+"- Design and create hex-based game boards effortlessly.\n"
+"- Explore geometric shapes and patterns with precision.\n"
+"- Draft maps with intricate terrain and land features.\n"
+"- Create hexagon-based quilts, mosaics, and artwork with ease."
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:198
+msgid ""
+"- Organize your thoughts by taking notes.\n"
+"- Organize tasks, schedules, and project outlines clearly.\n"
+"- Keep thoughts and reflections organized and legible.\n"
+"- Use as a guide for precise designs and sketches."
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:205
+msgid ""
+"This product contains graph papers with different configurations: multiple "
+"paper sizes, two different page orientations (landscape/portrait), and two "
+"different margin configurations (with and without). Here is a list of the "
+"paper sizes supported by the product:"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:209
+msgid "Depending on the paper size standard, we offer different pattern sizes:"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:213
+msgid ""
+"Our graph papers come in a variety of grid colours! Choose the one (or the "
+"ones) that best suits your needs:"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:219
+msgid "USES AND APPLICATIONS"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:235
+msgid "LAYOUTS"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:239
+msgid "PATTERN SIZES"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:241
+msgid "- ISO A Sizes"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:245
+msgid "- American ANSI Sizes"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:249
+msgid "AVAILABLE COLORS"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:272
+msgid "without-margin"
+msgstr ""
+
+#: one/content/listing_types/graphpaper.py:272
+msgid "with-margin"
+msgstr ""
+
+#: one/content/models.py:410
+msgid "Message"
+msgstr ""
+
+#: one/content/templates/home.html:12 one/faqs/models.py:10
+msgid "Products"
+msgstr ""
+
+#: one/content/templates/home.html:30 one/links/models.py:17
+msgid "Articles"
+msgstr ""
+
+#: one/content/templates/home.html:48
+msgid "Mobile Apps"
+msgstr ""
+
+#: one/content/templates/home.html:67
+msgid "Subscribe to my Telegram groups"
+msgstr ""
+
+#: one/content/templates/product.html:13 one/content/templates/product.html:33
+msgid "Buy now"
+msgstr ""
+
+#: one/content/templates/search/results.html:2
+#: one/search/templates/search/hx_results.html:2
+msgid "Total items found"
+msgstr ""
+
+#: one/content/views.py:92
+msgid "Thank you for your message!"
+msgstr ""
+
+#: one/faqs/models.py:9 one/links/models.py:18
+msgid "Plans"
+msgstr ""
+
+#: one/faqs/models.py:11
+msgid "Informative"
+msgstr ""
+
+#: one/faqs/models.py:12
+msgid "Accounts"
+msgstr ""
+
+#: one/faqs/models.py:13
+msgid "Legal concerns"
+msgstr ""
+
+#: one/home/models.py:166
+msgid "FAQs Section"
+msgstr ""
+
+#: one/home/models.py:167
+msgid "FAQs Sections"
+msgstr ""
+
+#: one/home/models.py:221
+msgid "Articles Section"
+msgstr ""
+
+#: one/home/models.py:222
+msgid "Articles Sections"
+msgstr ""
+
+#: one/home/templates/home/home.html:29
+msgid "Lastest articles"
+msgstr ""
+
+#: one/home/templates/home/home.html:29
+msgid "All"
+msgstr ""
+
+#: one/home/templates/home/userhome.html:4
+msgid "Hello"
+msgstr ""
+
+#: one/links/models.py:16
+msgid "Sitemap"
+msgstr ""
+
+#: one/links/models.py:21
+msgid "Account"
+msgstr ""
+
+#: one/links/models.py:22
+msgid "FAQs"
+msgstr ""
+
+#: one/links/models.py:23
+msgid "Chat"
+msgstr ""
+
+#: one/links/models.py:24
+msgid "English Quizzes"
+msgstr ""
+
+#: one/links/models.py:58
+msgid "Enter a custom title if an external url is entered."
+msgstr ""
+
+#: one/links/models.py:63
+msgid "One link must be entered."
+msgstr ""
+
+#: one/menus/models.py:15
+msgid "For logged user"
+msgstr ""
+
+#: one/menus/models.py:16
+msgid "For anonymous user"
+msgstr ""
+
+#: one/menus/models.py:17
+msgid "Show always"
+msgstr ""
+
+#: one/menus/models.py:18
+msgid "Never show"
+msgstr ""
+
+#: one/menus/models.py:60
+msgid "Insert an emoji if you want to show it as emoji."
+msgstr ""
+
+#: one/orders/models.py:14
+msgid ""
+"Thank you very much for your purchase. Attached you will find your order.\n"
+"\n"
+"Remember that if you have any questions, you can contact me directly to this "
+"email!\n"
+"\n"
+"Best wishes!\n"
+"Rami\n"
+msgstr ""
+
+#: one/orders/templates/product_order.html:4
+#: one/orders/templates/product_order.html:11
+msgid "Thank you for your order"
+msgstr ""
+
+#: one/orders/templates/product_order.html:13
+msgid "The order will be sent to the following Email Address shortly:"
+msgstr ""
+
+#: one/orders/templates/product_order.html:15
+msgid "Get invoice"
+msgstr ""
+
+#: one/orders/templates/product_order_expired.html:4
+#: one/orders/templates/product_order_expired.html:8
+msgid "Order link expired"
+msgstr ""
+
+#: one/orders/templates/product_order_expired.html:9
+msgid "This link has expired. If you did order something, please contact me."
+msgstr ""
+
+#: one/payments/signals.py:11
+msgid ""
+"Hi,\n"
+"\n"
+"Thank you for your order!\n"
+"\n"
+"Remember that if you have any questions or you require any technical "
+"support, you can contact me directly to this email!\n"
+"\n"
+"Best wishes!\n"
+"Rami (nicecv.online)\n"
+msgstr ""
+
+#: one/payments/signals.py:45
+msgid "Welcome"
+msgstr ""
+
+#: one/plans/templates/plans/detail.html:4
+msgid "Plan"
+msgstr ""
+
+#: one/plans/templates/plans/detail.html:14
+msgid "Your selected plan"
+msgstr ""
+
+#: one/plans/templates/plans/detail.html:33
+msgid "Checkout"
+msgstr ""
+
+#: one/plans/templates/plans/detail.html:39
+msgid "Back to all plans"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:4
+#: one/plans/templates/plans/plan_list.html:7
+msgid "Pricing"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:9
+msgid "Choose the right plan for you"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:23
+msgid "Buy plan"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:29
+msgid "Months"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:33
+#: one/profiles/templates/profiles/profile_list.html:4
+#: one/profiles/templates/profiles/profile_list.html:8
+msgid "Profiles"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:38
+msgid "Technical support"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:44
+msgid "Translate your profile"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:50
+msgid "We create a profile for you"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:56
+msgid "Premium templates"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:65
+msgid "Frequently asked questions"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:86
+msgid "Do you have a different question? Contact us."
+msgstr ""
+
+#: one/profiles/models.py:30
+msgid "⏳ Temporal"
+msgstr ""
+
+#: one/profiles/models.py:31
+msgid "👤 User profile"
+msgstr ""
+
+#: one/profiles/models.py:32
+msgid "📊 Template"
+msgstr ""
+
+#: one/profiles/models.py:62
+msgid "Language code"
+msgstr ""
+
+#: one/profiles/models.py:76 one/profiles/models.py:101
+#: one/profiles/models.py:180
+msgid "Full name"
+msgstr ""
+
+#: one/profiles/models.py:81 one/profiles/models.py:123
+#: one/profiles/models.py:184 one/profiles/models.py:651
+msgid "Job title"
+msgstr ""
+
+#: one/profiles/models.py:86 one/profiles/models.py:127
+#: one/profiles/models.py:188 one/profiles/models.py:653
+msgid "Location"
+msgstr ""
+
+#: one/profiles/models.py:91
+msgid "Birth"
+msgstr ""
+
+#: one/profiles/models.py:96 one/profiles/models.py:135
+#: one/profiles/models.py:196
+msgid "Phone number"
+msgstr ""
+
+#: one/profiles/models.py:106 one/profiles/models.py:143
+#: one/profiles/models.py:201
+msgid "Website"
+msgstr ""
+
+#: one/profiles/models.py:119
+msgid "Photo"
+msgstr ""
+
+#: one/profiles/models.py:131 one/profiles/models.py:192
+msgid "Birth date"
+msgstr ""
+
+#: one/profiles/models.py:139 one/profiles/models.py:198
+msgid "Email address"
+msgstr ""
+
+#: one/profiles/models.py:147 one/profiles/models.py:205
+msgid "About me"
+msgstr ""
+
+#: one/profiles/models.py:151 one/profiles/models.py:209
+msgid "Skills"
+msgstr ""
+
+#: one/profiles/models.py:155 one/profiles/models.py:213
+msgid "Languages"
+msgstr ""
+
+#: one/profiles/models.py:159 one/profiles/models.py:217
+#: one/profiles/models.py:641
+msgid "Education"
+msgstr ""
+
+#: one/profiles/models.py:163 one/profiles/models.py:221
+msgid "Work experience"
+msgstr ""
+
+#: one/profiles/models.py:167 one/profiles/models.py:225
+msgid "Achievements"
+msgstr ""
+
+#: one/profiles/models.py:171 one/profiles/models.py:229
+msgid "Projects"
+msgstr ""
+
+#: one/profiles/models.py:175 one/profiles/models.py:233
+msgid "Publications"
+msgstr ""
+
+#: one/profiles/models.py:515
+msgid "Profile"
+msgstr ""
+
+#: one/profiles/models.py:594
+msgid "Skill"
+msgstr ""
+
+#: one/profiles/models.py:595 one/profiles/models.py:607
+msgid "Level"
+msgstr ""
+
+#: one/profiles/models.py:606
+msgid "Language"
+msgstr ""
+
+#: one/profiles/models.py:614
+msgid "Start date"
+msgstr ""
+
+#: one/profiles/models.py:615
+msgid "End date"
+msgstr ""
+
+#: one/profiles/models.py:617
+msgid "Description"
+msgstr ""
+
+#: one/profiles/models.py:637
+msgid "Title"
+msgstr ""
+
+#: one/profiles/models.py:638
+msgid "Institution"
+msgstr ""
+
+#: one/profiles/models.py:654
+msgid "Company name"
+msgstr ""
+
+#: one/profiles/models.py:657
+msgid "Experience"
+msgstr ""
+
+#: one/profiles/models.py:666
+msgid "Goal achieved"
+msgstr ""
+
+#: one/profiles/models.py:667 one/profiles/models.py:705
+#: one/tools/templates/tools/tool_invoice.html:14
+msgid "Date"
+msgstr ""
+
+#: one/profiles/models.py:677
+msgid "Project name"
+msgstr ""
+
+#: one/profiles/models.py:679
+msgid "Role in the project"
+msgstr ""
+
+#: one/profiles/models.py:685
+msgid "Organization"
+msgstr ""
+
+#: one/profiles/models.py:691 one/profiles/models.py:715
+msgid "Link"
+msgstr ""
+
+#: one/profiles/models.py:706
+msgid "Publication title"
+msgstr ""
+
+#: one/profiles/models.py:708
+msgid "Authors"
+msgstr ""
+
+#: one/profiles/models.py:711
+msgid "Publisher"
+msgstr ""
+
+#: one/profiles/tasks.py:31
+msgid "Complete your profile"
+msgstr ""
+
+#: one/profiles/tasks.py:32
+msgid "Hello x"
+msgstr ""
+
+#: one/profiles/tasks.py:36
+msgid "This is Rami from nicecv.online."
+msgstr ""
+
+#: one/profiles/tasks.py:38
+msgid "I am glad you want to improve the aesthetics of your CV."
+msgstr ""
+
+#: one/profiles/tasks.py:41
+msgid ""
+"I writing to you because it seems that you decided to abandon the process of "
+"creating a CV that will impress recruiters."
+msgstr ""
+
+#: one/profiles/tasks.py:45
+msgid ""
+"But if you want to complete your profile and download CV templates, visit "
+"the site:"
+msgstr ""
+
+#: one/profiles/tasks.py:50
+msgid "Best wishes, Rami."
+msgstr ""
+
+#: one/profiles/templates/profiles/cvs/card.html:18
+msgid "Premium"
+msgstr ""
+
+#: one/profiles/templates/profiles/cvs/card.html:22
+msgid "Free"
+msgstr ""
+
+#: one/profiles/templates/profiles/cvs/card.html:28
+msgid "Average process time:"
+msgstr ""
+
+#: one/profiles/templates/profiles/cvs/card.html:28
+msgid "seconds"
+msgstr ""
+
+#: one/profiles/templates/profiles/cvs/card.html:39
+msgid "Generate CV"
+msgstr ""
+
+#: one/profiles/templates/profiles/cvs/card.html:47
+msgid "Get Premium"
+msgstr ""
+
+#: one/profiles/templates/profiles/cvs/card.html:56
+msgid "Download"
+msgstr ""
+
+#: one/profiles/templates/profiles/partials/childset.html:52
+msgid "New"
+msgstr ""
+
+#: one/profiles/templates/profiles/partials/childset.html:63
+msgid "Add"
+msgstr ""
+
+#: one/profiles/templates/profiles/partials/options.html:7
+#: one/tools/templates/tools/tool_invoice.html:146
+msgid "Settings"
+msgstr ""
+
+#: one/profiles/templates/profiles/partials/options.html:9
+msgid "CV templates"
+msgstr ""
+
+#: one/profiles/templates/profiles/partials/options.html:34
+msgid "Customize your profile"
+msgstr ""
+
+#: one/profiles/templates/profiles/partials/options.html:58
+msgid "Deactivate or activate fields"
+msgstr ""
+
+#: one/profiles/templates/profiles/partials/options.html:78
+msgid "Name your own labels"
+msgstr ""
+
+#: one/profiles/templates/profiles/photo/crop_form.html:14
+msgid "Delete photo?"
+msgstr ""
+
+#: one/profiles/templates/profiles/photo/main.html:13
+msgid "Add photo"
+msgstr ""
+
+#: one/profiles/templates/profiles/photo/main.html:38
+msgid "Edit photo"
+msgstr ""
+
+#: one/profiles/templates/profiles/photo/new.html:8
+msgid "Upload photo"
+msgstr ""
+
+#: one/profiles/templates/profiles/photo/new.html:15
+msgid "Upload"
+msgstr ""
+
+#: one/profiles/templates/profiles/profile_list.html:18
+msgid "Are you sure to delete this profile?"
+msgstr ""
+
+#: one/profiles/templates/profiles/profile_list.html:20
+msgid "Delete"
+msgstr ""
+
+#: one/profiles/templates/profiles/profile_list.html:22
+msgid "Edit"
+msgstr ""
+
+#: one/profiles/templates/profiles/profile_list.html:36
+msgid "Create a new profile"
+msgstr ""
+
+#: one/profiles/templates/profiles/profile_update.html:7
+msgid "My profile"
+msgstr ""
+
+#: one/profiles/templates/profiles/profile_update.html:22
+msgid "Personal info"
+msgstr ""
+
+#: one/profiles/templates/profiles/profile_update.html:68
+msgid "CVs"
+msgstr ""
+
+#: one/profiles/views.py:25 one/profiles/views.py:30
+msgid "This is a Premium template. Get a plan for using it."
+msgstr ""
+
+#: one/profiles/views.py:59
+msgid "You are not allowed to create another profile. Get a Premium Plan"
+msgstr ""
+
+#: one/profiles/views.py:67
+msgid "Only one profile is allowed for guest users"
+msgstr ""
+
+#: one/profiles/views.py:104
+msgid "Error with profile settings"
+msgstr ""
+
+#: one/tex/values.py:17
+msgid "Portrait"
+msgstr ""
+
+#: one/tex/values.py:18
+msgid "Landscape"
+msgstr ""
+
+#: one/tools/models.py:253
+msgid "Labels in format: NameAxis1 NameAxis2 NameAxis3..."
+msgstr ""
+
+#: one/tools/models.py:257
+msgid "Data in format: Legend number1 number2 number3..."
+msgstr ""
+
+#: one/tools/models.py:276
+msgid "Data in format (dates as YYYY-MM-DD): TaskName DateStart DateEnd"
+msgstr ""
+
+#: one/tools/models.py:282
+msgid "Data in format: ItemName ItemValue"
+msgstr ""
+
+#: one/tools/models.py:294
+msgid "Matrix heat"
+msgstr ""
+
+#: one/tools/models.py:299
+msgid "Data in format: X Y"
+msgstr ""
+
+#: one/tools/templates/tools/partials/no_data_storage.txt:2
+msgid "The data you are entering here is not being stored in my server."
+msgstr ""
+
+#: one/tools/templates/tools/partials/related_tools.html:3
+msgid "Related tools"
+msgstr ""
+
+#: one/tools/templates/tools/partials/related_tools.html:11
+msgid "No related tools found."
+msgstr ""
+
+#: one/tools/templates/tools/partials/related_tools.html:11
+msgid "All the tools."
+msgstr ""
+
+#: one/tools/templates/tools/results/barcode.html:6
+#: one/tools/templates/tools/results/chart.html:6
+#: one/tools/templates/tools/results/qrcode.html:6
+msgid "Downloads"
+msgstr ""
+
+#: one/tools/templates/tools/results/dj_secret_key.html:4
+#: one/tools/templates/tools/tool_md5.html:46
+msgid "Copied!"
+msgstr ""
+
+#: one/tools/templates/tools/tool_detail.html:25
+msgid "The result will be displayed here"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:9
+msgid "Invoice"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:11
+msgid "Client"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:12
+msgid "Ship to"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:13
+msgid "Invoice No."
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:14
+msgid "Order No."
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:15
+msgid "Article"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:15
+msgid "Quantity"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:16
+msgid "Price, €"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:16
+#: one/tools/templates/tools/tool_invoice.html:22
+msgid "Total, €"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:17
+msgid "Terms and Conditions"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:18
+msgid "Subtotal, €"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:19
+#, python-format
+msgid "VAT, %%"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:20
+#, python-format
+msgid "Discount, %%"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:21
+msgid "Subtotal - Discount, €"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:103
+msgid "New Article"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:104
+msgid "Only up to 10 items allowed"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:137
+msgid "Download invoice"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:149
+msgid "Number of decimals for price fields"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:154
+msgid "Shipping address"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:160
+msgid "Discount"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:15
+msgid "Input data"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:17
+msgid "String input"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:22
+msgid "Your string input"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:24
+msgid "Secret key (salt)"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:29
+msgid "Your arbitrary secret key"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:32
+msgid "Remove salt"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:32
+msgid "Add salt"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:41
+msgid "Results"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:46
+msgid "Copy"
+msgstr ""
+
+#: one/tools/tools.py:14
+msgid "Generate"
+msgstr ""
+
+#: one/tools/tools.py:17
+msgid ""
+"Generate your barcode with this online tool and download it for free in "
+"different formats"
+msgstr ""
+
+#: one/tools/tools.py:22
+msgid ""
+"free, free online, free online tools, barcode generator, qr code, chart "
+"maker, hashing, engineering tools, maker, generator"
+msgstr ""
+
+#: one/tools/tools.py:25
+msgid ""
+"free, barcode, barcodes, create, generate, generator, make, online, online "
+"barcode, barcodes online, barcode generator, online barcode generator, 2D "
+"code, QR code, barcode software"
+msgstr ""
+
+#: one/tools/tools.py:47
+msgid "Free Online Tools"
+msgstr ""
+
+#: one/tools/tools.py:49
+msgid "Generate charts, barcodes, QR codes with these free online tools"
+msgstr ""
+
+#: one/tools/tools.py:106
+msgid "Online generator md5 hash of a string"
+msgstr ""
+
+#: one/tools/tools.py:113
+msgid "Online Invoice Generator"
+msgstr ""
+
+#: one/tools/tools.py:118
+msgid "Barcode Generator EAN14"
+msgstr ""
+
+#: one/tools/tools.py:127
+msgid "Barcode Generator EAN13"
+msgstr ""
+
+#: one/tools/tools.py:138
+msgid "Barcode Generator EAN13 with guards"
+msgstr ""
+
+#: one/tools/tools.py:145
+msgid "Barcode Generator EAN8"
+msgstr ""
+
+#: one/tools/tools.py:155
+msgid "Barcode Generator JAN"
+msgstr ""
+
+#: one/tools/tools.py:164
+msgid "Barcode Generator Codabar"
+msgstr ""
+
+#: one/tools/tools.py:173
+msgid "Barcode Generator Code 128"
+msgstr ""
+
+#: one/tools/tools.py:182
+msgid "Barcode Generator Code 39"
+msgstr ""
+
+#: one/tools/tools.py:191
+msgid "Barcode Generator ISBN 13"
+msgstr ""
+
+#: one/tools/tools.py:201
+msgid "Barcode Generator GS1 128"
+msgstr ""
+
+#: one/tools/tools.py:210
+msgid "Barcode Generator ISBN 10"
+msgstr ""
+
+#: one/tools/tools.py:219
+msgid "Barcode Generator ISSN"
+msgstr ""
+
+#: one/tools/tools.py:228
+msgid "Barcode Generator PZN"
+msgstr ""
+
+#: one/tools/tools.py:237
+msgid "Barcode Generator ITF"
+msgstr ""
+
+#: one/tools/tools.py:246
+msgid "Barcode Generator UPC"
+msgstr ""
+
+#: one/tools/tools.py:256
+msgid "QR-Code Generator"
+msgstr ""
+
+#: one/tools/tools.py:264
+msgid "Spider Chart Generator"
+msgstr ""
+
+#: one/tools/tools.py:272
+msgid "Gantt Chart Generator"
+msgstr ""
+
+#: one/tools/tools.py:280
+msgid "Bar Chart Generator"
+msgstr ""
+
+#: one/tools/tools.py:288
+msgid "Simple data Chart Generator"
+msgstr ""
+
+#: one/tools/tools.py:298
+msgid "Django Secret Key Generator"
+msgstr ""
+
+#: one/users/views.py:22
+msgid "Account updated"
+msgstr ""
+
+#: one/users/views.py:24
+msgid "An error occurred"
+msgstr ""
+
+#: one/users/views.py:37
+msgid "Account deleted"
+msgstr ""
+
+#: one/users/views.py:40
+msgid "You are not allowed to delete someone else's account."
+msgstr ""
