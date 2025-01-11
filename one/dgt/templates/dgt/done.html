@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+  <center>
+    <h1>Resultados ({{ session_test.percentage_passed }} %)</h1>
+    <p>{{ session_test.question_list_emojis }}</p>
+  </center>
+  {% for session_question in session_test.sessionquestion_set.all %}
+    <hr>
+    <h2>{{ session_question.correct_emoji }} {{ session_question.question.title }}</h2>
+    <img src="{{ session_question.question.img_url }}"
+         alt="{{ session_question.question.title }}" />
+    <p>{{ session_question.option_a_emoji }} {{ session_question.question.option_a }}</p>
+    <p>{{ session_question.option_b_emoji }} {{ session_question.question.option_b }}</p>
+    <p>{{ session_question.option_c_emoji }} {{ session_question.question.option_c }}</p>
+  {% endfor %}
+  <h2>Más tests</h2>
+  {% include 'dgt/test_list.html' %}
+{% endblock content %}

@@ -46,6 +46,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "ramib.ch",
     "www.ramib.ch",
+    "dgt-tests.ramib.ch",
     "ramiboutas.com",
     "www.ramiboutas.com",
     "englishstuff.online",
@@ -111,6 +112,7 @@ INSTALLED_APPS = [
     "one.chat",
     "one.geo",
     "one.quiz",
+    "one.dgt",
 ]
 
 MIDDLEWARE = [

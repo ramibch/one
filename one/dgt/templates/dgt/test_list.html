@@ -1,0 +1,13 @@
+{% load dgt_tags %}
+<section class="row mb-2">
+  {% for test in tests %}
+    <div class="col-md-4">
+      <article>
+        <a href="{{ test.start_url }}" title="{{ test.title }}">{{ test.title }}</a>
+        <footer>
+          {% sessiontest_emojis request test %}
+        </footer>
+      </article>
+    </div>
+  {% endfor %}
+</section>

@@ -55,6 +55,7 @@ urlpatterns = [
     path("chat/", include("one.chat.urls")),
     path("clients/", include("one.clients.urls")),
     path("englishquizzes/", include("one.quiz.urls")),
+    path("dgt/", include("one.dgt.urls")),
     path("", include("one.base.urls")),
     path("", include("one.home.urls")),
 ]

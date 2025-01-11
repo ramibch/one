@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1 class="mt-5">{{ question.title }}</h1>
+  <center>
+    <img src="{{ question.img_url }}" alt="{{ question.title }}">
+  </center>
+  <form method="post"
+        action="{{ question.check_url }}"
+        hx-boost="true"
+        class="mb-5">
+    <fieldset>
+      <div>
+        <input type="radio" id="optionA" name="selected_option" value="a" />
+        <label for="optionA">{{ question.option_a }}</label>
+      </div>
+      <div>
+        <input type="radio" id="optionB" name="selected_option" value="b" />
+        <label for="optionB">{{ question.option_b }}</label>
+      </div>
+      <div>
+        <input type="radio" id="optionC" name="selected_option" value="c" />
+        <label for="optionC">{{ question.option_c }}</label>
+      </div>
+    </fieldset>
+    {% csrf_token %}
+    <button type="submit">Siguiente</button>
+  </form>
+{% endblock %}

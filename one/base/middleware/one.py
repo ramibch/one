@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.contrib.sessions.backends.db import SessionStore
+from django.contrib.sessions.models import Session
 from django.core.management import call_command
 from django.http import HttpRequest, HttpResponseRedirect
 from django.urls import reverse
@@ -27,6 +29,9 @@ class OneMiddleware:
         # Assign client attribute to request object
         request.client = self.get_client(request)
 
+        # Assign session
+        request.db_session = self.get_session(request)
+
         # Clear cache in development
         if settings.ENV == "dev" and settings.CLEAR_CACHE_IN_DEV:
             call_command("clear_cache")
@@ -41,6 +46,16 @@ class OneMiddleware:
         self.save_request(request, response)
 
         return response
+
+    def get_session(self, request):
+        try:
+            session_key = request.session["sessionid"]
+        except KeyError:
+            session_store = SessionStore()
+            session_store.create()
+            session_key = session_store.session_key
+            request.session["sessionid"] = session_key
+        return Session.objects.get(pk=session_key)
 
     def get_redirect_or_none(self, request):
         applicable = [
