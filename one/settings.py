@@ -48,7 +48,6 @@ ALLOWED_HOSTS = [
     "ramib.ch",
     "www.ramib.ch",
     # dgt tests
-    "dgt-tests.ramib.ch",
     "dgttests.es",
     "www.dgttests.es",
     # personal site 2 (will be removed)
