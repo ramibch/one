@@ -44,13 +44,20 @@ REDIS_CONNECTION_POOL = RedisConnectionPool.from_url(url=REDIS_URL)
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
+    # personal site
     "ramib.ch",
     "www.ramib.ch",
+    # dgt tests
     "dgt-tests.ramib.ch",
+    "dgttests.es",
+    "www.dgttests.es",
+    # personal site 2 (will be removed)
     "ramiboutas.com",
     "www.ramiboutas.com",
+    # english quizzes
     "englishstuff.online",
     "www.englishstuff.online",
+    # nice cv
     "nicecv.online",
     "www.nicecv.online",
 ]
