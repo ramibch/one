@@ -81,7 +81,6 @@ INSTALLED_APPS = [
     "channels",
     "dbbackup",
     "corsheaders",
-    "debug_toolbar",
     "django_browser_reload",
     "django_minify_html",
     # Django apps
@@ -123,7 +122,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "one.base.middleware.ip.IpAddressMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

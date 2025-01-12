@@ -25,7 +25,6 @@ dependencies = [
   "Werkzeug",
   "django-browser-reload",
   "docutils",
-  "django-debug-toolbar",
   "deepl",
   "Jinja2",
   "qrcode[pil]",
