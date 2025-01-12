@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-  <section>
-    <h1>
-      <center>DGT tests anteriores</center>
-    </h1>
+  <section class="my-5">
+    <center>
+      <h1>{{ page_title }}</h1>
+    </center>
   </section>
   {% include 'dgt/test_list.html' %}
 {% endblock content %}

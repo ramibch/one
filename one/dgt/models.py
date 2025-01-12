@@ -2,6 +2,7 @@ import auto_prefetch
 from django.contrib.sessions.models import Session
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.functional import cached_property
 
 
@@ -9,6 +10,9 @@ class DgtTest(models.Model):
     source_url = models.URLField(max_length=128)
     title = models.CharField(max_length=128)
     dgt_page = models.PositiveSmallIntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"[{self.dgt_page}] {self.title}"
 
     @cached_property
     def start_url(self):
@@ -29,6 +33,9 @@ class DgtQuestion(auto_prefetch.Model):
     explanation = models.TextField(max_length=512, null=True)
     img_alt = models.CharField(max_length=256, null=True)
     img_url = models.URLField(max_length=256)
+
+    def __str__(self):
+        return self.title
 
     @cached_property
     def detail_url(self):
@@ -74,11 +81,17 @@ class DgtQuestion(auto_prefetch.Model):
 class SessionDgtTest(auto_prefetch.Model):
     session = auto_prefetch.ForeignKey(Session, on_delete=models.CASCADE)
     test = auto_prefetch.ForeignKey(DgtTest, on_delete=models.CASCADE, null=True)
+    created_on = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.test} session={self.session}"
 
     @cached_property
     def correct_number(self):
         return self.sessiondgtquestion_set.filter(
-            is_correct=True, test=self.test, session_test=self
+            is_correct=True,
+            test=self.test,
+            session_test=self,
         ).count()
 
     @cached_property
@@ -108,19 +121,34 @@ class SessionDgtTest(auto_prefetch.Model):
     def question_list_emojis(self):
         return "".join(
             q.correct_emoji
-            for q in self.sessionquestion_set.filter(session_test=self, test=self.test)
+            for q in self.sessiondgtquestion_set.filter(
+                session_test=self,
+                test=self.test,
+            )
         )
 
 
 class SessionDgtQuestion(auto_prefetch.Model):
-    session = auto_prefetch.ForeignKey(Session, on_delete=models.CASCADE)
-    question = auto_prefetch.ForeignKey(DgtQuestion, on_delete=models.CASCADE)
-    session_test = auto_prefetch.ForeignKey(
-        SessionDgtTest, on_delete=models.CASCADE, null=True
+    session = auto_prefetch.ForeignKey(
+        Session,
+        on_delete=models.CASCADE,
     )
-    test = auto_prefetch.ForeignKey(DgtTest, on_delete=models.CASCADE)
+    question = auto_prefetch.ForeignKey(
+        DgtQuestion,
+        on_delete=models.CASCADE,
+    )
+    session_test = auto_prefetch.ForeignKey(
+        SessionDgtTest,
+        on_delete=models.CASCADE,
+        null=True,
+    )
+    test = auto_prefetch.ForeignKey(
+        DgtTest,
+        on_delete=models.CASCADE,
+    )
     selected_option = models.CharField(max_length=1)
     is_correct = models.BooleanField(default=False)
+    created_on = models.DateTimeField(default=timezone.now)
 
     @cached_property
     def correct_emoji(self):

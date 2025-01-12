@@ -1,18 +1,17 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import DgtQuestion, DgtTest, SessionDgtQuestion, SessionDgtTest
 
 
 def test_index(request):
-    context = {"tests": DgtTest.objects.all()}
+    context = {"tests": DgtTest.objects.all(), "page_title": "DGT tests anteriores"}
     return render(request, "dgt/index.html", context)
 
 
 def question_detail(request, id):
-    question = DgtQuestion.objects.get(id=id)
-    context = {"question": question}
-    return render(request, "dgt/question.html", context)
+    obj = get_object_or_404(DgtQuestion, id=id)
+    return render(request, "dgt/question.html", {"object": obj})
 
 
 @csrf_exempt
