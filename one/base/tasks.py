@@ -26,10 +26,9 @@ def commands_daily():
         stderr=err,
     )
     call_command("check", deploy=True, stdout=out, stderr=err)
+    call_command("clearsessions", deploy=True, stdout=out, stderr=err)
     call_command("update_rates", verbosity=0, stdout=out, stderr=err)
-    Bot.to_admin(
-        f"Daily commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n"
-    )
+    Bot.to_admin(f"Commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n")
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="0"))
