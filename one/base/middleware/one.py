@@ -29,15 +29,15 @@ class OneMiddleware:
         # Assign client attribute to request object
         request.client = self.get_client(request)
 
+        # Assign session
+        request.db_session = self.get_session(request)
+
         # Clear cache in development
         if settings.ENV == "dev" and settings.CLEAR_CACHE_IN_DEV:
             call_command("clear_cache")
 
         # Get response (view process)
         response = self.get_response(request)
-
-        # Assign session
-        request.db_session = self.get_session(request)
 
         # Check and set language
         self.process_language(request, response)
