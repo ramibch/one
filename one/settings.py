@@ -81,7 +81,6 @@ INSTALLED_APPS = [
     "channels",
     "dbbackup",
     "corsheaders",
-    "django_browser_reload",
     "django_minify_html",
     # Django apps
     "django.contrib.admin",
@@ -135,7 +134,6 @@ MIDDLEWARE = [
     "django.contrib.admindocs.middleware.XViewMiddleware",
     "one.base.middleware.one.OneMiddleware",
     "django_minify_html.middleware.MinifyHtmlMiddleware",
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
 

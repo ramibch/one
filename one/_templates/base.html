@@ -1,4 +1,4 @@
-{% load i18n static django_browser_reload %}
+{% load i18n static %}
 {% firstof page_title object.title request.site.seo.page_title as title %}
 {% firstof page_keywords object.keywords request.site.seo.page_keywords as keywords %}
 {% firstof page_description object.description request.site.seo.page_description as description %}
@@ -79,7 +79,6 @@
     <script defer src="{% static 'js/alpine_persist.js' %}"></script>
     <script defer src="{% static 'js/alpine.js' %}"></script>
     <script defer src="{% static 'js/sortable.js' %}"></script>
-    {% django_browser_reload_script %}
     {% block extra_js %}
     {% endblock extra_js %}
   </body>

@@ -62,5 +62,4 @@ urlpatterns = [
 if settings.ENV == "dev" and settings.DEBUG:
     urlpatterns += [
         re_path(r"^rosetta/", include("rosetta.urls")),
-        path("__reload__/", include("django_browser_reload.urls")),
     ]

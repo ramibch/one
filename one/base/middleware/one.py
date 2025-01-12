@@ -114,7 +114,6 @@ class OneMiddleware:
 
     def save_request(self, request, response):
         exempt_paths = [
-            reverse("django_browser_reload:events"),
             reverse("admin:index"),
             reverse("favicon"),
         ]

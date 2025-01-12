@@ -23,7 +23,6 @@ dependencies = [
   "hiredis",
   "geoip2",
   "Werkzeug",
-  "django-browser-reload",
   "docutils",
   "deepl",
   "Jinja2",
