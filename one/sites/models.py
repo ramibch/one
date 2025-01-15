@@ -147,6 +147,12 @@ class Site(Model):
             raise ValidationError(_("Add an emoji."), code="invalid")
 
     @cached_property
+    def display_brand(self):
+        if self.emoji_in_brand:
+            return f"{self.emoji} {self.brand_name}"
+        return self.brand_name
+
+    @cached_property
     def main_host(self):
         return self.host_set.filter(is_main=True).first()
 
@@ -168,6 +174,10 @@ class Site(Model):
     def url(self) -> str:
         schema = "https" if settings.HTTPS else "http"
         return f"{schema}://{self.main_host}"
+
+    @cached_property
+    def from_email_address(self):
+        return f"{self.display_brand} <no-reply@{self.name}>"
 
     def get_object_admin_url(self, obj) -> str:
         # the url to the Django admin form for the model instance

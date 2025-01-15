@@ -117,6 +117,7 @@ INSTALLED_APPS = [
     "one.geo",
     "one.quiz",
     "one.dgt",
+    "one.emails",
 ]
 
 MIDDLEWARE = [
@@ -360,6 +361,13 @@ O365_MAIL_TENANT_ID = env("O365_MAIL_TENANT_ID")
 O365_MAIL_MAILBOX_KWARGS = {"resource": EMAIL_HOST_USER}
 O365_MAIL_SAVE_TO_SENT = True
 
+EMAIL_BACKEND = env("EMAIL_BACKEND")
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = env("EMAIL_PORT")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+
 
 ## Translations
 
@@ -382,6 +390,10 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
+
+ACCOUNT_FORMS = {
+    "signup": "one.users.forms.CustomSignupForm",
+}
 
 
 ACCOUNT_LOGOUT_REDIRECT = "/"

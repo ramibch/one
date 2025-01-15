@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -10,9 +9,11 @@ from ..base import Languages
 class User(AbstractUser):
     asked_to_verify_email = models.BooleanField(default=False)
     country_code = models.CharField(max_length=8, null=True)
-    language = models.CharField(
-        max_length=8, choices=Languages.choices, default=settings.LANGUAGE_CODE
-    )
+    language = models.CharField(max_length=8, choices=Languages.choices, null=True)
+    sites = models.ManyToManyField("sites.Site", blank=True)
+
+    def __str__(self) -> str:
+        return f"User ({self.username} - {self.email})"
 
     @cached_property
     def delete_account_url(self):
@@ -27,6 +28,3 @@ class User(AbstractUser):
         if self.first_name not in ("", None):
             return self.first_name
         return self.username
-
-    def __str__(self) -> str:
-        return f"User ({self.username} - {self.email})"

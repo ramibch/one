@@ -54,7 +54,7 @@ class Lection(auto_prefetch.Model):
     slug = models.SlugField(blank=True)
 
     def get_first_question(self):
-        return self.dgtquestion_set.all().first()
+        return self.question_set.all().first()
 
     def get_absolute_url(self):
         return self.get_first_question().get_detail_url()

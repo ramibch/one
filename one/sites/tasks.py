@@ -1,5 +1,6 @@
 from huey import crontab
 from huey.contrib import djhuey as huey
+
 from one.sites.models import Site
 
 from ..base.utils.telegram import Bot

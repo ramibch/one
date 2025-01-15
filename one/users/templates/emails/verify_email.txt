@@ -1,0 +1,17 @@
+{% spaceless %}
+{% load i18n %}
+{% url "account_email" as email_url %}
+{% blocktrans with user_display=user.display_name  host=site.name  %}
+Hello {{ user_display }}
+
+Thank you for registering on my site. Please, consider to confirm your email address, just do this:
+
+1. Simply visit this page: https://{{ host }}{{ email_url }}
+
+2. Click on Resend Verification
+
+3. Go to your email inbox and confirm your email address by clicking on the link.
+
+Thank you very much.
+{% endblocktrans %}
+{% endspaceless %}
