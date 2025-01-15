@@ -1,16 +1,34 @@
 import json
 
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from .models import DomainDNSError, MessageLinkClicked, MessageLoaded, MessageSent
 
+
+@csrf_exempt
 @require_POST
 def postal_webhook(request):
-    with open(settings.BASE_DIR / "postal_post.txt", "w") as f:
-        f.write(json.dumps(request.POST))
+    signature = request.headers.get("X-Postal-Signature-Kid", "")
+    if signature != settings.POSTAL_SIGNATURE_KID:
+        return HttpResponseForbidden()
 
-    with open(settings.BASE_DIR / "postal_meta.txt", "w") as f:
-        f.write(json.dumps(request.META))
+    payload = json.loads(request.body.decode("utf-8"))
+    event = payload.get("event")
+
+    match event:
+        case "MessageSent":
+            MessageSent().save_from_payload(payload)
+
+        case "MessageLinkClicked":
+            MessageLinkClicked().save_from_payload(payload)
+
+        case "MessageLoaded":
+            MessageLoaded().save_from_payload(payload)
+
+        case "DomainDNSError":
+            DomainDNSError().save_from_payload(payload)
 
     return HttpResponse()
