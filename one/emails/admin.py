@@ -1,6 +1,35 @@
 from django.contrib import admin
 
-from .models import DomainDNSError, MessageSent
+from .models import (
+    Attachment,
+    DomainDNSError,
+    MessageSent,
+    MessageTemplate,
+    Recipient,
+)
+from .tasks import task_send_email_templates
+
+
+class EmailRecipientInline(admin.TabularInline):
+    model = Recipient
+    extra = 5
+    exclude = ("subject", "body")
+
+
+class EmailAttachmentInline(admin.TabularInline):
+    model = Attachment
+    extra = 0
+
+
+@admin.register(MessageTemplate)
+class EmailTemplateAdmin(admin.ModelAdmin):
+    search_fields = ("body", "subject")
+    inlines = (EmailAttachmentInline, EmailRecipientInline)
+    actions = ("send_emails",)
+
+    @admin.action(description="📧 Send Emails")
+    def send_emails(modeladmin, request, queryset):
+        task_send_email_templates(queryset)
 
 
 @admin.register(DomainDNSError)
