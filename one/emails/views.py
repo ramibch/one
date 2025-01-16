@@ -15,8 +15,9 @@ def postal_webhook(request):
     if signature != settings.POSTAL_SIGNATURE_KID:
         return HttpResponseForbidden()
 
-    payload = json.loads(request.body.decode("utf-8"))
-    event = payload.get("event")
+    data = json.loads(request.body.decode("utf-8"))
+    event = data.get("event")
+    payload = data.get("payload", {})
 
     match event:
         case "MessageSent":
