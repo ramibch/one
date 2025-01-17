@@ -5,15 +5,17 @@ from .models import (
     DomainDNSError,
     MessageSent,
     MessageTemplate,
-    Recipient,
+    Sender,
+    TemplateRecipient,
 )
 from .tasks import task_send_email_templates
 
 
 class EmailRecipientInline(admin.TabularInline):
-    model = Recipient
+    model = TemplateRecipient
     extra = 5
     exclude = ("subject", "body")
+    readonly_fields = ("email_sent",)
 
 
 class EmailAttachmentInline(admin.TabularInline):
@@ -21,9 +23,16 @@ class EmailAttachmentInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(Sender)
+class SenderAdmin(admin.ModelAdmin):
+    search_fields = ("name", "address")
+    list_display = ("__str__", "name", "address")
+
+
 @admin.register(MessageTemplate)
 class EmailTemplateAdmin(admin.ModelAdmin):
     search_fields = ("body", "subject")
+    autocomplete_fields = ("sender",)
     inlines = (EmailAttachmentInline, EmailRecipientInline)
     actions = ("send_emails",)
 

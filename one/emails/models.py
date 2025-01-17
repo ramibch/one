@@ -8,19 +8,34 @@ from django.core.files.storage import storages
 from django.core.mail import EmailMessage
 from django.db import models
 from django.utils import timezone
+from django.utils.functional import cached_property
 
 from one.base.utils.telegram import Bot
 
 
+class Sender(Model):
+    name = models.CharField(max_length=64)
+    address = models.EmailField(max_length=64, unique=True)
+
+    @cached_property
+    def name_and_address(self):
+        return f"{self.name} <{self.address}>"
+
+    def __str__(self):
+        return self.name_and_address
+
+
 class MessageTemplate(Model):
-    address_from = models.EmailField(max_length=64)
+    sender = ForeignKey(Sender, on_delete=models.SET_NULL, null=True)
     subject = models.CharField(max_length=128)
     reply_to = models.EmailField(max_length=64, null=True, blank=True)
     cc = models.EmailField(max_length=64, null=True, blank=True)
     body = models.TextField()
-    var1_meaning = models.CharField(max_length=64, null=True, blank=True)
-    var2_meaning = models.CharField(max_length=64, null=True, blank=True)
-    var3_meaning = models.CharField(max_length=64, null=True, blank=True)
+    remarks = models.TextField(null=True, blank=True)
+    is_periodic = models.BooleanField(default=False)
+    inverval = models.DurationField(null=True, blank=True)
+    start_time = models.DateField(null=True, blank=True)
+    stop_time = models.DateField(null=True, blank=True)
 
     def get_local_attachments(self):
         local_attachments = []
@@ -35,6 +50,12 @@ class MessageTemplate(Model):
 
         return local_attachments
 
+    def get_time_list(self) -> str:
+        if not self.is_periodic:
+            return []
+        if self.inverval is None or self.start_time or self.stop_time:
+            return []
+
     def __str__(self):
         return self.subject
 
@@ -47,18 +68,17 @@ class Attachment(Model):
         return self.file.name
 
 
-class Recipient(Model):
+class TemplateRecipient(Model):
     email_template = ForeignKey(MessageTemplate, on_delete=models.CASCADE)
+    email_sent = models.BooleanField(default=False, editable=False)
+    email_sent_on = models.DateTimeField(null=True, blank=True, editable=False)
     subject = models.CharField(max_length=128)
     body = models.TextField()
     to_address = models.EmailField(max_length=128)
     var_1 = models.CharField(max_length=64, null=True, blank=True)
     var_2 = models.CharField(max_length=64, null=True, blank=True)
     var_3 = models.CharField(max_length=64, null=True, blank=True)
-    remarks = models.TextField(null=True, blank=True)
     draft = models.BooleanField(default=False)
-    email_sent_on = models.DateTimeField(null=True, blank=True, editable=False)
-    email_sent = models.BooleanField(default=False, editable=False)
 
     def __str__(self) -> str:
         return self.to_address
@@ -81,14 +101,24 @@ class Recipient(Model):
         return self.text_replace(self.email_template.subject)
 
     def allow_to_send_email(self):
-        return all(
+        common = all(
             (
                 "#var" not in self.get_email_body(),
                 "#var" not in self.get_email_subject(),
                 not self.draft,
-                not self.email_sent,
+                self.email_template.sender is not None,
             )
         )
+
+        if self.email_template.is_periodic:
+            # check if now is in self.email_template.get_time_list()
+            # https://stackoverflow.com/questions/15105112/compare-only-time-part-in-datetime-python
+
+            extra = False
+        else:
+            extra = not self.email_sent
+
+        return common and extra
 
     def send_email(self):
         if not self.allow_to_send_email():
@@ -102,7 +132,7 @@ class Recipient(Model):
         msg = EmailMessage(
             subject=self.get_email_subject(),
             body=self.get_email_body(),
-            from_email=self.email_template.address_from,
+            from_email=self.email_template.sender.name_and_address,
             to=[self.to_address],
             cc=None if cc is None else [cc],
             reply_to=None if reply_to is None else [reply_to],
@@ -151,6 +181,10 @@ class MessageSent(Model):
     message_spam_status = models.CharField(max_length=128, null=True)
     message_tag = models.CharField(max_length=128, null=True)
 
+    class Meta(Model.Meta):
+        verbose_name = "Postal: MessageSent"
+        verbose_name_plural = "Postal: MessageSent"
+
     def save_from_payload(self, payload: dict):
         message: dict = payload.get("message", {})
 
@@ -190,6 +224,10 @@ class MessageLinkClicked(Model):
     https://docs.postalserver.io/developer/webhooks#message-click-event
     """
 
+    class Meta(Model.Meta):
+        verbose_name = "Postal: MessageLinkClicked"
+        verbose_name_plural = "Postal: MessageLinkClicked"
+
     def save_from_payload(self, payload: dict):
         please_implement_save_from_payload("MessageLinkClicked", payload)
 
@@ -198,6 +236,10 @@ class MessageLoaded(Model):
     """
     https://docs.postalserver.io/developer/webhooks#message-loadedopened-event
     """
+
+    class Meta(Model.Meta):
+        verbose_name = "Postal: MessageLoaded"
+        verbose_name_plural = "Postal: MessageLoaded"
 
     def save_from_payload(self, payload: dict):
         please_implement_save_from_payload("MessageLoaded", payload)
@@ -219,6 +261,10 @@ class DomainDNSError(Model):
     mx_error = models.CharField(max_length=256, null=True)
     return_path_status = models.CharField(max_length=128, null=True)
     return_path_error = models.CharField(max_length=256, null=True)
+
+    class Meta(Model.Meta):
+        verbose_name = "Postal: DomainDNSError"
+        verbose_name_plural = "Postal: DomainDNSError"
 
     def save_from_payload(self, payload: dict):
         self.domain = payload.get("domain")
