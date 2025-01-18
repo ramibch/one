@@ -19,7 +19,7 @@ class OneMiddleware:
 
     def __call__(self, request: HttpRequest):
         # Assign site attribute to request object
-        request.site = Site.objects.get(domain=request.get_host())
+        request.site = Site.objects.get_current(request=request)
 
         # Check redirect
         redirect_obj = self.get_redirect_or_none(request)

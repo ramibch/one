@@ -1,5 +1,6 @@
 import tempfile
 from copy import copy
+from datetime import timedelta
 from pathlib import Path
 
 from auto_prefetch import ForeignKey, Model
@@ -9,9 +10,11 @@ from django.core.mail import EmailMessage
 from django.db import models
 from django.utils import timezone
 from django.utils.functional import cached_property
+from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from one.base.utils.telegram import Bot
+from one.sites.models import Site
 
 
 class Sender(Model):
@@ -27,7 +30,9 @@ class Sender(Model):
 
     def clean(self):
         super().clean()
-        # TODO: Sender domain in Sites domain
+        domain = self.address.split("@")[1]
+        if not Site.objects.filter(domain=domain).exists():
+            raise ValidationError(_("Domain does not match any sites."), code="invalid")
 
 
 class EmailMessageTemplate(Model):
@@ -50,12 +55,12 @@ class EmailMessageTemplate(Model):
         blank=True,
         help_text=_("Set when email message is periodic." + f" Min: {MIN_INTERVAL}"),
     )
-    start_time = models.DateField(
+    start_time = models.DateTimeField(
         null=True,
         blank=True,
         help_text=_("Set when email message is periodic."),
     )
-    stop_time = models.DateField(
+    stop_time = models.DateTimeField(
         null=True,
         blank=True,
         help_text=_("Set when email message is periodic."),
@@ -88,8 +93,9 @@ class EmailMessageTemplate(Model):
             if self.stop_time - self.start_time > self.MAX_TIME_RANGE:
                 raise ValidationError(_("Time range too big."), code="invalid")
 
-    def get_local_attachments(self):
-        local_attachments = []
+    @cached_property
+    def local_attachments(self):
+        tmp_attachments = []
         for attachment in self.attachment_set.all():
             fileb = attachment.file.storage.open(attachment.file.name, "rb").read()
             with tempfile.TemporaryDirectory(delete=False) as tmpdirname:
@@ -97,19 +103,24 @@ class EmailMessageTemplate(Model):
                 Path(local_attachment).parent.mkdir(exist_ok=True, parents=True)
                 with open(local_attachment, "wb") as f:
                     f.write(fileb)
-                    local_attachments.append(local_attachment)
+                    tmp_attachments.append(local_attachment)
 
-        return local_attachments
+        return tmp_attachments
 
-    def get_time_list(self) -> list | None:
-        times = []
-        if all((self.interval, self.start_time, self.stop_time, self.is_periodic)):
-            next_time = self.start_time
-            while next_time < self.stop_time:
-                times.append(next_time)
-                next_time += self.interval
+    def send_periodic_email_now(self) -> bool:
+        # Validate required attributes
+        if not all((self.interval, self.start_time, self.stop_time, self.is_periodic)):
+            return False
 
-        return times
+        # Get the current time rounded to the nearest minute
+        current_time = now().replace(second=0, microsecond=0)
+
+        # Validate that current time is within the range
+        if not (self.start_time <= current_time <= self.stop_time):
+            return False
+
+        # Calculate if the current time matches the periodic interval
+        return (current_time - self.start_time) % self.interval == timedelta(0)
 
     def __str__(self):
         return self.subject
@@ -155,7 +166,6 @@ class Recipient(Model):
     def email_subject(self):
         return self.text_replace(self.email.subject)
 
-    @cached_property
     def allow_to_send_email(self):
         common = all(
             (
@@ -167,42 +177,33 @@ class Recipient(Model):
         )
 
         if self.email.is_periodic:
-            expression = "%Y_%m_%d_%H_%M"
-            strnow = timezone.now().strftime(expression)
-            strtimes = [t.strftime(expression) for t in self.email.get_time_list()]
-            extra = strnow in strtimes
+            extra = self.email.send_periodic_email_now()
         else:
-            extra = self.send_times < 1
-
+            extra = self.send_times == 0
         return common and extra
 
     def send_email(self, fail_silently=False):
-        if self.allow_to_send_email:
+        if self.allow_to_send_email():
             reply_to = self.email.reply_to
             cc = self.email.cc
 
             msg = EmailMessage(
-                subject=self.email_subject(),
-                body=self.email_body(),
+                subject=self.email_subject,
+                body=self.email_body,
                 from_email=self.email.sender.name_and_address,
                 to=[self.to_address],
                 cc=None if cc is None else [cc],
                 reply_to=None if reply_to is None else [reply_to],
             )
 
-            local_attachments = self.email.get_local_attachments()
-            for local_attachment in local_attachments:
+            for local_attachment in self.email.local_attachments:
                 msg.attach_file(local_attachment)
 
             # Send the email
             msg.send(fail_silently=fail_silently)
-            self.send_times += self.send_times
+            self.send_times = self.send_times + 1
             self.sent_on = timezone.now()
             self.save()
-
-        else:
-            msg = f"Email {self.email} not allowed to send to {self.to_address}"
-            Bot.to_admin(msg)
 
 
 # Postal models

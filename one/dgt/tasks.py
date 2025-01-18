@@ -7,7 +7,7 @@ from huey.contrib import djhuey as huey
 from .models import DgtQuestion, DgtTest
 
 
-@huey.periodic_task(crontab(day=1))
+@huey.db_periodic_task(crontab(day=1))
 def scrape_dgt_task_monthly():
     last_page = DgtTest.objects.last().dgt_page or 270
     host = "https://revista.dgt.es"

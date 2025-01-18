@@ -7,17 +7,7 @@ from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
 from ..articles.tasks import sync_articles
 from ..pages.tasks import sync_pages
-from .models import Host, Seo, Site
-
-
-class HostInline(admin.TabularInline):
-    model = Host
-    extra = 0
-
-
-@admin.register(Host)
-class HostAdmin(admin.ModelAdmin):
-    list_display = ("name", "site", "is_main")
+from .models import Seo, Site
 
 
 @admin.register(Site)
@@ -26,7 +16,6 @@ class SiteAdmin(admin.ModelAdmin):
     list_display = ("domain", "brand_name", "picocss_color", "remarks")
     readonly_fields = ("domain",)
     actions = ["sync_articles", "sync_pages"]
-    inlines = (HostInline,)
     fieldsets = (
         (
             _("Site fields"),

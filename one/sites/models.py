@@ -2,7 +2,7 @@ import contextlib
 import string
 from copy import copy
 
-from auto_prefetch import ForeignKey, Manager, Model
+from auto_prefetch import Manager, Model
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -55,13 +55,13 @@ class SiteManager(Manager):
         try:
             # First attempt to look up the site by host with or without port.
             if host not in SITE_CACHE:
-                SITE_CACHE[host] = self.get(host__name__iexact=host)
+                SITE_CACHE[host] = self.get(domain__iexact=host)
             return SITE_CACHE[host]
         except Site.DoesNotExist:
             # Fallback to looking up site after stripping port from the host.
             domain, port = split_domain_port(host)
             if domain not in SITE_CACHE:
-                SITE_CACHE[domain] = self.get(host__name__iexact=domain)
+                SITE_CACHE[domain] = self.get(domain__iexact=domain)
             return SITE_CACHE[domain]
 
     def get_current(self, request):
@@ -97,7 +97,13 @@ class PicoCssColor(models.TextChoices):
 
 
 class Site(Model):
-    domain = models.CharField(_("Name"), max_length=32, unique=True, db_index=True)
+    domain = models.CharField(
+        _("Name"),
+        max_length=32,
+        unique=True,
+        db_index=True,
+        validators=[_simple_domain_name_validator],
+    )
     remarks = models.TextField(null=True, blank=True)
 
     # Brand
@@ -206,21 +212,6 @@ class Site(Model):
     class Meta(Model.Meta):
         verbose_name = _("site")
         verbose_name_plural = _("sites")
-
-
-class Host(Model):
-    site = ForeignKey("sites.Site", on_delete=models.CASCADE)
-    name = models.CharField(
-        _("host name"),
-        max_length=100,
-        validators=[_simple_domain_name_validator],
-        primary_key=True,
-        db_index=True,
-    )
-    is_main = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
 
 
 def clear_site_cache(sender, **kwargs):
