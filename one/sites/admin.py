@@ -23,14 +23,14 @@ class HostAdmin(admin.ModelAdmin):
 @admin.register(Site)
 class SiteAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    list_display = ("name", "brand_name", "picocss_color", "remarks")
-    readonly_fields = ("name",)
+    list_display = ("domain", "brand_name", "picocss_color", "remarks")
+    readonly_fields = ("domain",)
     actions = ["sync_articles", "sync_pages"]
     inlines = (HostInline,)
     fieldsets = (
         (
             _("Site fields"),
-            {"fields": ("name",)},
+            {"fields": ("domain",)},
         ),
         (
             _("Submodules"),

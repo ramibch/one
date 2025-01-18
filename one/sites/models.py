@@ -97,7 +97,7 @@ class PicoCssColor(models.TextChoices):
 
 
 class Site(Model):
-    name = models.CharField(_("Name"), max_length=32, unique=True, db_index=True)
+    domain = models.CharField(_("Name"), max_length=32, unique=True, db_index=True)
     remarks = models.TextField(null=True, blank=True)
 
     # Brand
@@ -140,7 +140,7 @@ class Site(Model):
     development = DevelopmentSiteManager()
 
     def __str__(self):
-        return self.name
+        return self.domain
 
     def clean_emoji(self):
         if self.emoji_in_brand and self.emoji in [None, ""]:
@@ -177,7 +177,7 @@ class Site(Model):
 
     @cached_property
     def from_email_address(self):
-        return f"{self.display_brand} <no-reply@{self.name}>"
+        return f"{self.display_brand} <no-reply@{self.domain}>"
 
     def get_object_admin_url(self, obj) -> str:
         # the url to the Django admin form for the model instance

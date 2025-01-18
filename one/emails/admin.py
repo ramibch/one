@@ -3,22 +3,22 @@ from django.contrib import admin
 from .models import (
     Attachment,
     DomainDNSError,
+    EmailMessageTemplate,
     MessageSent,
-    MessageTemplate,
+    Recipient,
     Sender,
-    TemplateRecipient,
 )
 from .tasks import task_send_email_templates
 
 
-class EmailRecipientInline(admin.TabularInline):
-    model = TemplateRecipient
+class RecipientInline(admin.TabularInline):
+    model = Recipient
     extra = 5
     exclude = ("subject", "body")
-    readonly_fields = ("email_sent",)
+    readonly_fields = ("send_times",)
 
 
-class EmailAttachmentInline(admin.TabularInline):
+class AttachmentInline(admin.TabularInline):
     model = Attachment
     extra = 0
 
@@ -29,12 +29,15 @@ class SenderAdmin(admin.ModelAdmin):
     list_display = ("__str__", "name", "address")
 
 
-@admin.register(MessageTemplate)
-class EmailTemplateAdmin(admin.ModelAdmin):
+@admin.register(EmailMessageTemplate)
+class EmailMessageTemplateAdmin(admin.ModelAdmin):
     search_fields = ("body", "subject")
     autocomplete_fields = ("sender",)
-    inlines = (EmailAttachmentInline, EmailRecipientInline)
+    inlines = (AttachmentInline, RecipientInline)
     actions = ("send_emails",)
+    list_display = ("subject", "body", "sender", "reply_to", "cc")
+    list_editable = ("sender",)
+    list_filter = ("is_periodic", "sender")
 
     @admin.action(description="📧 Send Emails")
     def send_emails(modeladmin, request, queryset):

@@ -1,14 +1,15 @@
-import os
 import tempfile
 from copy import copy
 from pathlib import Path
 
 from auto_prefetch import ForeignKey, Model
+from django.core.exceptions import ValidationError
 from django.core.files.storage import storages
 from django.core.mail import EmailMessage
 from django.db import models
 from django.utils import timezone
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 
 from one.base.utils.telegram import Bot
 
@@ -17,25 +18,75 @@ class Sender(Model):
     name = models.CharField(max_length=64)
     address = models.EmailField(max_length=64, unique=True)
 
+    def __str__(self):
+        return self.name_and_address
+
     @cached_property
     def name_and_address(self):
         return f"{self.name} <{self.address}>"
 
-    def __str__(self):
-        return self.name_and_address
+    def clean(self):
+        super().clean()
+        # TODO: Sender domain in Sites domain
 
 
-class MessageTemplate(Model):
+class EmailMessageTemplate(Model):
+    MIN_INTERVAL = timezone.timedelta(hours=8)
+    MAX_INTERVAL = timezone.timedelta(days=365)
+    MAX_TIME_RANGE = timezone.timedelta(days=3 * 365)
     sender = ForeignKey(Sender, on_delete=models.SET_NULL, null=True)
     subject = models.CharField(max_length=128)
     reply_to = models.EmailField(max_length=64, null=True, blank=True)
     cc = models.EmailField(max_length=64, null=True, blank=True)
     body = models.TextField()
     remarks = models.TextField(null=True, blank=True)
-    is_periodic = models.BooleanField(default=False)
-    inverval = models.DurationField(null=True, blank=True)
-    start_time = models.DateField(null=True, blank=True)
-    stop_time = models.DateField(null=True, blank=True)
+
+    is_periodic = models.BooleanField(
+        default=False,
+        help_text=_("Email message will be send periodically."),
+    )
+    interval = models.DurationField(
+        null=True,
+        blank=True,
+        help_text=_("Set when email message is periodic." + f" Min: {MIN_INTERVAL}"),
+    )
+    start_time = models.DateField(
+        null=True,
+        blank=True,
+        help_text=_("Set when email message is periodic."),
+    )
+    stop_time = models.DateField(
+        null=True,
+        blank=True,
+        help_text=_("Set when email message is periodic."),
+    )
+
+    def clean(self):
+        super().clean()
+
+        text = f"{self.subject}\n{self.body}"
+        cleantext = text.replace("#var1", "").replace("#var2", "").replace("#var3", "")
+        if "#" in cleantext:
+            raise ValidationError(_("Tag '#' not recognised."), code="invalid")
+
+        if self.is_periodic:
+            if self.interval is None:
+                raise ValidationError(_("Interval must be set."), code="invalid")
+
+            if self.start_time is None:
+                raise ValidationError(_("Start time must be set."), code="invalid")
+
+            if self.stop_time is None:
+                raise ValidationError(_("Stop time must be set."), code="invalid")
+
+            if self.interval < self.MIN_INTERVAL:
+                raise ValidationError(_("Interval too low."), code="invalid")
+
+            if self.interval > self.MAX_INTERVAL:
+                raise ValidationError(_("Interval too big."), code="invalid")
+
+            if self.stop_time - self.start_time > self.MAX_TIME_RANGE:
+                raise ValidationError(_("Time range too big."), code="invalid")
 
     def get_local_attachments(self):
         local_attachments = []
@@ -50,30 +101,32 @@ class MessageTemplate(Model):
 
         return local_attachments
 
-    def get_time_list(self) -> str:
-        if not self.is_periodic:
-            return []
-        if self.inverval is None or self.start_time or self.stop_time:
-            return []
+    def get_time_list(self) -> list | None:
+        times = []
+        if all((self.interval, self.start_time, self.stop_time, self.is_periodic)):
+            next_time = self.start_time
+            while next_time < self.stop_time:
+                times.append(next_time)
+                next_time += self.interval
+
+        return times
 
     def __str__(self):
         return self.subject
 
 
 class Attachment(Model):
-    email_template = ForeignKey(MessageTemplate, on_delete=models.CASCADE)
+    email_template = ForeignKey(EmailMessageTemplate, on_delete=models.CASCADE)
     file = models.FileField(upload_to="emails", storage=storages["private"])
 
     def __str__(self):
         return self.file.name
 
 
-class TemplateRecipient(Model):
-    email_template = ForeignKey(MessageTemplate, on_delete=models.CASCADE)
-    email_sent = models.BooleanField(default=False, editable=False)
-    email_sent_on = models.DateTimeField(null=True, blank=True, editable=False)
-    subject = models.CharField(max_length=128)
-    body = models.TextField()
+class Recipient(Model):
+    email = ForeignKey(EmailMessageTemplate, on_delete=models.CASCADE)
+    send_times = models.PositiveSmallIntegerField(default=0, editable=False)
+    sent_on = models.DateTimeField(null=True, blank=True, editable=False)
     to_address = models.EmailField(max_length=128)
     var_1 = models.CharField(max_length=64, null=True, blank=True)
     var_2 = models.CharField(max_length=64, null=True, blank=True)
@@ -94,65 +147,62 @@ class TemplateRecipient(Model):
             text_copy = text_copy.replace(var_tag, var_value or var_tag)
         return text_copy
 
-    def get_email_body(self):
-        return self.text_replace(self.email_template.body)
+    @cached_property
+    def email_body(self):
+        return self.text_replace(self.email.body)
 
-    def get_email_subject(self):
-        return self.text_replace(self.email_template.subject)
+    @cached_property
+    def email_subject(self):
+        return self.text_replace(self.email.subject)
 
+    @cached_property
     def allow_to_send_email(self):
         common = all(
             (
-                "#var" not in self.get_email_body(),
-                "#var" not in self.get_email_subject(),
+                "#var" not in self.email_body,
+                "#var" not in self.email_subject,
                 not self.draft,
-                self.email_template.sender is not None,
+                self.email.sender is not None,
             )
         )
 
-        if self.email_template.is_periodic:
-            # check if now is in self.email_template.get_time_list()
-            # https://stackoverflow.com/questions/15105112/compare-only-time-part-in-datetime-python
-
-            extra = False
+        if self.email.is_periodic:
+            expression = "%Y_%m_%d_%H_%M"
+            strnow = timezone.now().strftime(expression)
+            strtimes = [t.strftime(expression) for t in self.email.get_time_list()]
+            extra = strnow in strtimes
         else:
-            extra = not self.email_sent
+            extra = self.send_times < 1
 
         return common and extra
 
-    def send_email(self):
-        if not self.allow_to_send_email():
-            Bot.to_admin(
-                f"Email {self.email_template} not allowed to send to {self.to_address}"
+    def send_email(self, fail_silently=False):
+        if self.allow_to_send_email:
+            reply_to = self.email.reply_to
+            cc = self.email.cc
+
+            msg = EmailMessage(
+                subject=self.email_subject(),
+                body=self.email_body(),
+                from_email=self.email.sender.name_and_address,
+                to=[self.to_address],
+                cc=None if cc is None else [cc],
+                reply_to=None if reply_to is None else [reply_to],
             )
-            return
-        reply_to = self.email_template.reply_to
-        cc = self.email_template.cc
 
-        msg = EmailMessage(
-            subject=self.get_email_subject(),
-            body=self.get_email_body(),
-            from_email=self.email_template.sender.name_and_address,
-            to=[self.to_address],
-            cc=None if cc is None else [cc],
-            reply_to=None if reply_to is None else [reply_to],
-        )
+            local_attachments = self.email.get_local_attachments()
+            for local_attachment in local_attachments:
+                msg.attach_file(local_attachment)
 
-        local_attachments = self.email_template.get_local_attachments()
-        for local_attachment in local_attachments:
-            msg.attach_file(local_attachment)
-
-        try:
-            msg.send(fail_silently=False)
-            self.email_sent = True
-            self.email_sent_on = timezone.now()
+            # Send the email
+            msg.send(fail_silently=fail_silently)
+            self.send_times += self.send_times
+            self.sent_on = timezone.now()
             self.save()
-        except Exception as e:
-            Bot.to_admin(f"Email Error {self.email_template} :{e}")
 
-        # Remove temporary files
-        for local_attachment in local_attachments:
-            os.unlink(local_attachment)
+        else:
+            msg = f"Email {self.email} not allowed to send to {self.to_address}"
+            Bot.to_admin(msg)
 
 
 # Postal models

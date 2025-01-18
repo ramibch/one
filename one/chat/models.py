@@ -32,7 +32,7 @@ class Chat(Model):
 
     @cached_property
     def join_full_url(self):
-        return self.site.main_host.name + self.join_url
+        return self.site.domain + self.join_url
 
 
 class Message(auto_prefetch.Model):
