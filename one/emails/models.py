@@ -211,10 +211,12 @@ def please_implement_save_from_payload(model_name, payload):
     Bot.to_admin(f"Please implement {model_name}.save_from_payload\n\n{str(payload)}")
 
 
-class MessageSent(Model):
+class PostalMessage(Model):
     """
     https://docs.postalserver.io/developer/webhooks#message-status-events
     """
+
+    POSTAL_URL = "https://postal.ramib.ch/org/ramib-ch/servers/ramib-ch/messages/"
 
     status = models.CharField(max_length=128, null=True)
     details = models.CharField(max_length=512, null=True)
@@ -222,33 +224,37 @@ class MessageSent(Model):
     time = models.FloatField(default=0.0)
     sent_with_ssl = models.BooleanField(default=False)
     timestamp = models.FloatField(null=True)
-    message_token = models.CharField(max_length=128, null=True)
-    message_direction = models.CharField(max_length=128, null=True)
-    message_id = models.CharField(max_length=128, null=True)
-    message_from = models.EmailField()
-    message_to = models.EmailField()
-    message_subject = models.CharField(max_length=128, null=True)
+    token = models.CharField(max_length=128, null=True)
+    direction = models.CharField(max_length=128, null=True)
+    large_id = models.CharField(max_length=128, null=True)
+    mail_from = models.EmailField()
+    mail_to = models.EmailField()
+    subject = models.CharField(max_length=256, null=True)
     message_timestamp = models.FloatField(null=True)
-    message_spam_status = models.CharField(max_length=128, null=True)
-    message_tag = models.CharField(max_length=128, null=True)
+    spam_status = models.CharField(max_length=128, null=True)
+    tag = models.CharField(max_length=128, null=True)
+
+    @cached_property
+    def url(self):
+        return f"{self.POSTAL_URL}{self.id}"
 
     class Meta(Model.Meta):
-        verbose_name = "Postal: MessageSent"
-        verbose_name_plural = "Postal: MessageSent"
+        verbose_name = "Postal: Message"
+        verbose_name_plural = "Postal: Messages"
 
     def save_from_payload(self, payload: dict):
         message: dict = payload.get("message", {})
-
+        # ID
         # Message attrs
-        self.message_token = message.get("token")
-        self.message_direction = message.get("direction")
-        self.message_id = message.get("message_id")
-        self.message_to = message.get("to")
-        self.message_from = message.get("from")
-        self.message_subject = message.get("subject")
-        self.message_timestamp = message.get("timestamp")
-        self.message_spam_status = message.get("spam_status")
-        self.message_tag = message.get("tag")
+        self.id = message.get("id")
+        self.token = message.get("token")
+        self.direction = message.get("direction")
+        self.large_id = message.get("message_id")
+        self.mail_to = message.get("to")
+        self.mail_from = message.get("from")
+        self.subject = message.get("subject")
+        self.spam_status = message.get("spam_status")
+        self.tag = message.get("tag")
 
         # Output
         self.output = payload.get("output")
@@ -263,11 +269,14 @@ class MessageSent(Model):
         # Timestamp
         self.timestamp = payload.get("timestamp")
 
-        if self.message_id:
-            self.save()
+        self.save()
+
+        if self.direction == "incoming":
+            msg = f"📧 New incoming Email\n\n{self.__dict__}"
+            Bot.to_admin(msg)
 
     def __str__(self):
-        return f"[{self.message_to}] {self.message_subject}"
+        return f"[{self.id}] {self.subject}"[:40]
 
 
 class MessageLinkClicked(Model):

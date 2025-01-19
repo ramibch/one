@@ -4,7 +4,7 @@ from .models import (
     Attachment,
     DomainDNSError,
     EmailMessageTemplate,
-    MessageSent,
+    PostalMessage,
     Recipient,
     Sender,
 )
@@ -72,8 +72,8 @@ class DomainDNSErrorAdmin(admin.ModelAdmin):
     readonly_fields = tuple(field.name for field in DomainDNSError._meta.fields)
 
 
-@admin.register(MessageSent)
-class MessageSentAdmin(admin.ModelAdmin):
-    list_filter = ("status", "message_tag", "message_spam_status", "message_direction")
-    readonly_fields = tuple(field.name for field in MessageSent._meta.fields)
-    list_display = ("message_id", "message_to", "message_from", "output")
+@admin.register(PostalMessage)
+class PostalMessageAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "mail_from", "mail_to", "direction", "url")
+    list_filter = ("status", "tag", "spam_status", "direction")
+    readonly_fields = ["url"] + [field.name for field in PostalMessage._meta.fields]

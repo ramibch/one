@@ -5,7 +5,9 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from .models import DomainDNSError, MessageLinkClicked, MessageLoaded, MessageSent
+from one.base.utils.telegram import Bot
+
+from .models import DomainDNSError, MessageLinkClicked, MessageLoaded, PostalMessage
 
 
 @csrf_exempt
@@ -21,7 +23,7 @@ def postal_webhook(request):
 
     match event:
         case "MessageSent":
-            MessageSent().save_from_payload(payload)
+            PostalMessage().save_from_payload(payload)
 
         case "MessageLinkClicked":
             MessageLinkClicked().save_from_payload(payload)
@@ -31,5 +33,8 @@ def postal_webhook(request):
 
         case "DomainDNSError":
             DomainDNSError().save_from_payload(payload)
+
+        case _:
+            Bot.to_admin(f"Webhook endpoint to implemented:\n\n{data}")
 
     return HttpResponse()
