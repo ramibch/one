@@ -1,4 +1,3 @@
-import contextlib
 import string
 from copy import copy
 
@@ -21,17 +20,17 @@ from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
 SITE_CACHE = {}
 
-LOCAL_SITES_EXPRESSION = Q(name__icontains="localhost") | Q(name__icontains="127.0.0.1")
+LOCAL_EXPRESSION = Q(domain__icontains="localhost") | Q(domain__icontains="127.0.0.1")
 
 
 class ProductionSiteManager(Manager):
     def get_queryset(self):
-        return super().get_queryset().exclude(LOCAL_SITES_EXPRESSION)
+        return super().get_queryset().exclude(LOCAL_EXPRESSION)
 
 
 class DevelopmentSiteManager(Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(LOCAL_SITES_EXPRESSION)
+        return super().get_queryset().filter(LOCAL_EXPRESSION)
 
 
 def _simple_domain_name_validator(value):
@@ -159,10 +158,6 @@ class Site(Model):
         return self.brand_name
 
     @cached_property
-    def main_host(self):
-        return self.host_set.filter(is_main=True).first()
-
-    @cached_property
     def languages(self) -> set:
         langs = copy(set(self.rest_languages))
         langs.add(self.default_language)
@@ -179,7 +174,7 @@ class Site(Model):
     @cached_property
     def url(self) -> str:
         schema = "https" if settings.HTTPS else "http"
-        return f"{schema}://{self.main_host}"
+        return f"{schema}://{self.domain}"
 
     @cached_property
     def from_email_address(self):
@@ -220,10 +215,15 @@ def clear_site_cache(sender, **kwargs):
     """
     instance = kwargs["instance"]
     using = kwargs["using"]
-    with contextlib.suppress(KeyError):
+
+    try:
         del SITE_CACHE[instance.pk]
-    with contextlib.suppress(KeyError, Site.DoesNotExist):
-        del SITE_CACHE[Site.objects.using(using).get(pk=instance.pk).main_host]
+    except KeyError:
+        pass
+    try:
+        del SITE_CACHE[Site.objects.using(using).get(pk=instance.pk)]
+    except (KeyError, Site.DoesNotExist):
+        pass
 
 
 class Seo(TranslatableModel):

@@ -68,6 +68,7 @@ line-length = 88
 
 [tool.ruff.lint]
 select = ["E", "F", "UP", "B", "SIM", "I"]
+ignore = ["SIM105"]
 
 [tool.coverage.run]
 branch = true

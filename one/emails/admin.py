@@ -23,6 +23,21 @@ class AttachmentInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(Recipient)
+class RecipientAdmin(admin.ModelAdmin):
+    search_fields = ("to_address", "var_1", "var_2", "var_3")
+    list_display = ("__str__", "email", "to_address", "draft")
+
+    # email = ForeignKey(EmailMessageTemplate, on_delete=models.CASCADE)
+    # send_times = models.PositiveSmallIntegerField(default=0, editable=False)
+    # sent_on = models.DateTimeField(null=True, blank=True, editable=False)
+    # to_address = models.EmailField(max_length=128)
+    # var_1 = models.CharField(max_length=64, null=True, blank=True)
+    # var_2 = models.CharField(max_length=64, null=True, blank=True)
+    # var_3 = models.CharField(max_length=64, null=True, blank=True)
+    # draft = models.BooleanField(default=False)
+
+
 @admin.register(Sender)
 class SenderAdmin(admin.ModelAdmin):
     search_fields = ("name", "address")
