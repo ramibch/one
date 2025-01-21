@@ -15,7 +15,7 @@ from .utils.translation import translate_text
 @huey.signal()
 def all_signal_handler(signal, task, exc=None):
     # This handler will be called for every signal.
-    Bot.to_admin(f"{signal} - {task.id}")
+    Bot.to_admin(f"{signal} - {task.__dict__}")
 
 
 @huey.signal(SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_CANCELED, SIGNAL_REVOKED)
