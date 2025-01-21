@@ -5,10 +5,24 @@ from django.core.management import call_command
 from django.db.models import Model, QuerySet
 from huey import crontab
 from huey.contrib import djhuey as huey
+from huey.signals import SIGNAL_CANCELED, SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_REVOKED
 
 from .utils.abstracts import BaseSubmoduleFolder
 from .utils.telegram import Bot
 from .utils.translation import translate_text
+
+
+@huey.signal()
+def all_signal_handler(signal, task, exc=None):
+    # This handler will be called for every signal.
+    Bot.to_admin(f"{signal} - {task.id}")
+
+
+@huey.signal(SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_CANCELED, SIGNAL_REVOKED)
+def task_not_executed_handler(signal, task, exc=None):
+    # This handler will be called for the 4 signals listed, which
+    # correspond to error conditions.
+    Bot.to_admin(f"[{signal}] {task.id} - not executed")
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="0"))
