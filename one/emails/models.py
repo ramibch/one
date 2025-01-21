@@ -276,19 +276,6 @@ class PostalMessage(Model):
 
         self.save()
 
-        if self.direction == "incoming":
-            msg = (
-                "📧 New incoming Email\n\n"
-                f"ID: {self.id}\n"
-                f"Details: {self.details}\n"
-                f"Subject: {self.subject}\n"
-                f"From: {self.mail_from}\n"
-                f"To: {self.mail_to}\n"
-                f"Spam Status: {self.spam_status}\n"
-                f"URL: {self.url}\n"
-            )
-            Bot.to_admin(msg)
-
     def __str__(self):
         return f"[{self.id}] {self.subject}"[:40]
 
