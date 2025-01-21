@@ -1,5 +1,6 @@
 from io import StringIO
 
+import yaml
 from django.conf import settings
 from django.core.management import call_command
 from django.db.models import Model, QuerySet
@@ -17,7 +18,9 @@ def task_not_executed_handler(signal, task, exc=None):
     # This handler will be called for the 4 signals listed, which
     # correspond to error conditions.
 
-    Bot.to_admin(f"[{signal}] {task.id} - not executed")
+    yaml_task = yaml.dump(task, default_flow_style=False)
+    msg = f"⚠️ Task not executed ({signal})\n\n{yaml_task}"
+    Bot.to_admin(msg)
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="0"))

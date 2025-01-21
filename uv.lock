@@ -115,18 +115,6 @@ wheels = [
 ]
 
 [[package]]
-name = "beautifulsoup4"
-version = "4.12.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "soupsieve" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/b3/ca/824b1195773ce6166d388573fc106ce56d4a805bd7427b624e063596ec58/beautifulsoup4-4.12.3.tar.gz", hash = "sha256:74e3d1928edc070d21748185c46e3fb33490f22f52a3addee9aee0f4f7781051", size = 581181 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b1/fe/e8c672695b37eecc5cbf43e1d0638d88d66ba3a44c4d321c796f4e59167f/beautifulsoup4-4.12.3-py3-none-any.whl", hash = "sha256:b80878c9f40111313e55da8ba20bdba06d8fa3969fc68304167741bbf9e082ed", size = 147925 },
-]
-
-[[package]]
 name = "black"
 version = "24.10.0"
 source = { registry = "https://pypi.org/simple" }
@@ -622,18 +610,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/3c/8b/29a211b9d5c6ec6a342e956313eb92f0709f14bc131d07165818dd5648a5/django-nested-inline-0.4.6.tar.gz", hash = "sha256:e57b55858d112364dfb112bbcdabb888e581d1677d31c1cac3bdcef6c890dc61", size = 19769 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/23/5f/99dde59e13c23ff1b5054e8238b2a7d27de06f8f27a4e7ef150ea88a4ad9/django_nested_inline-0.4.6-py2.py3-none-any.whl", hash = "sha256:4fc6f0e78b3b5411b4bb7f180bb984831b88874bda48e49a14307baff5da5f12", size = 25077 },
-]
-
-[[package]]
-name = "django-o365mail"
-version = "1.1.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "o365" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/0e/e2/f2df6ff046aff30ab74db2cb98615dc04ae96d58c9a20b7c3db7d23e2c8d/django-o365mail-1.1.0.tar.gz", hash = "sha256:dc8b18f7bc4f488674dd6ef0dedc19a479cd646133afb7643b6d914bb6bc6b8c", size = 8551 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a9/ca/84b111cd0713f91bb8b136e12244ca6b20ce4cb01576be67a746f879c9da/django_o365mail-1.1.0-py3-none-any.whl", hash = "sha256:13ed62247b757c59e020da69b33a021f362f1cf860b54d55d7ebb5ef291358ad", size = 9278 },
 ]
 
 [[package]]
@@ -1200,23 +1176,6 @@ wheels = [
 ]
 
 [[package]]
-name = "o365"
-version = "2.0.38"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "beautifulsoup4" },
-    { name = "python-dateutil" },
-    { name = "requests" },
-    { name = "requests-oauthlib" },
-    { name = "tzdata" },
-    { name = "tzlocal" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/37/b6/d64cd5a023493c1521f1f79a8f9d91f2844f0d541ca8a3c8e646f80baebc/O365-2.0.38.tar.gz", hash = "sha256:cee202b9980cf41904ab1406f25b720f8367fe51fe4172af226b9597e3e4b0b2", size = 181380 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/0f/78/052993901e53c347fa82a8aa119d474732ff12b756412a47e58fc7ea7e2b/O365-2.0.38-py3-none-any.whl", hash = "sha256:3a3bff2d224ef84fc39f853f48beb8114135e3a3c46c72b03e8f9f6eaddd8b4d", size = 158317 },
-]
-
-[[package]]
 name = "oauthlib"
 version = "3.2.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1250,7 +1209,6 @@ dependencies = [
     { name = "django-modeltranslation" },
     { name = "django-money", extra = ["exchange"] },
     { name = "django-nested-inline" },
-    { name = "django-o365mail" },
     { name = "django-rosetta" },
     { name = "django-storages" },
     { name = "django-stubs", extra = ["compatible-mypy"] },
@@ -1308,7 +1266,6 @@ requires-dist = [
     { name = "django-modeltranslation", specifier = ">=0.19.11" },
     { name = "django-money", extras = ["exchange"] },
     { name = "django-nested-inline", specifier = ">=0.4.6" },
-    { name = "django-o365mail" },
     { name = "django-rosetta" },
     { name = "django-storages", specifier = ">=1.14.4" },
     { name = "django-stubs", extras = ["compatible-mypy"] },
@@ -1830,15 +1787,6 @@ wheels = [
 ]
 
 [[package]]
-name = "soupsieve"
-version = "2.6"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/d7/ce/fbaeed4f9fb8b2daa961f90591662df6a86c1abf25c548329a86920aedfb/soupsieve-2.6.tar.gz", hash = "sha256:e2e68417777af359ec65daac1057404a3c8a5455bb8abc36f1a9866ab1a51abb", size = 101569 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d1/c2/fe97d779f3ef3b15f05c94a2f1e3d21732574ed441687474db9d342a7315/soupsieve-2.6-py3-none-any.whl", hash = "sha256:e72c4ff06e4fb6e4b5a9f0f55fe6e81514581fca1515028625d0f299c602ccc9", size = 36186 },
-]
-
-[[package]]
 name = "sqlparse"
 version = "0.5.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1979,18 +1927,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e1/34/943888654477a574a86a98e9896bae89c7aa15078ec29f490fef2f1e5384/tzdata-2024.2.tar.gz", hash = "sha256:7d85cc416e9382e69095b7bdf4afd9e3880418a2413feec7069d533d6b4e31cc", size = 193282 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a6/ab/7e5f53c3b9d14972843a647d8d7a853969a58aecc7559cb3267302c94774/tzdata-2024.2-py2.py3-none-any.whl", hash = "sha256:a48093786cdcde33cad18c2555e8532f34422074448fbc874186f0abd79565cd", size = 346586 },
-]
-
-[[package]]
-name = "tzlocal"
-version = "5.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "tzdata", marker = "platform_system == 'Windows'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/04/d3/c19d65ae67636fe63953b20c2e4a8ced4497ea232c43ff8d01db16de8dc0/tzlocal-5.2.tar.gz", hash = "sha256:8d399205578f1a9342816409cc1e46a93ebd5755e39ea2d85334bea911bf0e6e", size = 30201 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/97/3f/c4c51c55ff8487f2e6d0e618dba917e3c3ee2caae6cf0fbb59c9b1876f2e/tzlocal-5.2-py3-none-any.whl", hash = "sha256:49816ef2fe65ea8ac19d19aa7a1ae0551c834303d5014c6d5a62e4cbda8047b8", size = 17859 },
 ]
 
 [[package]]

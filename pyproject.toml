@@ -10,7 +10,6 @@ dependencies = [
   "django-cleanup",
   "django-extensions",
   "django-rosetta",
-  "django-o365mail",
   "django-money[exchange]",
   "django-upgrade",
   "django-markdownify",
