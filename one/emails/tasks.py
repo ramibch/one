@@ -1,5 +1,3 @@
-import os
-
 from django.utils.timezone import now
 from huey import crontab
 from huey.contrib import djhuey as huey
@@ -30,9 +28,6 @@ def task_send_email_templates(queryset):
 
         if count > 0:
             Bot.to_admin(log)
-
-        for local_attachment in email.local_attachments:
-            os.unlink(local_attachment)
 
 
 @huey.db_periodic_task(crontab(minute="*"))

@@ -97,6 +97,7 @@ class EmailMessageTemplate(Model):
     def local_attachments(self):
         tmp_attachments = []
         for attachment in self.attachment_set.all():
+            # TODO: rewrite generate_tmpfile_from_field (BASE_DIR /"tmp")
             fileb = attachment.file.storage.open(attachment.file.name, "rb").read()
             with tempfile.TemporaryDirectory(delete=False) as tmpdirname:
                 local_attachment = f"{tmpdirname}/{attachment.file.name}"

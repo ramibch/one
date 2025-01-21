@@ -52,6 +52,9 @@ def postal_webhook(request):
         case "DomainDNSError":
             DomainDNSError().save_from_payload(payload)
 
+        case _:  # for messages
+            return HttpResponse("Message received!")
+
     data_yaml = yaml.dump(data, default_flow_style=False)
     msg = f"📧 New Postal webhook event\n\n{data_yaml}"
     Bot.to_admin(msg)
