@@ -12,16 +12,11 @@ from .utils.telegram import Bot
 from .utils.translation import translate_text
 
 
-@huey.signal()
-def all_signal_handler(signal, task, exc=None):
-    # This handler will be called for every signal.
-    Bot.to_admin(f"{signal} - {task.__dict__}")
-
-
 @huey.signal(SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_CANCELED, SIGNAL_REVOKED)
 def task_not_executed_handler(signal, task, exc=None):
     # This handler will be called for the 4 signals listed, which
     # correspond to error conditions.
+
     Bot.to_admin(f"[{signal}] {task.id} - not executed")
 
 
