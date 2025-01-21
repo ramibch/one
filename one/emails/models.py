@@ -234,6 +234,11 @@ class PostalMessage(Model):
     spam_status = models.CharField(max_length=128, null=True)
     tag = models.CharField(max_length=128, null=True)
 
+    # flags
+    delayed = models.BooleanField(null=True, default=False)
+    held = models.BooleanField(null=True, default=False)
+    delivery_failed = models.BooleanField(null=True, default=False)
+
     @cached_property
     def url(self):
         return f"{self.POSTAL_URL}{self.id}"
@@ -272,7 +277,16 @@ class PostalMessage(Model):
         self.save()
 
         if self.direction == "incoming":
-            msg = f"📧 New incoming Email\n\n{self.__dict__}"
+            msg = (
+                "📧 New incoming Email\n\n"
+                f"ID: {self.id}\n"
+                f"Details: {self.details}\n"
+                f"Subject: {self.subject}\n"
+                f"From: {self.mail_from}\n"
+                f"To: {self.mail_to}\n"
+                f"Spam Status: {self.spam_status}\n"
+                f"URL: {self.url}\n"
+            )
             Bot.to_admin(msg)
 
     def __str__(self):

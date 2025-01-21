@@ -10,6 +10,27 @@ from one.base.utils.telegram import Bot
 from .models import DomainDNSError, MessageLinkClicked, MessageLoaded, PostalMessage
 
 
+def process_bounce_message(original, bounce):
+    msg = (
+        "📧⚠️ New bounce message\n\n"
+        f"Original message:\n"
+        f"ID: {original.get("id")}\n"
+        f"Direction: {original.get("direction")}\n"
+        f"Subject: {original.get("subject")}\n"
+        f"From: {original.get("from")}\n"
+        f"To: {original.get("to")}\n"
+        f"Spam Status: {original.get("spam_status")}\n\n"
+        f"Bounce message:\n"
+        f"ID: {bounce.get("id")}\n"
+        f"Direction: {bounce.get("direction")}\n"
+        f"Subject: {bounce.get("subject")}\n"
+        f"From: {bounce.get("from")}\n"
+        f"To: {bounce.get("to")}\n"
+        f"Spam Status: {bounce.get("spam_status")}\n"
+    )
+    Bot.to_admin(msg)
+
+
 @csrf_exempt
 @require_POST
 def postal_webhook(request):
@@ -24,6 +45,25 @@ def postal_webhook(request):
     match event:
         case "MessageSent":
             PostalMessage().save_from_payload(payload)
+
+        case "MessageDelayed":
+            obj = PostalMessage()
+            obj.delayed = True
+            obj.save_from_payload(payload)
+
+        case "MessageHeld":
+            obj = PostalMessage()
+            obj.held = True
+            obj.save_from_payload(payload)
+        case "MessageDeliveryFailed":
+            obj = PostalMessage()
+            obj.delivery_failed = True
+            obj.save_from_payload(payload)
+
+        case "MessageBounced":
+            original = data.get("original_message")
+            bounce = data.get("bounce")
+            process_bounce_message(original, bounce)
 
         case "MessageLinkClicked":
             MessageLinkClicked().save_from_payload(payload)
