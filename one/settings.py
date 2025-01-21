@@ -278,7 +278,7 @@ HUEY = {
     "blocking": True,  # Perform blocking pop rather than poll Redis.
     "connection": {"connection_pool": REDIS_CONNECTION_POOL},
     "consumer": {
-        "workers": 2,
+        "workers": 4,
         "worker_type": "thread",
         "initial_delay": 0.1,  # Smallest polling interval, same as -d.
         "backoff": 1.15,  # Exponential backoff using this rate, -b.
@@ -286,7 +286,7 @@ HUEY = {
         "scheduler_interval": 1,  # Check schedule every second, -s.
         "periodic": True,  # Enable crontab feature.
         "check_worker_health": True,  # Enable worker health checks.
-        "health_check_interval": 1,  # Check worker health every second.
+        "health_check_interval": 5,  # Check worker health every second.
     },
 }
 

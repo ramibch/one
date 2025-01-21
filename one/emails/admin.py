@@ -26,16 +26,22 @@ class AttachmentInline(admin.TabularInline):
 @admin.register(Recipient)
 class RecipientAdmin(admin.ModelAdmin):
     search_fields = ("to_address", "var_1", "var_2", "var_3")
-    list_display = ("__str__", "email", "to_address", "draft")
+    list_display = ("__str__", "email", "draft", "send_times", "sent_on")
+    list_filter = ("email", "draft", "send_times")
+    readonly_fields = ("email", "send_times", "sent_on")
+    actions = ["reset_send_times", "mark_as_draft", "mark_as_no_draft"]
 
-    # email = ForeignKey(EmailMessageTemplate, on_delete=models.CASCADE)
-    # send_times = models.PositiveSmallIntegerField(default=0, editable=False)
-    # sent_on = models.DateTimeField(null=True, blank=True, editable=False)
-    # to_address = models.EmailField(max_length=128)
-    # var_1 = models.CharField(max_length=64, null=True, blank=True)
-    # var_2 = models.CharField(max_length=64, null=True, blank=True)
-    # var_3 = models.CharField(max_length=64, null=True, blank=True)
-    # draft = models.BooleanField(default=False)
+    @admin.action(description="0️⃣ Reset send times")
+    def reset_send_times(modeladmin, request, queryset):
+        queryset.update(send_times=0)
+
+    @admin.action(description="✏️ Mark as draft")
+    def mark_as_draft(modeladmin, request, queryset):
+        queryset.update(draft=True)
+
+    @admin.action(description="✅ Mark as no draft")
+    def mark_as_no_draft(modeladmin, request, queryset):
+        queryset.update(draft=False)
 
 
 @admin.register(Sender)
@@ -51,7 +57,6 @@ class EmailMessageTemplateAdmin(admin.ModelAdmin):
     inlines = (AttachmentInline, RecipientInline)
     actions = ("send_emails",)
     list_display = ("subject", "body", "sender", "reply_to", "cc")
-    list_editable = ("sender",)
     list_filter = ("is_periodic", "sender")
 
     @admin.action(description="📧 Send Emails")
