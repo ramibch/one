@@ -62,7 +62,7 @@ def sync_submodule_folders_task():
     BaseSubmoduleFolder.sync_folders()
 
 
-@huey.task()
+@huey.db_task()
 def translate_modeltranslation_objects(
     queryset: QuerySet[type[Model]],
     fields: list[str],
