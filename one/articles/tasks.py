@@ -26,7 +26,7 @@ def sync_articles(sites=None):
     to_admin = f"🔄 Syncing {submodule}\n\n"
 
     for site in sites:
-        to_admin += f"- {site.name}:\n"
+        to_admin += f"- {site.domain}:\n"
 
         # Scanning
         for db_folder in site.article_folders.all():

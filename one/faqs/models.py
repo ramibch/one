@@ -27,5 +27,5 @@ class FAQ(TranslatableModel):
         return {lang for site in self.sites.all() for lang in site.rest_languages}
 
     def __str__(self):
-        joined_sites = ", ".join([site.name for site in self.sites.all()])
+        joined_sites = ", ".join([site.domain for site in self.sites.all()])
         return f"{self.question} [🌐 {joined_sites}]"

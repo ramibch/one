@@ -41,7 +41,7 @@ class TestOneMiddleware(TestCase):
 
     def get_response(self, ip_address, path="/"):
         site = Site.development.first()
-        request = self.request_factory.get(path, HTTP_HOST=site.name)
+        request = self.request_factory.get(path, HTTP_HOST=site.domain)
         request.ip_address = ip_address
         request.user = UserFactory()
         return self.middleware(request)
@@ -73,7 +73,7 @@ class TestOneMiddleware(TestCase):
 
         url = reverse("set_language")
         request = self.request_factory.post(
-            url, HTTP_HOST=site.name, data={"language": lang}
+            url, HTTP_HOST=site.domain, data={"language": lang}
         )
         request.ip_address = self.ip
         request.user = user
@@ -104,7 +104,7 @@ class TestOneMiddleware(TestCase):
 
     def test_save_request_skip_saving(self):
         site = Site.development.first()
-        request = self.request_factory.get("/", HTTP_HOST=site.name)
+        request = self.request_factory.get("/", HTTP_HOST=site.domain)
         request.ip_address = self.ip
         request.user = SuperuserFactory()
         response = self.middleware(request)

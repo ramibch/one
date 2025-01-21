@@ -27,7 +27,7 @@ def sync_books(sites=None):
     to_admin = f"🔄 Syncing {submodule}\n\n"
 
     for site in sites:
-        to_admin += f"- {site.name}:\n"
+        to_admin += f"- {site.domain}:\n"
 
         # Scanning
         for book in site.books.all():
