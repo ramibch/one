@@ -24,7 +24,7 @@ def task_not_executed_handler(signal, task, exc=None):
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="0"))
-def commands_daily():
+def run_commands_daily():
     """
     Typical django commands to run daily
 
@@ -38,13 +38,13 @@ def commands_daily():
         stderr=err,
     )
     call_command("check", deploy=True, stdout=out, stderr=err)
-    call_command("clearsessions", deploy=True, stdout=out, stderr=err)
-    call_command("update_rates", verbosity=0, stdout=out, stderr=err)
+    call_command("clearsessions", stdout=out, stderr=err)
+    # call_command("update_rates", verbosity=0, stdout=out, stderr=err) # TODO: first install djmoney
     Bot.to_admin(f"Commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n")
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="0"))
-def commands_weekly():
+def run_commands_weekly():
     """
     Some commands to run weekly
     """

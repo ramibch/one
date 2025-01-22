@@ -58,6 +58,7 @@ dependencies = [
   "stripe>=11.4.1",
   "unittest-parametrize>=1.5.0",
   "django-nested-inline>=0.4.6",
+  "bs4>=0.0.2",
 ]
 
 

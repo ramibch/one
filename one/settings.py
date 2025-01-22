@@ -459,6 +459,8 @@ Project settings
 ################
 """
 
+# cache clerar
+
 CLEAR_CACHE_IN_DEV = True
 
 
@@ -466,6 +468,9 @@ CLEAR_CACHE_IN_DEV = True
 # TODO: check if it is posible to pass an arg. to run tex without this setting.
 LATEX_GRAPHICSPATH = []
 
+
+# tmp dir
+TMP_DIR = BASE_DIR / "tmp"
 
 # Submodules
 SUBMODULES_PATH = BASE_DIR / "submodules"

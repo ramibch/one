@@ -168,3 +168,6 @@ media
 o365_token.txt
 private/*
 nginx/*
+
+# tmp files
+tmp/*

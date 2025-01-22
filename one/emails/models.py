@@ -1,7 +1,5 @@
-import tempfile
 from copy import copy
 from datetime import timedelta
-from pathlib import Path
 
 from auto_prefetch import ForeignKey, Model
 from django.core.exceptions import ValidationError
@@ -14,6 +12,7 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from one.base.utils.telegram import Bot
+from one.base.utils.tmp import TmpFile
 from one.sites.models import Site
 
 
@@ -95,18 +94,7 @@ class EmailMessageTemplate(Model):
 
     @cached_property
     def local_attachments(self):
-        tmp_attachments = []
-        for attachment in self.attachment_set.all():
-            # TODO: rewrite generate_tmpfile_from_field (BASE_DIR /"tmp")
-            fileb = attachment.file.storage.open(attachment.file.name, "rb").read()
-            with tempfile.TemporaryDirectory(delete=False) as tmpdirname:
-                local_attachment = f"{tmpdirname}/{attachment.file.name}"
-                Path(local_attachment).parent.mkdir(exist_ok=True, parents=True)
-                with open(local_attachment, "wb") as f:
-                    f.write(fileb)
-                    tmp_attachments.append(local_attachment)
-
-        return tmp_attachments
+        return [TmpFile(a.file).path for a in self.attachment_set.all()]
 
     def send_periodic_email_now(self) -> bool:
         # Validate required attributes
@@ -128,11 +116,14 @@ class EmailMessageTemplate(Model):
 
 
 class Attachment(Model):
-    email_template = ForeignKey(EmailMessageTemplate, on_delete=models.CASCADE)
-    file = models.FileField(upload_to="emails", storage=storages["private"])
+    def get_directory(self, filename):
+        return f"emails/{self.email.id}/{filename}"
+
+    email = ForeignKey(EmailMessageTemplate, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=get_directory, storage=storages["private"])
 
     def __str__(self):
-        return self.file.name
+        return str(self.file)
 
 
 class Recipient(Model):
@@ -279,6 +270,74 @@ class PostalMessage(Model):
 
     def __str__(self):
         return f"[{self.id}] {self.subject}"[:40]
+
+
+class PostalReplyMessage(Model):
+    def get_directory(self, filename):
+        return f"emails/replyies/{self.id}/{filename}"
+
+    postal_message = ForeignKey(PostalMessage, on_delete=models.CASCADE)
+    body = models.TextField()
+    replied = models.BooleanField(default=False)
+    replied_on = models.DateTimeField(null=True, blank=True, editable=False)
+    file = models.FileField(upload_to=get_directory, storage=storages["private"])
+
+    @cached_property
+    def subject(self):
+        return f"Re: {self.postal_message.subject}"
+
+    @cached_property
+    def mail_to(self):
+        return self.postal_message.mail_from
+
+    @cached_property
+    def mail_from(self):
+        return self.postal_message.mail_to
+
+    @cached_property
+    def local_file(self):
+        if not self.file.name:
+            raise ValueError("Attachment field cannot be null")
+        return TmpFile(self.file).path
+
+    @cached_property
+    def mail_headers(self):
+        return {
+            "References": self.postal_message.large_id,
+            "In-Reply-To": self.postal_message.large_id,
+        }
+
+    @cached_property
+    def sender(self) -> Sender:
+        try:
+            return Sender.objects.get(address=self.mail_from)
+        except Sender.DoesNotExist:
+            name = self.mail_from.split("@")[0]
+            Bot.to_admin(f"⚠️ Rename sender name: {self.mail_from}")
+            return Sender.objects.create(address=self.mail_from, name=name)
+
+    def reply(self, fail_silently=False):
+        if self.replied:
+            return
+
+        msg = EmailMessage(
+            subject=self.subject,
+            body=self.body,
+            from_email=self.sender.name_and_address,
+            to=[self.mail_to],
+            cc=None,
+            reply_to=None,
+            headers=self.mail_headers,
+        )
+
+        if self.file.name:
+            msg.attach_file(self.local_file)
+
+        # Send the email
+        msg.send(fail_silently=fail_silently)
+        self.replied = True
+        self.replied_on = timezone.now()
+        self.save()
 
 
 class MessageLinkClicked(Model):

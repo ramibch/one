@@ -5,10 +5,11 @@ from .models import (
     DomainDNSError,
     EmailMessageTemplate,
     PostalMessage,
+    PostalReplyMessage,
     Recipient,
     Sender,
 )
-from .tasks import task_send_email_templates
+from .tasks import task_reply_postal_messages, task_send_email_templates
 
 
 class RecipientInline(admin.TabularInline):
@@ -21,6 +22,12 @@ class RecipientInline(admin.TabularInline):
 class AttachmentInline(admin.TabularInline):
     model = Attachment
     extra = 0
+
+
+@admin.register(Attachment)
+class AttachmentAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "email")
+    search_fields = ("email", "file")
 
 
 @admin.register(Recipient)
@@ -77,8 +84,21 @@ class DomainDNSErrorAdmin(admin.ModelAdmin):
     readonly_fields = tuple(field.name for field in DomainDNSError._meta.fields)
 
 
+class PostalReplyMessageInline(admin.TabularInline):
+    model = PostalReplyMessage
+    extra = 1
+    max_num = 1
+    readonly_fields = ("replied", "replied_on")
+
+
 @admin.register(PostalMessage)
 class PostalMessageAdmin(admin.ModelAdmin):
     list_display = ("__str__", "mail_from", "mail_to", "direction", "url")
     list_filter = ("status", "tag", "spam_status", "direction")
     readonly_fields = ["url"] + [field.name for field in PostalMessage._meta.fields]
+    inlines = [PostalReplyMessageInline]
+    actions = ["reply"]
+
+    @admin.action(description="📬 Reply")
+    def reply(modeladmin, request, queryset):
+        task_reply_postal_messages(queryset.filter(replied=False))
