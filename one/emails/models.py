@@ -279,8 +279,11 @@ class PostalReplyMessage(Model):
     postal_message = ForeignKey(PostalMessage, on_delete=models.CASCADE)
     body = models.TextField()
     replied = models.BooleanField(default=False)
+    draft = models.BooleanField(default=False)
     replied_on = models.DateTimeField(null=True, blank=True, editable=False)
-    file = models.FileField(upload_to=get_directory, storage=storages["private"])
+    file = models.FileField(
+        upload_to=get_directory, storage=storages["private"], null=True, blank=True
+    )
 
     @cached_property
     def subject(self):

@@ -9,7 +9,7 @@ from .models import (
     Recipient,
     Sender,
 )
-from .tasks import task_reply_postal_messages, task_send_email_templates
+from .tasks import task_send_email_templates
 
 
 class RecipientInline(admin.TabularInline):
@@ -97,8 +97,3 @@ class PostalMessageAdmin(admin.ModelAdmin):
     list_filter = ("status", "tag", "spam_status", "direction")
     readonly_fields = ["url"] + [field.name for field in PostalMessage._meta.fields]
     inlines = [PostalReplyMessageInline]
-    actions = ["reply"]
-
-    @admin.action(description="📬 Reply")
-    def reply(modeladmin, request, queryset):
-        task_reply_postal_messages(queryset.filter(replied=False))

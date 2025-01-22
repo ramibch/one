@@ -4,7 +4,7 @@ from huey.contrib import djhuey as huey
 
 from one.base.utils.telegram import Bot
 
-from .models import EmailMessageTemplate
+from .models import EmailMessageTemplate, PostalReplyMessage
 
 
 @huey.db_task()
@@ -31,31 +31,17 @@ def task_send_email_templates(queryset):
 
 
 @huey.db_periodic_task(crontab(minute="*"))
-def task_send_periodic_email_templates():
+def task_send_periodic_email_templates_and_reply_postal_messages():
     """
     Send emails for recipients from Email Templates.
     """
-    queryset = EmailMessageTemplate.objects.filter(is_periodic=True)
-    if queryset.count() > 0:
+    emails = EmailMessageTemplate.objects.filter(is_periodic=True)
+    if emails.count() > 0:
         # Avoid the last 30s of every minute.
         delay = 0 if now().second < 30 else now().second + 1
-        task_send_email_templates.schedule((queryset,), delay=delay)
+        task_send_email_templates.schedule((emails,), delay=delay)
 
+    replies = PostalReplyMessage.objects.filter(replied=False, draft=False)
 
-@huey.db_task()
-def task_reply_postal_messages(queryset):
-    """
-    Reply to emails that gets delived in postal.
-    """
-    count = 0
-    log = "📧 Replying to Emails\n\n"
-    for obj in queryset:
-        try:
-            obj.reply(fail_silently=False)
-            count += 1
-            log = f"✅ Replied to {obj.mail_to}"
-        except Exception as e:
-            log += f"⚠️  Error with reply {obj}: {e}\n"
-
-    if count > 0:
-        Bot.to_admin(log)
+    for reply_obj in replies:
+        reply_obj.reply(fail_silently=False)
