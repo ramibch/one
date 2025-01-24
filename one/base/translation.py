@@ -4,5 +4,5 @@ from .models import Topic
 
 
 @register(Topic)
-class FAQOptions(TranslationOptions):
+class TopicOptions(TranslationOptions):
     fields = ("name", "slug")

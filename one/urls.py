@@ -49,8 +49,6 @@ urlpatterns = [
     path("tools/", include("one.tools.urls")),
     path("🤔/", include("one.faqs.urls")),
     path("faqs/", include("one.faqs.urls")),
-    path("💬/", include("one.chat.urls")),
-    path("chat/", include("one.chat.urls")),
     path("clients/", include("one.clients.urls")),
     path("englishquizzes/", include("one.quiz.urls")),
     path("dgt/", include("one.dgt.urls")),

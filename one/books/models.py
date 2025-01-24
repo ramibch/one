@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.files.storage import storages
 from django.db import models
 from django.urls import reverse_lazy
+
 from one.base.utils.abstracts import (
     BasePageModel,
     BaseSubmoduleFolder,

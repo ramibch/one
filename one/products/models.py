@@ -1,5 +1,4 @@
 from auto_prefetch import Model
-from django.conf import settings
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
@@ -7,68 +6,55 @@ from django.utils.functional import cached_property
 Listing = None  # TODO: rethink how to connect etsy listings
 
 
-class ProductTag(Model):
-    pass
+from auto_prefetch import ForeignKey
+from django.contrib.auth import get_user_model
+
+from one.base.utils.abstracts import (
+    BaseSubmoduleFolder,
+)
+
+from ..base import Languages
+from ..base.utils.db_fields import ChoiceArrayField
+
+User = get_user_model()
 
 
-class Product(Model):
-    dirname = models.CharField(max_length=128, unique=True)
-    image = models.ImageField(upload_to="listings", null=True)
+class Product(BaseSubmoduleFolder, submodule="products"):
+    """Product model as folder"""
+
+    title = models.CharField(max_length=128)
+    slug = models.SlugField(max_length=128)
     topics = models.ManyToManyField("base.Topic")
-    tags = models.ManyToManyField("products.ProductTag")
-
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.dirname
-
-    def get_listing(self):
-        return Listing.objects.get(dirname=self.dirname)
-
-    @cached_property
-    def description(self):
-        return self.get_listing().get_description()
+    languages = ChoiceArrayField(
+        models.CharField(max_length=4, choices=Languages),
+        default=list,
+        blank=True,
+    )
 
     def get_absolute_url(self):
         return reverse_lazy("product-detail", kwargs={"slug": self.dirname})
 
     @cached_property
-    def etsy_url(self):
-        if (
-            self.get_listing().etsy_url != ""
-            and self.get_listing().etsy_url is not None
-        ):
-            return self.get_listing().etsy_url
-
-    @cached_property
     def checkout_url(self):
         return reverse_lazy("product-checkout", kwargs={"id": self.id})
 
-    @cached_property
-    def page_url(self):
-        return self.get_absolute_url()
 
-    @cached_property
-    def full_page_url(self):
-        return settings.WEBSITE_URL + self.page_url
+def get_file_path(obj, filename: str):
+    return f"products/{obj._meta.model_name}/{filename}"
 
-    @cached_property
-    def price(self):
-        return self.get_listing().price
 
-    @cached_property
-    def price_in_cents(self):
-        return int(self.price * 100)
+class ProductFile(Model):
+    """Product file model"""
 
-    @cached_property
-    def title(self):
-        return self.get_listing().title
+    product = ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=128)
+    file = models.FileField(upload_to=get_file_path)
 
-    @cached_property
-    def keywords(self):
-        return self.get_listing().keywords
+    def __str__(self):
+        return self.name
 
-    @cached_property
-    def listing_type(self):
-        return self.get_listing().listing_type
+
+class ProductImage(Model):
+    product = ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=128)
+    file = models.FileField(upload_to=get_file_path)

@@ -55,8 +55,6 @@ ALLOWED_HOSTS = [
 INTERNAL_IPS = ["127.0.0.1"]
 
 INSTALLED_APPS = [
-    # Apps that need to be on top
-    "daphne",
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
     "django_extensions",
@@ -68,10 +66,8 @@ INSTALLED_APPS = [
     "allauth.account",
     "geoip2",
     "djmoney",
-    "channels",
     "dbbackup",
     "corsheaders",
-    "django_minify_html",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -103,7 +99,6 @@ INSTALLED_APPS = [
     "one.sites",
     "one.products",
     "one.books",
-    "one.chat",
     "one.geo",
     "one.quiz",
     "one.dgt",
@@ -124,7 +119,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.admindocs.middleware.XViewMiddleware",
     "one.base.middleware.one.OneMiddleware",
-    "django_minify_html.middleware.MinifyHtmlMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
 
@@ -422,19 +416,6 @@ SOCIALACCOUNT_PROVIDERS = {
             "public-profile-url",
             "openid",
         ],
-    },
-}
-
-
-# channels
-
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [REDIS_URL],
-        },
     },
 }
 

@@ -65,7 +65,8 @@ class Etsy(SingletonModel):
             token=self.access_token,
             refresh_token=self.refresh_token,
             expiry=timezone.make_naive(
-                self.expires_at, timezone=timezone.get_fixed_timezone(0)
+                self.expires_at,
+                timezone=timezone.get_fixed_timezone(0),
             ),
             refresh_save=etsy_refresh_save,
         )
