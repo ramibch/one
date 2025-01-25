@@ -45,6 +45,8 @@ def sync_books(sites=None):
                     folder_name=book.name,
                 )[0]
 
+                lang_count = 0
+
                 # Markdown files (.md) need to be processed first
                 md_paths = (p for p in subfolder.iterdir() if p.name.endswith(".md"))
                 for md_path in md_paths:
@@ -58,12 +60,16 @@ def sync_books(sites=None):
                     setattr(chapter, f"title_{lang_code}", title)
                     setattr(chapter, f"slug_{lang_code}", slugify(title))
                     setattr(chapter, f"body_{lang_code}", body_text)
+                    lang_count += 1
 
                 # Files
                 body_replacements = {}
                 for file_path in (
                     p for p in subfolder.iterdir() if not p.name.endswith(".md")
                 ):
+                    if file_path.is_dir():
+                        continue
+
                     db_file = ChapterFile.objects.get_or_create(
                         article=chapter,
                         name=file_path.name,
@@ -84,7 +90,8 @@ def sync_books(sites=None):
                             value = getattr(chapter, field).replace(local, remote)
                             setattr(chapter, f"body_{lang_code}", value)
 
-                # Save all object attributes in the database
-                chapter.save()
+                # Save object attributes in the database
+                if lang_count > 0:
+                    chapter.save()
 
     Bot.to_admin(to_admin)

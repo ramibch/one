@@ -43,7 +43,7 @@ def sync_articles(sites=None):
                     subfolder_name=subfolder.name,
                     folder_name=db_folder.name,
                 )[0]
-
+                lang_count = 0
                 # Markdown files (.md) need to be processed first
                 md_paths = (p for p in subfolder.iterdir() if p.name.endswith(".md"))
                 for md_path in md_paths:
@@ -59,12 +59,16 @@ def sync_articles(sites=None):
                     setattr(article, f"title_{lang_code}", title)
                     setattr(article, f"slug_{lang_code}", slugify(title))
                     setattr(article, f"body_{lang_code}", body_text)
+                    lang_count += 1
 
                 # Files
                 body_replacements = {}
                 for file_path in (
                     p for p in subfolder.iterdir() if not p.name.endswith(".md")
                 ):
+                    if file_path.is_dir():
+                        continue
+
                     db_file = ArticleFile.objects.get_or_create(
                         article=article,
                         name=file_path.name,
@@ -85,7 +89,8 @@ def sync_articles(sites=None):
                             value = getattr(article, field).replace(local, remote)
                             setattr(article, f"body_{lang_code}", value)
 
-                # Save all object attributes in the database
-                article.save()
+                # Save object attributes in the database
+                if lang_count > 0:
+                    article.save()
 
     Bot.to_admin(to_admin)
