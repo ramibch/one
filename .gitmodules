@@ -7,3 +7,6 @@
 [submodule "submodules/books"]
 	path = submodules/books
 	url = git@github.com:ramibch/books.git
+[submodule "submodules/products"]
+	path = submodules/products
+	url = git@github.com:ramibch/products.git
