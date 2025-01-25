@@ -78,7 +78,13 @@ class TranslatableModel(Model):
 
 class BasePageModel(Model, PageMixin):
     title = models.CharField(max_length=256, editable=False)
-    slug = models.SlugField(max_length=128, unique=True, editable=False, db_index=True)
+    slug = models.SlugField(
+        max_length=128,
+        editable=False,
+        db_index=True,
+        null=True,
+        blank=True,
+    )
     folder_name = models.CharField(max_length=128, editable=False)
     subfolder_name = models.CharField(max_length=256, editable=False)
     body = models.TextField(editable=False)

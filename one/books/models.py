@@ -4,10 +4,7 @@ from django.core.files.storage import storages
 from django.db import models
 from django.urls import reverse_lazy
 
-from one.base.utils.abstracts import (
-    BasePageModel,
-    BaseSubmoduleFolder,
-)
+from one.base.utils.abstracts import BaseSubmoduleFolder
 
 User = get_user_model()
 
@@ -18,10 +15,23 @@ class Book(BaseSubmoduleFolder, submodule="books"):
     pdf = models.FileField(storage=storages["private"], null=True, upload_to="books/")
 
 
-class Chapter(BasePageModel):
-    """Article model"""
+class Chapter(Model):
+    """Chapter model"""
 
     book = ForeignKey("books.Book", on_delete=models.CASCADE)
+    title = models.CharField(max_length=256, editable=False)
+    slug = models.SlugField(
+        max_length=128,
+        editable=False,
+        null=True,
+        blank=True,
+        db_index=True,
+    )
+    folder_name = models.CharField(max_length=128, editable=False)
+    subfolder_name = models.CharField(max_length=256, editable=False)
+    body = models.TextField(editable=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
     can_be_shown_in_home = models.BooleanField(default=True)
     display = models.BooleanField(default=False)
 

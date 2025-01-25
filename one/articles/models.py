@@ -5,9 +5,9 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from one.base.utils.abstracts import (
-    BasePageModel,
     BaseSubmoduleFolder,
 )
+from one.base.utils.mixins import PageMixin
 
 User = get_user_model()
 
@@ -18,10 +18,17 @@ class ArticleParentFolder(BaseSubmoduleFolder, submodule="articles"):
     pass
 
 
-class Article(BasePageModel):
+class Article(Model, PageMixin):
     """Article model"""
 
     parent_folder = ForeignKey("articles.ArticleParentFolder", on_delete=models.CASCADE)
+    title = models.CharField(max_length=256, editable=False)
+    slug = models.SlugField(max_length=128, editable=False, db_index=True)
+    folder_name = models.CharField(max_length=128, editable=False)
+    subfolder_name = models.CharField(max_length=256, editable=False)
+    body = models.TextField(editable=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
     allow_comments = models.BooleanField(default=True)
     is_premium = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
