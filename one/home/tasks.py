@@ -13,7 +13,7 @@ def auto_add_artciles_to_sections():
     """
     for section in ArticlesSection.objects.filter(auto_add_articles=True):
         articles = Article.objects.filter(
-            parent_folder__sites=section.home.site,
+            parent_folder__in=section.home.site.article_folders.all(),
             featured=True,
         )
         section.articles.add(*articles)
