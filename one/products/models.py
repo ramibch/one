@@ -1,8 +1,11 @@
 from auto_prefetch import ForeignKey, Model
 from django.contrib.auth import get_user_model
+from django.core.files.storage import storages
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 
 from one.base.utils.abstracts import (
     BaseSubmoduleFolder,
@@ -18,13 +21,17 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     title = models.CharField(max_length=128)
     slug = models.SlugField(max_length=128)
     summary = models.TextField(blank=True, null=True)
-    etsy_id = models.PositiveIntegerField(null=True, blank=True)
-    etsy_url = models.URLField(max_length=256, null=True, blank=True)
     price = models.FloatField(default=1.0)
+    discount_percentage = models.SmallIntegerField(
+        default=90,
+        verbose_name=_("Discount in percentage"),
+        help_text=_("It is applied to the country with the lowest GDP per capita."),
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )
     topics = models.ManyToManyField("base.Topic")
 
     def get_absolute_url(self):
-        return reverse_lazy("product-detail", kwargs={"slug": self.dirname})
+        return reverse_lazy("product-detail", kwargs={"slug": self.slug})
 
     @cached_property
     def checkout_url(self):
@@ -40,7 +47,7 @@ class ProductFile(Model):
 
     product = ForeignKey(Product, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
-    file = models.FileField(upload_to=get_file_path)
+    file = models.FileField(upload_to=get_file_path, storage=storages["private"])
 
     def __str__(self):
         return self.name
@@ -50,3 +57,6 @@ class ProductImage(Model):
     product = ForeignKey(Product, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     file = models.FileField(upload_to=get_file_path)
+
+    def __str__(self):
+        return self.name
