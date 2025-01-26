@@ -1,5 +1,4 @@
 import string
-from copy import copy
 
 from auto_prefetch import Manager, Model
 from django.conf import settings
@@ -13,10 +12,8 @@ from django.utils.functional import cached_property
 from django.utils.timezone import timedelta
 from django.utils.translation import gettext_lazy as _
 
-from ..base import Languages
-from ..base.utils.abstracts import TranslatableModel
-from ..base.utils.db_fields import ChoiceArrayField
-from ..menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
+from one.base.utils.abstracts import TranslatableModel
+from one.menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
 SITE_CACHE = {}
 
@@ -95,7 +92,7 @@ class PicoCssColor(models.TextChoices):
     GREEN = "green", _("Green")
 
 
-class Site(Model):
+class Site(TranslatableModel):
     domain = models.CharField(
         _("Name"),
         max_length=32,
@@ -121,17 +118,6 @@ class Site(Model):
     change_language_in_navbar = models.BooleanField(default=True)
     change_language_in_footer = models.BooleanField(default=True)
 
-    default_language = models.CharField(
-        max_length=4,
-        choices=Languages,
-        default=Languages.EN,
-    )
-    rest_languages = ChoiceArrayField(
-        models.CharField(max_length=4, choices=Languages),
-        default=list,
-        blank=True,
-    )
-
     spam_requests_duration = models.DurationField(default=timedelta(days=1))
     requests_duration = models.DurationField(default=timedelta(days=14))
 
@@ -143,6 +129,11 @@ class Site(Model):
     objects = SiteManager()
     production = ProductionSiteManager()
     development = DevelopmentSiteManager()
+
+    # SEO
+    page_title = models.CharField(max_length=64)
+    page_description = models.TextField(max_length=256)
+    page_keywords = models.TextField(max_length=128)
 
     def __str__(self):
         return self.domain
@@ -156,16 +147,6 @@ class Site(Model):
         if self.emoji_in_brand:
             return f"{self.emoji} {self.brand_name}"
         return self.brand_name
-
-    @cached_property
-    def languages(self) -> set:
-        langs = copy(set(self.rest_languages))
-        langs.add(self.default_language)
-        return langs
-
-    @cached_property
-    def language_count(self):
-        return len(self.languages)
 
     @cached_property
     def picocss_static_file(self) -> str:
@@ -224,22 +205,6 @@ def clear_site_cache(sender, **kwargs):
         del SITE_CACHE[Site.objects.using(using).get(pk=instance.pk)]
     except (KeyError, Site.DoesNotExist):
         pass
-
-
-class Seo(TranslatableModel):
-    site = models.OneToOneField(Site, on_delete=models.CASCADE)
-    page_title = models.CharField(max_length=64)
-    page_description = models.TextField(max_length=256)
-    page_keywords = models.TextField(max_length=128)
-
-    def get_default_language(self) -> str:
-        return self.site.default_language
-
-    def get_rest_languages(self) -> set:
-        return set(self.site.rest_languages)
-
-    def __str__(self):
-        return self.page_title
 
 
 pre_save.connect(clear_site_cache, sender=Site)

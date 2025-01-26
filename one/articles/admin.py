@@ -1,6 +1,8 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
+from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+
 from .models import Article, ArticleFile, ArticleParentFolder
 
 
@@ -17,13 +19,8 @@ class ArticlesSubmoduleAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(TranslationAdmin):
-    list_display = (
-        "title",
-        "folder_name",
-        "subfolder_name",
-        "created_on",
-        "updated_on",
-    )
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+    list_display = ("__str__", "created_on", "updated_on")
     readonly_fields = (
         "title",
         "parent_folder",

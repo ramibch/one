@@ -1,7 +1,6 @@
 from urllib.parse import urlparse
 
 from auto_prefetch import ForeignKey, Model
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -92,12 +91,6 @@ class FooterItem(TranslatableModel):
     @cached_property
     def display_title(self) -> str:
         return f"{self.emoji} {self.title}" if self.emoji else self.title
-
-    def get_default_language(self) -> str:
-        return settings.LANGUAGE_CODE
-
-    def get_rest_languages(self) -> set:
-        return {lang for site in self.sites.all() for lang in site.rest_languages}
 
 
 class FooterLink(Model):

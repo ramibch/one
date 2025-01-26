@@ -1,5 +1,7 @@
 from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.db import models
+from django.db.models import Q
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
 from one.base.utils.mixins import PageMixin
@@ -32,14 +34,6 @@ class Home(TranslatableModel, PageMixin):
 
     def __str__(self):
         return f"{self.title} 🌐{self.site}"
-
-    # Translation
-
-    def get_default_language(self):
-        return self.site.default_language
-
-    def get_rest_languages(self):
-        return self.site.rest_languages
 
 
 class HeroSection(TranslatableModel):
@@ -90,12 +84,6 @@ class HeroSection(TranslatableModel):
     def display_cta_title(self):
         return self.cta_title if self.cta_title else self.cta_link.title
 
-    def get_default_language(self):
-        return self.home.site.default_language
-
-    def get_rest_languages(self):
-        return self.home.site.rest_languages
-
 
 class ProblemSection(Model):
     """ """
@@ -104,34 +92,16 @@ class ProblemSection(Model):
     title = models.CharField(max_length=64)
     description = models.TextField()
 
-    def get_default_language(self):
-        return self.home.site.default_language
-
-    def get_rest_languages(self):
-        return self.home.site.rest_languages
-
 
 class SolutionSection(TranslatableModel):
     home = OneToOneField("home.Home", on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     description = models.TextField()
 
-    def get_default_language(self):
-        return self.home.site.default_language
-
-    def get_rest_languages(self):
-        return self.home.site.rest_languages
-
 
 class BenefitsSection(TranslatableModel):
     home = OneToOneField("home.Home", on_delete=models.CASCADE)
     emoji = models.CharField(max_length=8)
-
-    def get_default_language(self):
-        return self.home.site.default_language
-
-    def get_rest_languages(self):
-        return self.home.site.rest_languages
 
 
 class StepAction(TranslatableModel):
@@ -139,12 +109,6 @@ class StepAction(TranslatableModel):
     step_label = models.CharField(max_length=4, default="01")
     title = models.CharField(max_length=64)
     description = models.TextField()
-
-    def get_default_language(self):
-        return self.home.site.default_language
-
-    def get_rest_languages(self):
-        return self.home.site.rest_languages
 
 
 class FAQsSection(TranslatableModel):
@@ -155,12 +119,6 @@ class FAQsSection(TranslatableModel):
         models.CharField(max_length=32, choices=FAQCategory)
     )
     auto_add_faqs = models.BooleanField(default=False)
-
-    def get_default_language(self):
-        return self.home.site.default_language
-
-    def get_rest_languages(self):
-        return self.home.site.rest_languages
 
     class Meta(TranslatableModel.Meta):
         verbose_name = _("FAQs Section")
@@ -211,11 +169,15 @@ class ArticlesSection(TranslatableModel):
         choices=AnimationDelay,
     )
 
-    def get_default_language(self):
-        return self.home.site.default_language
-
-    def get_rest_languages(self):
-        return self.home.site.rest_languages
+    def get_articles(self):
+        lang = get_language()
+        return (
+            self.articles.filter(
+                Q(default_language=lang | Q(rest_languages__contains=[lang]))
+            )
+            .exclude(slug=None, featured=False)
+            .distinct()[: self.number_of_articles]
+        )
 
     class Meta(TranslatableModel.Meta):
         verbose_name = _("Articles Section")

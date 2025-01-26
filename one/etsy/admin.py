@@ -1,16 +1,13 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from one.base.utils.actions import translation_actions
+from one.base.utils.actions import translate_fields
+from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from .models import Listing, Shop
+from .models import Shop
 
 
 @admin.register(Shop)
 class ShopAdmin(TranslationAdmin):
-    actions = translation_actions
-
-
-@admin.register(Listing)
-class ListingAdmin(TranslationAdmin):
-    actions = translation_actions
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+    actions = [translate_fields]

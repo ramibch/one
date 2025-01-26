@@ -4,7 +4,7 @@ from huey.contrib import djhuey as huey
 
 from one.base.utils.telegram import Bot
 
-from .models import EmailMessageTemplate, PostalReplyMessage
+from .models import PostalReplyMessage, TemplateMessage
 
 
 @huey.db_task()
@@ -35,7 +35,7 @@ def task_send_periodic_email_templates_and_reply_postal_messages():
     """
     Send emails for recipients from Email Templates.
     """
-    emails = EmailMessageTemplate.objects.filter(is_periodic=True)
+    emails = TemplateMessage.objects.filter(is_periodic=True)
     if emails.count() > 0:
         # Avoid the last 30s of every minute.
         delay = 0 if now().second < 30 else now().second + 1

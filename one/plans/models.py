@@ -5,7 +5,8 @@ from django.urls import reverse, reverse_lazy
 from django.utils.functional import cached_property
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
-from one.base.utils.abstracts import PageMixin
+
+from one.base.utils.mixins import PageMixin
 
 
 class Plan(Model, PageMixin):

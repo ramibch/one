@@ -4,9 +4,7 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
-from one.base.utils.abstracts import (
-    BaseSubmoduleFolder,
-)
+from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
 from one.base.utils.mixins import PageMixin
 
 User = get_user_model()
@@ -18,7 +16,7 @@ class ArticleParentFolder(BaseSubmoduleFolder, submodule="articles"):
     pass
 
 
-class Article(Model, PageMixin):
+class Article(TranslatableModel, PageMixin):
     """Article model"""
 
     parent_folder = ForeignKey("articles.ArticleParentFolder", on_delete=models.CASCADE)
@@ -35,6 +33,9 @@ class Article(Model, PageMixin):
 
     def get_absolute_url(self):
         return reverse_lazy("article-detail", kwargs={"slug": self.slug})
+
+    def __str__(self):
+        return f"{self.folder_name}/{self.subfolder_name}"
 
 
 def get_article_file_path(obj, filename: str):

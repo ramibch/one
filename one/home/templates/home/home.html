@@ -26,9 +26,9 @@
     {% with section=object.articlessection %}
       <section class="row mt-5">
         <h2>
-          ✍ {% trans "Lastest articles" %} <span style="float: right;"> <a href="{% url 'article_list' %}">{% trans "All" %}</a> </span>
+          ✍ {{ section.title }} <span style="float: right;"> <a href="{% url 'article_list' %}">{% trans "All" %}</a> </span>
         </h2>
-        {% for article in section.articles.filter|slice:section.number_of_articles %}
+        {% for article in section.get_articles %}
           <div class="col-md-4">
             <article {% include "snippets/animation_attrs.html" with animation_type=section.card_animation_type name=section.card_animation_name repeat=section.card_animation_repeat delay=section.card_animation_delay speed=section.card_animation_speed %}>
               <h3>

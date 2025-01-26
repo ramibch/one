@@ -3,9 +3,12 @@ import subprocess
 from auto_prefetch import Model
 from django.conf import settings
 from django.db import models
+from django.utils.functional import cached_property
+
+from one.base import Languages
+from one.base.utils.db_fields import ChoiceArrayField
 
 from .exceptions import SubmoduleException
-from .mixins import PageMixin
 
 
 class BaseSubmoduleFolder(Model):
@@ -67,34 +70,24 @@ class SingletonModel(Model):
 
 
 class TranslatableModel(Model):
-    get_default_language = None  # Implement in the subclass
-    get_rest_languages = None  # Implement in the subclass
-    allow_translation = models.BooleanField(default=False)
-    override_translated_fields = models.BooleanField(default=False)
-
-    class Meta(Model.Meta):
-        abstract = True
-
-
-class BasePageModel(Model, PageMixin):
-    title = models.CharField(max_length=256, editable=False)
-    slug = models.SlugField(
-        max_length=128,
-        editable=False,
-        db_index=True,
-        null=True,
+    default_language = models.CharField(
+        max_length=4,
+        choices=Languages,
+        default=Languages.EN,
+    )
+    rest_languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=Languages),
+        default=list,
         blank=True,
     )
-    folder_name = models.CharField(max_length=128, editable=False)
-    subfolder_name = models.CharField(max_length=256, editable=False)
-    body = models.TextField(editable=False)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+
+    @cached_property
+    def languages(self) -> list:
+        return list(set(self.rest_languages + [self.default_language]))
+
+    @cached_property
+    def language_count(self):
+        return len(self.languages)
 
     class Meta(Model.Meta):
-        unique_together = ["folder_name", "subfolder_name"]
-        ordering = ["folder_name", "-created_on"]
         abstract = True
-
-    def __str__(self):
-        return f"{self.folder_name}: {self.title}"

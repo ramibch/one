@@ -1,16 +1,12 @@
-from auto_prefetch import Model
+from auto_prefetch import ForeignKey, Model
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 
-Listing = None  # TODO: rethink how to connect etsy listings
-
-
-from auto_prefetch import ForeignKey
-from django.contrib.auth import get_user_model
-
 from one.base.utils.abstracts import (
     BaseSubmoduleFolder,
+    TranslatableModel,
 )
 
 from ..base import Languages
@@ -19,11 +15,15 @@ from ..base.utils.db_fields import ChoiceArrayField
 User = get_user_model()
 
 
-class Product(BaseSubmoduleFolder, submodule="products"):
+class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     """Product model as folder"""
 
     title = models.CharField(max_length=128)
     slug = models.SlugField(max_length=128)
+    summary = models.TextField(blank=True, null=True)
+    etsy_id = models.PositiveIntegerField(null=True, blank=True)
+    etsy_url = models.URLField(max_length=256, null=True, blank=True)
+    price = models.FloatField(default=1.0)
     topics = models.ManyToManyField("base.Topic")
     languages = ChoiceArrayField(
         models.CharField(max_length=4, choices=Languages),

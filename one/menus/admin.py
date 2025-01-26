@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.db import models
 from django.forms import CheckboxSelectMultiple
 from modeltranslation.admin import TranslationAdmin
-from one.base.utils.actions import translation_actions
+
+from one.base.utils.actions import translate_fields
 
 from .models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
@@ -43,7 +44,7 @@ class FooterItemAdmin(TranslationAdmin):
     list_editable = ("emoji", "show_type", "order")
     list_filter = ("show_type", "order")
     inlines = (FooterLinkInline,)
-    actions = translation_actions
+    actions = [translate_fields]
 
 
 @admin.register(FooterLink)

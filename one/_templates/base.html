@@ -1,7 +1,7 @@
 {% load i18n static %}
-{% firstof page_title object.title request.site.seo.page_title as title %}
-{% firstof page_keywords object.keywords request.site.seo.page_keywords as keywords %}
-{% firstof page_description object.description request.site.seo.page_description as description %}
+{% firstof page_title object.title request.site.page_title as title %}
+{% firstof page_keywords object.keywords request.site.page_keywords as keywords %}
+{% firstof page_description object.description request.site.page_description as description %}
 {% static 'css/pygments_default.css' as light_pygments_css %}
 {% static 'css/pygments_monokai.css' as dark_pygments_css %}
 <!DOCTYPE html>

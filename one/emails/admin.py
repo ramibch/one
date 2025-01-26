@@ -1,36 +1,36 @@
 from django.contrib import admin
 
 from .models import (
-    Attachment,
-    DomainDNSError,
-    EmailMessageTemplate,
+    PostalDomainDNSError,
     PostalMessage,
     PostalReplyMessage,
-    Recipient,
     Sender,
+    TemplateAttachment,
+    TemplateMessage,
+    TemplateRecipient,
 )
 from .tasks import task_send_email_templates
 
 
 class RecipientInline(admin.TabularInline):
-    model = Recipient
+    model = TemplateRecipient
     extra = 5
     exclude = ("subject", "body")
     readonly_fields = ("send_times",)
 
 
 class AttachmentInline(admin.TabularInline):
-    model = Attachment
+    model = TemplateAttachment
     extra = 0
 
 
-@admin.register(Attachment)
+@admin.register(TemplateAttachment)
 class AttachmentAdmin(admin.ModelAdmin):
     list_display = ("__str__", "email")
     search_fields = ("email", "file")
 
 
-@admin.register(Recipient)
+@admin.register(TemplateRecipient)
 class RecipientAdmin(admin.ModelAdmin):
     search_fields = ("to_address", "var_1", "var_2", "var_3")
     list_display = ("__str__", "email", "draft", "send_times", "sent_on")
@@ -57,7 +57,7 @@ class SenderAdmin(admin.ModelAdmin):
     list_display = ("__str__", "name", "address")
 
 
-@admin.register(EmailMessageTemplate)
+@admin.register(TemplateMessage)
 class EmailMessageTemplateAdmin(admin.ModelAdmin):
     search_fields = ("body", "subject")
     autocomplete_fields = ("sender",)
@@ -71,7 +71,7 @@ class EmailMessageTemplateAdmin(admin.ModelAdmin):
         task_send_email_templates(queryset)
 
 
-@admin.register(DomainDNSError)
+@admin.register(PostalDomainDNSError)
 class DomainDNSErrorAdmin(admin.ModelAdmin):
     list_display = (
         "domain",
@@ -81,7 +81,7 @@ class DomainDNSErrorAdmin(admin.ModelAdmin):
         "return_path_status",
     )
     list_filter = ("domain",)
-    readonly_fields = tuple(field.name for field in DomainDNSError._meta.fields)
+    readonly_fields = tuple(field.name for field in PostalDomainDNSError._meta.fields)
 
 
 class PostalReplyMessageInline(admin.TabularInline):

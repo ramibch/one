@@ -1,12 +1,10 @@
 from auto_prefetch import ForeignKey, Manager
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..base import Languages
 from ..base.utils.abstracts import TranslatableModel
 
 DJ_PATHS = (
@@ -103,9 +101,3 @@ class Link(TranslatableModel):
 
         if self.model_obj:
             return self.model_obj.title
-
-    def get_default_language(self):
-        return settings.LANGUAGE_CODE
-
-    def get_rest_languages(self) -> set:
-        return set(Languages.values)

@@ -8,7 +8,12 @@ from django.views.decorators.http import require_POST
 
 from one.base.utils.telegram import Bot
 
-from .models import DomainDNSError, MessageLinkClicked, MessageLoaded, PostalMessage
+from .models import (
+    PostalDomainDNSError,
+    PostalMessage,
+    PostalMessageLinkClicked,
+    PostalMessageLoaded,
+)
 
 
 @csrf_exempt
@@ -44,13 +49,13 @@ def postal_webhook(request):
             pass
 
         case "MessageLinkClicked":
-            MessageLinkClicked().save_from_payload(payload)
+            PostalMessageLinkClicked().save_from_payload(payload)
 
         case "MessageLoaded":
-            MessageLoaded().save_from_payload(payload)
+            PostalMessageLoaded().save_from_payload(payload)
 
         case "DomainDNSError":
-            DomainDNSError().save_from_payload(payload)
+            PostalDomainDNSError().save_from_payload(payload)
 
         case _:  # for messages
             return HttpResponse("Message received!")

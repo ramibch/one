@@ -67,39 +67,42 @@ def translate_modeltranslation_objects(
     queryset: QuerySet[type[Model]],
     fields: list[str],
 ):
-    out = "🈂️ Translating a multilanguage queryset:\n\n"
+    log = "🈂️ Translating a multilanguage queryset:\n\n"
     for db_obj in queryset:
-        out += f"Object {str(db_obj)}\n"
-        if not hasattr(db_obj, "allow_translation"):
-            out += "⚠️ Object not allowed to translate. Check: allow_translation.\n\n"
-            continue
+        log += f"Object {str(db_obj)}\n"
+        count = 0
 
         for field in fields:
-            from_field = f"{field}_{db_obj.get_default_language()}"
-            from_field_value = getattr(db_obj, from_field)
-            if from_field_value is None:
-                out += f"Not translating the field {from_field} since it is null.\n"
+            from_lang = db_obj.default_language
+            from_field = f"{field}_{from_lang}"
+            from_value = getattr(db_obj, from_field)
+            if from_value is None:
+                log += f"Not translating the field {from_field} since it is null.\n"
                 continue
 
-            out += f"{db_obj.get_default_language()}: {from_field_value}\n"
-            for to_language in db_obj.get_rest_language():
-                to_field = f"{field}_{to_language}"
+            log += f"{from_lang}: {from_value}\n"
+            for to_lang in db_obj.languages:
+                to_field = f"{field}_{to_lang}"
                 if (
                     hasattr(db_obj, to_field)
-                    and db_obj.override_translated_fields
-                    and to_language != db_obj.get_default_language()
+                    and to_lang != from_lang
+                    and getattr(db_obj, to_field, None) is None
                 ):
-                    to_field_value = translate_text(
-                        from_language=db_obj.get_default_language(),
-                        to_lang=to_language,
-                        text=from_field_value,
+                    to_value = translate_text(
+                        from_lang=from_lang,
+                        to_lang=to_lang,
+                        text=from_value,
                     )
-                    setattr(db_obj, to_field, to_field_value)
-                    out += f"{to_language}: {to_field_value}\n"
-        db_obj.save()
-        out += "\n\n"
+                    setattr(db_obj, to_field, to_value)
+                    log += f"{to_lang}: {to_value}\n"
+                    count += 1
 
-    Bot.to_admin(out)
+        log += "\n\n"
+
+        if count > 0:
+            db_obj.save()
+
+    Bot.to_admin(log)
 
 
 @huey.db_periodic_task(crontab(minute="21"))

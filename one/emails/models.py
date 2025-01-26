@@ -34,7 +34,7 @@ class Sender(Model):
             raise ValidationError(_("Domain does not match any sites."), code="invalid")
 
 
-class EmailMessageTemplate(Model):
+class TemplateMessage(Model):
     MIN_INTERVAL = timezone.timedelta(hours=8)
     MAX_INTERVAL = timezone.timedelta(days=365)
     MAX_TIME_RANGE = timezone.timedelta(days=3 * 365)
@@ -115,19 +115,19 @@ class EmailMessageTemplate(Model):
         return self.subject
 
 
-class Attachment(Model):
+class TemplateAttachment(Model):
     def get_directory(self, filename):
         return f"emails/{self.email.id}/{filename}"
 
-    email = ForeignKey(EmailMessageTemplate, on_delete=models.CASCADE)
+    email = ForeignKey(TemplateMessage, on_delete=models.CASCADE)
     file = models.FileField(upload_to=get_directory, storage=storages["private"])
 
     def __str__(self):
         return str(self.file)
 
 
-class Recipient(Model):
-    email = ForeignKey(EmailMessageTemplate, on_delete=models.CASCADE)
+class TemplateRecipient(Model):
+    email = ForeignKey(TemplateMessage, on_delete=models.CASCADE)
     send_times = models.PositiveSmallIntegerField(default=0, editable=False)
     sent_on = models.DateTimeField(null=True, blank=True, editable=False)
     to_address = models.EmailField(max_length=128)
@@ -273,8 +273,8 @@ class PostalMessage(Model):
 
 
 class PostalReplyMessage(Model):
-    def get_directory(self, filename):
-        return f"emails/replyies/{self.id}/{filename}"
+    def get_file_path(self, filename):
+        return f"emails/replies/{self.id}/{filename}"
 
     postal_message = ForeignKey(PostalMessage, on_delete=models.CASCADE)
     body = models.TextField()
@@ -282,7 +282,7 @@ class PostalReplyMessage(Model):
     draft = models.BooleanField(default=False)
     replied_on = models.DateTimeField(null=True, blank=True, editable=False)
     file = models.FileField(
-        upload_to=get_directory, storage=storages["private"], null=True, blank=True
+        upload_to=get_file_path, storage=storages["private"], null=True, blank=True
     )
 
     @cached_property
@@ -343,7 +343,7 @@ class PostalReplyMessage(Model):
         self.save()
 
 
-class MessageLinkClicked(Model):
+class PostalMessageLinkClicked(Model):
     """
     https://docs.postalserver.io/developer/webhooks#message-click-event
     """
@@ -356,20 +356,20 @@ class MessageLinkClicked(Model):
         please_implement_save_from_payload("MessageLinkClicked", payload)
 
 
-class MessageLoaded(Model):
+class PostalMessageLoaded(Model):
     """
     https://docs.postalserver.io/developer/webhooks#message-loadedopened-event
     """
 
     class Meta(Model.Meta):
-        verbose_name = "Postal: MessageLoaded"
-        verbose_name_plural = "Postal: MessageLoaded"
+        verbose_name = "Postal: Message Loaded"
+        verbose_name_plural = "Postal: Messages Loaded"
 
     def save_from_payload(self, payload: dict):
         please_implement_save_from_payload("MessageLoaded", payload)
 
 
-class DomainDNSError(Model):
+class PostalDomainDNSError(Model):
     """
     https://docs.postalserver.io/developer/webhooks#dns-error-event
     """
@@ -387,8 +387,8 @@ class DomainDNSError(Model):
     return_path_error = models.CharField(max_length=256, null=True)
 
     class Meta(Model.Meta):
-        verbose_name = "Postal: DomainDNSError"
-        verbose_name_plural = "Postal: DomainDNSError"
+        verbose_name = "Postal: Domain DNS Error"
+        verbose_name_plural = "Postal: Domain DNS Errors"
 
     def save_from_payload(self, payload: dict):
         self.domain = payload.get("domain")

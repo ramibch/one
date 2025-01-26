@@ -4,7 +4,7 @@ from django.db.migrations.recorder import MigrationRecorder
 from modeltranslation.admin import TranslationAdmin
 
 from .models import Topic
-from .utils.actions import translation_actions
+from .utils.actions import translate_fields
 
 
 @admin.register(MigrationRecorder.Migration)
@@ -22,4 +22,4 @@ class SessionAdmin(admin.ModelAdmin):
 
 @admin.register(Topic)
 class TopicAdmin(TranslationAdmin):
-    actions = translation_actions
+    actions = [translate_fields]

@@ -8,7 +8,6 @@ from django.utils.text import slugify
 
 from ..articles.models import Article
 from ..products.models import Product
-from . import Languages
 from .utils.abstracts import TranslatableModel
 
 User = get_user_model()
@@ -51,9 +50,3 @@ class Topic(TranslatableModel):
             with translation.override(lang):
                 setattr(self, f"slug_{lang}", slugify(self.name))
         super().save(*args, **kwargs)
-
-    def get_default_language(self):
-        return settings.LANGUAGE_CODE
-
-    def get_rest_languages(self) -> set:
-        return set(Languages.values)

@@ -2,20 +2,20 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 
-from one.base.utils.actions import translation_actions
+from one.base.utils.actions import translate_fields
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
 from ..articles.tasks import sync_articles
 from ..pages.tasks import sync_pages
-from .models import Seo, Site
+from .models import Site
 
 
 @admin.register(Site)
-class SiteAdmin(admin.ModelAdmin):
+class SiteAdmin(TranslationAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = ("domain", "brand_name", "picocss_color", "remarks")
     readonly_fields = ("domain",)
-    actions = ["sync_articles", "sync_pages"]
+    actions = ["sync_articles", "sync_pages", translate_fields]
     fieldsets = (
         (
             _("Site fields"),
@@ -53,6 +53,16 @@ class SiteAdmin(admin.ModelAdmin):
                 )
             },
         ),
+        (
+            _("SEO"),
+            {
+                "fields": (
+                    "page_title",
+                    "page_description",
+                    "page_keywords",
+                )
+            },
+        ),
     )
 
     @admin.action(description="🔄 Sync articles")
@@ -62,9 +72,3 @@ class SiteAdmin(admin.ModelAdmin):
     @admin.action(description="🔄 Sync pages")
     def sync_pages(modeladmin, request, queryset):
         sync_pages(queryset)
-
-
-@admin.register(Seo)
-class SeoAdmin(TranslationAdmin):
-    list_display = ("page_title", "page_description", "page_keywords")
-    actions = translation_actions

@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -19,12 +18,6 @@ class FAQ(TranslatableModel):
     question = models.CharField(max_length=256)
     answer = models.TextField()
     featured = models.BooleanField(default=False)
-
-    def get_default_language(self) -> str:
-        return settings.LANGUAGE_CODE
-
-    def get_rest_languages(self) -> set:
-        return {lang for site in self.sites.all() for lang in site.rest_languages}
 
     def __str__(self):
         joined_sites = ", ".join([site.domain for site in self.sites.all()])

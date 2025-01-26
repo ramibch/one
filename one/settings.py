@@ -103,6 +103,7 @@ INSTALLED_APPS = [
     "one.quiz",
     "one.dgt",
     "one.emails",
+    "one.etsy",
 ]
 
 MIDDLEWARE = [
