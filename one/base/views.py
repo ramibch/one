@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.sitemaps.views import index as django_sitemap_index
 from django.contrib.sitemaps.views import sitemap as django_sitemap
 from django.http import HttpResponse
@@ -49,6 +50,8 @@ def sitemap_index(*args, **kwargs):
     # https://stackoverflow.com/questions/9817856/django-sitemaps-get-only-pages-of-the-current-website
     for key in kwargs.get("sitemaps", {}).keys():
         kwargs["sitemaps"][key].request = args[0]
+        kwargs["sitemaps"][key].lang = kwargs.get("lang", settings.LANGUAGE_CODE)
+    kwargs.pop("lang", None)
     return django_sitemap_index(*args, **kwargs)
 
 
@@ -56,4 +59,6 @@ def sitemap(*args, **kwargs):
     # https://stackoverflow.com/questions/9817856/django-sitemaps-get-only-pages-of-the-current-website
     for key in kwargs.get("sitemaps", {}).keys():
         kwargs["sitemaps"][key].request = args[0]
+        kwargs["sitemaps"][key].lang = kwargs.get("lang", settings.LANGUAGE_CODE)
+    kwargs.pop("lang", None)
     return django_sitemap(*args, **kwargs)

@@ -15,6 +15,7 @@ class ArticleSitemap(Sitemap):
     def items(self):
         folders = self.request.site.article_folders.all()
         return Article.objects.filter(
+            languages__in=[self.lang],
             parent_folder__in=folders,
             slug__isnull=False,
         )
@@ -34,6 +35,7 @@ class PageSitemap(Sitemap):
         return Page.objects.filter(
             parent_folder__in=folders,
             slug__isnull=False,
+            # languages__in=[self.lang], ?? like in ArticleSitemap
         )
 
     def lastmod(self, obj: Page):

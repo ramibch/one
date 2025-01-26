@@ -7,6 +7,9 @@ from .views import favicon, sitemap
 
 urlpatterns = [
     # Sitemaps
+    path(
+        "<str:lang>/sitemap.xml", sitemap, {"sitemaps": get_sitemaps()}, name="sitemap"
+    ),
     path("sitemap.xml", sitemap, {"sitemaps": get_sitemaps()}, name="sitemap"),
     # Favicon
     path("favicon.ico", favicon, name="favicon"),
