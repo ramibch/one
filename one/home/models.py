@@ -1,6 +1,5 @@
 from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.db import models
-from django.db.models import Q
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
@@ -128,8 +127,8 @@ class FAQsSection(TranslatableModel):
         lang = get_language()
         return (
             FAQ.objects.filter(
-                Q(default_language=lang) | Q(rest_languages__contains=[lang]),
                 category__in=self.categories,
+                languages__contains=[lang],
                 sites=self.home.site,
                 featured=True,
             )
@@ -181,8 +180,8 @@ class ArticlesSection(TranslatableModel):
         lang = get_language()
         return (
             Article.objects.filter(
-                Q(default_language=lang) | Q(rest_languages__contains=[lang]),
                 parent_folder__in=self.home.site.article_folders.all(),
+                languages__contains=[lang],
                 slug__isnull=False,
                 featured=True,
             )

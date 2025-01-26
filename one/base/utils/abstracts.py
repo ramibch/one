@@ -2,8 +2,10 @@ import subprocess
 
 from auto_prefetch import Model
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 
 from one.base import Languages
 from one.base.utils.db_fields import ChoiceArrayField
@@ -75,19 +77,20 @@ class TranslatableModel(Model):
         choices=Languages,
         default=Languages.EN,
     )
-    rest_languages = ChoiceArrayField(
+    languages = ChoiceArrayField(
         models.CharField(max_length=8, choices=Languages),
         default=list,
         blank=True,
     )
 
     @cached_property
-    def languages(self) -> list:
-        return list(set(self.rest_languages + [self.default_language]))
-
-    @cached_property
     def language_count(self):
         return len(self.languages)
+
+    def clean(self):
+        super().clean()
+        if self.default_language not in self.languages:
+            raise ValidationError(_("Default language must be included in languages"))
 
     class Meta(Model.Meta):
         abstract = True

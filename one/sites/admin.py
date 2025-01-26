@@ -47,7 +47,7 @@ class SiteAdmin(TranslationAdmin):
                 "fields": (
                     "remarks",
                     "default_language",
-                    "rest_languages",
+                    "languages",
                     "requests_duration",
                     "spam_requests_duration",
                 )

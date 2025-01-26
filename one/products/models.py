@@ -9,9 +9,6 @@ from one.base.utils.abstracts import (
     TranslatableModel,
 )
 
-from ..base import Languages
-from ..base.utils.db_fields import ChoiceArrayField
-
 User = get_user_model()
 
 
@@ -25,11 +22,6 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     etsy_url = models.URLField(max_length=256, null=True, blank=True)
     price = models.FloatField(default=1.0)
     topics = models.ManyToManyField("base.Topic")
-    languages = ChoiceArrayField(
-        models.CharField(max_length=4, choices=Languages),
-        default=list,
-        blank=True,
-    )
 
     def get_absolute_url(self):
         return reverse_lazy("product-detail", kwargs={"slug": self.dirname})

@@ -59,6 +59,7 @@ def sync_articles(sites=None):
                     setattr(article, f"title_{lang_code}", title)
                     setattr(article, f"slug_{lang_code}", slugify(title))
                     setattr(article, f"body_{lang_code}", body_text)
+                    article.languages.append(lang_code)
                     lang_count += 1
 
                 # Files

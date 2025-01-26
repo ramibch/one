@@ -14,7 +14,10 @@ class ArticleSitemap(Sitemap):
 
     def items(self):
         folders = self.request.site.article_folders.all()
-        return Article.objects.filter(parent_folder__in=folders)
+        return Article.objects.filter(
+            parent_folder__in=folders,
+            slug__isnull=False,
+        )
 
     def lastmod(self, obj: Article):
         return obj.updated_on
@@ -28,7 +31,10 @@ class PageSitemap(Sitemap):
 
     def items(self):
         folders = self.request.site.page_folders.all()
-        return Page.objects.filter(parent_folder__in=folders)
+        return Page.objects.filter(
+            parent_folder__in=folders,
+            slug__isnull=False,
+        )
 
     def lastmod(self, obj: Page):
         return obj.updated_on
