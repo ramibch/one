@@ -1,12 +1,20 @@
 [submodule "submodules/pages"]
 	path = submodules/pages
 	url = git@github.com:ramibch/pages.git
+  branch = main
+  ignore = dirty
 [submodule "submodules/articles"]
 	path = submodules/articles
 	url = git@github.com:ramibch/articles.git
+  branch = main
+  ignore = dirty
 [submodule "submodules/books"]
 	path = submodules/books
 	url = git@github.com:ramibch/books.git
+  branch = main
+  ignore = dirty
 [submodule "submodules/products"]
 	path = submodules/products
 	url = git@github.com:ramibch/products.git
+  branch = main
+  ignore = dirty
