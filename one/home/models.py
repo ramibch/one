@@ -173,7 +173,7 @@ class ArticlesSection(TranslatableModel):
         lang = get_language()
         return (
             self.articles.filter(
-                Q(default_language=lang | Q(rest_languages__contains=[lang]))
+                Q(default_language=lang) | Q(rest_languages__contains=[lang])
             )
             .exclude(slug=None, featured=False)
             .distinct()[: self.number_of_articles]
