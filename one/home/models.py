@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
+from one.articles.models import Article
 from one.base.utils.mixins import PageMixin
 
 from ..base.utils.abstracts import TranslatableModel
@@ -15,7 +16,7 @@ from ..base.utils.animate import (
     AttentionSeekers,
 )
 from ..base.utils.db_fields import ChoiceArrayField
-from ..faqs.models import FAQCategory
+from ..faqs.models import FAQ, FAQCategory
 
 
 class Home(TranslatableModel, PageMixin):
@@ -114,11 +115,7 @@ class StepAction(TranslatableModel):
 class FAQsSection(TranslatableModel):
     home = OneToOneField("home.Home", on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
-    faqs = models.ManyToManyField("faqs.FAQ", limit_choices_to={"featured": True})
-    auto_add_categories = ChoiceArrayField(
-        models.CharField(max_length=32, choices=FAQCategory)
-    )
-    auto_add_faqs = models.BooleanField(default=False)
+    categories = ChoiceArrayField(models.CharField(max_length=32, choices=FAQCategory))
 
     class Meta(TranslatableModel.Meta):
         verbose_name = _("FAQs Section")
@@ -127,12 +124,23 @@ class FAQsSection(TranslatableModel):
     def __str__(self):
         return self.title
 
+    def get_faqs(self):
+        lang = get_language()
+        return (
+            FAQ.objects.filter(
+                Q(default_language=lang) | Q(rest_languages__contains=[lang]),
+                category__in=self.categories,
+                sites=self.home.site,
+                featured=True,
+            )
+            .order_by("-id")
+            .distinct()
+        )
+
 
 class ArticlesSection(TranslatableModel):
     home = OneToOneField("home.Home", on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
-    articles = models.ManyToManyField("articles.Article")
-    auto_add_articles = models.BooleanField(default=False)
     number_of_articles = models.PositiveSmallIntegerField(default=6)
     card_animation_type = models.CharField(
         max_length=16,
@@ -172,10 +180,13 @@ class ArticlesSection(TranslatableModel):
     def get_articles(self):
         lang = get_language()
         return (
-            self.articles.filter(
-                Q(default_language=lang) | Q(rest_languages__contains=[lang])
+            Article.objects.filter(
+                Q(default_language=lang) | Q(rest_languages__contains=[lang]),
+                parent_folder__in=self.home.site.article_folders.all(),
+                slug__isnull=False,
+                featured=True,
             )
-            .exclude(slug=None, featured=False)
+            .order_by("-id")
             .distinct()[: self.number_of_articles]
         )
 

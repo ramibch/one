@@ -18,13 +18,13 @@ class HomeAdmin(TranslationAdmin):
 
 @admin.register(FAQsSection)
 class FAQsSectionAdmin(TranslationAdmin):
-    filter_horizontal = ("faqs",)
     formfield_overrides = {ChoiceArrayField: {"widget": CheckboxSelectMultiple}}
 
 
 @admin.register(ArticlesSection)
 class ArticlesSectionAdmin(TranslationAdmin):
-    filter_horizontal = ("articles",)
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+    actions = [translate_fields]
 
 
 @admin.register(HeroSection)
