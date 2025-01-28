@@ -1,7 +1,9 @@
 from auto_prefetch import ForeignKey, Model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.urls import reverse_lazy
 from django.utils import timezone, translation
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from etsyv3 import EtsyAPI
 from etsyv3.models.file_request import (
@@ -11,8 +13,9 @@ from etsyv3.models.file_request import (
 from etsyv3.models.listing_request import CreateDraftListingRequest
 
 from one.base.utils.abstracts import TranslatableModel
+from one.base.utils.db_fields import ChoiceArrayField
 
-from .enums import ListingType, TaxonomyID, WhenMade, WhoMade
+from .enums import ListingType, Scopes, TaxonomyID, WhenMade, WhoMade
 
 
 def app_refresh_save(access_token, refresh_token, expires_at):
@@ -23,9 +26,21 @@ def app_refresh_save(access_token, refresh_token, expires_at):
     app.save()
 
 
+def get_default_scopes():
+    return [
+        "listings_d",
+        "listings_r",
+        "listings_w",
+        "profile_r",
+        "profile_w",
+        "shops_r",
+        "shops_w",
+        "transactions_r",
+    ]
+
+
 class App(Model):
     name = models.CharField(max_length=32)
-
     keystring = models.CharField(
         max_length=256,
         help_text="An Etsy App API Key keystring for the app.",
@@ -35,9 +50,9 @@ class App(Model):
         default="https://ramib.ch/etsy/callback",
         help_text="A callback URL your app uses to receive the authorization code",
     )
-    scopes = models.CharField(
-        max_length=256,
-        default="listings_d, listings_r, listings_w, profile_r, profile_w, shops_r, shops_w, transactions_r",
+    scopes = ChoiceArrayField(
+        models.CharField(max_length=16, choices=Scopes),
+        default=get_default_scopes,
         help_text="The scopes your application requires to use specific endpoints",
     )
     state = models.CharField(
@@ -76,6 +91,13 @@ class App(Model):
             ),
             refresh_save=app_refresh_save,
         )
+
+    def get_absolute_url(self):
+        return reverse_lazy("etsy_code", kwargs={"id": self.id})
+
+    @cached_property
+    def request_auth_url(self):
+        return self.get_absolute_url()
 
 
 class Shop(TranslatableModel):

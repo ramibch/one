@@ -1,4 +1,6 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 
 from one.base.utils.actions import translate_fields
@@ -38,4 +40,22 @@ class ListingAdmin(admin.ModelAdmin):
 
 @admin.register(App)
 class AppAdmin(admin.ModelAdmin):
-    pass
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+    readonly_fields = (
+        "access_token",
+        "refresh_token",
+        "expires_at",
+        "code_verifier",
+        "state",
+        "code",
+    )
+    list_display = ("name", "keystring")
+    actions = ["request_auth"]
+
+    @admin.action(description="👤 Request Etsy auth")
+    def request_auth(modeladmin, request, queryset):
+        if queryset.count() != 1:
+            messages.error(request, _("Select just one object"))
+            return
+
+        return redirect(queryset.first().request_auth_url)
