@@ -27,6 +27,10 @@ class BaseSubmoduleFolder(Model):
     def __str__(self):
         return self.name
 
+    @cached_property
+    def folder_path(self):
+        return self.submodule_path / self.name
+
     @staticmethod
     def fetch_submodules():
         subprocess.call(["git", "submodule", "update", "--remote"])

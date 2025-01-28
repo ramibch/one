@@ -20,7 +20,7 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
 
     title = models.CharField(max_length=128)
     slug = models.SlugField(max_length=128)
-    summary = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     price = models.FloatField(default=1.0)
     discount_percentage = models.SmallIntegerField(
         default=90,
@@ -36,6 +36,16 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     @cached_property
     def checkout_url(self):
         return reverse_lazy("product-checkout", kwargs={"id": self.id})
+
+    @cached_property
+    def file_paths(self):
+        base = self.folder_path / "files"
+        return [base / fobj.name for fobj in self.productfile_set.all()]
+
+    @cached_property
+    def image_paths(self):
+        base = self.folder_path / "images"
+        return [base / fobj.name for fobj in self.productfile_set.all()]
 
 
 def get_file_path(obj, filename: str):

@@ -5,7 +5,7 @@ from one.base.utils.actions import translate_fields
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 from one.products.models import Product
 
-from .models import Listing, Shop
+from .models import App, Listing, Shop
 
 
 @admin.register(Shop)
@@ -25,7 +25,7 @@ class ShopAdmin(TranslationAdmin):
                     Listing(
                         product=product,
                         shop=shop,
-                        price=shop.overprice_percentage / 100 * product.price,
+                        price=shop.price_percentage / 100 * product.price,
                     )
                 )
         Listing.objects.bulk_create(listings)
@@ -33,4 +33,9 @@ class ShopAdmin(TranslationAdmin):
 
 @admin.register(Listing)
 class ListingAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(App)
+class AppAdmin(admin.ModelAdmin):
     pass

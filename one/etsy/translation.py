@@ -5,4 +5,4 @@ from .models import Shop
 
 @register(Shop)
 class ShopOptions(TranslationOptions):
-    fields = ("general_listing_description",)
+    fields = ("generic_listing_description",)
