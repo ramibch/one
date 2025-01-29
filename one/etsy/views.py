@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from etsyv3.util.auth import AuthHelper
 
@@ -33,16 +33,12 @@ def etsy_callback(request):
     # to be in a completely new request context to the first - your original object may well no longer exist)
     state = request.GET["state"]
     code = request.GET["code"]
-    app = App.objects.get()
 
-    Bot.to_admin(f"Etsy callback.\nstate={state}\ncode={code}")
-
-    if state != app.state:
-        # Before using an authorization code, validate that the state string in the response matches the state sent with the authorization code request.
-        # If they do not match, halt authentication as the request is vulnerable to CSRF attacks.
-        # If they match, make a note never to use that state again, and make your next authorization code request with a new state string.
-        Bot.to_admin(f"Code from Etsy={state}\nCode requested={app.state}")
-        return HttpResponse(status=403)
+    try:
+        app = App.objects.get(state=state, code=code)
+    except App.DoesNotExist:
+        Bot.to_admin(f"Etsy callback.\nstate={state}\ncode={code}")
+        return HttpResponseForbidden()
 
     auth = AuthHelper(
         app.keystring,

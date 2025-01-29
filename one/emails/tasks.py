@@ -15,7 +15,7 @@ def task_send_email_templates(queryset):
     for email in queryset:
         count = 0
         log = f"📧 {email.subject}\n\n"
-        for recipient in email.recipient_set.filter(draft=False):
+        for recipient in email.templaterecipient_set.filter(draft=False):
             if not recipient.allow_to_send_email():
                 log += f"⏭️ Skip {recipient}\n"
                 continue
