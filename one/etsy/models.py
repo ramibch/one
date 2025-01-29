@@ -171,7 +171,7 @@ class Listing(Model):
             title=self.get_title(),
             description=self.get_description(),
             price=self.price,
-            who_made=self.when_made,
+            who_made=self.who_made,
             when_made=self.when_made,
             taxonomy_id=self.taxonomy_id,
             listing_type=self.listing_type,
