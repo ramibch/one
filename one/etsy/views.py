@@ -31,13 +31,13 @@ def etsy_callback(request):
     # 3. Use the state and code params from the callback that Etsy will make to call set_authorization_code(code, state)
     # on an AuthHelper object initialised with the same the arguments passed to your first one (this callback is likely
     # to be in a completely new request context to the first - your original object may well no longer exist)
-    state = request.GET["state"]
-    code = request.GET["code"]
+    state = request.GET.get("state")
+    code = request.GET.get("code")
 
     try:
-        app = App.objects.get(state=state, code=code)
+        app = App.objects.get(state=state, code=state)
     except App.DoesNotExist:
-        Bot.to_admin(f"Etsy callback.\nstate={state}\ncode={code}")
+        Bot.to_admin(f"Etsy callback. No App match.\nstate={state}\ncode={code}")
         return HttpResponseForbidden()
 
     auth = AuthHelper(
