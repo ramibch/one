@@ -123,8 +123,10 @@ class Shop(TranslatableModel):
 class Listing(Model):
     shop = ForeignKey("etsy.Shop", on_delete=models.CASCADE)
     product = ForeignKey("products.Product", on_delete=models.CASCADE)
-
-    quantity = models.PositiveSmallIntegerField(default=1000)
+    quantity = models.PositiveSmallIntegerField(
+        default=999,
+        validators=[MinValueValidator(0), MaxValueValidator(999)],
+    )
     price = models.FloatField(default=1.0)
     who_made = models.CharField(
         max_length=32,
@@ -183,7 +185,7 @@ class Listing(Model):
         self.listing_id = response.get("listing_id")
         self.url = response.get("url")
 
-        translation.deactivate(self.shop.default_language)
+        translation.deactivate()
 
         # uploading images
         for rank, path in enumerate(self.product.image_paths, start=1):
