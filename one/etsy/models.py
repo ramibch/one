@@ -190,19 +190,21 @@ class Listing(Model):
         # uploading images
         for rank, path in enumerate(self.product.image_paths, start=1):
             with open(path, "rb") as f:
-                image = UploadListingImageRequest(image_bytes=f.read(), rank=rank)
-            api.upload_listing_image(
-                shop_id=shop_id,
-                listing_id=self.listing_id,
-                listing_image=image,
-            )
+                api.upload_listing_image(
+                    shop_id=shop_id,
+                    listing_id=self.listing_id,
+                    listing_image=UploadListingImageRequest(
+                        image_bytes=f.read(), rank=rank
+                    ),
+                )
 
         # uploading files
-        for path in self.get_file_paths():
+        for path in self.product.file_paths:
             with open(path, "rb") as f:
-                file = UploadListingFileRequest(file_bytes=f.read(), name=path.name)
-            api.upload_listing_file(
-                shop_id=shop_id,
-                listing_id=self.listing_id,
-                listing_file=file,
-            )
+                api.upload_listing_file(
+                    shop_id=shop_id,
+                    listing_id=self.listing_id,
+                    listing_file=UploadListingFileRequest(
+                        file_bytes=f.read(), name=path.name
+                    ),
+                )
