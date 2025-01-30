@@ -210,16 +210,11 @@ class Listing(Model):
             shop_id=shop_id, listing=request_listing
         )
 
-        Bot.to_admin(
-            "TODO: Remove logic when Exp handling is OK. (etsy.models.upload_to_etsy)"
-        )
-        try:
-            self.listing_id = response.get("listing_id")
-            self.url = response.get("url")
-            self.response = response
-            self.save()
-        except Exception as e:
-            Bot.to_admin(f"Failed to save response for listing: {e}")
+        self.listing_id = response.get("listing_id")
+        self.url = response.get("url")
+        self.state = response.get("state")
+        self.response = response
+        self.save()
 
         translation.deactivate()
 
