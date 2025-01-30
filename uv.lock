@@ -699,14 +699,10 @@ wheels = [
 [[package]]
 name = "etsyv3"
 version = "0.0.7"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/anitabyte/etsyv3#c06404ae0bf04a146c1a91ad5b30aae8a3a1f3b5" }
 dependencies = [
     { name = "requests" },
     { name = "requests-oauthlib" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/8a/7b/b1c8637af58fa22bfe7026755bfb642d2ee552ef8289db73527b4ea5e0f8/etsyv3-0.0.7.tar.gz", hash = "sha256:617ee8b9c2f905934ff38cb9e8a0792cb62ab66c4b95a14373e790df2f92c5f9", size = 59445 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/e5/85/7e9dabc50a77198a032d266a2de26a47c1f72463a9999774ee5ae125761f/etsyv3-0.0.7-py3-none-any.whl", hash = "sha256:38c97c5bccc574c31871d263cb21134c613c8d8628ee3871ecb22d9b53ea49c5", size = 44976 },
 ]
 
 [[package]]
@@ -1193,7 +1189,7 @@ requires-dist = [
     { name = "djlint" },
     { name = "docutils" },
     { name = "environs" },
-    { name = "etsyv3" },
+    { name = "etsyv3", git = "https://github.com/anitabyte/etsyv3" },
     { name = "factory-boy" },
     { name = "geoip2" },
     { name = "gunicorn" },

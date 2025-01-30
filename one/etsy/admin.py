@@ -12,6 +12,7 @@ from .models import App, Listing, Shop
 
 @admin.register(Shop)
 class ShopAdmin(TranslationAdmin):
+    list_display = ("__str__",)
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     actions = [translate_fields, "generate_listings"]
 
@@ -35,7 +36,8 @@ class ShopAdmin(TranslationAdmin):
 
 @admin.register(Listing)
 class ListingAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("__str__", "price", "url")
+    readonly_fields = ("listing_id", "url", "state")
 
 
 @admin.register(App)
@@ -49,13 +51,11 @@ class AppAdmin(admin.ModelAdmin):
         "state",
         "code",
     )
-    list_display = ("name", "keystring")
+    list_display = ("name", "keystring", "expires_at")
     actions = ["request_auth"]
 
     @admin.action(description="👤 Request Etsy auth")
     def request_auth(modeladmin, request, queryset):
-        if queryset.count() != 1:
-            messages.error(request, _("Select just one object"))
-            return
-
-        return redirect(queryset.first().request_auth_url)
+        if queryset.count() == 1:
+            return redirect(queryset.first().request_auth_url)
+        messages.error(request, _("Select just one object"))

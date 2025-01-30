@@ -1,4 +1,5 @@
 import subprocess
+from copy import copy
 
 from auto_prefetch import Model
 from django.conf import settings
@@ -90,6 +91,12 @@ class TranslatableModel(Model):
     @cached_property
     def language_count(self):
         return len(self.languages)
+
+    @cached_property
+    def languages_without_default(self):
+        langs = copy(self.languages)
+        langs.remove(self.default_language)
+        return langs
 
     def clean(self):
         super().clean()

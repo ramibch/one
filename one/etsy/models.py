@@ -10,20 +10,34 @@ from etsyv3.models.file_request import (
     UploadListingFileRequest,
     UploadListingImageRequest,
 )
-from etsyv3.models.listing_request import CreateDraftListingRequest
+from etsyv3.models.listing_request import (
+    CreateDraftListingRequest,
+    CreateListingTranslationRequest,
+)
 
 from one.base.utils.abstracts import TranslatableModel
 from one.base.utils.db_fields import ChoiceArrayField
+from one.base.utils.telegram import Bot
 
 from .enums import ListingType, Scopes, TaxonomyID, WhenMade, WhoMade
 
 
 def app_refresh_save(access_token, refresh_token, expires_at):
-    # It's intended to be a 'neat' way to handle refreshes
-    app = App.objects.get(access_token=access_token)
-    app.refresh_token = refresh_token
-    app.expires_at = timezone.make_aware(expires_at, timezone.get_fixed_timezone(0))
-    app.save()
+    """
+    This function is intended to be a 'neat' way to handle refreshes
+
+    https://developer.etsy.com/documentation/essentials/authentication/#step-3-request-an-access-token
+
+    """
+
+    user_id = access_token.split(".")[0]
+    try:
+        app = App.objects.get(refresh_token__contains=user_id)
+        app.refresh_token = refresh_token
+        app.expires_at = timezone.make_aware(expires_at, timezone.get_fixed_timezone(0))
+        app.save()
+    except App.DoesNotExist:
+        Bot.to_admin(f"Failed to save access token, user_id = {user_id}")
 
 
 def get_default_scopes():
@@ -101,7 +115,10 @@ class App(Model):
 
 
 class Shop(TranslatableModel):
+    name = models.CharField(max_length=64, default="Shop example")
+    generic_listing_description = models.TextField()
     app = ForeignKey(App, on_delete=models.CASCADE)
+    topics = models.ManyToManyField("base.Topic")
     shop_id = models.PositiveIntegerField(
         default=39982277,
         help_text=(
@@ -110,14 +127,15 @@ class Shop(TranslatableModel):
             "3. View Page Source and search for 'shop_id'."
         ),
     )
-    generic_listing_description = models.TextField()
-    topics = models.ManyToManyField("base.Topic")
     price_percentage = models.SmallIntegerField(
         default=150,
         verbose_name=_("Price percentace"),
         help_text=_("Percent to apply to Etsy listing price."),
         validators=[MinValueValidator(50), MaxValueValidator(300)],
     )
+
+    def __str__(self):
+        return self.name
 
 
 class Listing(Model):
@@ -150,9 +168,13 @@ class Listing(Model):
     )
 
     # Attrs after response
+    response = models.JSONField(null=True, blank=True)
     listing_id = models.PositiveIntegerField(null=True, blank=True)
     url = models.URLField(max_length=256, null=True, blank=True)
     state = models.CharField(max_length=32, blank=True, null=True)
+
+    def __str__(self):
+        return f"[{self.shop}] {self.product}"
 
     def get_title(self) -> str:
         return self.product.title
@@ -164,7 +186,11 @@ class Listing(Model):
         return list(self.product.topics.all().values_list("name", flat=True))
 
     def upload_to_etsy(self):
-        api = self.shop.app.get_api_client()
+        if self.listing_id:
+            Bot.to_admin(f"Listing already in Etsy:\n{self.product}\n{self.url}")
+            return
+
+        api_client = self.shop.app.get_api_client()
         shop_id = self.shop.shop_id
 
         translation.activate(self.shop.default_language)
@@ -180,17 +206,27 @@ class Listing(Model):
             tags=self.get_tags(),
         )
 
-        response = api.create_draft_listing(shop_id=shop_id, listing=request_listing)
+        response = api_client.create_draft_listing(
+            shop_id=shop_id, listing=request_listing
+        )
 
-        self.listing_id = response.get("listing_id")
-        self.url = response.get("url")
+        Bot.to_admin(
+            "TODO: Remove logic when Exp handling is OK. (etsy.models.upload_to_etsy)"
+        )
+        try:
+            self.listing_id = response.get("listing_id")
+            self.url = response.get("url")
+            self.response = response
+            self.save()
+        except Exception as e:
+            Bot.to_admin(f"Failed to save response for listing: {e}")
 
         translation.deactivate()
 
-        # uploading images
+        # Images
         for rank, path in enumerate(self.product.image_paths, start=1):
             with open(path, "rb") as f:
-                api.upload_listing_image(
+                api_client.upload_listing_image(
                     shop_id=shop_id,
                     listing_id=self.listing_id,
                     listing_image=UploadListingImageRequest(
@@ -198,13 +234,28 @@ class Listing(Model):
                     ),
                 )
 
-        # uploading files
+        # Files
         for path in self.product.file_paths:
             with open(path, "rb") as f:
-                api.upload_listing_file(
+                api_client.upload_listing_file(
                     shop_id=shop_id,
                     listing_id=self.listing_id,
                     listing_file=UploadListingFileRequest(
                         file_bytes=f.read(), name=path.name
                     ),
+                )
+
+        # Translations
+        for lang in self.shop.languages_without_default:
+            with translation.override(lang):
+                listing_translation = CreateListingTranslationRequest(
+                    title=self.get_title(),
+                    description=self.get_description(),
+                    tags=self.get_tags(),
+                )
+                api_client.create_listing_translation(
+                    shop_id=self.shop.shop_id,
+                    listing_id=self.listing_id,
+                    language=lang,
+                    listing_translation=listing_translation,
                 )

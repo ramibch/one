@@ -45,7 +45,6 @@ dependencies = [
   "django-allauth[socialaccount]",
   "pdf2image",
   "django-dbbackup",
-  "etsyv3",
   "django-modeltranslation>=0.19.11",
   "django-cors-headers>=4.6.0",
   "pydotplus>=2.0.2",
@@ -56,6 +55,7 @@ dependencies = [
   "unittest-parametrize>=1.5.0",
   "django-nested-inline>=0.4.6",
   "bs4>=0.0.2",
+  "etsyv3",
 ]
 
 
@@ -76,3 +76,6 @@ plugins = ["mypy_django_plugin.main"]
 
 [tool.django-stubs]
 django_settings_module = "one.settings"
+
+[tool.uv.sources]
+etsyv3 = { git = "https://github.com/anitabyte/etsyv3" }
