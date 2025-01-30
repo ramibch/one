@@ -45,7 +45,7 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     @cached_property
     def image_paths(self):
         base = self.folder_path / "images"
-        return [base / fobj.name for fobj in self.productfile_set.all()]
+        return [base / fobj.name for fobj in self.productimage_set.all()]
 
 
 def get_file_path(obj, filename: str):
