@@ -38,6 +38,12 @@ class ShopAdmin(TranslationAdmin):
 class ListingAdmin(admin.ModelAdmin):
     list_display = ("__str__", "price", "url")
     readonly_fields = ("listing_id", "url", "state")
+    actions = ["upload"]
+
+    @admin.action(description="⬆️ Upload to Etsy")
+    def upload(modeladmin, request, queryset):
+        for obj in queryset.filter(listing_id__isnull=True):
+            obj.upload_to_etsy()
 
 
 @admin.register(App)
