@@ -116,6 +116,7 @@ class App(Model):
     def request_auth_url(self):
         return self.get_absolute_url()
 
+    @cached_property
     def request_auth_v2_url(self):
         return reverse_lazy("etsy_code_v2", kwargs={"id": self.id})
 
@@ -170,10 +171,7 @@ class UserShopAuth(Model):
             keystring=self.app.keystring,
             token=self.access_token,
             refresh_token=self.refresh_token,
-            expiry=timezone.make_naive(
-                self.expires_at,
-                timezone=timezone.get_fixed_timezone(0),
-            ),
+            expiry=self.expires_at,
             refresh_save=user_app_refresh_save,
         )
 
