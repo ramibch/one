@@ -1,4 +1,5 @@
 from auto_prefetch import ForeignKey, Model
+from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse_lazy
@@ -20,6 +21,8 @@ from one.base.utils.db_fields import ChoiceArrayField
 from one.base.utils.telegram import Bot
 
 from .enums import ListingType, Scopes, TaxonomyID, WhenMade, WhoMade
+
+User = get_user_model()
 
 
 def app_refresh_save(access_token, refresh_token, expires_at):
@@ -112,6 +115,67 @@ class App(Model):
     @cached_property
     def request_auth_url(self):
         return self.get_absolute_url()
+
+    def request_auth_v2_url(self):
+        return reverse_lazy("etsy_code_v2", kwargs={"id": self.id})
+
+
+def user_app_refresh_save(access_token, refresh_token, expires_at):
+    """
+    This function is intended to be a 'neat' way to handle refreshes
+
+    https://developer.etsy.com/documentation/essentials/authentication/#step-3-request-an-access-token
+
+    """
+
+    user_id = access_token.split(".")[0]
+    try:
+        app = UserShopAuth.objects.get(refresh_token__contains=user_id)
+        app.refresh_token = refresh_token
+        app.expires_at = timezone.make_aware(expires_at, timezone.get_fixed_timezone(0))
+        app.save()
+    except App.DoesNotExist:
+        Bot.to_admin(f"Failed to save access token, user_id = {user_id}")
+
+
+class UserShopAuth(Model):
+    app = ForeignKey(App, on_delete=models.CASCADE)
+    user = ForeignKey(User, on_delete=models.CASCADE, null=True)
+    etsy_user_id = models.PositiveBigIntegerField(null=True)
+    shop_id = models.PositiveBigIntegerField(null=True)
+    state = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+        help_text="A state string, similar to a strong password, which protects against Cross-site request forgery exploits.",
+    )
+    code_verifier = models.CharField(
+        help_text="A code verifier for code exchange (PKCE)",
+        max_length=256,
+        null=True,
+        blank=True,
+    )
+    code = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+        help_text="An OAuth authorization code required to request an OAuth token",
+    )
+    access_token = models.CharField(max_length=256, null=True, blank=True)
+    refresh_token = models.CharField(max_length=256, null=True, blank=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+
+    def get_api_client(self) -> type[EtsyAPI]:
+        return EtsyAPI(
+            keystring=self.app.keystring,
+            token=self.access_token,
+            refresh_token=self.refresh_token,
+            expiry=timezone.make_naive(
+                self.expires_at,
+                timezone=timezone.get_fixed_timezone(0),
+            ),
+            refresh_save=user_app_refresh_save,
+        )
 
 
 class Shop(TranslatableModel):

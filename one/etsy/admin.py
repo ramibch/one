@@ -7,7 +7,7 @@ from one.base.utils.actions import translate_fields
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 from one.products.models import Product
 
-from .models import App, Listing, Shop
+from .models import App, Listing, Shop, UserShopAuth
 
 
 @admin.register(Shop)
@@ -59,10 +59,21 @@ class AppAdmin(admin.ModelAdmin):
         "code",
     )
     list_display = ("name", "keystring", "expires_at")
-    actions = ["request_auth"]
+    actions = ["request_auth", "request_auth_v2"]
 
     @admin.action(description="👤 Request Etsy auth")
     def request_auth(modeladmin, request, queryset):
         if queryset.count() == 1:
             return redirect(queryset.first().request_auth_url)
         messages.error(request, _("Select just one object"))
+
+    @admin.action(description="👤 Request Etsy auth v2")
+    def request_auth_v2(modeladmin, request, queryset):
+        if queryset.count() == 1:
+            return redirect(queryset.first().request_auth_v2_url)
+        messages.error(request, _("Select just one object"))
+
+
+@admin.register(UserShopAuth)
+class UserAuthAdmin(admin.ModelAdmin):
+    pass
