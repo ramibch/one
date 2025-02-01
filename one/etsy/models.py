@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse_lazy
-from django.utils import timezone, translation
+from django.utils import translation
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from etsyv3.models.file_request import (
@@ -75,13 +75,14 @@ def auth_refresh_save(access_token, refresh_token, expires_at):
     """
 
     user_id = access_token.split(".")[0]
-    try:
-        app = UserShopAuth.objects.get(refresh_token__contains=user_id)
+    app = UserShopAuth.objects.filter(etsy_user_id=user_id).last()
+    if app:
+        app.access_token = access_token
         app.refresh_token = refresh_token
-        app.expires_at = timezone.make_aware(expires_at, timezone.get_fixed_timezone(0))
+        app.expires_at = expires_at
         app.save()
-    except App.DoesNotExist:
-        Bot.to_admin(f"Failed to save access token, user_id = {user_id}")
+    else:
+        Bot.to_admin(f"Etsy: Failed to save tokens, user_id = {user_id}")
 
 
 class UserShopAuth(Model):
@@ -107,9 +108,17 @@ class UserShopAuth(Model):
         blank=True,
         help_text="An OAuth authorization code required to request an OAuth token",
     )
+    scopes = ChoiceArrayField(
+        models.CharField(max_length=16, choices=Scopes),
+        default=get_default_scopes,
+        help_text="The scopes your application requires to use specific endpoints",
+    )
     access_token = models.CharField(max_length=256, null=True, blank=True)
     refresh_token = models.CharField(max_length=256, null=True, blank=True)
     expires_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"[{self.etsy_user_id}] {self.app}"
 
     def get_api_client(self) -> type[ExtendedEtsyAPI]:
         return ExtendedEtsyAPI(
@@ -132,6 +141,21 @@ class Shop(TranslatableModel):
         help_text=_("Percent to apply to Etsy listing price."),
         validators=[MinValueValidator(50), MaxValueValidator(300)],
     )
+    etsy_payload = models.JSONField(null=True, blank=True)
+
+    @cached_property
+    def api_client(self):
+        if self.user_shop_auth:
+            return self.user_shop_auth.get_api_client()
+        raise ValueError
+
+    @cached_property
+    def shop_id(self):
+        return self.user_shop_auth.shop_id
+
+    def request_and_save_payload(self):
+        self.etsy_payload = self.api_client.get_shop(self.shop_id)
+        self.save()
 
     def __str__(self):
         return self.name

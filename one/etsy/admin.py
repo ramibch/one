@@ -25,13 +25,19 @@ class AppAdmin(admin.ModelAdmin):
 
 @admin.register(Shop)
 class ShopAdmin(TranslationAdmin):
-    list_display = ("__str__", "price_percentage")
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    actions = [translate_fields, "generate_listings"]
+    list_display = ("__str__", "price_percentage")
+    readonly_fields = ("etsy_payload",)
+    actions = [translate_fields, "generate_listings", "get_payload"]
 
     @admin.action(description="🚀 Create listings from products using topics")
     def generate_listings(modeladmin, request, queryset):
         task_generate_listings_from_products(queryset)
+
+    @admin.action(description="🛍️ Request Etsy payload")
+    def get_payload(modeladmin, request, queryset):
+        for shop in queryset:
+            shop.request_and_save_payload()
 
 
 @admin.register(Listing)
@@ -47,6 +53,7 @@ class ListingAdmin(admin.ModelAdmin):
 
 @admin.register(UserShopAuth)
 class UserShopAuthAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "etsy_user_id", "shop_id", "app", "user")
     readonly_fields = [f.name for f in UserShopAuth._meta.fields]
 
     def has_add_permission(self, request):

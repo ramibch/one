@@ -1,6 +1,6 @@
 from typing import Any
 
-from etsyv3 import EtsyAPI
+from etsyv3.etsy_api import ETSY_API_BASEURL, EtsyAPI
 
 
 class ExtendedEtsyAPI(EtsyAPI):
@@ -14,5 +14,5 @@ class ExtendedEtsyAPI(EtsyAPI):
         Remove if merged:
         https://github.com/anitabyte/etsyv3/pull/27
         """
-        uri = f"{super().ETSY_API_BASEURL}/users/me"
+        uri = f"{ETSY_API_BASEURL}/users/me"
         return self._issue_request(uri)

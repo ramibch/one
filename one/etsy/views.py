@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from etsyv3.util.auth import AuthHelper
+from oauthlib.oauth2.rfc6749.errors import InvalidGrantError
+
+from one.base.utils.telegram import Bot
 
 from ..base.utils.telegram import Bot
 from .models import App, UserShopAuth
@@ -12,16 +15,21 @@ from .models import App, UserShopAuth
 @login_required
 def etsy_request_code(request, id):
     app = get_object_or_404(App, id=id)
-    auth_helper = AuthHelper(app.keystring, app.redirect_uri, scopes=app.scopes)
+    auth_helper = AuthHelper(
+        keystring=app.keystring,
+        redirect_uri=app.redirect_uri,
+        scopes=app.scopes,
+    )
     # 1. Call get_auth_code() on your AuthHelper - this will return an Etsy authentication URL
-    url, code = auth_helper.get_auth_code()
+    url, state = auth_helper.get_auth_code()
     # save in the etsy obj the generate properties
     UserShopAuth.objects.create(
         user=request.user,
         app=app,
-        code=code,
+        code=state,
         state=auth_helper.state,
         code_verifier=auth_helper.code_verifier,
+        scopes=app.scopes,  # store the selected scopes
     )
     # 2. Go to that URL and authenticate with Etsy
     return redirect(url)
@@ -38,24 +46,30 @@ def etsy_callback(request):
     code = request.GET.get("code")
 
     try:
-        userauth = UserShopAuth.objects.get(state=state, code=state, user=request.user)
+        userauth = UserShopAuth.objects.get(code=state, state=state, user=request.user)
     except UserShopAuth.DoesNotExist:
         Bot.to_admin(f"No UserShopAuth (Etsy) match.\nstate={state}\ncode={code}")
-        return HttpResponseForbidden("Auth failed")
+        return HttpResponseForbidden("Auth failed, contact admin")
 
     auth_helper = AuthHelper(
         userauth.app.keystring,
         userauth.app.redirect_uri,
         code_verifier=userauth.code_verifier,
         state=userauth.state,
+        scopes=userauth.scopes,
     )
     auth_helper.set_authorisation_code(code, state)
     # 4. You can then call get_access_token() on your AuthHelper object and you should get a dictionary returned
     # with the keys access_token, refresh_token and expires_at. These a required to create the EtsyAPI object.
-    reponse = auth_helper.get_access_token()
-    userauth.access_token = reponse["access_token"]
-    userauth.refresh_token = reponse["refresh_token"]
-    userauth.expires_at = datetime.fromtimestamp(reponse["expires_at"])
+    try:
+        response = auth_helper.get_access_token()
+    except InvalidGrantError as e:
+        Bot.to_admin(f"Etsy Auth error ({userauth.id}):{e}")
+        return HttpResponseForbidden("Auth failed, contact admin.")
+
+    userauth.access_token = response["access_token"]
+    userauth.refresh_token = response["refresh_token"]
+    userauth.expires_at = datetime.fromtimestamp(response["expires_at"])
 
     # Extra: Get shop_id and user_id
     client_api = userauth.get_api_client()
@@ -63,4 +77,5 @@ def etsy_callback(request):
     userauth.etsy_user_id = data.get("user_id")
     userauth.shop_id = data.get("shop_id")
     userauth.save()
+
     return HttpResponse("Logged in!")
