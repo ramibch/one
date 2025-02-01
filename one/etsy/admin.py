@@ -5,33 +5,33 @@ from modeltranslation.admin import TranslationAdmin
 
 from one.base.utils.actions import translate_fields
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
-from one.products.models import Product
 
 from .models import App, Listing, Shop, UserShopAuth
+from .tasks import task_generate_listings_from_products, task_upload_listings
+
+
+@admin.register(App)
+class AppAdmin(admin.ModelAdmin):
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+    list_display = ("name", "keystring", "redirect_uri", "scopes")
+    actions = ["request_auth"]
+
+    @admin.action(description="👤 Request Etsy auth")
+    def request_auth(modeladmin, request, queryset):
+        if queryset.count() == 1:
+            return redirect(queryset.first().request_auth_url)
+        messages.error(request, _("Select just one object"))
 
 
 @admin.register(Shop)
 class ShopAdmin(TranslationAdmin):
-    list_display = ("__str__",)
+    list_display = ("__str__", "price_percentage")
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     actions = [translate_fields, "generate_listings"]
 
     @admin.action(description="🚀 Create listings from products using topics")
     def generate_listings(modeladmin, request, queryset):
-        listings = []
-        for shop in queryset:
-            products = Product.objects.filter(topics__in=shop.topics.all())
-            for product in products:
-                if Listing.objects.filter(product=product, shop=shop).exists():
-                    continue
-                listings.append(
-                    Listing(
-                        product=product,
-                        shop=shop,
-                        price=shop.price_percentage / 100 * product.price,
-                    )
-                )
-        Listing.objects.bulk_create(listings)
+        task_generate_listings_from_products(queryset)
 
 
 @admin.register(Listing)
@@ -42,38 +42,12 @@ class ListingAdmin(admin.ModelAdmin):
 
     @admin.action(description="⬆️ Upload to Etsy")
     def upload(modeladmin, request, queryset):
-        # TODO: use task!
-        for obj in queryset.filter(listing_id__isnull=True):
-            obj.upload_to_etsy()
-
-
-@admin.register(App)
-class AppAdmin(admin.ModelAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    readonly_fields = (
-        "access_token",
-        "refresh_token",
-        "expires_at",
-        "code_verifier",
-        "state",
-        "code",
-    )
-    list_display = ("name", "keystring", "expires_at")
-    actions = ["request_auth", "request_auth_v2"]
-
-    @admin.action(description="👤 Request Etsy auth")
-    def request_auth(modeladmin, request, queryset):
-        if queryset.count() == 1:
-            return redirect(queryset.first().request_auth_url)
-        messages.error(request, _("Select just one object"))
-
-    @admin.action(description="👤 Request Etsy auth v2")
-    def request_auth_v2(modeladmin, request, queryset):
-        if queryset.count() == 1:
-            return redirect(queryset.first().request_auth_v2_url)
-        messages.error(request, _("Select just one object"))
+        task_upload_listings(queryset.filter(listing_id__isnull=True))
 
 
 @admin.register(UserShopAuth)
-class UserAuthAdmin(admin.ModelAdmin):
-    pass
+class UserShopAuthAdmin(admin.ModelAdmin):
+    readonly_fields = [f.name for f in UserShopAuth._meta.fields]
+
+    def has_add_permission(self, request):
+        return False

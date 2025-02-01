@@ -1,4 +1,4 @@
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -6,7 +6,6 @@ from django.urls import reverse_lazy
 from django.utils import timezone, translation
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from etsyv3 import EtsyAPI
 from etsyv3.models.file_request import (
     UploadListingFileRequest,
     UploadListingImageRequest,
@@ -20,27 +19,10 @@ from one.base.utils.abstracts import TranslatableModel
 from one.base.utils.db_fields import ChoiceArrayField
 from one.base.utils.telegram import Bot
 
+from .api import ExtendedEtsyAPI
 from .enums import ListingType, Scopes, TaxonomyID, WhenMade, WhoMade
 
 User = get_user_model()
-
-
-def app_refresh_save(access_token, refresh_token, expires_at):
-    """
-    This function is intended to be a 'neat' way to handle refreshes
-
-    https://developer.etsy.com/documentation/essentials/authentication/#step-3-request-an-access-token
-
-    """
-
-    user_id = access_token.split(".")[0]
-    try:
-        app = App.objects.get(refresh_token__contains=user_id)
-        app.refresh_token = refresh_token
-        app.expires_at = timezone.make_aware(expires_at, timezone.get_fixed_timezone(0))
-        app.save()
-    except App.DoesNotExist:
-        Bot.to_admin(f"Failed to save access token, user_id = {user_id}")
 
 
 def get_default_scopes():
@@ -72,42 +54,9 @@ class App(Model):
         default=get_default_scopes,
         help_text="The scopes your application requires to use specific endpoints",
     )
-    state = models.CharField(
-        max_length=256,
-        null=True,
-        blank=True,
-        help_text="A state string, similar to a strong password, which protects against Cross-site request forgery exploits.",
-    )
-    code_verifier = models.CharField(
-        help_text="A code verifier for code exchange (PKCE)",
-        max_length=256,
-        null=True,
-        blank=True,
-    )
-    code = models.CharField(
-        max_length=256,
-        null=True,
-        blank=True,
-        help_text="An OAuth authorization code required to request an OAuth token",
-    )
-    access_token = models.CharField(max_length=256, null=True, blank=True)
-    refresh_token = models.CharField(max_length=256, null=True, blank=True)
-    expires_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.keystring})"
-
-    def get_api_client(self) -> type[EtsyAPI]:
-        return EtsyAPI(
-            keystring=self.keystring,
-            token=self.access_token,
-            refresh_token=self.refresh_token,
-            expiry=timezone.make_naive(
-                self.expires_at,
-                timezone=timezone.get_fixed_timezone(0),
-            ),
-            refresh_save=app_refresh_save,
-        )
 
     def get_absolute_url(self):
         return reverse_lazy("etsy_code", kwargs={"id": self.id})
@@ -116,12 +65,8 @@ class App(Model):
     def request_auth_url(self):
         return self.get_absolute_url()
 
-    @cached_property
-    def request_auth_v2_url(self):
-        return reverse_lazy("etsy_code_v2", kwargs={"id": self.id})
 
-
-def user_app_refresh_save(access_token, refresh_token, expires_at):
+def auth_refresh_save(access_token, refresh_token, expires_at):
     """
     This function is intended to be a 'neat' way to handle refreshes
 
@@ -140,7 +85,7 @@ def user_app_refresh_save(access_token, refresh_token, expires_at):
 
 
 class UserShopAuth(Model):
-    app = ForeignKey(App, on_delete=models.CASCADE)
+    app = ForeignKey(App, on_delete=models.CASCADE, null=True)
     user = ForeignKey(User, on_delete=models.CASCADE, null=True)
     etsy_user_id = models.PositiveBigIntegerField(null=True)
     shop_id = models.PositiveBigIntegerField(null=True)
@@ -166,29 +111,21 @@ class UserShopAuth(Model):
     refresh_token = models.CharField(max_length=256, null=True, blank=True)
     expires_at = models.DateTimeField(null=True, blank=True)
 
-    def get_api_client(self) -> type[EtsyAPI]:
-        return EtsyAPI(
+    def get_api_client(self) -> type[ExtendedEtsyAPI]:
+        return ExtendedEtsyAPI(
             keystring=self.app.keystring,
             token=self.access_token,
             refresh_token=self.refresh_token,
             expiry=self.expires_at,
-            refresh_save=user_app_refresh_save,
+            refresh_save=auth_refresh_save,
         )
 
 
 class Shop(TranslatableModel):
+    user_shop_auth = OneToOneField(UserShopAuth, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=64, default="Shop example")
     generic_listing_description = models.TextField()
-    app = ForeignKey(App, on_delete=models.CASCADE)
     topics = models.ManyToManyField("base.Topic")
-    shop_id = models.PositiveIntegerField(
-        default=39982277,
-        help_text=(
-            "1. Log in into etsy. "
-            "2. Visit your shop at 'https://www.etsy.com/shop/<your-shop>'. "
-            "3. View Page Source and search for 'shop_id'."
-        ),
-    )
     price_percentage = models.SmallIntegerField(
         default=150,
         verbose_name=_("Price percentace"),
@@ -201,7 +138,8 @@ class Shop(TranslatableModel):
 
 
 class Listing(Model):
-    shop = ForeignKey("etsy.Shop", on_delete=models.CASCADE)
+    shop = ForeignKey(Shop, on_delete=models.CASCADE)
+    user_shop_auth = ForeignKey(UserShopAuth, on_delete=models.CASCADE, null=True)
     product = ForeignKey("products.Product", on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(
         default=999,
@@ -247,13 +185,21 @@ class Listing(Model):
     def get_tags(self) -> list[str]:
         return list(self.product.topics.all().values_list("name", flat=True))
 
+    @cached_property
+    def api_client(self):
+        return self.user_shop_auth.get_api_client()
+
+    @cached_property
+    def shop_id(self):
+        return self.user_shop_auth.shop_id
+
     def upload_to_etsy(self):
         if self.listing_id:
             Bot.to_admin(f"Listing already in Etsy:\n{self.product}\n{self.url}")
             return
 
-        api_client = self.shop.app.get_api_client()
-        shop_id = self.shop.shop_id
+        api_client = self.api_client
+        shop_id = self.shop_id
 
         translation.activate(self.shop.default_language)
         request_listing = CreateDraftListingRequest(
