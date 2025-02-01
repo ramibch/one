@@ -9,12 +9,15 @@ from .models import DgtQuestion, DgtTest
 
 @huey.db_periodic_task(crontab(day=1))
 def scrape_dgt_task_monthly():
-    last_page = DgtTest.objects.last().dgt_page or 270
+    last_test = DgtTest.objects.last()
+    start_page = 1 if last_test is None else last_test.dgt_page + 1
     host = "https://revista.dgt.es"
-    for page_num in range(last_page, last_page + 3):
+    for page_num in range(start_page, start_page + 3):
         questions = []
         url = f"{host}/es/test/Test-num-{page_num}.shtml"
         r = requests.get(url)
+        if r.status_code != 200:
+            continue
         soup = BeautifulSoup(r.text, "html.parser")
         test = DgtTest.objects.create(
             title=soup.find("h1").text, source_url=url, dgt_page=page_num
