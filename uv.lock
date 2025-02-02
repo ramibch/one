@@ -268,7 +268,7 @@ name = "click"
 version = "8.1.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "platform_system == 'Windows'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/96/d3/f04c7bfcf5c1862a2a5b845c6b2b360488cf47af55dfa79c98f6a6bf98b5/click-8.1.7.tar.gz", hash = "sha256:ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de", size = 336121 }
 wheels = [
@@ -561,6 +561,15 @@ wheels = [
 ]
 
 [[package]]
+name = "django-rest-framework"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "djangorestframework" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ed/d2/61159bc6efd1bf16adc4a2a48f7ace2080d1f7aef054f606d1857cab490c/django-rest-framework-0.1.0.tar.gz", hash = "sha256:47a8f496fa69e3b6bd79f68dd7a1527d907d6b77f009e9db7cf9bb21cc565e4a", size = 969 }
+
+[[package]]
 name = "django-rosetta"
 version = "0.10.1"
 source = { registry = "https://pypi.org/simple" }
@@ -642,6 +651,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/f3/46/24e32ffdad682df8c273e2f434096246c89d265948a2fd214307f31eeeec/django_upgrade-1.22.2.tar.gz", hash = "sha256:8643abdde2961e3c60173ebee84f48371ffbec5181095a38cac080947af0d2ae", size = 67932 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/98/64/7b1432a7eca9e8e24b27ef89b9badca59add35a6dc785a63aa886b167c9d/django_upgrade-1.22.2-py3-none-any.whl", hash = "sha256:fb76b183b2e8186bb1157734083569a4b754dce2e812c2a723454bd248fb1373", size = 69114 },
+]
+
+[[package]]
+name = "djangorestframework"
+version = "3.15.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/2c/ce/31482eb688bdb4e271027076199e1aa8d02507e530b6d272ab8b4481557c/djangorestframework-3.15.2.tar.gz", hash = "sha256:36fe88cd2d6c6bec23dca9804bab2ba5517a8bb9d8f47ebc68981b56840107ad", size = 1067420 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7c/b6/fa99d8f05eff3a9310286ae84c4059b08c301ae4ab33ae32e46e8ef76491/djangorestframework-3.15.2-py3-none-any.whl", hash = "sha256:2b8871b062ba1aefc2de01f773875441a961fefbf79f5eed1e32b2f096944b20", size = 1071235 },
 ]
 
 [[package]]
@@ -1126,6 +1147,7 @@ dependencies = [
     { name = "django-modeltranslation" },
     { name = "django-money", extra = ["exchange"] },
     { name = "django-nested-inline" },
+    { name = "django-rest-framework" },
     { name = "django-rosetta" },
     { name = "django-storages" },
     { name = "django-stubs", extra = ["compatible-mypy"] },
@@ -1181,6 +1203,7 @@ requires-dist = [
     { name = "django-modeltranslation", specifier = ">=0.19.11" },
     { name = "django-money", extras = ["exchange"] },
     { name = "django-nested-inline", specifier = ">=0.4.6" },
+    { name = "django-rest-framework", specifier = ">=0.1.0" },
     { name = "django-rosetta" },
     { name = "django-storages", specifier = ">=1.14.4" },
     { name = "django-stubs", extras = ["compatible-mypy"] },
@@ -1772,7 +1795,7 @@ name = "tqdm"
 version = "4.67.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "platform_system == 'Windows'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a8/4b/29b4ef32e036bb34e4ab51796dd745cdba7ed47ad142a9f4a1eb8e0c744d/tqdm-4.67.1.tar.gz", hash = "sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2", size = 169737 }
 wheels = [

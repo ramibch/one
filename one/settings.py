@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "djmoney",
     "dbbackup",
     "corsheaders",
+    "rest_framework",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",

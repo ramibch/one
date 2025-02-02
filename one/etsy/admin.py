@@ -55,6 +55,13 @@ class ListingAdmin(admin.ModelAdmin):
 class UserShopAuthAdmin(admin.ModelAdmin):
     list_display = ("__str__", "etsy_user_id", "shop_id", "app", "user")
     readonly_fields = [f.name for f in UserShopAuth._meta.fields]
+    actions = ["refresh"]
 
     def has_add_permission(self, request):
         return False
+    
+    @admin.action(description="🔄 Refresh token")
+    def refresh(modeladmin, request, queryset):
+        for obj in queryset:
+            api = auth_obj.get_api_client()
+            api.refresh()
