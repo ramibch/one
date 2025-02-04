@@ -1,5 +1,8 @@
+import re
+
 from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse_lazy
@@ -161,7 +164,7 @@ class Shop(TranslatableModel):
         return self.name
 
 
-class Listing(Model):
+class ProductListing(Model):
     shop = ForeignKey(Shop, on_delete=models.CASCADE)
     user_shop_auth = ForeignKey(UserShopAuth, on_delete=models.CASCADE, null=True)
     product = ForeignKey("products.Product", on_delete=models.CASCADE)
@@ -286,3 +289,133 @@ class Listing(Model):
                     language=lang,
                     listing_translation=listing_translation,
                 )
+
+
+class UserShop(Model):
+    pass
+
+
+def validate_listing_title(value):
+    # Regex pattern to allow only specific characters
+    pattern = r"[^\p{L}\p{Nd}\p{P}\p{Sm}\p{Zs}™©®]"
+
+    # Check if the title contains any invalid characters
+    if re.search(pattern, value, re.UNICODE):
+        raise ValidationError("The title contains invalid characters.")
+
+    # Check that %, :, &, and + appear at most once each
+    restricted_chars = ["%", ":", "&", "+"]
+    for char in restricted_chars:
+        if value.count(char) > 1:
+            raise ValidationError(f"The character '{char}' can only be used once.")
+
+
+class UserListing(Model):
+    user_shop = ForeignKey(UserShop, on_delete=models.CASCADE)
+    user_shop_auth = ForeignKey(UserShopAuth, on_delete=models.CASCADE)
+    quantity = models.PositiveSmallIntegerField(
+        default=999,
+        validators=[MinValueValidator(0), MaxValueValidator(999)],
+    )
+    title = models.CharField(
+        max_length=255,
+        validators=[validate_listing_title],
+        help_text=_(
+            "Title can contain only letters, numbers, punctuation, "
+            "mathematical symbols, whitespace, ™, ©, and ®. '%', ':', "
+            "'&', and '+' can be used only once each."
+        ),
+    )
+    description = models.TextField()
+    price = models.FloatField()
+    who_made = models.CharField(
+        max_length=32,
+        default=WhoMade.I_DID,
+        choices=WhoMade,
+    )
+    when_made = models.CharField(
+        max_length=32,
+        default=WhenMade.YEARS_2020_2025,
+        choices=WhenMade,
+    )
+    taxonomy_id = models.PositiveIntegerField(
+        default=TaxonomyID.DIGITAL_PRINTS,
+        choices=TaxonomyID,
+    )
+    shop_section_id = models.PositiveIntegerField(null=True, blank=True)
+    tags = ChoiceArrayField(models.CharField(max_length=20), size=13, default=list)
+    is_personalizable = models.BooleanField(
+        null=True,
+        blank=True,
+        help_text=_("This listing is personalizable or not."),
+    )
+    personalization_is_required = models.BooleanField(
+        null=True,
+        blank=True,
+        help_text=_(
+            "Listing requires personalization or not. "
+            "Will only change if is_personalizable is 'true'."
+        ),
+    )
+    personalization_char_count_max = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        help_text=_(
+            "It represents the maximum length for the personalization message "
+            "entered by the buyer. Will only change if is_personalizable is 'true'."
+        ),
+    )
+    personalization_instructions = models.TextField(
+        null=True,
+        blank=True,
+        help_text=_(
+            "It represents  instructions for the buyer to enter the personalization. "
+            "Will only change if is_personalizable is 'true'."
+        ),
+    )
+    is_customizable = models.BooleanField(
+        null=True,
+        blank=True,
+        help_text=_(
+            "When true, a buyer may contact the seller for a customized order. "
+            "The default value is true when a shop accepts custom orders. "
+            "Does not apply to shops that do not accept custom orders."
+        ),
+    )
+    should_auto_renew = models.BooleanField(
+        null=True,
+        blank=True,
+        default=False,
+        help_text=_("Renews or not a listing for four months upon expiration."),
+    )
+    is_taxable = models.BooleanField(
+        null=True,
+        blank=True,
+        default=False,
+        help_text=_("Tax rates apply or not to this listing at checkout."),
+    )
+    listing_type = models.CharField(
+        max_length=32,
+        default=ListingType.DOWNLOAD,
+        choices=ListingType,
+        help_text=_(
+            "An enumerated type string that indicates whether "
+            "the listing is physical or a digital download."
+        ),
+    )
+
+    # Response or read-only fields
+    state = models.CharField(max_length=32, null=True)
+    creation_timestamp = models.PositiveBigIntegerField(null=True)
+    created_timestamp = models.PositiveBigIntegerField(null=True)
+    ending_timestamp = models.PositiveBigIntegerField(null=True)
+    original_creation_timestamp = models.PositiveBigIntegerField(null=True)
+    last_modified_timestamp = models.PositiveBigIntegerField(null=True)
+    updated_timestamp = models.PositiveBigIntegerField(null=True)
+    state_timestamp = models.PositiveBigIntegerField(null=True)
+    featured_rank = models.PositiveIntegerField(null=True)
+    url = models.URLField(null=True)
+    num_favorers = models.PositiveIntegerField(null=True)
+    non_taxable = models.BooleanField(null=True)
+    is_private = models.BooleanField(null=True)
+    language = models.CharField(max_length=32, null=True)

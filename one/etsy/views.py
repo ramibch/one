@@ -1,19 +1,18 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseForbidden, Http404
+from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from etsyv3.util.auth import AuthHelper
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError
-from django.http import JsonResponse
 from rest_framework.generics import RetrieveAPIView
-from django.utils import timezone
 
 from one.base.utils.telegram import Bot
 
-from ..base.utils.telegram import Bot
 from .models import App, UserShopAuth
 from .serializers import UserShopAuthSerializer
+
 
 @login_required
 def etsy_request_code(request, id):
@@ -74,11 +73,13 @@ def etsy_callback(request):
     userauth.refresh_token = response["refresh_token"]
     userauth.expires_at = datetime.fromtimestamp(response["expires_at"])
 
-    # Extra: Get shop_id and user_id
-    client_api = userauth.get_api_client()
-    data = client_api.get_me()
-    userauth.etsy_user_id = data.get("user_id")
-    userauth.shop_id = data.get("shop_id")
+    # Get shop_id and user_id if not assigned
+    if None in (userauth.shop_id, userauth.etsy_user_id):
+        client_api = userauth.get_api_client()
+        data = client_api.get_me()
+        userauth.etsy_user_id = data.get("user_id")
+        userauth.shop_id = data.get("shop_id")
+
     userauth.save()
 
     return HttpResponse("Logged in!")
@@ -92,15 +93,17 @@ class RefreshView(RetrieveAPIView):
         user_id = self.request.META.get("HTTP_X_ETSY_USER_ID")
         code = self.request.META.get("HTTP_X_ETSY_CODE")
         access_token = self.request.META.get("HTTP_X_ETSY_ACCESS_TOKEN")
-        Bot.to_admin(f"shop_id={shop_id}\nuser_id={user_id}\ncode={code}\naccess_token={access_token}")
+        Bot.to_admin(
+            f"shop_id={shop_id}\nuser_id={user_id}\ncode={code}\naccess_token={access_token}"
+        )
         if None in (shop_id, user_id, code):
             raise Http404
 
-        obj = get_object_or_404(UserShopAuth, shop_id=shop_id, etsy_user_id=user_id, code=code)
+        obj = get_object_or_404(
+            UserShopAuth, shop_id=shop_id, etsy_user_id=user_id, code=code
+        )
         ref_time = timezone.now() - timezone.timedelta(minutes=10)
         if ref_time > obj.expires_at:
             obj.get_api_client().refresh()
             obj.refresh_from_db()
         return obj
-
-

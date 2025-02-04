@@ -6,7 +6,7 @@ from modeltranslation.admin import TranslationAdmin
 from one.base.utils.actions import translate_fields
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from .models import App, Listing, Shop, UserShopAuth
+from .models import App, ProductListing, Shop, UserListing, UserShopAuth
 from .tasks import task_generate_listings_from_products, task_upload_listings
 
 
@@ -40,7 +40,7 @@ class ShopAdmin(TranslationAdmin):
             shop.request_and_save_payload()
 
 
-@admin.register(Listing)
+@admin.register(ProductListing)
 class ListingAdmin(admin.ModelAdmin):
     list_display = ("__str__", "price", "url")
     readonly_fields = ("listing_id", "url", "state", "response")
@@ -59,9 +59,43 @@ class UserShopAuthAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
-    
+
     @admin.action(description="🔄 Refresh token")
     def refresh(modeladmin, request, queryset):
         for obj in queryset:
-            api = auth_obj.get_api_client()
+            api = obj.get_api_client()
             api.refresh()
+
+
+@admin.register(UserListing)
+class UserListingAdmin(admin.ModelAdmin):
+    readonly_fields = (
+        "state",
+        "creation_timestamp",
+        "created_timestamp",
+        "ending_timestamp",
+        "original_creation_timestamp",
+        "last_modified_timestamp",
+        "updated_timestamp",
+        "state_timestamp",
+        "featured_rank",
+        "url",
+        "num_favorers",
+        "non_taxable",
+        "is_private",
+        "language",
+        "state",
+        "creation_timestamp",
+        "created_timestamp",
+        "ending_timestamp",
+        "original_creation_timestamp",
+        "last_modified_timestamp",
+        "updated_timestamp",
+        "state_timestamp",
+        "featured_rank",
+        "url",
+        "num_favorers",
+        "non_taxable",
+        "is_private",
+        "language",
+    )

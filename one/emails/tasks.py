@@ -1,4 +1,3 @@
-from django.utils.timezone import now
 from huey import crontab
 from huey.contrib import djhuey as huey
 
@@ -37,9 +36,7 @@ def task_send_periodic_email_templates_and_reply_postal_messages():
     """
     emails = TemplateMessage.objects.filter(is_periodic=True)
     if emails.count() > 0:
-        # Avoid the last 30s of every minute.
-        delay = 0 if now().second < 30 else now().second + 1
-        task_send_email_templates.schedule((emails,), delay=delay)
+        task_send_email_templates.schedule((emails,))
 
     replies = PostalReplyMessage.objects.filter(replied=False, draft=False)
 

@@ -2,7 +2,7 @@ from huey.contrib import djhuey as huey
 
 from one.products.models import Product
 
-from .models import Listing
+from .models import ProductListing
 
 
 @huey.db_task()
@@ -23,13 +23,13 @@ def task_generate_listings_from_products(shops):
     for shop in shops:
         products = Product.objects.filter(topics__in=shop.topics.all())
         for product in products:
-            if Listing.objects.filter(product=product, shop=shop).exists():
+            if ProductListing.objects.filter(product=product, shop=shop).exists():
                 continue
             listings.append(
-                Listing(
+                ProductListing(
                     product=product,
                     shop=shop,
                     price=shop.price_percentage / 100 * product.price,
                 )
             )
-    Listing.objects.bulk_create(listings)
+    ProductListing.objects.bulk_create(listings)

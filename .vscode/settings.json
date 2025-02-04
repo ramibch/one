@@ -10,5 +10,8 @@
   "ruff.lint.args": [
     "--config=pyproject.toml"
   ],
-  "commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,target,out,build,bin,obj,vendor,venv}/**/*"
+  "commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,target,out,build,bin,obj,vendor,venv}/**/*",
+  "ruff.interpreter": [
+    ".venv/bin/python"
+  ]
 }
