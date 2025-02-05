@@ -46,10 +46,10 @@ class UserShopAuthMixin:
                 code=code,
             )
         except UserShopAuth.DoesNotExist as err:
-            adm_msg = f"⚠️ {UserShopAuth.__class__} no object match\n"
-            adm_msg += f"shop_id={shop_id}"
-            adm_msg += f"user_id={user_id}"
-            adm_msg += f"code={code}"
+            adm_msg = f"⚠️ {UserShopAuth.__name__} no object match\n"
+            adm_msg += f"shop_id = {shop_id}\n"
+            adm_msg += f"user_id = {user_id}\n"
+            adm_msg += f"cod e= {code}"
             Bot.to_admin(adm_msg)
             msg = _("No authorization, contact admin/seller.")
             raise PermissionDenied(msg) from err
