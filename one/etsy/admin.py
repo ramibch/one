@@ -53,7 +53,7 @@ class ListingAdmin(admin.ModelAdmin):
 
 @admin.register(UserShopAuth)
 class UserShopAuthAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "etsy_user_id", "shop_id", "app", "user")
+    list_display = ("__str__", "etsy_user_id", "shop_id", "app", "user", "expires_at")
     readonly_fields = [f.name for f in UserShopAuth._meta.fields]
     actions = ["refresh"]
 

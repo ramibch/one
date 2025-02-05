@@ -442,6 +442,10 @@ Project settings
 ################
 """
 
+# One secret key
+
+ONE_SECRET_KEY = env("ONE_SECRET_KEY")
+
 # cache clerar
 
 CLEAR_CACHE_IN_DEV = True

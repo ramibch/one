@@ -1,15 +1,23 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
-from .models import UserListing, UserShopAuth
+from .models import App, UserListing, UserListingFile, UserListingImage, UserShopAuth
 
 
-class UserShopAuthSerializer(ModelSerializer):
+class AppSerializer(serializers.ModelSerializer):
+    scopes = serializers.ListField(child=serializers.CharField(), read_only=True)
+
+    class Meta:
+        model = App
+        fields = ("id", "name", "keystring", "scopes")
+
+
+class UserShopAuthSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserShopAuth
         fields = ("id", "access_token", "refresh_token", "expires_at")
 
 
-class UserListingSerializer(ModelSerializer):
+class UserListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserListing
         fields = (
@@ -30,4 +38,29 @@ class UserListingSerializer(ModelSerializer):
             "should_auto_renew",
             "is_taxable",
             "listing_type",
+        )
+
+
+class UserListingFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserListingFile
+        fields = (
+            "listing_file_id",
+            "file",
+            "name",
+            "rank",
+        )
+
+
+class UserListingImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserListingImage
+        fields = (
+            "image",
+            "listing_image_id",
+            "rank",
+            "name",
+            "overwrite",
+            "is_watermarked",
+            "alt_text",
         )

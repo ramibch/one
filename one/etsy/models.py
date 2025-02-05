@@ -2,7 +2,9 @@ import re
 
 from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
+from django.core.files.storage import storages
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse_lazy
@@ -22,8 +24,8 @@ from one.base.utils.abstracts import TranslatableModel
 from one.base.utils.db_fields import ChoiceArrayField
 from one.base.utils.telegram import Bot
 
-from .api import ExtendedEtsyAPI
 from .enums import ListingType, Scopes, TaxonomyID, WhenMade, WhoMade
+from .etsy_api import ExtendedEtsyAPI
 
 User = get_user_model()
 
@@ -46,6 +48,7 @@ class App(Model):
     keystring = models.CharField(
         max_length=256,
         help_text="An Etsy App API Key keystring for the app.",
+        unique=True,
     )
     redirect_uri = models.URLField(
         max_length=200,
@@ -119,6 +122,9 @@ class UserShopAuth(Model):
     access_token = models.CharField(max_length=256, null=True, blank=True)
     refresh_token = models.CharField(max_length=256, null=True, blank=True)
     expires_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta(Model.Meta):
+        ordering = ["-id"]
 
     def __str__(self):
         return f"[{self.etsy_user_id}] {self.app}"
@@ -311,7 +317,7 @@ def validate_listing_title(value):
 
 
 class UserListing(Model):
-    user_shop = ForeignKey(UserShop, on_delete=models.CASCADE)
+    user_shop = ForeignKey(UserShop, on_delete=models.CASCADE)  # TODO: needed?
     user_shop_auth = ForeignKey(UserShopAuth, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(
         default=999,
@@ -331,19 +337,20 @@ class UserListing(Model):
     who_made = models.CharField(
         max_length=32,
         default=WhoMade.I_DID,
-        choices=WhoMade,
+        choices=WhoMade.choices,
     )
     when_made = models.CharField(
         max_length=32,
         default=WhenMade.YEARS_2020_2025,
-        choices=WhenMade,
+        choices=WhenMade.choices,
     )
     taxonomy_id = models.PositiveIntegerField(
         default=TaxonomyID.DIGITAL_PRINTS,
-        choices=TaxonomyID,
+        choices=TaxonomyID.choices,
     )
     shop_section_id = models.PositiveIntegerField(null=True, blank=True)
-    tags = ChoiceArrayField(models.CharField(max_length=20), size=13, default=list)
+    tags = ArrayField(models.CharField(max_length=20), size=13, default=list)
+
     is_personalizable = models.BooleanField(
         null=True,
         blank=True,
@@ -419,3 +426,52 @@ class UserListing(Model):
     non_taxable = models.BooleanField(null=True)
     is_private = models.BooleanField(null=True)
     language = models.CharField(max_length=32, null=True)
+
+
+def get_file_path(obj, filename: str):
+    return f"etsy/users/{obj.listing.id}/{obj._meta.model_name}/{filename}"
+
+
+class UserListingFile(Model):
+    listing = ForeignKey(UserListing, on_delete=models.CASCADE)
+    listing_file_id = models.PositiveBigIntegerField(null=True)
+    file = models.FileField(upload_to=get_file_path, storage=storages["private"])
+    name = models.CharField(max_length=256)
+    rank = models.PositiveSmallIntegerField(default=1)
+
+    # Response or read-only fields
+    filename = models.CharField(max_length=256, null=True)
+    filesize = models.CharField(max_length=256, null=True)
+    size_bytes = models.PositiveBigIntegerField(null=True)
+    filetype = models.CharField(max_length=128, null=True)
+    create_timestamp = models.PositiveBigIntegerField(null=True)
+    created_timestamp = models.PositiveBigIntegerField(null=True)
+
+
+class UserListingImage(Model):
+    listing = ForeignKey(UserListing, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=get_file_path, storage=storages["private"])
+    listing_image_id = models.PositiveBigIntegerField(null=True)
+    rank = models.PositiveSmallIntegerField(default=1)
+    name = models.CharField(max_length=256)
+    overwrite = models.BooleanField(default=False)
+    is_watermarked = models.BooleanField(default=False)
+    alt_text = models.CharField(max_length=250)
+
+    # Response or read-only fields
+    hex_code = models.TextField(null=True)
+    red = models.PositiveSmallIntegerField(null=True)
+    green = models.PositiveSmallIntegerField(null=True)
+    blue = models.PositiveSmallIntegerField(null=True)
+    hue = models.PositiveSmallIntegerField(null=True)
+    saturation = models.PositiveSmallIntegerField(null=True)
+    brightness = models.PositiveSmallIntegerField(null=True)
+    is_black_and_white = models.BooleanField(default=False)
+    creation_tsz = models.PositiveBigIntegerField(null=True)  # No idea what is this
+    created_timestamp = models.PositiveBigIntegerField(null=True)
+    url_75x75 = models.URLField(max_length=512, null=True)
+    url_170x135 = models.URLField(max_length=512, null=True)
+    url_570xN = models.URLField(max_length=512, null=True)
+    url_fullxfull = models.URLField(max_length=512, null=True)
+    full_height = models.PositiveIntegerField(null=True)
+    full_width = models.PositiveIntegerField(null=True)

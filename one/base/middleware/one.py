@@ -32,6 +32,10 @@ class OneMiddleware:
         # Assign session
         request.db_session = self.get_session(request)
 
+        # Valid Project api secret
+        # Use for API POST calls without user authentication
+        request.has_valid_one_secret_key = self.valid_secret_key(request)
+
         # Clear cache in development
         if settings.ENV == "dev" and settings.CLEAR_CACHE_IN_DEV:
             call_command("clear_cache")
@@ -44,8 +48,10 @@ class OneMiddleware:
 
         # Save request object
         self.save_request(request, response)
-
         return response
+
+    def valid_secret_key(self, request):
+        return request.META.get("HTTP_X_ONE_SECRET_KEY") == settings.ONE_SECRET_KEY
 
     def get_session(self, request):
         try:
