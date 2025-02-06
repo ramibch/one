@@ -12,8 +12,9 @@ from .models import App, UserShopAuth
 
 
 @login_required
-def etsy_request_code(request, id):
-    app = get_object_or_404(App, id=id)
+def etsy_request_code(request):
+    keystring = request.GET.get("keystring")
+    app = get_object_or_404(App, keystring=keystring)
     auth_helper = AuthHelper(
         keystring=app.keystring,
         redirect_uri=app.redirect_uri,

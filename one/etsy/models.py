@@ -7,18 +7,12 @@ from django.core.exceptions import ValidationError
 from django.core.files.storage import storages
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils import translation
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from etsyv3.models.file_request import (
-    UploadListingFileRequest,
-    UploadListingImageRequest,
-)
-from etsyv3.models.listing_request import (
-    CreateDraftListingRequest,
-    CreateListingTranslationRequest,
-)
+from etsyv3.models.file_request import UploadListingFileRequest, UploadListingImageRequest
+from etsyv3.models.listing_request import CreateDraftListingRequest, CreateListingTranslationRequest
 
 from one.base.utils.abstracts import TranslatableModel
 from one.base.utils.db_fields import ChoiceArrayField
@@ -65,7 +59,7 @@ class App(Model):
         return f"{self.name} ({self.keystring})"
 
     def get_absolute_url(self):
-        return reverse_lazy("etsy_code", kwargs={"id": self.id})
+        return reverse("etsy_code") + f"?keystring={self.keystring}"
 
     @cached_property
     def request_auth_url(self):

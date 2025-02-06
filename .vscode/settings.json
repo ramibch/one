@@ -13,5 +13,8 @@
   "commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,target,out,build,bin,obj,vendor,venv}/**/*",
   "ruff.interpreter": [
     ".venv/bin/python"
-  ]
+  ],
+  "editor.formatOnSave": true,
+  "ruff.configuration": "pyproject.toml",
+  "python.analysis.autoImportCompletions": true
 }
