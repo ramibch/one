@@ -15,6 +15,12 @@ urlpatterns = [
         views.AppCreateView.as_view(),
         name="etsy_api_app_create",
     ),
+    # Shop
+    path(
+        "shop/create",
+        views.UserShopCreateView.as_view(),
+        name="etsy_api_shop_create",
+    ),
     # Listing
     path(
         "listing/<pk>",

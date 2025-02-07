@@ -36,7 +36,7 @@ def task_send_periodic_email_templates_and_reply_postal_messages():
     """
     emails = TemplateMessage.objects.filter(is_periodic=True)
     if emails.count() > 0:
-        task_send_email_templates.schedule((emails,))
+        task_send_email_templates.schedule((emails,), delay=1)
 
     replies = PostalReplyMessage.objects.filter(replied=False, draft=False)
 

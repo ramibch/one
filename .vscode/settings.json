@@ -16,5 +16,6 @@
   ],
   "editor.formatOnSave": true,
   "ruff.configuration": "pyproject.toml",
-  "python.analysis.autoImportCompletions": true
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "basic"
 }

@@ -292,7 +292,11 @@ class ProductListing(Model):
 
 
 class UserShop(Model):
-    pass
+    name = models.CharField(max_length=128)
+    user_shop_auth = ForeignKey(UserShopAuth, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.name
 
 
 def validate_listing_title(value):
@@ -311,8 +315,7 @@ def validate_listing_title(value):
 
 
 class UserListing(Model):
-    user_shop = ForeignKey(UserShop, on_delete=models.CASCADE)  # TODO: needed?
-    user_shop_auth = ForeignKey(UserShopAuth, on_delete=models.CASCADE)
+    user_shop = ForeignKey(UserShop, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(
         default=999,
         validators=[MinValueValidator(0), MaxValueValidator(999)],

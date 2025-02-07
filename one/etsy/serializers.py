@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import App, UserListing, UserListingFile, UserListingImage, UserShopAuth
+from .models import App, UserListing, UserListingFile, UserListingImage, UserShop, UserShopAuth
 
 
 class AppSerializer(serializers.ModelSerializer):
@@ -15,6 +15,13 @@ class UserShopAuthSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserShopAuth
         fields = ("id", "access_token", "refresh_token", "expires_at")
+
+
+
+class UserShopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserShop
+        fields = ("id", "name")
 
 
 class UserListingSerializer(serializers.ModelSerializer):

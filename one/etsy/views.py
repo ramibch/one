@@ -81,3 +81,7 @@ def etsy_callback(request):
     userauth.save()
 
     return HttpResponse("Logged in!")
+
+
+def etsy_dashboard(request):
+    return HttpResponse("TODO!")

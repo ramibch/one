@@ -6,7 +6,7 @@ from modeltranslation.admin import TranslationAdmin
 from one.base.utils.actions import translate_fields
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from .models import App, ProductListing, Shop, UserListing, UserShopAuth
+from .models import App, ProductListing, Shop, UserListing, UserShop, UserShopAuth
 from .tasks import task_generate_listings_from_products, task_upload_listings
 
 
@@ -65,6 +65,12 @@ class UserShopAuthAdmin(admin.ModelAdmin):
         for obj in queryset:
             api = obj.get_api_client()
             api.refresh()
+
+
+@admin.register(UserShop)
+class UserShopAdmin(admin.ModelAdmin):
+    list_display = ("name", "user_shop_auth")
+
 
 
 @admin.register(UserListing)
