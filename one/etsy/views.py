@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from etsyv3.util.auth import AuthHelper
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError
 
@@ -37,6 +37,11 @@ def etsy_request_code(request):
 
 @login_required
 def etsy_callback(request):
+    # 'Referer': 'https://www.etsy.com/'
+    if not "etsy.com" in request.headers.get("Referer", ""):
+        # Refresh o user tried to change the language
+        return etsy_dashboard(request)
+
     # https://developers.etsy.com/documentation/tutorials/quickstart/#start-with-a-simple-express-server-application
 
     # 3. Use the state and code params from the callback that Etsy will make to call set_authorization_code(code, state)
@@ -77,10 +82,8 @@ def etsy_callback(request):
         data = client_api.get_me()
         userauth.etsy_user_id = data.get("user_id")
         userauth.shop_id = data.get("shop_id")
-
     userauth.save()
-
-    return HttpResponse("Logged in!")
+    return render(request, "etsy/after_callback.html", {"userauth": userauth})
 
 
 def etsy_dashboard(request):

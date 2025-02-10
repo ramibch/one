@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.utils.timezone import get_current_timezone
 from factory.django import DjangoModelFactory
 
-from .models import App, Shop, UserListing, UserShop, UserShopAuth
+from .models import App, Listing, Shop, UserShop, UserShopAuth
 
 User = get_user_model()
 
@@ -52,7 +52,7 @@ class UserShopFactory(DjangoModelFactory):
 
 class UserListingFactory(DjangoModelFactory):
     class Meta:
-        model = UserListing
+        model = Listing
 
     user_shop = factory.SubFactory(UserShopFactory)
     user_shop_auth = factory.SubFactory(UserShopAuthFactory)

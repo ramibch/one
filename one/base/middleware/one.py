@@ -125,7 +125,7 @@ class OneMiddleware:
         ]
 
         path_ok = not any(request.path.startswith(exempt) for exempt in exempt_paths)
-        user_ok = not request.user.is_staff
+        user_ok = True # not request.user.is_staff
 
         if path_ok and user_ok:
             try:

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from .models import App, UserListing, UserListingFile, UserListingImage, UserShop, UserShopAuth
+from one.base.utils.telegram import Bot
+
+from ..models import App, UserListing, UserListingFile, UserListingImage, UserShop, UserShopAuth
 
 
 class AppSerializer(serializers.ModelSerializer):
@@ -11,20 +13,20 @@ class AppSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "keystring", "scopes")
 
 
-class UserShopAuthSerializer(serializers.ModelSerializer):
+class ShopAuthSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserShopAuth
         fields = ("id", "access_token", "refresh_token", "expires_at")
 
 
 
-class UserShopSerializer(serializers.ModelSerializer):
+class ShopSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserShop
         fields = ("id", "name")
 
 
-class UserListingSerializer(serializers.ModelSerializer):
+class ListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserListing
         fields = (
@@ -37,18 +39,25 @@ class UserListingSerializer(serializers.ModelSerializer):
             "taxonomy_id",
             "shop_section_id",
             "tags",
-            "is_personalizable",
-            "personalization_is_required",
-            "personalization_char_count_max",
-            "personalization_instructions",
-            "is_customizable",
-            "should_auto_renew",
-            "is_taxable",
+            # "is_personalizable",
+            # "personalization_is_required",
+            # "personalization_char_count_max",
+            # "personalization_instructions",
+            # "is_customizable",
+            # "should_auto_renew",
+            # "is_taxable",
             "listing_type",
         )
 
 
-class UserListingFileSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        extra =  {"user_shop_auth": self.context.get("user_shop_auth")}
+        more_validated_data =validated_data | extra
+        return super().create(more_validated_data)
+
+
+
+class ListingFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserListingFile
         fields = (
@@ -59,7 +68,7 @@ class UserListingFileSerializer(serializers.ModelSerializer):
         )
 
 
-class UserListingImageSerializer(serializers.ModelSerializer):
+class ListingImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserListingImage
         fields = (

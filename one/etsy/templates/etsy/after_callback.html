@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+  <section>
+    <center>
+        <h1>{% trans "You are now logged in with Etsy" %} </h1>
+    </center>
+  </section>
+  <section >
+    <table>
+        <thead>
+          <tr>
+            <th scope="col"><i>user_id</i></th>
+            <th scope="col"><i>shop_id</i></th>
+            <th scope="col"><i>code</i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td> {{ userauth.etsy_user_id }} </td>
+            <td> {{ userauth.shop_id }} </td>
+            <td> {{ userauth.code }}</td>
+          </tr>
+        </tbody>
+      </table>
+  </section>
+{% endblock content %}

@@ -1,21 +1,20 @@
-# from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import permissions
-from rest_framework.decorators import api_view
+from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView
+from rest_framework.response import Response
 
 from one.base.utils.telegram import Bot
 
-from ..models import UserListing, UserListingFile, UserListingImage, UserShopAuth
-from ..serializers import (AppSerializer, UserListingFileSerializer, UserListingImageSerializer, UserListingSerializer,
-                           UserShopAuthSerializer, UserShopSerializer)
+from ..models import UserListing, UserListingFile, UserListingImage, UserShop, UserShopAuth
+from .serializers import (AppSerializer, ListingFileSerializer, ListingImageSerializer, ListingSerializer, ShopAuthSerializer,
+                          ShopSerializer)
 
 
-class UserShopAuthMixin:
+class AuthMixin:
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         shop_id = request.META.get("HTTP_X_ETSY_SHOP_ID")
@@ -54,8 +53,8 @@ class UserShopAuthMixin:
         return super().dispatch(request, *args, **kwargs)
 
 
-class TokenRefreshView(UserShopAuthMixin, RetrieveAPIView):
-    serializer_class = UserShopAuthSerializer
+class TokenRefreshView(AuthMixin, RetrieveAPIView):
+    serializer_class = ShopAuthSerializer
 
     def get_object(self):
         obj = self.user_shop_auth
@@ -76,42 +75,55 @@ class AppCreateView(CreateAPIView):
             raise PermissionDenied
 
 
-class UserListingDetailView(UserShopAuthMixin, RetrieveUpdateAPIView):
-    serializer_class = UserListingSerializer
+class UserListingDetailView(AuthMixin, RetrieveUpdateAPIView):
+    serializer_class = ListingSerializer
 
     def get_queryset(self):
         return UserListing.objects.filter(user_shop_auth=self.user_shop_auth)
 
 
-class UserShopCreateView(UserShopAuthMixin, CreateAPIView):
-    serializer_class = UserShopSerializer
+class ShopCreateView(AuthMixin, CreateAPIView):
+    serializer_class = ShopSerializer
 
     def perform_create(self, serializer):
         return serializer.save(user_shop_auth=self.user_shop_auth)
-    
-
-class UserListingCreateView(UserShopAuthMixin, CreateAPIView):
-    serializer_class = UserListingSerializer
-    permission_classes = (permissions.AllowAny,)
 
 
-class UserListingFileCreateView(UserShopAuthMixin, CreateAPIView):
-    serializer_class = UserListingFileSerializer
+class ShopDetailView(AuthMixin, RetrieveUpdateAPIView):
+    serializer_class = ShopSerializer
+
+    def get_queryset(self):
+        return UserShop.objects.filter(user_shop_auth=self.user_shop_auth)
 
 
-class UserListingFileDetailView(UserShopAuthMixin, RetrieveUpdateAPIView):
-    serializer_class = UserListingFileSerializer
+class ListingCreateView(AuthMixin, CreateAPIView):
+    serializer_class = ListingSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, context={'user_shop_auth': self.user_shop_auth})
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ListingFileCreateView(AuthMixin, CreateAPIView):
+    serializer_class = ListingFileSerializer
+
+
+class ListingFileDetailView(AuthMixin, RetrieveUpdateAPIView):
+    serializer_class = ListingFileSerializer
 
     def get_queryset(self):
         return UserListingFile.objects.filter(listing__user_shop_auth=self.user_shop_auth)
 
 
-class UserListingImageCreateView(UserShopAuthMixin, CreateAPIView):
-    serializer_class = UserListingImageSerializer
+class ListingImageCreateView(AuthMixin, CreateAPIView):
+    serializer_class = ListingImageSerializer
 
 
-class UserListingImageDetailView(UserShopAuthMixin, RetrieveUpdateAPIView):
-    serializer_class = UserListingImageSerializer
+class ListingImageDetailView(AuthMixin, RetrieveUpdateAPIView):
+    serializer_class = ListingImageSerializer
 
     def get_queryset(self):
         return UserListingImage.objects.filter(listing__user_shop_auth=self.user_shop_auth)

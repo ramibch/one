@@ -292,8 +292,8 @@ class ProductListing(Model):
 
 
 class UserShop(Model):
-    name = models.CharField(max_length=128)
     user_shop_auth = ForeignKey(UserShopAuth, on_delete=models.CASCADE)
+    name = models.CharField(max_length=128)
     
     def __str__(self):
         return self.name
@@ -315,20 +315,12 @@ def validate_listing_title(value):
 
 
 class UserListing(Model):
-    user_shop = ForeignKey(UserShop, on_delete=models.CASCADE)
+    user_shop_auth = ForeignKey(UserShopAuth, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveSmallIntegerField(
         default=999,
         validators=[MinValueValidator(0), MaxValueValidator(999)],
     )
-    title = models.CharField(
-        max_length=255,
-        validators=[validate_listing_title],
-        help_text=_(
-            "Title can contain only letters, numbers, punctuation, "
-            "mathematical symbols, whitespace, ™, ©, and ®. '%', ':', "
-            "'&', and '+' can be used only once each."
-        ),
-    )
+    title = models.CharField(max_length=255)
     description = models.TextField()
     price = models.FloatField()
     who_made = models.CharField(
@@ -346,7 +338,8 @@ class UserListing(Model):
         choices=TaxonomyID.choices,
     )
     shop_section_id = models.PositiveIntegerField(null=True, blank=True)
-    tags = ArrayField(models.CharField(max_length=20), size=13, default=list)
+
+    tags = models.TextField(null=True)
 
     is_personalizable = models.BooleanField(
         null=True,

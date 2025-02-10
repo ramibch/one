@@ -18,40 +18,46 @@ urlpatterns = [
     # Shop
     path(
         "shop/create",
-        views.UserShopCreateView.as_view(),
+        views.ShopCreateView.as_view(),
         name="etsy_api_shop_create",
+    ),
+    path(
+        "shop/<int:pk>",
+        views.ShopDetailView.as_view(),
+        name="etsy_api_shop_detail",
     ),
     # Listing
     path(
-        "listing/<pk>",
+        "listing/create",
+        views.ListingCreateView.as_view(),
+        name="etsy_api_listing_create",
+    ),
+    path(
+        "listing/<int:pk>",
         views.UserListingDetailView.as_view(),
         name="etsy_api_listing_detail",
     ),
-    path(
-        "listing/create",
-        views.UserListingCreateView.as_view(),
-        name="etsy_api_listing_create",
-    ),
+
     # Listing File
     path(
         "listing/file/create",
-        views.UserListingFileCreateView.as_view(),
+        views.ListingFileCreateView.as_view(),
         name="etsy_api_listing_file_create",
     ),
     path(
-        "listing/file/<pk>",
-        views.UserListingFileDetailView.as_view(),
+        "listing/file/<int:pk>",
+        views.ListingFileDetailView.as_view(),
         name="etsy_api_listing_file_detail",
     ),
     # Listing Image
     path(
         "listing/image/create",
-        views.UserListingImageCreateView.as_view(),
+        views.ListingImageCreateView.as_view(),
         name="etsy_api_listing_image_create",
     ),
     path(
-        "listing/image/<pk>",
-        views.UserListingImageDetailView.as_view(),
+        "listing/image/<int:pk>",
+        views.ListingImageDetailView.as_view(),
         name="etsy_api_listing_image_detail",
     ),
 ]

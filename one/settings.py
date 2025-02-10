@@ -254,6 +254,9 @@ CACHES = {
     }
 }
 
+# Append slash
+APPEND_SLASH = False
+
 
 """
 ####################
