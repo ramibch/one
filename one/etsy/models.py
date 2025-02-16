@@ -426,7 +426,6 @@ class UserListingFile(Model):
     listing = ForeignKey(UserListing, on_delete=models.CASCADE)
     listing_file_id = models.PositiveBigIntegerField(null=True)
     file = models.FileField(upload_to=get_file_path, storage=storages["private"])
-    name = models.CharField(max_length=256)
     rank = models.PositiveSmallIntegerField(default=1)
 
     # Response or read-only fields
@@ -437,16 +436,20 @@ class UserListingFile(Model):
     create_timestamp = models.PositiveBigIntegerField(null=True)
     created_timestamp = models.PositiveBigIntegerField(null=True)
 
+    @cached_property
+    def name(self):
+        return self.file.name.split("/")[-1]
+
 
 class UserListingImage(Model):
     listing = ForeignKey(UserListing, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=get_file_path, storage=storages["private"])
+    file = models.ImageField(upload_to=get_file_path, storage=storages["private"])
     listing_image_id = models.PositiveBigIntegerField(null=True)
     rank = models.PositiveSmallIntegerField(default=1)
-    name = models.CharField(max_length=256)
+    name = models.CharField(max_length=256, null=True)
     overwrite = models.BooleanField(default=False)
     is_watermarked = models.BooleanField(default=False)
-    alt_text = models.CharField(max_length=250)
+    alt_text = models.CharField(max_length=250, null=True)
 
     # Response or read-only fields
     hex_code = models.TextField(null=True)

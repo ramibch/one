@@ -6,7 +6,7 @@ from modeltranslation.admin import TranslationAdmin
 from one.base.utils.actions import translate_fields
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from .models import App, ProductListing, Shop, UserListing, UserShop, UserShopAuth
+from .models import App, ProductListing, Shop, UserListing, UserListingFile, UserShop, UserShopAuth
 from .tasks import task_generate_listings_from_products, task_upload_listings
 
 
@@ -75,6 +75,7 @@ class UserShopAdmin(admin.ModelAdmin):
 
 @admin.register(UserListing)
 class UserListingAdmin(admin.ModelAdmin):
+    list_display = ("title", "user_shop_auth")
     readonly_fields = (
         "state",
         "creation_timestamp",
@@ -105,3 +106,8 @@ class UserListingAdmin(admin.ModelAdmin):
         "is_private",
         "language",
     )
+
+
+@admin.register(UserListingFile)
+class UserListingFileAdmin(admin.ModelAdmin):
+    pass

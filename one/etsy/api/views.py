@@ -1,3 +1,5 @@
+import json
+
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
@@ -5,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 
 from one.base.utils.telegram import Bot
@@ -107,8 +110,29 @@ class ListingCreateView(AuthMixin, CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class ListingFileCreateView(AuthMixin, CreateAPIView):
+class CreateAPIListingFileView(AuthMixin, CreateAPIView):
+    """ Base View for Listing Files """
+    parser_classes = [MultiPartParser, FormParser]
+
+    def create(self, request, *args, **kwargs):
+        listing_id = request.headers.get("x-one-listing-id")
+        context = {'listing_id': listing_id, "user_shop_auth": self.user_shop_auth} 
+        serializer = self.get_serializer(data=request.data, context=context)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ListingFileCreateView(CreateAPIListingFileView):
+    """ Upload a listing file """
     serializer_class = ListingFileSerializer
+
+
+class ListingImageCreateView(CreateAPIListingFileView):
+    """ Upload a listing image """
+    serializer_class = ListingImageSerializer
+
 
 
 class ListingFileDetailView(AuthMixin, RetrieveUpdateAPIView):
@@ -116,10 +140,6 @@ class ListingFileDetailView(AuthMixin, RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return UserListingFile.objects.filter(listing__user_shop_auth=self.user_shop_auth)
-
-
-class ListingImageCreateView(AuthMixin, CreateAPIView):
-    serializer_class = ListingImageSerializer
 
 
 class ListingImageDetailView(AuthMixin, RetrieveUpdateAPIView):
