@@ -8,7 +8,7 @@ from oauthlib.oauth2.rfc6749.errors import InvalidGrantError
 
 from one.base.utils.telegram import Bot
 
-from .models import App, UserShopAuth
+from .models import App, EtsyAuth, Shop
 
 
 @login_required
@@ -23,7 +23,7 @@ def etsy_request_code(request):
     # 1. Call get_auth_code() on your AuthHelper - this will return an Etsy authentication URL
     url, state = auth_helper.get_auth_code()
     # save in the etsy obj the generate properties
-    UserShopAuth.objects.create(
+    EtsyAuth.objects.create(
         user=request.user,
         app=app,
         code=state,
@@ -51,17 +51,17 @@ def etsy_callback(request):
     code = request.GET.get("code")
 
     try:
-        userauth = UserShopAuth.objects.get(code=state, state=state, user=request.user)
-    except UserShopAuth.DoesNotExist:
+        etsy_auth = EtsyAuth.objects.get(code=state, state=state, user=request.user)
+    except EtsyAuth.DoesNotExist:
         Bot.to_admin(f"No UserShopAuth (Etsy) match.\nstate={state}\ncode={code}")
         return HttpResponseForbidden("Auth failed, contact admin")
 
     auth_helper = AuthHelper(
-        userauth.app.keystring,
-        userauth.app.redirect_uri,
-        code_verifier=userauth.code_verifier,
-        state=userauth.state,
-        scopes=userauth.scopes,
+        etsy_auth.app.keystring,
+        etsy_auth.app.redirect_uri,
+        code_verifier=etsy_auth.code_verifier,
+        state=etsy_auth.state,
+        scopes=etsy_auth.scopes,
     )
     auth_helper.set_authorisation_code(code, state)
     # 4. You can then call get_access_token() on your AuthHelper object and you should get a dictionary returned
@@ -69,21 +69,24 @@ def etsy_callback(request):
     try:
         response = auth_helper.get_access_token()
     except InvalidGrantError as e:
-        Bot.to_admin(f"Etsy Auth error ({userauth.id}):{e}")
+        Bot.to_admin(f"Etsy Auth error ({etsy_auth.id}):{e}")
         return HttpResponseForbidden("Auth failed, contact admin.")
 
-    userauth.access_token = response["access_token"]
-    userauth.refresh_token = response["refresh_token"]
-    userauth.expires_at = datetime.fromtimestamp(response["expires_at"])
+    etsy_auth.access_token = response["access_token"]
+    etsy_auth.refresh_token = response["refresh_token"]
+    etsy_auth.expires_at = datetime.fromtimestamp(response["expires_at"])
 
     # Get shop_id and user_id if not assigned
-    if None in (userauth.shop_id, userauth.etsy_user_id):
-        client_api = userauth.get_api_client()
+    if None in (etsy_auth.shop_id, etsy_auth.etsy_user_id):
+        client_api = etsy_auth.get_api_client()
         data = client_api.get_me()
-        userauth.etsy_user_id = data.get("user_id")
-        userauth.shop_id = data.get("shop_id")
-    userauth.save()
-    return render(request, "etsy/after_callback.html", {"userauth": userauth})
+        etsy_auth.etsy_user_id = data.get("user_id")
+        etsy_auth.shop_id = data.get("shop_id")
+    
+    etsy_auth.save()
+    shop = Shop(etsy_auth=etsy_auth)
+    shop.update_from_etsy()
+    return render(request, "etsy/after_callback.html", {"etsy_auth": etsy_auth})
 
 
 def etsy_dashboard(request):

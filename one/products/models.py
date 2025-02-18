@@ -82,7 +82,7 @@ class ProductImage(Model):
 
 
 class EtsyShop(TranslatableModel):
-    user_shop_auth = OneToOneField("etsy.UserShopAuth", on_delete=models.CASCADE, null=True)
+    user_shop_auth = OneToOneField("etsy.EtsyAuth", on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=64, default="Shop example")
     generic_listing_description = models.TextField()
     topics = models.ManyToManyField("base.Topic")

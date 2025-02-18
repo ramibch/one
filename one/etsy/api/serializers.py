@@ -3,7 +3,7 @@ from rest_framework import serializers
 from one.base.utils.telegram import Bot
 from one.books.models import User
 
-from ..models import App, UserListing, UserListingFile, UserListingImage, UserShop, UserShopAuth
+from ..models import App, EtsyAuth, Listing, ListingFile, Shop, UserListingImage
 
 
 class AppSerializer(serializers.ModelSerializer):
@@ -16,20 +16,20 @@ class AppSerializer(serializers.ModelSerializer):
 
 class ShopAuthSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserShopAuth
+        model = EtsyAuth
         fields = ("id", "access_token", "refresh_token", "expires_at")
 
 
 
 class ShopSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserShop
+        model = Shop
         fields = ("id", "name")
 
 
 class ListingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserListing
+        model = Listing
         fields = (
             "id",
             "quantity",
@@ -53,13 +53,13 @@ class ListingSerializer(serializers.ModelSerializer):
 
 class ListingFileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserListingFile
+        model = ListingFile
         fields = ("file",)
     
     def create(self, validated_data):
         user_shop_auth = self.context.get("user_shop_auth")
         listing_id = self.context.get("listing_id")
-        listing = UserListing.objects.get(id=listing_id, user_shop_auth=user_shop_auth)
+        listing = Listing.objects.get(id=listing_id, user_shop_auth=user_shop_auth)
         last_file = listing.userlistingfile_set.last()
         rank = 1 if last_file is None else last_file.rank + 1
         extra =  {"listing": listing, "rank": rank}
@@ -75,7 +75,7 @@ class ListingImageSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_shop_auth = self.context.get("user_shop_auth")
         listing_id = self.context.get("listing_id")
-        listing = UserListing.objects.get(id=listing_id, user_shop_auth=user_shop_auth)
+        listing = Listing.objects.get(id=listing_id, user_shop_auth=user_shop_auth)
         last_file = listing.userlistingimage_set.last()
         rank = 1 if last_file is None else last_file.rank + 1
         extra =  {"listing": listing, "rank": rank}

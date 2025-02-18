@@ -12,7 +12,7 @@ from rest_framework.response import Response
 
 from one.base.utils.telegram import Bot
 
-from ..models import UserListing, UserListingFile, UserListingImage, UserShop, UserShopAuth
+from ..models import EtsyAuth, Listing, ListingFile, Shop, UserListingImage
 from .serializers import (AppSerializer, ListingFileSerializer, ListingImageSerializer, ListingSerializer, ShopAuthSerializer,
                           ShopSerializer)
 
@@ -29,22 +29,22 @@ class AuthMixin:
 
         # User auth object
         try:
-            self.user_shop_auth = UserShopAuth.objects.get(
+            self.user_shop_auth = EtsyAuth.objects.get(
                 shop_id=shop_id,
                 etsy_user_id=user_id,
                 code=code,
             )
-        except UserShopAuth.DoesNotExist as err:
-            adm_msg = f"⚠️ {UserShopAuth.__name__} no object match\n"
+        except EtsyAuth.DoesNotExist as err:
+            adm_msg = f"⚠️ {EtsyAuth.__name__} no object match\n"
             adm_msg += f"shop_id = {shop_id}\n"
             adm_msg += f"user_id = {user_id}\n"
             adm_msg += f"cod e= {code}"
             Bot.to_admin(adm_msg)
             msg = _("No authorization, contact admin/seller.")
             raise PermissionDenied(msg) from err
-        except UserShopAuth.MultipleObjectsReturned:
+        except EtsyAuth.MultipleObjectsReturned:
             self.user_shop_auth = (
-                UserShopAuth.objects.filter(
+                EtsyAuth.objects.filter(
                     shop_id=shop_id,
                     etsy_user_id=user_id,
                     code=code,
@@ -82,7 +82,7 @@ class UserListingDetailView(AuthMixin, RetrieveUpdateAPIView):
     serializer_class = ListingSerializer
 
     def get_queryset(self):
-        return UserListing.objects.filter(user_shop_auth=self.user_shop_auth)
+        return Listing.objects.filter(user_shop_auth=self.user_shop_auth)
 
 
 class ShopCreateView(AuthMixin, CreateAPIView):
@@ -96,7 +96,7 @@ class ShopDetailView(AuthMixin, RetrieveUpdateAPIView):
     serializer_class = ShopSerializer
 
     def get_queryset(self):
-        return UserShop.objects.filter(user_shop_auth=self.user_shop_auth)
+        return Shop.objects.filter(user_shop_auth=self.user_shop_auth)
 
 
 class ListingCreateView(AuthMixin, CreateAPIView):
@@ -139,7 +139,7 @@ class ListingFileDetailView(AuthMixin, RetrieveUpdateAPIView):
     serializer_class = ListingFileSerializer
 
     def get_queryset(self):
-        return UserListingFile.objects.filter(listing__user_shop_auth=self.user_shop_auth)
+        return ListingFile.objects.filter(listing__user_shop_auth=self.user_shop_auth)
 
 
 class ListingImageDetailView(AuthMixin, RetrieveUpdateAPIView):

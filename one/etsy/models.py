@@ -75,7 +75,7 @@ def auth_refresh_save(access_token, refresh_token, expires_at):
     """
 
     user_id = access_token.split(".")[0]
-    app = UserShopAuth.objects.filter(etsy_user_id=user_id).last()
+    app = EtsyAuth.objects.filter(etsy_user_id=user_id).last()
     if app:
         app.access_token = access_token
         app.refresh_token = refresh_token
@@ -84,8 +84,7 @@ def auth_refresh_save(access_token, refresh_token, expires_at):
     else:
         Bot.to_admin(f"Etsy: Failed to save tokens, user_id = {user_id}")
 
-
-class UserShopAuth(Model):
+class EtsyAuth(Model):
     app = ForeignKey(App, on_delete=models.CASCADE, null=True)
     user = ForeignKey(User, on_delete=models.CASCADE, null=True)
     etsy_user_id = models.PositiveBigIntegerField(null=True)
@@ -132,18 +131,81 @@ class UserShopAuth(Model):
             refresh_save=auth_refresh_save,
         )
 
+    def get_shop_dict(self):
+        api = self.get_api_client()
+        return api.get_shop(shop_id=self.shop_id)
 
-class UserShop(Model):
-    user_shop_auth = ForeignKey(UserShopAuth, on_delete=models.CASCADE)
-    name = models.CharField(max_length=128)
+
+class Shop(Model):
+    etsy_auth = OneToOneField(EtsyAuth, on_delete=models.CASCADE)
+    shop_id = models.PositiveBigIntegerField()
+    shop_name = models.CharField(max_length=128)
+    user_id = models.PositiveBigIntegerField()
+    create_date = models.PositiveBigIntegerField(null=True)
+    created_timestamp = models.PositiveBigIntegerField(null=True)
+    title = models.CharField(max_length=256)
+    announcement = models.CharField(max_length=256, null=True)
+    currency_code = models.CharField(max_length=8)
+    is_vacation = models.BooleanField(default=False)
+    vacation_message = models.CharField(max_length=512, null=True)
+    sale_message = models.CharField(max_length=512, null=True)
+    digital_sale_message = models.CharField(max_length=512, null=True)
+    update_date = models.PositiveBigIntegerField(null=True)
+    updated_timestamp = models.PositiveBigIntegerField(null=True)
+    listing_active_count = models.PositiveIntegerField(null=True)
+    digital_listing_count = models.PositiveIntegerField(null=True)
+    login_name = models.CharField(max_length=256, null=True)
+    accepts_custom_requests = models.BooleanField(null=True)
+    vacation_autoreply = models.CharField(max_length=512, null=True)
+    url = models.URLField(max_length=256, null=True)
+    image_url_760x100 = models.URLField(max_length=512, null=True)
+    num_favorers = models.PositiveIntegerField(null=True)
+    languages = ArrayField(models.CharField(max_length=16),  default=list, blank=True, null=True)
+    icon_url_fullxfull = models.URLField(max_length=512, null=True)
+    is_using_structured_policies = models.BooleanField(null=True)
+    has_onboarded_structured_policies = models.BooleanField(null=True)
+    include_dispute_form_link = models.BooleanField(null=True)
+    is_direct_checkout_onboarded = models.BooleanField(null=True)
+    is_etsy_payments_onboarded = models.BooleanField(null=True)
+    is_opted_in_to_buyer_promise = models.BooleanField(null=True)
+    is_calculated_eligible = models.BooleanField(null=True)
+    is_shop_us_based = models.BooleanField(null=True)
+    transaction_sold_count = models.PositiveBigIntegerField(null=True)
+    shipping_from_country_iso = models.CharField(null=True)
+    shop_location_country_iso = models.CharField(null=True)
+    policy_welcome = models.TextField(null=True)
+    policy_payment = models.TextField(null=True)
+    policy_shipping = models.TextField(null=True)
+    policy_refunds = models.TextField(null=True)
+    policy_additional = models.TextField(null=True)
+    policy_seller_info = models.TextField(null=True)
+    policy_update_date = models.PositiveBigIntegerField(null=True)
+    policy_has_private_receipt_info = models.BooleanField(null=True)
+    has_unstructured_policies = models.BooleanField(null=True)
+    policy_privacy = models.TextField(null=True)
+    review_average = models.FloatField(null=True)
+    review_count = models.PositiveIntegerField(null=True)
+    shop_dict = models.JSONField(null=True)
     
+    def update_from_etsy(self):
+        shop_dict = self.etsy_auth.get_shop_dict()
+        self.shop_dict = shop_dict
+        for key, value in shop_dict.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        self.save()
+
+
+
+
+
     def __str__(self):
-        return self.name
+        return self.shop_name
 
 
 
-class UserListing(Model):
-    user_shop_auth = ForeignKey(UserShopAuth, on_delete=models.CASCADE, null=True)
+class Listing(Model):
+    etsy_auth = ForeignKey(EtsyAuth, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveSmallIntegerField(
         default=999,
         validators=[MinValueValidator(0), MaxValueValidator(999)],
@@ -250,8 +312,8 @@ def get_file_path(obj, filename: str):
     return f"etsy/users/{obj.listing.id}/{obj._meta.model_name}/{filename}"
 
 
-class UserListingFile(Model):
-    listing = ForeignKey(UserListing, on_delete=models.CASCADE)
+class ListingFile(Model):
+    listing = ForeignKey(Listing, on_delete=models.CASCADE)
     listing_file_id = models.PositiveBigIntegerField(null=True)
     file = models.FileField(upload_to=get_file_path, storage=storages["private"])
     rank = models.PositiveSmallIntegerField(default=1)
@@ -270,7 +332,7 @@ class UserListingFile(Model):
 
 
 class UserListingImage(Model):
-    listing = ForeignKey(UserListing, on_delete=models.CASCADE)
+    listing = ForeignKey(Listing, on_delete=models.CASCADE)
     file = models.ImageField(upload_to=get_file_path, storage=storages["private"])
     listing_image_id = models.PositiveBigIntegerField(null=True)
     rank = models.PositiveSmallIntegerField(default=1)

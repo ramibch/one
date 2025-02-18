@@ -18,6 +18,7 @@ class ChoiceArrayField(ArrayField):
                                    default=[...])
     """
 
+
     def formfield(self, **kwargs):
         defaults = {
             "form_class": forms.MultipleChoiceField,

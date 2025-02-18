@@ -47,3 +47,4 @@ class Scopes(models.TextChoices):
     SHOPS_WRITE = "shops_w", _("shops_w: update shop")
     TRANSACTIONS_READ = ("transactions_r", _("transactions_r: see all payment data"))
     TRANSACTIONS_WRITE = "transactions_w", _("transactions_w: update receipts")
+

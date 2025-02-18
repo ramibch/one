@@ -1,12 +1,10 @@
 from django.contrib import admin, messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
-from modeltranslation.admin import TranslationAdmin
 
-from one.base.utils.actions import translate_fields
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from .models import App, UserListing, UserListingFile, UserShop, UserShopAuth
+from .models import App, EtsyAuth, Listing, ListingFile, Shop
 
 
 @admin.register(App)
@@ -22,11 +20,10 @@ class AppAdmin(admin.ModelAdmin):
         messages.error(request, _("Select just one object"))
 
 
-
-@admin.register(UserShopAuth)
+@admin.register(EtsyAuth)
 class UserShopAuthAdmin(admin.ModelAdmin):
     list_display = ("__str__", "etsy_user_id", "shop_id", "app", "user", "expires_at")
-    readonly_fields = [f.name for f in UserShopAuth._meta.fields]
+    readonly_fields = [f.name for f in EtsyAuth._meta.fields]
     actions = ["refresh"]
 
     def has_add_permission(self, request):
@@ -39,15 +36,16 @@ class UserShopAuthAdmin(admin.ModelAdmin):
             api.refresh()
 
 
-@admin.register(UserShop)
-class UserShopAdmin(admin.ModelAdmin):
-    list_display = ("name", "user_shop_auth")
+@admin.register(Shop)
+class ShopAdmin(admin.ModelAdmin):
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+    list_display = ("shop_name", "etsy_auth")
 
 
 
-@admin.register(UserListing)
-class UserListingAdmin(admin.ModelAdmin):
-    list_display = ("title", "user_shop_auth")
+@admin.register(Listing)
+class ListingAdmin(admin.ModelAdmin):
+    list_display = ("title", "etsy_auth")
     readonly_fields = (
         "state",
         "creation_timestamp",
@@ -80,6 +78,8 @@ class UserListingAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(UserListingFile)
-class UserListingFileAdmin(admin.ModelAdmin):
+@admin.register(ListingFile)
+class ListingFileAdmin(admin.ModelAdmin):
     pass
+
+
