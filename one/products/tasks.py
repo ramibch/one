@@ -2,8 +2,10 @@ from django.core.files import File
 from huey import crontab
 from huey.contrib import djhuey as huey
 
+from one.products.models import Product
+
 from ..base.utils.telegram import Bot
-from .models import Product, ProductFile, ProductImage
+from .models import EtsyListing, Product, ProductFile, ProductImage
 
 
 @huey.db_periodic_task(crontab(hour="4", minute="10"))
@@ -49,3 +51,34 @@ def sync_products():
                 db_file.save()
 
     Bot.to_admin(log)
+
+
+
+@huey.db_task()
+def task_upload_listings(listings):
+    """
+    Uploading listings to Etsy
+    """
+    for listing in listings:
+        listing.upload_to_etsy()
+
+
+@huey.db_task()
+def task_generate_listings_from_products(shops):
+    """
+    Create listings from Product objects
+    """
+    listings = []
+    for shop in shops:
+        products = Product.objects.filter(topics__in=shop.topics.all())
+        for product in products:
+            if EtsyListing.objects.filter(product=product, shop=shop).exists():
+                continue
+            listings.append(
+                EtsyListing(
+                    product=product,
+                    shop=shop,
+                    price=shop.price_percentage / 100 * product.price,
+                )
+            )
+    EtsyListing.objects.bulk_create(listings)

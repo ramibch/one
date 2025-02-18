@@ -4,9 +4,10 @@ import auto_prefetch
 import django.core.validators
 import django.db.models.deletion
 import django.db.models.manager
+from django.db import migrations, models
+
 import one.base.utils.db_fields
 import one.etsy.models
-from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -69,9 +70,7 @@ class Migration(migrations.Migration):
                     "title",
                     models.CharField(
                         help_text="Title can contain only letters, numbers, punctuation, mathematical symbols, whitespace, ™, ©, and ®. '%', ':', '&', and '+' can be used only once each.",
-                        max_length=255,
-                        validators=[one.etsy.models.validate_listing_title],
-                    ),
+                        max_length=255,                    ),
                 ),
                 ("description", models.TextField()),
                 ("price", models.FloatField()),
