@@ -7,14 +7,8 @@ from one.articles.models import Article
 from one.base.utils.mixins import PageMixin
 
 from ..base.utils.abstracts import TranslatableModel
-from ..base.utils.animate import (
-    AnimationDelay,
-    AnimationRepeat,
-    AnimationSpeed,
-    AnimationType,
-    AttentionSeekers,
-)
-from ..base.utils.db_fields import ChoiceArrayField
+from ..base.utils.animate import AnimationDelay, AnimationRepeat, AnimationSpeed, AnimationType, AttentionSeekers
+from ..base.utils.db import ChoiceArrayField
 from ..faqs.models import FAQ, FAQCategory
 
 

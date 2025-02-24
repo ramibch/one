@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 
-import one.base.utils.db_fields
+import one.base.utils.db
 
 
 class Migration(migrations.Migration):
@@ -113,7 +113,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="shop",
             name="languages",
-            field=one.base.utils.db_fields.ChoiceArrayField(
+            field=one.base.utils.db.ChoiceArrayField(
                 base_field=models.CharField(max_length=16), default=list, size=None
             ),
         ),

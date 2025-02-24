@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 
-import one.base.utils.db_fields
+import one.base.utils.db
 import one.etsy.models
 
 
@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="shop",
             name="languages",
-            field=one.base.utils.db_fields.ChoiceArrayField(
+            field=one.base.utils.db.ChoiceArrayField(
                 base_field=models.CharField(max_length=16),
                 size=None,
             ),

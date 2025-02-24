@@ -5,7 +5,7 @@ from modeltranslation.admin import TranslationAdmin
 from one.base.utils.actions import translate_fields
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from ..base.utils.db_fields import ChoiceArrayField
+from ..base.utils.db import ChoiceArrayField
 from .models import ArticlesSection, FAQsSection, HeroSection, Home
 
 

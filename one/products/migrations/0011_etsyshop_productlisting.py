@@ -4,8 +4,9 @@ import auto_prefetch
 import django.core.validators
 import django.db.models.deletion
 import django.db.models.manager
-import one.base.utils.db_fields
 from django.db import migrations, models
+
+import one.base.utils.db
 
 
 class Migration(migrations.Migration):
@@ -55,7 +56,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "languages",
-                    one.base.utils.db_fields.ChoiceArrayField(
+                    one.base.utils.db.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 ("en", "English"),

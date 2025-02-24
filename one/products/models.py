@@ -15,7 +15,7 @@ from etsyv3.models.file_request import UploadListingFileRequest, UploadListingIm
 from etsyv3.models.listing_request import CreateDraftListingRequest, CreateListingTranslationRequest
 
 from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
-from one.base.utils.db_fields import ChoiceArrayField
+from one.base.utils.db import ChoiceArrayField
 from one.base.utils.telegram import Bot
 from one.etsy.enums import ListingType, Scopes, TaxonomyID, WhenMade, WhoMade
 from one.etsy.etsy_api import ExtendedEtsyAPI

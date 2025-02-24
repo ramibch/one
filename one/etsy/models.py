@@ -12,10 +12,10 @@ from django.utils import translation
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from etsyv3.models.file_request import UploadListingFileRequest, UploadListingImageRequest
-from etsyv3.models.listing_request import CreateDraftListingRequest, CreateListingTranslationRequest
+from etsyv3.models.listing_request import CreateDraftListingRequest, CreateListingTranslationRequest, UpdateListingRequest
 
 from one.base.utils.abstracts import TranslatableModel
-from one.base.utils.db_fields import ChoiceArrayField
+from one.base.utils.db import ChoiceArrayField, update_model_from_dict
 from one.base.utils.telegram import Bot
 
 from .enums import ListingType, Scopes, TaxonomyID, WhenMade, WhoMade
@@ -36,6 +36,24 @@ def get_default_scopes():
         "transactions_r",
     ]
 
+def auth_refresh_save(access_token, refresh_token, expires_at):
+    """
+    This function is intended to be a 'neat' way to handle refreshes
+
+    https://developer.etsy.com/documentation/essentials/authentication/#step-3-request-an-access-token
+
+    """
+
+    user_id = access_token.split(".")[0]
+    etsy_auth = EtsyAuth.objects.filter(etsy_user_id=user_id).last()
+    if etsy_auth:
+        etsy_auth.access_token = access_token
+        etsy_auth.refresh_token = refresh_token
+        etsy_auth.expires_at = expires_at
+        etsy_auth.save()
+    else:
+        Bot.to_admin(f"Etsy: Failed to save tokens, user_id = {user_id}")
+
 
 class App(Model):
     name = models.CharField(max_length=32)
@@ -55,6 +73,8 @@ class App(Model):
         help_text="The scopes your application requires to use specific endpoints",
     )
 
+    is_commercial = models.BooleanField(default=False, null=True)
+
     def __str__(self):
         return f"{self.name} ({self.keystring})"
 
@@ -66,23 +86,6 @@ class App(Model):
         return self.get_absolute_url()
 
 
-def auth_refresh_save(access_token, refresh_token, expires_at):
-    """
-    This function is intended to be a 'neat' way to handle refreshes
-
-    https://developer.etsy.com/documentation/essentials/authentication/#step-3-request-an-access-token
-
-    """
-
-    user_id = access_token.split(".")[0]
-    app = EtsyAuth.objects.filter(etsy_user_id=user_id).last()
-    if app:
-        app.access_token = access_token
-        app.refresh_token = refresh_token
-        app.expires_at = expires_at
-        app.save()
-    else:
-        Bot.to_admin(f"Etsy: Failed to save tokens, user_id = {user_id}")
 
 class EtsyAuth(Model):
     app = ForeignKey(App, on_delete=models.CASCADE, null=True)
@@ -116,8 +119,6 @@ class EtsyAuth(Model):
     refresh_token = models.CharField(max_length=256, null=True, blank=True)
     expires_at = models.DateTimeField(null=True, blank=True)
 
-    class Meta(Model.Meta):
-        ordering = ["-id"]
 
     def __str__(self):
         return f"[{self.etsy_user_id}] {self.app}"
@@ -185,23 +186,18 @@ class Shop(Model):
     policy_privacy = models.TextField(null=True)
     review_average = models.FloatField(null=True)
     review_count = models.PositiveIntegerField(null=True)
-    shop_dict = models.JSONField(null=True)
+    etsy_dict = models.JSONField(null=True)
     
     def update_from_etsy(self):
-        shop_dict = self.etsy_auth.get_shop_dict()
-        self.shop_dict = shop_dict
-        for key, value in shop_dict.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-        self.save()
-
-
-
-
+        try:
+            shop_dict = self.etsy_auth.get_shop_dict()
+            self.etsy_dict = shop_dict
+            update_model_from_dict(self, shop_dict, save=True)
+        except Exception as e:
+            Bot.to_admin(f"Not possible to update Etsy Shop\n{e}")
 
     def __str__(self):
         return self.shop_name
-
 
 
 class Listing(Model):
@@ -223,17 +219,13 @@ class Listing(Model):
         default=WhenMade.YEARS_2020_2025,
         choices=WhenMade.choices,
     )
-    taxonomy_id = models.PositiveIntegerField(
-        default=TaxonomyID.DIGITAL_PRINTS,
-        choices=TaxonomyID.choices,
-    )
+    taxonomy_id = models.PositiveIntegerField(default=TaxonomyID.DIGITAL_PRINTS)
     shop_section_id = models.PositiveIntegerField(null=True, blank=True)
 
     tags = models.TextField(null=True)
 
     is_personalizable = models.BooleanField(
-        null=True,
-        blank=True,
+        default=False,
         help_text=_("This listing is personalizable or not."),
     )
     personalization_is_required = models.BooleanField(
@@ -290,8 +282,20 @@ class Listing(Model):
             "the listing is physical or a digital download."
         ),
     )
+    is_supply = models.BooleanField(
+        null=True,
+        blank=True,
+        default=False,
+        help_text=_(
+            "When true, tags the listing as a supply product, "
+            "else indicates that it's a finished product. "
+            "Helps buyers locate the listing under the Supplies heading. "
+            "Requires 'who_made' and 'when_made'."
+        ),
+    )
 
     # Response or read-only fields
+    listing_id = models.PositiveBigIntegerField(null=True) 
     state = models.CharField(max_length=32, null=True)
     creation_timestamp = models.PositiveBigIntegerField(null=True)
     created_timestamp = models.PositiveBigIntegerField(null=True)
@@ -300,48 +304,168 @@ class Listing(Model):
     last_modified_timestamp = models.PositiveBigIntegerField(null=True)
     updated_timestamp = models.PositiveBigIntegerField(null=True)
     state_timestamp = models.PositiveBigIntegerField(null=True)
-    featured_rank = models.PositiveIntegerField(null=True)
+    featured_rank = models.IntegerField(null=True)
     url = models.URLField(null=True)
     num_favorers = models.PositiveIntegerField(null=True)
     non_taxable = models.BooleanField(null=True)
     is_private = models.BooleanField(null=True)
     language = models.CharField(max_length=32, null=True)
+    etsy_dict = models.JSONField(null=True)
 
+    feedback_fields = (
+        "listing_id",
+        "state",
+        "creation_timestamp",
+        "created_timestamp",
+        "ending_timestamp",
+        "original_creation_timestamp",
+        "last_modified_timestamp",
+        "updated_timestamp",
+        "state_timestamp",
+        "featured_rank",
+        "url",
+        "num_favorers",
+        "non_taxable",
+        "is_private",
+        "language",
+        "etsy_dict",
+    )
+
+    def __str__(self):
+        return self.title
+
+    def update_in_etsy(self):
+        if self.listing_id is None:
+            Bot.to_admin(f"⚠️ Not possible to update listing ({self.id}).")
+            return
+
+        api_client = ExtendedEtsyAPI(
+            keystring=self.etsy_auth.app.keystring,
+            token=self.etsy_auth.access_token,
+            refresh_token=self.etsy_auth.refresh_token,
+            expiry=self.etsy_auth.expires_at,
+            refresh_save=auth_refresh_save,
+        )
+        shop_id = self.etsy_auth.shop_id
+        request_listing = UpdateListingRequest(
+            title=self.title,
+            description=self.description,
+            tags=self.tags,
+        )
+        try:
+            api_client.update_listing(
+                shop_id=shop_id,
+                listing_id=self.listing_id,
+                listing=request_listing,
+            )
+        except Exception as e:
+            Bot.to_admin(f"⚠️ Error by updating listing ({self.id}).\n{e}")
+            
+
+    def upload_to_etsy(self):
+        # api_client = self.etsy_auth.get_api_client()
+        api_client = ExtendedEtsyAPI(
+            keystring=self.etsy_auth.app.keystring,
+            token=self.etsy_auth.access_token,
+            refresh_token=self.etsy_auth.refresh_token,
+            expiry=self.etsy_auth.expires_at,
+            refresh_save=auth_refresh_save,
+        )
+
+        shop_id = self.etsy_auth.shop_id
+
+        request_listing = CreateDraftListingRequest(
+            quantity=self.quantity,
+            title=self.title,
+            description=self.description,
+            price=self.price,
+            who_made=self.who_made,
+            when_made=self.when_made,
+            taxonomy_id=self.taxonomy_id,
+            listing_type=self.listing_type,
+            tags=self.tags,
+        )
+
+        response = api_client.create_draft_listing(shop_id=shop_id, listing=request_listing)
+        self.etsy_dict = response
+        for field in self.feedback_fields:
+            setattr(self, field, response.get(field))
+        self.save()
+
+        # Images
+        for image_obj in self.images.all():
+            request_image = UploadListingImageRequest(
+                image_bytes=image_obj.file.storage.open(image_obj.file.name, "rb").read(), 
+                rank=image_obj.rank,
+                )
+            image_obj.etsy_dict = api_client.upload_listing_image(
+                shop_id=shop_id,
+                listing_id=self.listing_id,
+                listing_image=request_image,
+            )
+            update_model_from_dict(image_obj, image_obj.etsy_dict, save=True)
+        
+        # Files
+        for file_obj in self.files.all():
+            request_file = UploadListingFileRequest(
+                file_bytes=file_obj.file.storage.open(file_obj.file.name, "rb").read(), 
+                name=file_obj.name, 
+                rank=file_obj.rank,
+                )
+            file_obj.etsy_dict = api_client.upload_listing_file(
+                shop_id=shop_id,
+                listing_id=self.listing_id,
+                listing_file=request_file,
+            )
+            update_model_from_dict(file_obj, file_obj.etsy_dict, save=True)
+           
 
 def get_file_path(obj, filename: str):
     return f"etsy/users/{obj.listing.id}/{obj._meta.model_name}/{filename}"
 
 
 class ListingFile(Model):
-    listing = ForeignKey(Listing, on_delete=models.CASCADE)
-    listing_file_id = models.PositiveBigIntegerField(null=True)
+    listing = ForeignKey(Listing, on_delete=models.CASCADE, related_name="files")
     file = models.FileField(upload_to=get_file_path, storage=storages["private"])
     rank = models.PositiveSmallIntegerField(default=1)
 
     # Response or read-only fields
+    listing_file_id = models.PositiveBigIntegerField(null=True)
     filename = models.CharField(max_length=256, null=True)
     filesize = models.CharField(max_length=256, null=True)
     size_bytes = models.PositiveBigIntegerField(null=True)
     filetype = models.CharField(max_length=128, null=True)
     create_timestamp = models.PositiveBigIntegerField(null=True)
     created_timestamp = models.PositiveBigIntegerField(null=True)
+    etsy_dict = models.JSONField(null=True)
+
+    feedback_fields = (
+        "listing_file_id",
+        "filename",
+        "filesize",
+        "size_bytes",
+        "filetype",
+        "create_timestamp",
+        "created_timestamp",
+        "etsy_dict",
+    )
+
 
     @cached_property
     def name(self):
         return self.file.name.split("/")[-1]
 
 
-class UserListingImage(Model):
-    listing = ForeignKey(Listing, on_delete=models.CASCADE)
+class ListingImage(Model):
+    listing = ForeignKey(Listing, on_delete=models.CASCADE, related_name="images")
     file = models.ImageField(upload_to=get_file_path, storage=storages["private"])
-    listing_image_id = models.PositiveBigIntegerField(null=True)
     rank = models.PositiveSmallIntegerField(default=1)
-    name = models.CharField(max_length=256, null=True)
-    overwrite = models.BooleanField(default=False)
-    is_watermarked = models.BooleanField(default=False)
+    overwrite = models.BooleanField(default=False, null=True)
+    is_watermarked = models.BooleanField(default=False, null=True)
     alt_text = models.CharField(max_length=250, null=True)
 
     # Response or read-only fields
+    listing_image_id = models.PositiveBigIntegerField(null=True)
     hex_code = models.TextField(null=True)
     red = models.PositiveSmallIntegerField(null=True)
     green = models.PositiveSmallIntegerField(null=True)
@@ -349,7 +473,7 @@ class UserListingImage(Model):
     hue = models.PositiveSmallIntegerField(null=True)
     saturation = models.PositiveSmallIntegerField(null=True)
     brightness = models.PositiveSmallIntegerField(null=True)
-    is_black_and_white = models.BooleanField(default=False)
+    is_black_and_white = models.BooleanField(default=False, null=True)
     creation_tsz = models.PositiveBigIntegerField(null=True)  # No idea what is this
     created_timestamp = models.PositiveBigIntegerField(null=True)
     url_75x75 = models.URLField(max_length=512, null=True)
@@ -358,3 +482,28 @@ class UserListingImage(Model):
     url_fullxfull = models.URLField(max_length=512, null=True)
     full_height = models.PositiveIntegerField(null=True)
     full_width = models.PositiveIntegerField(null=True)
+    etsy_dict = models.JSONField(null=True)
+    feedback_fields = (
+        "listing_image_id",
+        "hex_code",
+        "red",
+        "green",
+        "blue",
+        "hue",
+        "saturation",
+        "brightness",
+        "is_black_and_white",
+        "creation_tsz",
+        "created_timestamp",
+        "url_75x75",
+        "url_170x135",
+        "url_570xN",
+        "url_fullxfull",
+        "full_height",
+        "full_width",
+        "etsy_dict",
+    )
+
+    @cached_property
+    def name(self):
+        return self.file.name.split("/")[-1]

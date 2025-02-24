@@ -9,7 +9,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from one.base import Languages
-from one.base.utils.db_fields import ChoiceArrayField
+from one.base.utils.db import ChoiceArrayField
 
 from .exceptions import SubmoduleException
 

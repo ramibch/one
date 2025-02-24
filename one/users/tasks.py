@@ -6,6 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from huey import crontab
 from huey.contrib import djhuey as huey
 
+from one.emails.models import PostalMessage
+
 from .models import User
 
 
@@ -39,3 +41,13 @@ def task_ask_users_to_verify_email():
             ).send(fail_silently=True)
 
     users.update(asked_to_verify_email=True)
+
+
+@huey.db_periodic_task(crontab(minute="5"))
+def task_check_if_accounts_are_spam():
+    
+    """
+    Check if the created account are spam
+    """
+    suspicious_emails = PostalMessage.objects.filter(delivery_failed=True, direction="outgoing").values_list("mail_to")
+    User.objects.filter(email__in=suspicious_emails).update(possible_spam=True)

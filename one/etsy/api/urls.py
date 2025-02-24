@@ -15,6 +15,11 @@ urlpatterns = [
         views.AppCreateView.as_view(),
         name="etsy_api_app_create",
     ),
+    path(
+        "app/commercial",
+        views.CommercialAppDetailView.as_view(),
+        name="etsy_api_app_commercial_detail",
+    ),
     # Shop
     path(
         "shop/create",
@@ -37,7 +42,11 @@ urlpatterns = [
         views.UserListingDetailView.as_view(),
         name="etsy_api_listing_detail",
     ),
-
+    path(
+        "listing/<int:pk>/cmd/<str:cmd>",
+        views.ListingCommandView.as_view(),
+        name="etsy_api_listing_command",
+    ),
     # Listing File
     path(
         "listing/file/create",

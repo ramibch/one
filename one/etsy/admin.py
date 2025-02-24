@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from .models import App, EtsyAuth, Listing, ListingFile, Shop
+from .models import App, EtsyAuth, Listing, ListingFile, ListingImage, Shop
 
 
 @admin.register(App)
@@ -21,7 +21,7 @@ class AppAdmin(admin.ModelAdmin):
 
 
 @admin.register(EtsyAuth)
-class UserShopAuthAdmin(admin.ModelAdmin):
+class EtsyAuthAdmin(admin.ModelAdmin):
     list_display = ("__str__", "etsy_user_id", "shop_id", "app", "user", "expires_at")
     readonly_fields = [f.name for f in EtsyAuth._meta.fields]
     actions = ["refresh"]
@@ -42,44 +42,21 @@ class ShopAdmin(admin.ModelAdmin):
     list_display = ("shop_name", "etsy_auth")
 
 
+class FileInline(admin.StackedInline):
+    model = ListingFile
+    readonly_fields = ListingFile.feedback_fields
+    extra = 0
+
+
+class ImageInline(admin.StackedInline):
+    model = ListingImage
+    readonly_fields = ListingImage.feedback_fields
+    extra = 0
+
 
 @admin.register(Listing)
 class ListingAdmin(admin.ModelAdmin):
     list_display = ("title", "etsy_auth")
-    readonly_fields = (
-        "state",
-        "creation_timestamp",
-        "created_timestamp",
-        "ending_timestamp",
-        "original_creation_timestamp",
-        "last_modified_timestamp",
-        "updated_timestamp",
-        "state_timestamp",
-        "featured_rank",
-        "url",
-        "num_favorers",
-        "non_taxable",
-        "is_private",
-        "language",
-        "state",
-        "creation_timestamp",
-        "created_timestamp",
-        "ending_timestamp",
-        "original_creation_timestamp",
-        "last_modified_timestamp",
-        "updated_timestamp",
-        "state_timestamp",
-        "featured_rank",
-        "url",
-        "num_favorers",
-        "non_taxable",
-        "is_private",
-        "language",
-    )
-
-
-@admin.register(ListingFile)
-class ListingFileAdmin(admin.ModelAdmin):
-    pass
-
+    readonly_fields = Listing.feedback_fields
+    inlines = (FileInline, ImageInline)
 

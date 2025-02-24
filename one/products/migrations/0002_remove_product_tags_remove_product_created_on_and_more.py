@@ -3,9 +3,10 @@
 import auto_prefetch
 import django.db.models.deletion
 import django.db.models.manager
-import one.base.utils.db_fields
-import one.products.models
 from django.db import migrations, models
+
+import one.base.utils.db
+import one.products.models
 
 
 class Migration(migrations.Migration):
@@ -38,7 +39,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="product",
             name="languages",
-            field=one.base.utils.db_fields.ChoiceArrayField(
+            field=one.base.utils.db.ChoiceArrayField(
                 base_field=models.CharField(
                     choices=[
                         ("en", "English"),

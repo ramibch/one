@@ -3,7 +3,7 @@ from rest_framework import serializers
 from one.base.utils.telegram import Bot
 from one.books.models import User
 
-from ..models import App, EtsyAuth, Listing, ListingFile, Shop, UserListingImage
+from ..models import App, EtsyAuth, Listing, ListingFile, ListingImage, Shop
 
 
 class AppSerializer(serializers.ModelSerializer):
@@ -41,12 +41,13 @@ class ListingSerializer(serializers.ModelSerializer):
             "taxonomy_id",
             "shop_section_id",
             "tags",
-            "listing_type"
+            "listing_type",
+            "is_personalizable",
         )
 
 
     def create(self, validated_data):
-        extra =  {"user_shop_auth": self.context.get("user_shop_auth")}
+        extra =  {"etsy_auth": self.context.get("etsy_auth")}
         more_validated_data =validated_data | extra
         return super().create(more_validated_data)
 
@@ -57,10 +58,10 @@ class ListingFileSerializer(serializers.ModelSerializer):
         fields = ("file",)
     
     def create(self, validated_data):
-        user_shop_auth = self.context.get("user_shop_auth")
+        etsy_auth = self.context.get("etsy_auth")
         listing_id = self.context.get("listing_id")
-        listing = Listing.objects.get(id=listing_id, user_shop_auth=user_shop_auth)
-        last_file = listing.userlistingfile_set.last()
+        listing = Listing.objects.get(id=listing_id, etsy_auth=etsy_auth)
+        last_file = listing.files.last()
         rank = 1 if last_file is None else last_file.rank + 1
         extra =  {"listing": listing, "rank": rank}
         more_validated_data =validated_data | extra
@@ -69,15 +70,16 @@ class ListingFileSerializer(serializers.ModelSerializer):
 
 class ListingImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserListingImage
+        model = ListingImage
         fields = ("file",)
 
     def create(self, validated_data):
-        user_shop_auth = self.context.get("user_shop_auth")
+        etsy_auth = self.context.get("etsy_auth")
         listing_id = self.context.get("listing_id")
-        listing = Listing.objects.get(id=listing_id, user_shop_auth=user_shop_auth)
-        last_file = listing.userlistingimage_set.last()
+        listing = Listing.objects.get(id=listing_id, etsy_auth=etsy_auth)
+        last_file = listing.images.last()
         rank = 1 if last_file is None else last_file.rank + 1
         extra =  {"listing": listing, "rank": rank}
         more_validated_data =validated_data | extra
         return super().create(more_validated_data)
+

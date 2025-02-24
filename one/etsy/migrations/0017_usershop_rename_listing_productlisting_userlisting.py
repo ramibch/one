@@ -6,7 +6,7 @@ import django.db.models.deletion
 import django.db.models.manager
 from django.db import migrations, models
 
-import one.base.utils.db_fields
+import one.base.utils.db
 import one.etsy.models
 
 
@@ -109,7 +109,7 @@ class Migration(migrations.Migration):
                 ("shop_section_id", models.PositiveIntegerField(blank=True, null=True)),
                 (
                     "tags",
-                    one.base.utils.db_fields.ChoiceArrayField(
+                    one.base.utils.db.ChoiceArrayField(
                         base_field=models.CharField(max_length=20), size=13
                     ),
                 ),
