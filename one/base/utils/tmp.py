@@ -26,7 +26,7 @@ class TmpFile:
     @cached_property
     def file_bytes(self):
         try:
-            self.field.storage.open(self.field.name, "rb").read()
+            return self.field.storage.open(self.field.name, "rb").read()
         except FileNotFoundError:
             model_obj = self.field.instance
             Bot.to_admin(f"File not found for: PK={model_obj.pk} {type(model_obj)}")

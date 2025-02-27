@@ -94,7 +94,7 @@ class TemplateMessage(Model):
 
     @cached_property
     def local_attachments(self):
-        return [TmpFile(a.file).path for a in self.templateattachment_set.all()]
+        return [TmpFile(attachment.file).path for attachment in self.templateattachment_set.all()]
 
     def send_periodic_email_now(self) -> bool:
         # Validate required attributes
