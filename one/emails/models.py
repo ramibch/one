@@ -136,6 +136,9 @@ class TemplateRecipient(Model):
     var_3 = models.CharField(max_length=64, null=True, blank=True)
     draft = models.BooleanField(default=False)
 
+    class Meta(Model.Meta):
+        unique_together = ("email", "to_address")
+
     def __str__(self) -> str:
         return self.to_address
 
