@@ -1,14 +1,6 @@
 from django.contrib import admin
 
-from .models import (
-    PostalDomainDNSError,
-    PostalMessage,
-    PostalReplyMessage,
-    Sender,
-    TemplateAttachment,
-    TemplateMessage,
-    TemplateRecipient,
-)
+from .models import PostalDomainDNSError, PostalMessage, PostalReplyMessage, Sender, TemplateAttachment, TemplateMessage, TemplateRecipient
 from .tasks import task_send_email_templates
 
 
@@ -93,7 +85,7 @@ class PostalReplyMessageInline(admin.TabularInline):
 
 @admin.register(PostalMessage)
 class PostalMessageAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "mail_from", "mail_to", "direction", "url")
-    list_filter = ("status", "tag", "spam_status", "direction")
+    list_display = ("__str__", "mail_from", "mail_to", "direction", "received_at", "url")
+    list_filter = ("received_at", "status", "tag", "spam_status", "direction")
     readonly_fields = ["url"] + [field.name for field in PostalMessage._meta.fields]
     inlines = [PostalReplyMessageInline]

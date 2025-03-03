@@ -8,12 +8,7 @@ from django.views.decorators.http import require_POST
 
 from one.base.utils.telegram import Bot
 
-from .models import (
-    PostalDomainDNSError,
-    PostalMessage,
-    PostalMessageLinkClicked,
-    PostalMessageLoaded,
-)
+from .models import PostalDomainDNSError, PostalMessage, PostalMessageLinkClicked, PostalMessageLoaded
 
 
 @csrf_exempt
@@ -60,8 +55,8 @@ def postal_webhook(request):
         case _:  # for messages
             return HttpResponse("Message received!")
 
-    data_yaml = yaml.dump(data, default_flow_style=False)
-    msg = f"📧 New Postal webhook event\n\n{data_yaml}"
-    Bot.to_admin(msg)
+    # data_yaml = yaml.dump(data, default_flow_style=False)
+    # msg = f"📧 New Postal webhook event\n\n{data_yaml}"
+    # Bot.to_admin(msg)
 
     return HttpResponse("Processed!")

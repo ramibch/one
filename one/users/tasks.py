@@ -42,12 +42,3 @@ def task_ask_users_to_verify_email():
 
     users.update(asked_to_verify_email=True)
 
-
-@huey.db_periodic_task(crontab(minute="5"))
-def task_check_if_accounts_are_spam():
-    
-    """
-    Check if the created account are spam
-    """
-    suspicious_emails = PostalMessage.objects.filter(delivery_failed=True, direction="outgoing").values_list("mail_to")
-    User.objects.filter(email__in=suspicious_emails).update(possible_spam=True)

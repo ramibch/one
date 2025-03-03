@@ -139,7 +139,7 @@ class EtsyAuth(Model):
 
 class Shop(Model):
     etsy_auth = OneToOneField(EtsyAuth, on_delete=models.CASCADE)
-    shop_id = models.PositiveBigIntegerField()
+    shop_id = models.PositiveBigIntegerField(primary_key=True)
     shop_name = models.CharField(max_length=128)
     user_id = models.PositiveBigIntegerField()
     create_date = models.PositiveBigIntegerField(null=True)

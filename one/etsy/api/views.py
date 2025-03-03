@@ -107,9 +107,11 @@ class ShopCreateView(AuthMixin, CreateAPIView):
 
 class ShopDetailView(AuthMixin, RetrieveUpdateAPIView):
     serializer_class = ShopSerializer
+    queryset = Shop.objects.filter()
 
-    def get_queryset(self):
-        return Shop.objects.filter(etsy_auth=self.etsy_auth)
+    def get(self, request, *args, **kwargs):
+        self.get_object().update_from_etsy()
+        return super().get(request, *args, **kwargs)
 
 
 class ListingCreateView(AuthMixin, CreateAPIView):

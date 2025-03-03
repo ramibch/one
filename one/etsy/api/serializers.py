@@ -24,7 +24,22 @@ class ShopAuthSerializer(serializers.ModelSerializer):
 class ShopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shop
-        fields = ("id", "name")
+        fields = (
+            "shop_id",
+            "shop_name",
+            "user_id",
+            "title",
+            "announcement",
+            "currency_code",
+            "listing_active_count",
+            "digital_listing_count",
+            "url",
+            "num_favorers",
+            "languages",
+            "transaction_sold_count",
+            "review_average",
+            "review_count",
+            )
 
 
 class ListingSerializer(serializers.ModelSerializer):
@@ -43,7 +58,10 @@ class ListingSerializer(serializers.ModelSerializer):
             "tags",
             "listing_type",
             "is_personalizable",
+            "listing_id",
+            "url",
         )
+        read_only_fields = ("url", "listing_id")
 
 
     def create(self, validated_data):

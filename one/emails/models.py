@@ -1,5 +1,5 @@
 from copy import copy
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from auto_prefetch import ForeignKey, Model
 from django.core.exceptions import ValidationError
@@ -135,6 +135,7 @@ class TemplateRecipient(Model):
     var_2 = models.CharField(max_length=64, null=True, blank=True)
     var_3 = models.CharField(max_length=64, null=True, blank=True)
     draft = models.BooleanField(default=False)
+    remarks = models.TextField(null=True, blank=True) 
 
     class Meta(Model.Meta):
         unique_together = ("email", "to_address")
@@ -211,7 +212,7 @@ class PostalMessage(Model):
     https://docs.postalserver.io/developer/webhooks#message-status-events
     """
 
-    POSTAL_URL = "https://postal.ramib.ch/org/ramib-ch/servers/ramib-ch/messages/"
+    POSTAL_URL = "https://postal.ramib.ch/org/ramib-ch/servers/ramib-ch/messages/{}/plain"
 
     status = models.CharField(max_length=128, null=True)
     details = models.CharField(max_length=512, null=True)
@@ -225,7 +226,6 @@ class PostalMessage(Model):
     mail_from = models.EmailField()
     mail_to = models.EmailField()
     subject = models.CharField(max_length=256, null=True)
-    message_timestamp = models.FloatField(null=True)
     spam_status = models.CharField(max_length=128, null=True)
     tag = models.CharField(max_length=128, null=True)
 
@@ -234,9 +234,13 @@ class PostalMessage(Model):
     held = models.BooleanField(null=True, default=False)
     delivery_failed = models.BooleanField(null=True, default=False)
 
+    # own fields
+    received_at = models.DateTimeField(null=True)
+    message_dict = models.JSONField(null=True)
+
     @cached_property
     def url(self):
-        return f"{self.POSTAL_URL}{self.id}"
+        return self.POSTAL_URL.format(self.id)
 
     class Meta(Model.Meta):
         verbose_name = "Postal: Message"
@@ -269,6 +273,13 @@ class PostalMessage(Model):
         # Timestamp
         self.timestamp = payload.get("timestamp")
 
+        # Own fields
+        self.message_dict = message
+        
+        if self.timestamp:
+            dt = datetime.fromtimestamp(int(self.timestamp))
+            self.received_at = timezone.make_aware(dt, timezone.get_current_timezone())
+        
         self.save()
 
     def __str__(self):

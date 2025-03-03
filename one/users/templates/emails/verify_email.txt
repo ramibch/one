@@ -1,12 +1,12 @@
 {% spaceless %}
 {% load i18n %}
-{% url "account_email" as email_url %}
-{% blocktrans with user_display=user.display_name  host=site.name  %}
+{% url "account_email" as email_url_path %}
+{% blocktrans with user_display=user.display_name  host=site.domain  %}
 Hello {{ user_display }}
 
 Thank you for registering on my site. Please, consider to confirm your email address, just do this:
 
-1. Simply visit this page: https://{{ host }}{{ email_url }}
+1. Simply visit this page: https://{{ host }}{{ email_url_path }}
 
 2. Click on Resend Verification
 
