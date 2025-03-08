@@ -57,6 +57,7 @@ dependencies = [
   "etsyv3",
   "django-rest-framework>=0.1.0",
   "ruff>=0.9.5",
+  "pre-commit>=4.1.0",
 ]
 
 
