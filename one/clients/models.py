@@ -113,7 +113,7 @@ class Request(Model):
 
     def __str__(self):
         time = self.time.strftime("%Y-%m-%d %H:%M")
-        return f"[{time}] {self.method} " f"{self.path} {self.status_code}"
+        return f"[{time}] {self.method} {self.path} {self.status_code}"
 
 
 class RedirectTypes(models.TextChoices):

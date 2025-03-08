@@ -20,7 +20,8 @@ def etsy_request_code(request):
         redirect_uri=app.redirect_uri,
         scopes=app.scopes,
     )
-    # 1. Call get_auth_code() on your AuthHelper - this will return an Etsy authentication URL
+    # 1. Call get_auth_code() on your AuthHelper -
+    # this will return an Etsy authentication URL
     url, state = auth_helper.get_auth_code()
     # save in the etsy obj the generate properties
     EtsyAuth.objects.create(
@@ -38,15 +39,18 @@ def etsy_request_code(request):
 @login_required
 def etsy_callback(request):
     # 'Referer': 'https://www.etsy.com/'
-    if not "etsy.com" in request.headers.get("Referer", ""):
+    if "etsy.com" not in request.headers.get("Referer", ""):
         # Refresh o user tried to change the language
         return etsy_dashboard(request)
 
     # https://developers.etsy.com/documentation/tutorials/quickstart/#start-with-a-simple-express-server-application
 
-    # 3. Use the state and code params from the callback that Etsy will make to call set_authorization_code(code, state)
-    # on an AuthHelper object initialised with the same the arguments passed to your first one (this callback is likely
-    # to be in a completely new request context to the first - your original object may well no longer exist)
+    # 3. Use the state and code params from the callback that
+    # Etsy will make to call set_authorization_code(code, state)
+    # on an AuthHelper object initialised with the same
+    # arguments passed to your first one (this callback is likely
+    # to be in a completely new request context to the first -
+    # your original object may well no longer exist)
     state = request.GET.get("state")
     code = request.GET.get("code")
 
@@ -64,8 +68,10 @@ def etsy_callback(request):
         scopes=etsy_auth.scopes,
     )
     auth_helper.set_authorisation_code(code, state)
-    # 4. You can then call get_access_token() on your AuthHelper object and you should get a dictionary returned
-    # with the keys access_token, refresh_token and expires_at. These a required to create the EtsyAPI object.
+    # 4. You can then call get_access_token() on your AuthHelper object
+    # and you should get a dictionary returned
+    # with the keys access_token, refresh_token and expires_at.
+    # These a required to create the EtsyAPI object.
     try:
         response = auth_helper.get_access_token()
     except InvalidGrantError as e:
@@ -82,7 +88,7 @@ def etsy_callback(request):
         data = client_api.get_me()
         etsy_auth.etsy_user_id = data.get("user_id")
         etsy_auth.shop_id = data.get("shop_id")
-    
+
     etsy_auth.save()
     shop = Shop(etsy_auth=etsy_auth)
     shop.update_from_etsy()

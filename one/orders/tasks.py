@@ -1,10 +1,9 @@
 from django.utils import timezone
-
 from huey import crontab
 from huey.contrib import djhuey as huey
+from utils.telegram import report_to_admin
 
 from .models import ProductOrder
-from utils.telegram import report_to_admin
 
 
 @huey.db_periodic_task(crontab(hour="10", minute="16"), retries=2, retry_delay=10)

@@ -131,7 +131,7 @@
 			{% if profile.email_active %}
 			\raisebox{-1pt}{\small\faEnvelope} & \href{mailto: {{- profile.get_tex_value("email") -}} }{ {{- profile.get_tex_value("email") -}} } \\ % Email address
 			{% endif %}
-			
+
 			{% if profile.website_active %}
 			\raisebox{-1pt}{\small\faDesktop} & \href{ {{- profile.get_tex_value("website") -}} }{ {{- profile.get_tex_value("website") -}} } \\ % Website
 			{% endif %}
@@ -154,7 +154,7 @@
 {% if profile.skill_active and profile.skill_set.count() > 0 %}
 \section{ {{- profile.get_tex_value("skill_label") -}} }
 \begin{supertabular}{r l} % Start a table with two columns, the table will ensure everything is aligned
-	{% for skill in profile.skill_set.all() %}	
+	{% for skill in profile.skill_set.all() %}
 		\tableentry{ {{- skill.get_level_as_tikzcircles(n=5) -}} }{ {{- skill.get_tex_value("name") -}} }{spaceafter}
 	{% endfor %}
 \end{supertabular}
@@ -164,7 +164,7 @@
 {% if profile.language_active and profile.languageability_set.count() > 0 %}
 \section{ {{- profile.get_tex_value("language_label") -}} }
 \begin{supertabular}{r l} % Start a table with two columns, the table will ensure everything is aligned
-	{% for language in profile.languageability_set.all() %}	
+	{% for language in profile.languageability_set.all() %}
 		\tableentry{ {{- language.get_level_as_tikzcircles(n=5) -}} }{ {{- language.get_tex_value("name") -}} }{spaceafter}
 	{% endfor %}
 \end{supertabular}
@@ -189,8 +189,8 @@
 	{ {{- project.get_tex_value("organization") -}} } % Duration
 	{} % FT/PT (full time or part time)
 	{} % Employer
-	{ {{- project.get_tex_value("title") -}} } 
-	{ {{- project.get_tex_value("role") -}} } 
+	{ {{- project.get_tex_value("title") -}} }
+	{ {{- project.get_tex_value("role") -}} }
 {% endfor %}
 {% endif %}
 

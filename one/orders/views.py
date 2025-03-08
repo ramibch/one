@@ -1,13 +1,12 @@
 import json
 
 import stripe
+from content.models import ListingProduct
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
-
-from content.models import ListingProduct
 from utils.telegram import report_to_admin
 
 from .models import Customer, ProductOrder
@@ -39,11 +38,14 @@ def create_stripe_session(request, product: ListingProduct):
         # payment_method_types[0]:
         # must be one of card, acss_debit, affirm, afterpay_clearpay,
         # alipay, au_becs_debit, bacs_debit, bancontact, blik, boleto,
-        # cashapp, customer_balance, eps, fpx, giropay, grabpay, ideal, klarna, konbini, link, oxxo, p24, paynow, paypal, pix, promptpay, sepa_debit, sofort, us_bank_account, wechat_pay, or zip
+        # cashapp, customer_balance, eps, fpx, giropay, grabpay, ideal,
+        # klarna, konbini, link, oxxo, p24, paynow, paypal, pix,
+        # promptpay, sepa_debit, sofort, us_bank_account, wechat_pay, or zip
         # payment_method_types=["bacs_debit"],  # for bacs_debit
         payment_intent_data={
             "setup_future_usage": "off_session",
-            # so that the metadata gets copied to the associated Payment Intent and Charge Objects
+            # so that the metadata gets copied to
+            # the associated Payment Intent and Charge Objects
             "metadata": metadata,
         },
         line_items=[

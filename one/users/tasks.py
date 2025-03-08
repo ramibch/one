@@ -6,8 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from one.emails.models import PostalMessage
-
 from .models import User
 
 
@@ -41,4 +39,3 @@ def task_ask_users_to_verify_email():
             ).send(fail_silently=True)
 
     users.update(asked_to_verify_email=True)
-

@@ -8,9 +8,6 @@ class ProductOptions(TranslationOptions):
     fields = ("title", "description")
 
 
-
-
-
 @register(EtsyShop)
 class ShopOptions(TranslationOptions):
     fields = ("generic_listing_description",)

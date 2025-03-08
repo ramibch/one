@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-
-from .models import ProductOrder, Customer
+from .models import Customer, ProductOrder
 
 
 @admin.register(Customer)

@@ -1,4 +1,3 @@
-import json
 from http import HTTPStatus
 
 from django.utils import timezone
@@ -7,15 +6,25 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    RetrieveAPIView,
+    RetrieveUpdateAPIView,
+)
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 
 from one.base.utils.telegram import Bot
 
 from ..models import App, EtsyAuth, Listing, ListingFile, ListingImage, Shop
-from .serializers import (AppSerializer, ListingFileSerializer, ListingImageSerializer, ListingSerializer, ShopAuthSerializer,
-                          ShopSerializer)
+from .serializers import (
+    AppSerializer,
+    ListingFileSerializer,
+    ListingImageSerializer,
+    ListingSerializer,
+    ShopAuthSerializer,
+    ShopSerializer,
+)
 
 
 class AuthMixin:
@@ -53,7 +62,7 @@ class AuthMixin:
                 .order_by("-expires_at")
                 .filter()
             )
-        
+
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -78,13 +87,14 @@ class AppCreateView(CreateAPIView):
         else:
             raise PermissionDenied
 
+
 class CommercialAppDetailView(RetrieveAPIView):
     serializer_class = AppSerializer
     queryset = App.objects.filter(is_commercial=True)
 
     def get_object(self):
         return self.queryset.last()
-    
+
     def get(self, request, *args, **kwargs):
         if self.get_object() and request.has_valid_one_secret_key:
             return super().get(self, request, *args, **kwargs)
@@ -118,11 +128,15 @@ class ListingCreateView(AuthMixin, CreateAPIView):
     serializer_class = ListingSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, context={'etsy_auth': self.etsy_auth})
+        serializer = self.get_serializer(
+            data=request.data, context={"etsy_auth": self.etsy_auth}
+        )
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
 
 class ListingCommandView(AuthMixin, RetrieveAPIView):
@@ -138,35 +152,37 @@ class ListingCommandView(AuthMixin, RetrieveAPIView):
             listing.upload_to_etsy()
         elif cmd == "update":
             listing.update_in_etsy()
-            
+
         return super().get(request, *args, **kwargs)
 
 
-
 class BaseCreateListingFileView(AuthMixin, CreateAPIView):
-    """ Base View for Listing Files """
+    """Base View for Listing Files"""
+
     parser_classes = [MultiPartParser, FormParser]
 
     def create(self, request, *args, **kwargs):
         listing_id = request.headers.get("x-one-listing-id")
-        context = {'listing_id': listing_id, "etsy_auth": self.etsy_auth} 
+        context = {"listing_id": listing_id, "etsy_auth": self.etsy_auth}
         serializer = self.get_serializer(data=request.data, context=context)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
 
 class ListingFileCreateView(BaseCreateListingFileView):
-    """ Upload a listing file """
+    """Upload a listing file"""
+
     serializer_class = ListingFileSerializer
 
 
 class ListingImageCreateView(BaseCreateListingFileView):
-    """ Upload a listing image """
-    serializer_class = ListingImageSerializer
+    """Upload a listing image"""
 
+    serializer_class = ListingImageSerializer
 
 
 class ListingFileDetailView(AuthMixin, RetrieveUpdateAPIView):

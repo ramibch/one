@@ -3,9 +3,10 @@
 import auto_prefetch
 import django.db.models.deletion
 import django.db.models.manager
-import one.emails.models
 import storages.backends.s3
 from django.db import migrations, models
+
+import one.emails.models
 
 
 class Migration(migrations.Migration):

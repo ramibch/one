@@ -1,8 +1,10 @@
+default_language_version:
+  python: python3.13
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v5.0.0
     hooks:
-      - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/psf/black-pre-commit-mirror
@@ -10,15 +12,12 @@ repos:
     hooks:
       - id: black
         exclude: \.py-tpl$
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.9.10
     hooks:
-      - id: isort
-  - repo: https://github.com/PyCQA/flake8
-    rev: 7.1.1
-    hooks:
-      - id: flake8
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.19.0
-    hooks:
-      - id: eslint
+      # Run the linter.
+      - id: ruff
+        args: [--fix]
+      # Run the formatter.
+      - id: ruff-format

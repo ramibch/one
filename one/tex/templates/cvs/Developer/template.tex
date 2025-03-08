@@ -32,7 +32,7 @@
 
 \begin{minipage}[t]{0.33\textwidth}
 	\vspace{-\baselineskip} % Required for vertically aligning minipages
-	
+
 	% fullname
 	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {{- profile.get_tex_value("fullname") -}} }}}}
 	\vspace{6pt}
@@ -138,7 +138,7 @@
 	{ {{- education.get_tex_value("title") -}} }
 	{ {{- education.get_tex_value("institution") -}} }
 	{ {{- education.get_tex_value("description") | linebreaks -}} }
-	\vspace{3mm} 
+	\vspace{3mm}
 \end{entrylist}
 {% endfor %}
 {% endif %}
@@ -153,7 +153,7 @@
 	{ {{- achievement.get_tex_value("title") -}} }
 	{ }
 	{ }
-	\vspace{3mm} 
+	\vspace{3mm}
 \end{entrylist}
 {% endfor %}
 {% endif %}
@@ -167,7 +167,7 @@
 	{ {{- project.get_tex_value("title") -}} }
 	{ {{- project.get_tex_value("organization") -}} }
 	{ }
-	\vspace{3mm} 
+	\vspace{3mm}
 \end{entrylist}
 {% endfor %}
 {% endif %}
@@ -184,7 +184,7 @@
 	{ {{- publication.get_tex_value("title") -}} }
 	{ {{- publication.get_tex_value("publisher") -}} }
 	{ {{- publication.get_tex_value("authors") -}} }
-	\vspace{3mm} 
+	\vspace{3mm}
 \end{entrylist}
 {% endfor %}
 {% endif %}

@@ -1,10 +1,6 @@
 from django.contrib.admin.sites import AdminSite
 
-from one.articles.admin import (
-    ArticleAdmin,
-    ArticleFileAdmin,
-    ArticlesSubmoduleAdmin,
-)
+from one.articles.admin import ArticleAdmin, ArticleFileAdmin, ArticlesSubmoduleAdmin
 from one.articles.models import Article, ArticleFile, ArticleParentFolder
 from one.test import TestCase
 

@@ -1,20 +1,21 @@
-import re
-
 from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
-from django.core.exceptions import ValidationError
 from django.core.files.storage import storages
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.urls import reverse, reverse_lazy
-from django.utils import translation
+from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from etsyv3.models.file_request import UploadListingFileRequest, UploadListingImageRequest
-from etsyv3.models.listing_request import CreateDraftListingRequest, CreateListingTranslationRequest, UpdateListingRequest
+from etsyv3.models.file_request import (
+    UploadListingFileRequest,
+    UploadListingImageRequest,
+)
+from etsyv3.models.listing_request import (
+    CreateDraftListingRequest,
+    UpdateListingRequest,
+)
 
-from one.base.utils.abstracts import TranslatableModel
 from one.base.utils.db import ChoiceArrayField, update_model_from_dict
 from one.base.utils.telegram import Bot
 
@@ -35,6 +36,7 @@ def get_default_scopes():
         "shops_w",
         "transactions_r",
     ]
+
 
 def auth_refresh_save(access_token, refresh_token, expires_at):
     """
@@ -86,7 +88,6 @@ class App(Model):
         return self.get_absolute_url()
 
 
-
 class EtsyAuth(Model):
     app = ForeignKey(App, on_delete=models.CASCADE, null=True)
     user = ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -96,7 +97,10 @@ class EtsyAuth(Model):
         max_length=256,
         null=True,
         blank=True,
-        help_text="A state string, similar to a strong password, which protects against Cross-site request forgery exploits.",
+        help_text=(
+            "A state string, similar to a strong password, "
+            "which protects against Cross-site request forgery exploits."
+        ),
     )
     code_verifier = models.CharField(
         help_text="A code verifier for code exchange (PKCE)",
@@ -118,7 +122,6 @@ class EtsyAuth(Model):
     access_token = models.CharField(max_length=256, null=True, blank=True)
     refresh_token = models.CharField(max_length=256, null=True, blank=True)
     expires_at = models.DateTimeField(null=True, blank=True)
-
 
     def __str__(self):
         return f"[{self.etsy_user_id}] {self.app}"
@@ -161,7 +164,9 @@ class Shop(Model):
     url = models.URLField(max_length=256, null=True)
     image_url_760x100 = models.URLField(max_length=512, null=True)
     num_favorers = models.PositiveIntegerField(null=True)
-    languages = ArrayField(models.CharField(max_length=16),  default=list, blank=True, null=True)
+    languages = ArrayField(
+        models.CharField(max_length=16), default=list, blank=True, null=True
+    )
     icon_url_fullxfull = models.URLField(max_length=512, null=True)
     is_using_structured_policies = models.BooleanField(null=True)
     has_onboarded_structured_policies = models.BooleanField(null=True)
@@ -187,7 +192,7 @@ class Shop(Model):
     review_average = models.FloatField(null=True)
     review_count = models.PositiveIntegerField(null=True)
     etsy_dict = models.JSONField(null=True)
-    
+
     def update_from_etsy(self):
         try:
             shop_dict = self.etsy_auth.get_shop_dict()
@@ -295,7 +300,7 @@ class Listing(Model):
     )
 
     # Response or read-only fields
-    listing_id = models.PositiveBigIntegerField(null=True) 
+    listing_id = models.PositiveBigIntegerField(null=True)
     state = models.CharField(max_length=32, null=True)
     creation_timestamp = models.PositiveBigIntegerField(null=True)
     created_timestamp = models.PositiveBigIntegerField(null=True)
@@ -360,7 +365,6 @@ class Listing(Model):
             )
         except Exception as e:
             Bot.to_admin(f"⚠️ Error by updating listing ({self.id}).\n{e}")
-            
 
     def upload_to_etsy(self):
         # api_client = self.etsy_auth.get_api_client()
@@ -386,7 +390,9 @@ class Listing(Model):
             tags=self.tags,
         )
 
-        response = api_client.create_draft_listing(shop_id=shop_id, listing=request_listing)
+        response = api_client.create_draft_listing(
+            shop_id=shop_id, listing=request_listing
+        )
         self.etsy_dict = response
         for field in self.feedback_fields:
             setattr(self, field, response.get(field))
@@ -395,30 +401,32 @@ class Listing(Model):
         # Images
         for image_obj in self.images.all():
             request_image = UploadListingImageRequest(
-                image_bytes=image_obj.file.storage.open(image_obj.file.name, "rb").read(), 
+                image_bytes=image_obj.file.storage.open(
+                    image_obj.file.name, "rb"
+                ).read(),
                 rank=image_obj.rank,
-                )
+            )
             image_obj.etsy_dict = api_client.upload_listing_image(
                 shop_id=shop_id,
                 listing_id=self.listing_id,
                 listing_image=request_image,
             )
             update_model_from_dict(image_obj, image_obj.etsy_dict, save=True)
-        
+
         # Files
         for file_obj in self.files.all():
             request_file = UploadListingFileRequest(
-                file_bytes=file_obj.file.storage.open(file_obj.file.name, "rb").read(), 
-                name=file_obj.name, 
+                file_bytes=file_obj.file.storage.open(file_obj.file.name, "rb").read(),
+                name=file_obj.name,
                 rank=file_obj.rank,
-                )
+            )
             file_obj.etsy_dict = api_client.upload_listing_file(
                 shop_id=shop_id,
                 listing_id=self.listing_id,
                 listing_file=request_file,
             )
             update_model_from_dict(file_obj, file_obj.etsy_dict, save=True)
-           
+
 
 def get_file_path(obj, filename: str):
     return f"etsy/users/{obj.listing.id}/{obj._meta.model_name}/{filename}"
@@ -449,7 +457,6 @@ class ListingFile(Model):
         "created_timestamp",
         "etsy_dict",
     )
-
 
     @cached_property
     def name(self):

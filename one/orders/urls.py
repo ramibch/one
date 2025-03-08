@@ -1,9 +1,6 @@
 from django.urls import path
 
-from .views import stripe_webhook
-from .views import checkout
-from .views import order_detail
-from .views import order_invoice
+from .views import checkout, order_detail, order_invoice, stripe_webhook
 
 urlpatterns = [
     path("stripe/webhook/", stripe_webhook, name="webhook-intent"),

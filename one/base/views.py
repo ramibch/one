@@ -48,7 +48,7 @@ def error_500(request: CustomHttpRequest):
 
 def sitemap_index(*args, **kwargs):
     # https://stackoverflow.com/questions/9817856/django-sitemaps-get-only-pages-of-the-current-website
-    for key in kwargs.get("sitemaps", {}).keys():
+    for key in kwargs.get("sitemaps", {}):
         kwargs["sitemaps"][key].request = args[0]
         kwargs["sitemaps"][key].lang = kwargs.get("lang", settings.LANGUAGE_CODE)
     kwargs.pop("lang", None)
@@ -57,7 +57,7 @@ def sitemap_index(*args, **kwargs):
 
 def sitemap(*args, **kwargs):
     # https://stackoverflow.com/questions/9817856/django-sitemaps-get-only-pages-of-the-current-website
-    for key in kwargs.get("sitemaps", {}).keys():
+    for key in kwargs.get("sitemaps", {}):
         kwargs["sitemaps"][key].request = args[0]
         kwargs["sitemaps"][key].lang = kwargs.get("lang", settings.LANGUAGE_CODE)
     kwargs.pop("lang", None)

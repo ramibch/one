@@ -67,9 +67,11 @@ class OneMiddleware:
 
     def get_redirect_or_none(self, request):
         applicable = [
-            RedirectTypes.USER
-            if request.user.is_authenticated
-            else RedirectTypes.NO_USER,
+            (
+                RedirectTypes.USER
+                if request.user.is_authenticated
+                else RedirectTypes.NO_USER
+            ),
             RedirectTypes.ALWAYS,
         ]
         return PathRedirect.objects.filter(
@@ -125,7 +127,7 @@ class OneMiddleware:
         ]
 
         path_ok = not any(request.path.startswith(exempt) for exempt in exempt_paths)
-        user_ok = True # not request.user.is_staff
+        user_ok = True  # not request.user.is_staff
 
         if path_ok and user_ok:
             try:

@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
+
 from one.base.utils.http import CustomHttpRequest
 
 from ..articles.models import Article

@@ -9,7 +9,7 @@ faker = Faker()
 
 class FAQFactory(DjangoModelFactory):
     category = factory.Iterator(FAQCategory.values)
-    question = factory.LazyAttribute(lambda _: f"{faker.sentence().replace(".", "?")}")
+    question = factory.LazyAttribute(lambda _: f"{faker.sentence().replace('.', '?')}")
     answer = factory.Faker("text")
     featured = factory.Faker("boolean", chance_of_getting_true=80)
 

@@ -89,7 +89,7 @@
 
 \personalinfo{
   % You can add your own with \printinfo{symbol}{detail}
-  
+
   {% if profile.email_active %} \email{ {{- profile.get_tex_value("email") -}} } {% endif %}
   {% if profile.phone_active %} \phone{ {{- profile.get_tex_value("phone") -}} } {% endif %}
   {% if profile.location_active %} \location{ {{- profile.get_tex_value("location") -}} } {% endif %}

@@ -94,7 +94,10 @@ class TemplateMessage(Model):
 
     @cached_property
     def local_attachments(self):
-        return [TmpFile(attachment.file).path for attachment in self.templateattachment_set.all()]
+        return [
+            TmpFile(attachment.file).path
+            for attachment in self.templateattachment_set.all()
+        ]
 
     def send_periodic_email_now(self) -> bool:
         # Validate required attributes
@@ -135,7 +138,7 @@ class TemplateRecipient(Model):
     var_2 = models.CharField(max_length=64, null=True, blank=True)
     var_3 = models.CharField(max_length=64, null=True, blank=True)
     draft = models.BooleanField(default=False)
-    remarks = models.TextField(null=True, blank=True) 
+    remarks = models.TextField(null=True, blank=True)
 
     class Meta(Model.Meta):
         unique_together = ("email", "to_address")
@@ -212,7 +215,9 @@ class PostalMessage(Model):
     https://docs.postalserver.io/developer/webhooks#message-status-events
     """
 
-    POSTAL_URL = "https://postal.ramib.ch/org/ramib-ch/servers/ramib-ch/messages/{}/plain"
+    POSTAL_URL = (
+        "https://postal.ramib.ch/org/ramib-ch/servers/ramib-ch/messages/{}/plain"
+    )
 
     status = models.CharField(max_length=128, null=True)
     details = models.CharField(max_length=512, null=True)
@@ -275,11 +280,11 @@ class PostalMessage(Model):
 
         # Own fields
         self.message_dict = message
-        
+
         if self.timestamp:
             dt = datetime.fromtimestamp(int(self.timestamp))
             self.received_at = timezone.make_aware(dt, timezone.get_current_timezone())
-        
+
         self.save()
 
     def __str__(self):

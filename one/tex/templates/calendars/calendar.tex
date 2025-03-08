@@ -27,7 +27,7 @@
     \node [anchor=north west, text width= 3.4cm] at
     ($(cal-#1.north west)+(3em, 0em)$) {\tiny{#2}};
     }
-    
+
 {% endraw %}
 
 \renewcommand{\headrulewidth}{0.0pt}
@@ -87,14 +87,14 @@
 \end{tikzpicture}
 \pagebreak
 \begin{tikzpicture}[every day/.style={anchor = north}]
-    
+
 
 \calendar[dates=\year-07-01 to \year-12-31,
   name=cal,
   day yshift = 3em,
   day code=
   {
-    \node[name=\pgfcalendarsuggestedname,every day,shape=rectangle, 
+    \node[name=\pgfcalendarsuggestedname,every day,shape=rectangle,
       minimum height= .53cm, text width = 4.4cm, draw = gray]{\tikzdaytext};
     \draw (-1.8cm, -.1ex) node[anchor = west]
     {
@@ -105,7 +105,7 @@
   {
     \ifdate{day of month=1} {
     \pgftransformxshift{4.8cm}
-    \draw (0,0)node [shape=rectangle, minimum height= .53cm, 
+    \draw (0,0)node [shape=rectangle, minimum height= .53cm,
       text width = 4.4cm, fill = {{color}}, text= white, draw = gray, text centered]
     {
       \textbf{\pgfcalendarmonthname{\pgfcalendarcurrentmonth}}

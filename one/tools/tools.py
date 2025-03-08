@@ -14,15 +14,19 @@ from . import models
 TEXT_GENERATE = _("Generate")
 
 GENERAL_BARCODE_DESCRIPTION = _(
-    "Generate your barcode with this online tool and download it for free in different formats"
+    "Generate your barcode with this online tool and "
+    "download it for free in different formats"
 )
 
 # Keywords
 GENERAL_KEYWORDS = _(
-    "free, free online, free online tools, barcode generator, qr code, chart maker, hashing, engineering tools, maker, generator"
+    "free, free online, free online tools, barcode generator, qr code, "
+    "chart maker, hashing, engineering tools, maker, generator"
 )
 BARCODE_KEYWORDS = _(
-    "free, barcode, barcodes, create, generate, generator, make, online, online barcode, barcodes online, barcode generator, online barcode generator, 2D code, QR code, barcode software"
+    "free, barcode, barcodes, create, generate, generator, make, online, "
+    "online barcode, barcodes online, barcode generator, "
+    "online barcode generator, 2D code, QR code, barcode software"
 )
 
 

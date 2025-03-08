@@ -18,6 +18,8 @@ class ExtendedEtsyAPI(EtsyAPI):
         uri = f"{ETSY_API_BASEURL}/users/me"
         return self._issue_request(uri)
 
-    def update_listing_deprecated(self, shop_id: int, listing_id: int, listing: UpdateListingRequest) -> Any:
+    def update_listing_deprecated(
+        self, shop_id: int, listing_id: int, listing: UpdateListingRequest
+    ) -> Any:
         uri = f"{ETSY_API_BASEURL}/shops/{shop_id}/listings/{listing_id}"
         return self._issue_request(uri, method=Method.PUT, request_payload=listing)

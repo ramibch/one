@@ -197,13 +197,13 @@
       doc.text(article_price_text, 140, 120);
       doc.text(article_total_text, 160, 120);
       products.forEach((item, index) => {
-        let h_product = parseInt(130 + index*8); 
+        let h_product = parseInt(130 + index*8);
         doc.text(item[0], 20, h_product);
         doc.text(String(item[1]), 120, h_product);
         doc.text(String(item[2]), 140, h_product);
         doc.text(String(item[3]), 160, h_product);
       });
-      
+
       const totalText = `${total_heading}: ${total_str}`
       const totalTextWidth = doc.getTextWidth(totalText)*1.05;
 

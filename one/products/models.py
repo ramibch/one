@@ -1,24 +1,24 @@
-import re
-
 from auto_prefetch import ForeignKey, Model, OneToOneField
 from django.contrib.auth import get_user_model
-from django.contrib.postgres.fields import ArrayField
-from django.core.exceptions import ValidationError
 from django.core.files.storage import storages
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.utils import translation
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from etsyv3.models.file_request import UploadListingFileRequest, UploadListingImageRequest
-from etsyv3.models.listing_request import CreateDraftListingRequest, CreateListingTranslationRequest
+from etsyv3.models.file_request import (
+    UploadListingFileRequest,
+    UploadListingImageRequest,
+)
+from etsyv3.models.listing_request import (
+    CreateDraftListingRequest,
+    CreateListingTranslationRequest,
+)
 
 from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
-from one.base.utils.db import ChoiceArrayField
 from one.base.utils.telegram import Bot
-from one.etsy.enums import ListingType, Scopes, TaxonomyID, WhenMade, WhoMade
-from one.etsy.etsy_api import ExtendedEtsyAPI
+from one.etsy.enums import ListingType, TaxonomyID, WhenMade, WhoMade
 
 User = get_user_model()
 
@@ -48,12 +48,12 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     @cached_property
     def file_paths(self):
         base = self.folder_path / "files"
-        return [base / fobj.name for fobj in self.productfile_set.all()]
+        return [base / fobj.name for fobj in self.productfile_set.all()]  # type: ignore
 
     @cached_property
     def image_paths(self):
         base = self.folder_path / "images"
-        return [base / fobj.name for fobj in self.productimage_set.all()]
+        return [base / fobj.name for fobj in self.productimage_set.all()]  # type: ignore
 
 
 def get_file_path(obj, filename: str):
@@ -78,7 +78,6 @@ class ProductImage(Model):
 
     def __str__(self):
         return self.name
-
 
 
 class EtsyShop(TranslatableModel):

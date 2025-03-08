@@ -2,7 +2,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from djstripe.models import Event
-
 from plans.models import PremiumPlan
 from users.models import User, UserPremiumPlan
 from utils.email import send_simple_email
@@ -12,7 +11,8 @@ EMAIL_BODY_THANKS = _(
 
 Thank you for your order!
 
-Remember that if you have any questions or you require any technical support, you can contact me directly to this email!
+If you have any questions or you require any technical support,
+you can contact me directly to this email!
 
 Best wishes!
 Rami (nicecv.online)

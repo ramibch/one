@@ -59,4 +59,3 @@ class ListingAdmin(admin.ModelAdmin):
     list_display = ("title", "etsy_auth")
     readonly_fields = Listing.feedback_fields
     inlines = (FileInline, ImageInline)
-

@@ -1,6 +1,7 @@
 import uuid
 
 import auto_prefetch
+from content.models import ListingProduct
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.db import models
@@ -9,15 +10,15 @@ from django.utils import timezone, translation
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
-from content.models import ListingProduct
-
-EMAIL_BODY = _("""Thank you very much for your purchase. Attached you will find your order.
+EMAIL_BODY = _(
+    """Thank you very much for your purchase. Attached you will find your order.
 
 Remember that if you have any questions, you can contact me directly to this email!
 
 Best wishes!
 Rami
-""")
+"""
+)
 
 
 class Customer(auto_prefetch.Model):

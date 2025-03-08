@@ -39,7 +39,8 @@ def run_commands_daily():
     )
     call_command("check", deploy=True, stdout=out, stderr=err)
     call_command("clearsessions", stdout=out, stderr=err)
-    # call_command("update_rates", verbosity=0, stdout=out, stderr=err) # TODO: first install djmoney
+    # call_command("update_rates", verbosity=0, stdout=out, stderr=err)
+    # TODO: first install djmoney
     Bot.to_admin(f"Commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n")
 
 

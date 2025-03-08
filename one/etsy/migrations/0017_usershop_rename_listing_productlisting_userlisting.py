@@ -70,7 +70,8 @@ class Migration(migrations.Migration):
                     "title",
                     models.CharField(
                         help_text="Title can contain only letters, numbers, punctuation, mathematical symbols, whitespace, ™, ©, and ®. '%', ':', '&', and '+' can be used only once each.",
-                        max_length=255,                    ),
+                        max_length=255,
+                    ),
                 ),
                 ("description", models.TextField()),
                 ("price", models.FloatField()),

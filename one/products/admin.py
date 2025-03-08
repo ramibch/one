@@ -21,7 +21,6 @@ class ProductAdmin(TranslationAdmin):
     actions = [translate_fields]
 
 
-
 @admin.register(EtsyListing)
 class ListingAdmin(admin.ModelAdmin):
     list_display = ("__str__", "price", "url")
@@ -31,8 +30,6 @@ class ListingAdmin(admin.ModelAdmin):
     @admin.action(description="⬆️ Upload to Etsy")
     def upload(modeladmin, request, queryset):
         task_upload_listings(queryset.filter(listing_id__isnull=True))
-
-
 
 
 @admin.register(EtsyShop)
@@ -50,4 +47,3 @@ class ShopAdmin(TranslationAdmin):
     def get_payload(modeladmin, request, queryset):
         for shop in queryset:
             shop.request_and_save_payload()
-

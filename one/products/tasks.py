@@ -2,8 +2,6 @@ from django.core.files import File
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from one.products.models import Product
-
 from ..base.utils.telegram import Bot
 from .models import EtsyListing, Product, ProductFile, ProductImage
 
@@ -51,7 +49,6 @@ def sync_products():
                 db_file.save()
 
     Bot.to_admin(log)
-
 
 
 @huey.db_task()

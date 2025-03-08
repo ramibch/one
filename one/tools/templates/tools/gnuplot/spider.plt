@@ -11,4 +11,4 @@ set for [p=2:{{ self.num }}] paxis p tics format ""
 set paxis 1 tics font "0,9"
 {{ self.render_labels }}
 set grid spiderplot
-plot for [i=2:{{ self.num_plus_1  }}] $DATA using i:key(1) 
+plot for [i=2:{{ self.num_plus_1  }}] $DATA using i:key(1)
