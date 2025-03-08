@@ -273,8 +273,6 @@ ADMINS = [
 
 
 
-
-
 """
 ####################
 Third-party settings

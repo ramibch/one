@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import Client, Path, PathRedirect, Request
-from .tasks import block_clients_task, update_client_task
+from .tasks import block_spammy_clients, update_client_task
 
 
 @admin.register(Path)
@@ -43,7 +43,7 @@ class ClientAdmin(admin.ModelAdmin):
         qs = queryset.filter(ip_address__isnull=False).exclude(
             ip_address=Client.DUMMY_IP_ADDRESS
         )
-        block_clients_task(qs)
+        block_spammy_clients(qs)
 
     @admin.action(description="🔄 Update values")
     def update_values(modeladmin, request, queryset):

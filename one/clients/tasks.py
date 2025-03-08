@@ -18,18 +18,18 @@ def update_client_task(client: Client):
 
 
 @huey.db_periodic_task(crontab(minute="47"))
-def block_spam_clients_task_hourly():
+def block_spammy_clients_hourly():
     """
     Filter the clients which send requests to undesired paths and block them.
     """
     clients = Client.objects.filter(request__path__is_spam=True).exclude(
         ip_address=Client.DUMMY_IP_ADDRESS
     )
-    block_clients_task(clients)
+    block_spammy_clients(clients)
 
 
 @huey.db_task()
-def block_clients_task(clients=None):
+def block_spammy_clients(clients=None):
     """
     Block the selected clients
     """
@@ -51,7 +51,7 @@ def block_clients_task(clients=None):
     clients.update(is_blocked=True)
 
 
-@huey.db_periodic_task(crontab(minute="55"))
+@huey.db_periodic_task(crontab(hour="1", minute="15"))
 def purge_requests_task():
     """Purge requests"""
     now = timezone.now()
