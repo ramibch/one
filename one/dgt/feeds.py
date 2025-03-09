@@ -15,7 +15,10 @@ class DgtQuestionPinFeed(Feed):
 
     def items(self):
         past = timezone.now() - timezone.timedelta(days=self.DAYS)
-        return DgtQuestion.objects.filter(test__scrapped_on__gte=past)
+        return DgtQuestion.objects.filter(
+            test__scrapped_on__gte=past,
+            image__isnull=False,
+        )
 
     def item_title(self, item: DgtQuestion):
         return item.title
@@ -27,7 +30,7 @@ class DgtQuestionPinFeed(Feed):
         return item.test.scrapped_on
 
     def item_enclosure_url(self, item: DgtQuestion):
-        return item.img_url
+        return item.image.url
 
     def item_enclosure_length(self, item: DgtQuestion):
-        return (250, 226)
+        return item.image.size

@@ -1,5 +1,9 @@
+from tempfile import NamedTemporaryFile
+from urllib.request import urlopen
+
 import auto_prefetch
 from django.contrib.sessions.models import Session
+from django.core.files import File
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -34,9 +38,19 @@ class DgtQuestion(auto_prefetch.Model):
     explanation = models.TextField(max_length=512, null=True)
     img_alt = models.CharField(max_length=256, null=True)
     img_url = models.URLField(max_length=256)
+    image = models.ImageField(null=True, upload_to="dgt/questions")
 
     def __str__(self):
         return self.title
+
+
+def save(self, *args, **kwargs):
+    if self.img_url and not self.image:
+        with NamedTemporaryFile(delete=True) as img_temp:
+            img_temp.write(urlopen(self.img_url).read())
+            img_temp.flush()
+            self.image.save(f"{self.pk}".zfill(6), File(img_temp))
+    super().save(*args, **kwargs)
 
     @cached_property
     def detail_url(self):
