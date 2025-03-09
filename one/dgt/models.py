@@ -1,13 +1,14 @@
-from tempfile import NamedTemporaryFile
 from urllib.request import urlopen
 
 import auto_prefetch
 from django.contrib.sessions.models import Session
-from django.core.files import File
+from django.core.files.base import ContentFile
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
+
+from one.base.utils.telegram import Bot
 
 
 class DgtTest(models.Model):
@@ -43,13 +44,17 @@ class DgtQuestion(auto_prefetch.Model):
     def __str__(self):
         return self.title
 
-
-def save(self, *args, **kwargs):
-    if self.img_url and self.image.name in ("", None):
-        with NamedTemporaryFile(mode="w") as img_temp:
-            img_temp.write(urlopen(self.img_url).read())
-            self.image.save(f"{self.pk}".zfill(6), File(img_temp))
-    super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if self.img_url and self.image.name in ("", None):
+            try:
+                self.image.save(
+                    f"{str(self.pk).zfill(10)}.png",
+                    ContentFile(urlopen(self.img_url).read()),
+                    save=False,
+                )
+            except Exception as e:
+                Bot.to_admin(f"⚠️ DGT Question {self.pk}\n\n{e}")
+        super().save(*args, **kwargs)
 
     @cached_property
     def detail_url(self):
