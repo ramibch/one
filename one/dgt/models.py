@@ -45,7 +45,7 @@ class DgtQuestion(auto_prefetch.Model):
 
 
 def save(self, *args, **kwargs):
-    if self.img_url and not self.image:
+    if self.img_url and self.image.name in ("", None):
         with NamedTemporaryFile(delete=True) as img_temp:
             img_temp.write(urlopen(self.img_url).read())
             img_temp.flush()
