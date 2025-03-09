@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 
 from ...models import DgtQuestion, DgtTest
 
@@ -17,7 +18,11 @@ class Command(BaseCommand):
             url = f"{host}/es/test/Test-num-{i}.shtml"
             r = requests.get(url)
             soup = BeautifulSoup(r.text, "html.parser")
-            test = DgtTest.objects.create(title=soup.find("h1").text, source_url=url)
+            test = DgtTest.objects.create(
+                title=soup.find("h1").text,
+                source_url=url,
+                scrapped_on=timezone.now(),
+            )
             soup_qs = soup.find("section", class_="preguntas_test")
             for _, soup_q in enumerate(soup_qs.children):
                 explanation = None

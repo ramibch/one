@@ -10,6 +10,7 @@ class DgtTest(models.Model):
     source_url = models.URLField(max_length=128)
     title = models.CharField(max_length=128)
     dgt_page = models.PositiveSmallIntegerField(null=True, blank=True)
+    scrapped_on = models.DateField(default=timezone.now)
 
     def __str__(self):
         return f"[{self.dgt_page}] {self.title}"
@@ -39,6 +40,9 @@ class DgtQuestion(auto_prefetch.Model):
 
     @cached_property
     def detail_url(self):
+        return self.get_absolute_url()
+
+    def get_absolute_url(self):
         return reverse("question-detail", kwargs={"id": self.id})
 
     @cached_property
