@@ -1,7 +1,9 @@
 from django.urls import path
 from django.views.generic.base import TemplateView
 
+from one.articles.views import ArticleDetailView
 from one.base.sitemaps import get_sitemaps
+from one.home.views import home
 
 from .views import favicon, sitemap
 
@@ -18,4 +20,6 @@ urlpatterns = [
         "robots.txt",
         TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
     ),
+    path("<slug:slug>/", ArticleDetailView.as_view(), name="article-detail"),
+    path("", home, name="home"),
 ]

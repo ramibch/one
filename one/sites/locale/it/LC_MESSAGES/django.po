@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-09 19:13+0100\n"
+"POT-Creation-Date: 2025-03-09 20:53+0100\n"
 "PO-Revision-Date: 2017-09-23 18:54+0000\n"
 "Last-Translator: Stefano Brentegani <sbrentegani@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/django/django/language/"
@@ -19,133 +19,136 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: one/sites/admin.py:32
+#: one/sites/admin.py:21
 #, fuzzy
 #| msgid "Sites"
 msgid "Site fields"
 msgstr "Siti"
 
-#: one/sites/admin.py:36
+#: one/sites/admin.py:25
 msgid "Submodules"
 msgstr ""
 
-#: one/sites/admin.py:40
+#: one/sites/admin.py:29
 msgid "Brand and design"
 msgstr ""
 
-#: one/sites/admin.py:56
+#: one/sites/admin.py:45
 msgid "Management"
+msgstr ""
+
+#: one/sites/admin.py:57
+msgid "SEO"
 msgstr ""
 
 #: one/sites/apps.py:11
 msgid "Sites"
 msgstr "Siti"
 
-#: one/sites/models.py:45
+#: one/sites/models.py:41
 msgid "The domain name cannot contain any spaces or tabs."
 msgstr "Il nome di dominio non può contenere spazi né tab."
 
-#: one/sites/models.py:77
+#: one/sites/models.py:73
 msgid "Amber"
 msgstr ""
 
-#: one/sites/models.py:78
+#: one/sites/models.py:74
 msgid "Blue"
 msgstr ""
 
-#: one/sites/models.py:79
+#: one/sites/models.py:75
 msgid "Fuchsia"
 msgstr ""
 
-#: one/sites/models.py:80
+#: one/sites/models.py:76
 msgid "Jade"
 msgstr ""
 
-#: one/sites/models.py:81
+#: one/sites/models.py:77
 msgid "Grey"
 msgstr ""
 
-#: one/sites/models.py:82
+#: one/sites/models.py:78
 msgid "Purple"
 msgstr ""
 
-#: one/sites/models.py:83
+#: one/sites/models.py:79
 msgid "Cyan"
 msgstr ""
 
-#: one/sites/models.py:84
+#: one/sites/models.py:80
 msgid "Read"
 msgstr ""
 
-#: one/sites/models.py:85
+#: one/sites/models.py:81
 msgid "Violet"
 msgstr ""
 
-#: one/sites/models.py:86
+#: one/sites/models.py:82
 msgid "Indigo"
 msgstr ""
 
-#: one/sites/models.py:87
+#: one/sites/models.py:83
 msgid "Slate"
 msgstr ""
 
-#: one/sites/models.py:88
+#: one/sites/models.py:84
 msgid "Lime"
 msgstr ""
 
-#: one/sites/models.py:89
+#: one/sites/models.py:85
 msgid "Colors"
 msgstr ""
 
-#: one/sites/models.py:90
+#: one/sites/models.py:86
 msgid "Orange"
 msgstr ""
 
-#: one/sites/models.py:91
+#: one/sites/models.py:87
 msgid "Pumpkin"
 msgstr ""
 
-#: one/sites/models.py:92
+#: one/sites/models.py:88
 msgid "Zinc"
 msgstr ""
 
-#: one/sites/models.py:93
+#: one/sites/models.py:89
 msgid "Sand"
 msgstr ""
 
-#: one/sites/models.py:94
+#: one/sites/models.py:90
 msgid "Yellow"
 msgstr ""
 
-#: one/sites/models.py:95
+#: one/sites/models.py:91
 msgid "Pink"
 msgstr ""
 
-#: one/sites/models.py:96
+#: one/sites/models.py:92
 msgid "Green"
 msgstr ""
 
-#: one/sites/models.py:100
+#: one/sites/models.py:97
 msgid "Name"
 msgstr ""
 
-#: one/sites/models.py:147
+#: one/sites/models.py:143
 msgid "Add an emoji."
 msgstr ""
 
-#: one/sites/models.py:197
+#: one/sites/models.py:189
 msgid "site"
 msgstr "sito"
 
-#: one/sites/models.py:198
+#: one/sites/models.py:190
 msgid "sites"
 msgstr "siti"
 
-#: one/sites/models.py:204
 #, fuzzy
-#| msgid "domain name"
-msgid "host name"
-msgstr "nome di dominio"
+#~| msgid "domain name"
+#~ msgid "host name"
+#~ msgstr "nome di dominio"
 
 #~ msgid "display name"
 #~ msgstr "nome visualizzato"

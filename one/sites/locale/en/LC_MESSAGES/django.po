@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-17 11:07+0100\n"
+"POT-Creation-Date: 2025-03-09 20:52+0100\n"
 "PO-Revision-Date: 2025-01-09 19:46+0100\n"
 "Last-Translator:   <admin@example.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -14,26 +14,134 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Translated-Using: django-rosetta 0.10.1\n"
 
-#: contrib/sites/apps.py:11
+#: one/sites/admin.py:21
+#, fuzzy
+#| msgid "Sites"
+msgid "Site fields"
+msgstr "Sites"
+
+#: one/sites/admin.py:25
+msgid "Submodules"
+msgstr ""
+
+#: one/sites/admin.py:29
+msgid "Brand and design"
+msgstr ""
+
+#: one/sites/admin.py:45
+msgid "Management"
+msgstr ""
+
+#: one/sites/admin.py:57
+msgid "SEO"
+msgstr ""
+
+#: one/sites/apps.py:11
 msgid "Sites"
 msgstr "Sites"
 
-#: contrib/sites/models.py:30
+#: one/sites/models.py:41
 msgid "The domain name cannot contain any spaces or tabs."
 msgstr "The domain name cannot contain any spaces or tabs."
 
-#: contrib/sites/models.py:81
-msgid "domain name"
-msgstr "domain name"
+#: one/sites/models.py:73
+msgid "Amber"
+msgstr ""
 
-#: contrib/sites/models.py:83
-msgid "display name"
-msgstr "display name"
+#: one/sites/models.py:74
+msgid "Blue"
+msgstr ""
 
-#: contrib/sites/models.py:88
+#: one/sites/models.py:75
+msgid "Fuchsia"
+msgstr ""
+
+#: one/sites/models.py:76
+msgid "Jade"
+msgstr ""
+
+#: one/sites/models.py:77
+msgid "Grey"
+msgstr ""
+
+#: one/sites/models.py:78
+msgid "Purple"
+msgstr ""
+
+#: one/sites/models.py:79
+msgid "Cyan"
+msgstr ""
+
+#: one/sites/models.py:80
+msgid "Read"
+msgstr ""
+
+#: one/sites/models.py:81
+msgid "Violet"
+msgstr ""
+
+#: one/sites/models.py:82
+msgid "Indigo"
+msgstr ""
+
+#: one/sites/models.py:83
+msgid "Slate"
+msgstr ""
+
+#: one/sites/models.py:84
+msgid "Lime"
+msgstr ""
+
+#: one/sites/models.py:85
+msgid "Colors"
+msgstr ""
+
+#: one/sites/models.py:86
+msgid "Orange"
+msgstr ""
+
+#: one/sites/models.py:87
+msgid "Pumpkin"
+msgstr ""
+
+#: one/sites/models.py:88
+msgid "Zinc"
+msgstr ""
+
+#: one/sites/models.py:89
+msgid "Sand"
+msgstr ""
+
+#: one/sites/models.py:90
+msgid "Yellow"
+msgstr ""
+
+#: one/sites/models.py:91
+msgid "Pink"
+msgstr ""
+
+#: one/sites/models.py:92
+msgid "Green"
+msgstr ""
+
+#: one/sites/models.py:97
+msgid "Name"
+msgstr ""
+
+#: one/sites/models.py:143
+msgid "Add an emoji."
+msgstr ""
+
+#: one/sites/models.py:189
 msgid "site"
 msgstr "site"
 
-#: contrib/sites/models.py:89
+#: one/sites/models.py:190
 msgid "sites"
 msgstr "sites"
+
+#~ msgid "domain name"
+#~ msgstr "domain name"
+
+#~ msgid "display name"
+#~ msgstr "display name"
