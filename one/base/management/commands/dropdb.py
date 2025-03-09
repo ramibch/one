@@ -14,8 +14,8 @@ class Command(BaseCommand):
             conn = f"user='{su}' password='{su_pw}' host='{host}' port='{port}'"
             with psycopg.connect(conn, autocommit=True).cursor() as cur:
                 cur.execute(f"DROP DATABASE {db_name};")
-            msg = f"Postgres database '{db_name}' is dropped."
-            self.stdout.write(self.style.SUCCESS(msg))
+                msg = f"Postgres database '{db_name}' is dropped."
+                self.stdout.write(self.style.SUCCESS(msg))
         else:
             msg = f"Confirmation declied. Not dropping '{db_name}'."
             self.stdout.write(self.style.WARNING(msg))

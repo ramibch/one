@@ -17,16 +17,13 @@ class Command(BaseCommand):
         with psycopg.connect(conn, autocommit=True).cursor() as cur:
             try:
                 cur.execute(f"CREATE DATABASE {db_name};")
+                cur.execute(f"CREATE USER {u} WITH PASSWORD '{pw}';")
             except DuplicateDatabase:
                 msg = f"Database '{db_name}' already exists"
                 self.stdout.write(self.style.WARNING(msg))
-                cur.close()
-                return
-
-            try:
-                cur.execute(f"CREATE USER {u} WITH PASSWORD '{pw}';")
             except DuplicateObject:
-                self.stdout.write(self.style.WARNING(f"User '{u}' already exists"))
+                msg = f"User '{u}' already exists"
+                self.stdout.write(self.style.WARNING(msg))
 
             cur.execute(f"ALTER ROLE {u} SET client_encoding TO 'utf8';")
             cur.execute(f"ALTER ROLE {u} SET timezone TO 'UTC';")
