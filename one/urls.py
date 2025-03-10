@@ -40,6 +40,7 @@ urlpatterns = [
     path("pages/", include("one.pages.urls")),
     path("account/", include("one.users.urls")),
     path("plans/", include("one.plans.urls")),
+    path("products/", include("one.products.urls")),
     path("tools/", include("one.tools.urls")),
     path("faqs/", include("one.faqs.urls")),
     path("clients/", include("one.clients.urls")),

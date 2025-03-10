@@ -37,6 +37,8 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
     topics = models.ManyToManyField("base.Topic")
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse_lazy("product-detail", kwargs={"slug": self.slug})
