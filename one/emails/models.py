@@ -222,7 +222,7 @@ class PostalMessage(Model):
     status = models.CharField(max_length=128, null=True)
     details = models.CharField(max_length=512, null=True)
     output = models.CharField(max_length=512, null=True)
-    time = models.FloatField(default=0.0)
+    time = models.FloatField(default=0.0, null=True)
     sent_with_ssl = models.BooleanField(default=False)
     timestamp = models.FloatField(null=True)
     token = models.CharField(max_length=128, null=True)
