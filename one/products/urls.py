@@ -4,8 +4,12 @@ from . import feeds, views
 
 urlpatterns = [
     path("<str:slug>", views.ProductDetailView.as_view(), name="product-detail"),
-    # Feeds
-    path("pins/etsy/en", feeds.EtsyProductPinFeed("en")),
-    path("pins/etsy/de", feeds.EtsyProductPinFeed("de")),
-    path("pins/etsy/es", feeds.EtsyProductPinFeed("es")),
+    # Feeds - produts
+    path("pins/products/en", feeds.ProductPinFeed("en")),
+    path("pins/products/de", feeds.ProductPinFeed("de")),
+    path("pins/products/es", feeds.ProductPinFeed("es")),
+    # Feeds - Etsy listings
+    path("pins/etsy/en", feeds.EtsyListingPinFeed("en")),
+    path("pins/etsy/de", feeds.EtsyListingPinFeed("de")),
+    path("pins/etsy/es", feeds.EtsyListingPinFeed("es")),
 ]

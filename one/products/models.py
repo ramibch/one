@@ -94,6 +94,8 @@ class EtsyShop(TranslatableModel):
         validators=[MinValueValidator(50), MaxValueValidator(300)],
     )
     etsy_payload = models.JSONField(null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
 
     @cached_property
     def api_client(self):
@@ -114,6 +116,9 @@ class EtsyShop(TranslatableModel):
 
 
 class EtsyListing(Model):
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
     shop = ForeignKey(EtsyShop, on_delete=models.CASCADE)
     product = ForeignKey("products.Product", on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(
