@@ -1,7 +1,7 @@
-from one.base.utils.generic_views import MultilinguageDetailView
+from django.views.generic.detail import DetailView
 
 from .models import Product
 
 
-class ProductDetailView(MultilinguageDetailView):
+class ProductDetailView(DetailView):
     model = Product
