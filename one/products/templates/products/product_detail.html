@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+  <!-- Hero Section -->
+  <section class="grid">
+    <div>
+      <h1>{{ object.title }}</h1>
+      <p>
+        <strong>{{ object.price }} €</strong>
+      </p>
+      <br>
+      <center>
+        {% if object.etsylisting_set.first %}
+            <a role="button" class="col-6" href="{{ object.etsylisting_set.first.url }}">{% translate 'Check out' %}</a>
+        {% endif %}
+      </center>
+      <br>
+    </div>
+    {% if object.productimage_set.first %}
+        <div>
+            <img src="{{ object.productimage_set.first.file.url }}" width="100%" />
+        </div>
+    {% endif %}
+  </section>
+
+{% endblock %}
