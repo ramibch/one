@@ -15,7 +15,7 @@ User = get_user_model()
 
 
 class Path(Model):
-    name = models.CharField(max_length=256, unique=True, db_index=True)
+    name = models.CharField(max_length=512, unique=True, db_index=True)
     is_spam = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -31,7 +31,7 @@ class Client(Model):
     geoinfo = ForeignKey("geo.GeoInfo", null=True, on_delete=models.SET_NULL)
     ip_address = models.GenericIPAddressField(unique=True, db_index=True)
     is_blocked = models.BooleanField(default=False)
-    user_agent = models.CharField(max_length=255, null=True)
+    user_agent = models.CharField(max_length=512, null=True)
     dark_theme = models.BooleanField(default=True)
 
     def __str__(self):

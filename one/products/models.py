@@ -118,6 +118,7 @@ class EtsyShop(TranslatableModel):
 class EtsyListing(Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+    include_generic_description = models.BooleanField(default=True)
 
     shop = ForeignKey(EtsyShop, on_delete=models.CASCADE)
     product = ForeignKey("products.Product", on_delete=models.CASCADE)
@@ -160,7 +161,12 @@ class EtsyListing(Model):
         return self.product.title
 
     def get_description(self) -> str:
-        return f"{self.product.description}\n\n{self.shop.generic_listing_description}"
+        if self.include_generic_description:
+            return (
+                f"{self.product.description}\n\n{self.shop.generic_listing_description}"
+            )
+        else:
+            return self.product.description
 
     def get_tags(self) -> list[str]:
         return list(self.product.topics.all().values_list("name", flat=True))
