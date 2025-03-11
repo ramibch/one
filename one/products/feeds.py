@@ -63,10 +63,10 @@ class EtsyListingPinFeed(Feed):
         )
 
     def item_title(self, item: EtsyListing):
-        return item.title
+        return item.get_title()
 
     def item_description(self, item: EtsyListing):
-        return item.description
+        return item.get_description()
 
     def item_lastupdated(self, item: EtsyListing):
         return item.updated_on
