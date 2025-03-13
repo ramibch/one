@@ -10,3 +10,24 @@
   </section>
 {% endcache %}
 {% endblock content %}
+
+{% block extra_js %}
+  <!-- https://blog.qualys.com/vulnerabilities-threat-research/2024/06/28/polyfill-io-supply-chain-attack -->
+  <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.js?features=es6"></script>
+  <script defer src="{% static 'js/tex-mml-chtml.js' %}"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true},
+        jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"],
+        extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js","AssistiveMML.js", "[Contrib]/a11y/accessibility-menu.js"],
+        TeX: {
+        extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
+        equationNumbers: {
+        autoNumber: "AMS"
+        }
+      }
+    });
+  </script>
+{% endblock extra_js %}
