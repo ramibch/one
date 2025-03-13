@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+
 {% block head_title %}Quizzes | English Stuff Online{% endblock %}
+
 {% block content %}
   <center>
     <h1 class="my-5">Learn English Online!</h1>
@@ -35,4 +37,4 @@
     </form>
     <div class="row my-5" id="quizzes">{% include "quiz/partials/quiz_list.html" %}</div>
   </center>
-{% endblock %}
+{% endblock content %}

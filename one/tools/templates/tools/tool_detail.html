@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static i18n %}
+{% load i18n static %}
 {% block content %}
     <h1>
         <center>
@@ -22,7 +22,7 @@
             </form>
         </div>
         <div {% if object.html_cols == True %}class="col-md-{{ object.html_col2 }}"{% endif %}
-             id="results">{% trans "The result will be displayed here" %}</div>
+             id="results">{% translate "The result will be displayed here" %}</div>
     </section>
     {% include "tools/partials/body_md.html" %}
     {% include "tools/partials/related_tools.html" %}

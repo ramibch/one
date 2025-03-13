@@ -1,20 +1,18 @@
 {
-  "[python]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.codeActionsOnSave": {
-      "source.fixAll": "explicit",
-      "source.organizeImports": "explicit"
-    }
-  },
-  "commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,target,out,build,bin,obj,vendor,venv}/**/*",
-  "ruff.interpreter": [
-    ".venv/bin/python"
-  ],
-  "editor.formatOnSave": true,
-  "ruff.configuration": "pyproject.toml",
-  "python.analysis.autoImportCompletions": true,
-  "python.analysis.typeCheckingMode": "basic",
-  "ruff.format.preview": true,
-  "python.analysis.autoFormatStrings": true
+	"[python]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "charliermarsh.ruff",
+		"editor.codeActionsOnSave": {
+			"source.fixAll": "explicit",
+			"source.organizeImports": "explicit"
+		}
+	},
+	"commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,target,out,build,bin,obj,vendor,venv}/**/*",
+	"ruff.interpreter": [".venv/bin/python"],
+	"editor.formatOnSave": true,
+	"ruff.configuration": "pyproject.toml",
+	"python.analysis.autoImportCompletions": true,
+	"python.analysis.typeCheckingMode": "basic",
+	"ruff.format.preview": true,
+	"python.analysis.autoFormatStrings": true
 }

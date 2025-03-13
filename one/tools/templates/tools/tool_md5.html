@@ -12,24 +12,24 @@
     <div class="g-col-6">
       <article>
         <header>
-          <h2>{% trans "Input data" %}</h2>
+          <h2>{% translate "Input data" %}</h2>
         </header>
-        <label for="in_strInput">{% trans "String input" %}</label>
+        <label for="in_strInput">{% translate "String input" %}</label>
         <input id="in_strInput"
                type="text"
                x-model="in_str"
                x-on:keyup="copy_clicked = false; update();"
-               placeholder="{% trans "Your string input" %}" />
+               placeholder="{% translate "Your string input" %}" />
         <div x-show="show_salt" x-transition>
-          <label for="saltInput">{% trans "Secret key (salt)" %}</label>
+          <label for="saltInput">{% translate "Secret key (salt)" %}</label>
           <input id="saltInput"
                  type="text"
                  x-model="salt"
                  x-on:keyup="copy_clicked = false; update();"
-                 placeholder="{% trans "Your arbitrary secret key" %}" />
+                 placeholder="{% translate "Your arbitrary secret key" %}" />
         </div>
         <button x-on:click="show_salt = !show_salt; copy_clicked = false; if(!show_salt){salt=''}; update()"
-                x-text="show_salt ? '{% trans "Remove salt" %}' : '{% trans "Add salt" %}' "></button>
+                x-text="show_salt ? '{% translate "Remove salt" %}' : '{% translate "Add salt" %}' "></button>
         <footer>
           <small>{% include "tools/partials/no_data_storage.txt" %}</small>
         </footer>
@@ -38,12 +38,12 @@
     <div class="g-col-6">
       <article>
         <header>
-          <h2>{% trans "Results" %}</h2>
+          <h2>{% translate "Results" %}</h2>
         </header>
         <p x-text="out"></p>
         <footer>
           <button x-on:click="navigator.clipboard.writeText(out); copy_clicked = true"
-                  x-text="copy_clicked ?  '🙂 {% trans "Copied!" %}' : '📋 {% trans "Copy" %}'"></button>
+                  x-text="copy_clicked ?  '🙂 {% translate "Copied!" %}' : '📋 {% translate "Copy" %}'"></button>
         </footer>
       </article>
     </div>
@@ -51,6 +51,7 @@
   {% include "tools/partials/body_md.html" %}
   {% include "tools/partials/related_tools.html" %}
 {% endblock content %}
+
 {% block extra_js %}
   <script>
     !(function (n) {

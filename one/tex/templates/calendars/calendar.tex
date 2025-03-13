@@ -19,10 +19,10 @@
 \usetikzlibrary{calc}
 \usetikzlibrary{calendar}
 \renewcommand*\familydefault{\sfdefault}
-\def\year{ {{- year -}} }
+\def\year{ {{ - year - }} }
 
 {% raw %}
-\newcommand{\link}[1]{{\color{blue}\href{#1}{#1}}}
+\newcommand{\link}[1]{{ \color{blue}\href{#1}{#1 }}}
 \def\termin#1#2{
     \node [anchor=north west, text width= 3.4cm] at
     ($(cal-#1.north west)+(3em, 0em)$) {\tiny{#2}};
@@ -37,7 +37,7 @@
   \Large\textbf{ {{ title }} }\hfill
 }
 {% if footer_url %}
-\cfoot{\footnotesize\texttt{  \link{ {{- footer_url -}} } }}
+\cfoot{\footnotesize\texttt{  \link{ {{ - footer_url - }} } }}
 {% else %}
 \cfoot{\footnotesize\texttt{  }}
 {% endif %}
@@ -70,20 +70,20 @@
     {
       \tikzset{every day/.style={fill=white}}
     }{}
-    \ifdate{Saturday}{\tikzset{every day/.style={fill={{color}}!10}}}{}
-    \ifdate{Sunday}{\tikzset{every day/.style={fill={{color}}!20}}}{}
-    {%- for holiday in holidays_part1 -%}
-    \ifdate{equals= {{- holiday.tex_date() -}} }{\tikzset{every day/.style={fill={{holiday_color}}!20}}}{}
-    {%- endfor -%}
+    \ifdate{Saturday}{\tikzset{every day/.style={fill={{ color }}!10}}}{}
+    \ifdate{Sunday}{\tikzset{every day/.style={fill={{ color }}!20}}}{}
+    {% - for holiday in holidays_part1 - %}
+    \ifdate{equals= {{ - holiday.tex_date() - }} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
+    {% - endfor - %}
     },
  execute at begin day scope=
   {
     \pgftransformyshift{-.53*\pgfcalendarcurrentday cm}
   }
 ];
-{%- for holiday in holidays_part1 -%}
-\termin{ {{- holiday.tex_date() -}} }{ {{- holiday.title -}} }
-{%- endfor -%}
+{% - for holiday in holidays_part1 - %}
+\termin{ {{ - holiday.tex_date() - }} }{ {{ - holiday.title - }} }
+{% - endfor - %}
 \end{tikzpicture}
 \pagebreak
 \begin{tikzpicture}[every day/.style={anchor = north}]
@@ -106,7 +106,7 @@
     \ifdate{day of month=1} {
     \pgftransformxshift{4.8cm}
     \draw (0,0)node [shape=rectangle, minimum height= .53cm,
-      text width = 4.4cm, fill = {{color}}, text= white, draw = gray, text centered]
+      text width = 4.4cm, fill = {{ color }}, text= white, draw = gray, text centered]
     {
       \textbf{\pgfcalendarmonthname{\pgfcalendarcurrentmonth}}
     };
@@ -115,11 +115,11 @@
   {
     \tikzset{every day/.style={fill=white}}
   }{}
-  \ifdate{Saturday}{\tikzset{every day/.style={fill={{color}}!10}}}{}
-  \ifdate{Sunday}{\tikzset{every day/.style={fill={{color}}!20}}}{}
-  {%- for holiday in holidays_part2 -%}
-    \ifdate{equals= {{- holiday.tex_date() -}} }{\tikzset{every day/.style={fill={{holiday_color}}!20}}}{}
-  {%- endfor -%}
+  \ifdate{Saturday}{\tikzset{every day/.style={fill={{ color }}!10}}}{}
+  \ifdate{Sunday}{\tikzset{every day/.style={fill={{ color }}!20}}}{}
+  {% - for holiday in holidays_part2 - %}
+    \ifdate{equals= {{ - holiday.tex_date() - }} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
+  {% - endfor - %}
   },
   execute at begin day scope=
   {
@@ -127,9 +127,9 @@
   }
 ];
 
-{%- for holiday in holidays_part2 -%}
-\termin{ {{- holiday.tex_date() -}} }{ {{- holiday.title -}} }
-{%- endfor -%}
+{% - for holiday in holidays_part2 - %}
+\termin{ {{ - holiday.tex_date() - }} }{ {{ - holiday.title - }} }
+{% - endfor - %}
 \end{tikzpicture}
 \end{center}
 \end{document}

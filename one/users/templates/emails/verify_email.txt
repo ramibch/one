@@ -1,7 +1,7 @@
 {% spaceless %}
 {% load i18n %}
 {% url "account_email" as email_url_path %}
-{% blocktrans with user_display=user.display_name  host=site.domain  %}
+{% blocktranslate with user_display=user.display_name host=site.domain %}
 Hello {{ user_display }}
 
 Thank you for registering on my site. Please, consider to confirm your email address, just do this:
@@ -13,5 +13,5 @@ Thank you for registering on my site. Please, consider to confirm your email add
 3. Go to your email inbox and confirm your email address by clicking on the link.
 
 Thank you very much.
-{% endblocktrans %}
+{% endblocktranslate %}
 {% endspaceless %}

@@ -1,11 +1,11 @@
 \documentclass{article}
 \usepackage[
-pattern={{- pattern -}},
-patternsize={{- patternsize -}},
-{%- if fullpage -%}fullpage{%- else -%}textarea{%- endif -%},
-colorset={{- colorset -}},
+pattern={{ - pattern - }},
+patternsize={{ - patternsize - }},
+{% - if fullpage - %}fullpage{% - else - %}textarea{% - endif - %},
+colorset={{ - colorset - }},
 bgcolor=white,
-geometry={ {{- papersize -}}, {{- orientation -}}, margin={{- margin -}}}
+geometry={ {{ - papersize - }}, {{ - orientation - }}, margin={{ - margin - }}}
 ]{gridpapers}
 \begin{document}
 \thispagestyle{empty}

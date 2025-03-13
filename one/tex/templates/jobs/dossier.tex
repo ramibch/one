@@ -1,6 +1,6 @@
 % !TeX encoding = utf8
 
-\documentclass[a4paper, {{- application.profile.latex_pt -}}pt]{report}
+\documentclass[a4paper, {{ - application.profile.latex_pt - }}pt]{report}
 \usepackage[T1]{fontenc}
 \usepackage{helvet}
 \usepackage[utf8]{inputenc}
@@ -10,9 +10,9 @@
 \usepackage{fontawesome5}
 \usepackage{eso-pic}
 \usepackage{charter}
-\usepackage[ {{- application.latex_lang -}} ]{babel}
+\usepackage[ {{ - application.latex_lang - }} ]{babel}
 %\usepackage[left=25mm, right=20mm, top=20mm, bottom=20mm]{geometry}
-\usepackage[left={{- application.profile.margin_left -}}, right={{- application.profile.margin_right -}}, top={{- application.profile.margin_top -}}, bottom={{- application.profile.margin_bottom -}}]{geometry}
+\usepackage[left={{ - application.profile.margin_left - }}, right={{ - application.profile.margin_right - }}, top={{ - application.profile.margin_top - }}, bottom={{ - application.profile.margin_bottom - }}]{geometry}
 \usepackage{enumitem}
 \usepackage{titlesec}
 \usepackage{parskip}
@@ -33,11 +33,11 @@
 % Edit the following
 
 % Personal information
-\newcommand{\profilelinkedin}{ {% if application.profile.linkedin %} \href{https://linkedin.com/in/ {{- application.profile.linkedin -}} }{\faLinkedinIn\enspace {{ application.profile.linkedin }} } {% endif %} }
-\newcommand{\profilegithub}{ {% if application.profile.github %} \href{https://github.com/ {{- application.profile.github -}} }{\faGithub\enspace {{ application.profile.github }} } {% endif %} }
-\newcommand{\profilewebsite}{ {% if application.profile.has_website %} \href{ {{- application.profile.website_url -}} }{\faLink\enspace {{ application.profile.website_label }} } {% endif %} }
-\newcommand{\profileemail}{ \href{mailto: {{- application.profile.email -}} }{\faEnvelope\enspace {{ application.profile.email }}}  }
-\newcommand{\profilephone}{ \href{tel: {{- application.profile.cleaned_phone -}} }{\faPhone\enspace {{ application.profile.phone }}} }
+\newcommand{\profilelinkedin}{ {% if application.profile.linkedin %} \href{https://linkedin.com/in/ {{ - application.profile.linkedin - }} }{\faLinkedinIn\enspace {{ application.profile.linkedin }} } {% endif %} }
+\newcommand{\profilegithub}{ {% if application.profile.github %} \href{https://github.com/ {{ - application.profile.github - }} }{\faGithub\enspace {{ application.profile.github }} } {% endif %} }
+\newcommand{\profilewebsite}{ {% if application.profile.has_website %} \href{ {{ - application.profile.website_url - }} }{\faLink\enspace {{ application.profile.website_label }} } {% endif %} }
+\newcommand{\profileemail}{ \href{mailto: {{ - application.profile.email - }} }{\faEnvelope\enspace {{ application.profile.email }}}  }
+\newcommand{\profilephone}{ \href{tel: {{ - application.profile.cleaned_phone - }} }{\faPhone\enspace {{ application.profile.phone }}} }
 
 \begin{document}
 
@@ -51,7 +51,7 @@
 
   % Title
   \vspace{.7\baselineskip}
-  {\huge \textbf{ {{- application.profile.fullname -}}  }}
+  {\huge \textbf{ {{ - application.profile.fullname - }}  }}
 
   % Subtitle
   \vspace*{.5cm}
@@ -61,7 +61,7 @@
 
   \vspace{20mm}
   % Report logo.
-  \includegraphics[width={{- application.profile.photo_width -}}\textwidth]{ {{- application.profile.local_photo_path -}} }
+  \includegraphics[width={{ - application.profile.photo_width - }}\textwidth]{ {{ - application.profile.local_photo_path - }} }
 
   \vspace{10mm}
   \large
@@ -95,21 +95,21 @@
 \today\\
 
 \vspace{-3mm}
-{{- application.job.recruiter.name -}}\\
-{{- application.job.company.name | latex_escape -}}\\
-{{ application.job.company.address | linebreaks}}
+{{ - application.job.recruiter.name - }}\\
+{{ - application.job.company.name | latex_escape - }}\\
+{{ application.job.company.address|linebreaks }}
 
 \begin{center}
-\textbf{ {{- application.title | latex_escape -}} }\\
+\textbf{ {{ - application.title | latex_escape - }} }\\
 \vspace{15mm}
 \end{center}
 
-\vspace{-3mm}{{- application.message_salutation -}}\\
+\vspace{-3mm}{{ - application.message_salutation - }}\\
 
 % Body
 \vspace{-3mm}\setlength\parindent{24pt}
 
-{{ application.processed_letter_body | latex_escape }}
+{{ application.processed_letter_body|latex_escape }}
 
 \vspace{5mm}
 
@@ -117,12 +117,12 @@
 \vspace{10mm}
 
 \begin{flushleft}
-{{- application.message_closing -}}\\
+{{ - application.message_closing - }}\\
 
-{{- application.profile.fullname -}}\\
+{{ - application.profile.fullname - }}\\
 
 \vspace{3mm}
-\includegraphics[width=40mm]{ {{- application.profile.local_signature_path -}} }
+\includegraphics[width=40mm]{ {{ - application.profile.local_signature_path - }} }
 % \vspace{-3mm}
 
 \end{flushleft}
@@ -131,19 +131,19 @@
 
 {% if application.hiringreason_set.count() > 0 %}
 \begin{center}
-  {\fontsize{28}{0}\selectfont {{ application.profile.why_me | latex_escape }} }
+  {\fontsize{28}{0}\selectfont {{ application.profile.why_me|latex_escape }} }
 \end{center}
 
 {% if application.why_me_description %}
 \vspace{5mm}
-{{ application.why_me_description | linebreaks | latex_escape }}
+{{ application.why_me_description|linebreaks|latex_escape }}
 {% endif %}
 
 \vspace{5mm}
 {% for reason in application.hiringreason_set.all() %}
-\textbf{ {{- reason.job_item | linebreaks | latex_escape -}} }
+\textbf{ {{ - reason.job_item | linebreaks | latex_escape - }} }
 \begin{tcolorbox}
-  {{ reason.answer | linebreaks | latex_escape }}
+  {{ reason.answer|linebreaks|latex_escape }}
 \end{tcolorbox}
 \vspace{5mm}
 {% endfor %}
@@ -155,7 +155,7 @@
 \begin{center}
   \textbf{\Huge {{ application.profile.fullname }}} \\
   \vspace{2mm}
-  \faIcon{briefcase} {{ application.profile.job_title | latex_escape }}
+  \faIcon{briefcase} {{ application.profile.job_title|latex_escape }}
 \end{center}
 
 \vspace{4mm}
@@ -170,25 +170,25 @@
 {% if application.profile.about %}
 \space
 \section*{\faIcon{user} {{ application.profile.about_label }} }
-{{ application.profile.about | latex_escape }}
+{{ application.profile.about|latex_escape }}
 {% endif %}
 
 
 {% if application.profile.experience_set.count() > 0 %}
 \section*{\faIcon{building} {{ application.profile.experience_label }} }
 {% for exp in application.profile.experience_set.all() %}
-\subsection*{ {{- exp.company_name | latex_escape -}} \hfill {{ exp.from_to | latex_escape }}  }
-\textit{ {{- exp.job_title -}} } \vspace{3mm} \\
-{{ exp.description | latex_escape | linebreaks }}
+\subsection*{ {{ - exp.company_name | latex_escape - }} \hfill {{ exp.from_to|latex_escape }}  }
+\textit{ {{ - exp.job_title - }} } \vspace{3mm} \\
+{{ exp.description|latex_escape|linebreaks }}
 {% endfor %}
 {% endif %}
 
 {% if application.profile.education_set.count() > 0 %}
 \section*{\faIcon{graduation-cap} {{ application.profile.education_label }}}
 {% for edu in application.profile.education_set.all() %}
-\subsection*{ {{- edu.institution_name | latex_escape -}} \hfill {{ edu.from_to | latex_escape }} }
-\textit{ {{- edu.title | latex_escape -}} } \vspace{3mm} \\
-{{ edu.description | latex_escape | linebreaks }}
+\subsection*{ {{ - edu.institution_name | latex_escape - }} \hfill {{ edu.from_to|latex_escape }} }
+\textit{ {{ - edu.title | latex_escape - }} } \vspace{3mm} \\
+{{ edu.description|latex_escape|linebreaks }}
 {% endfor %}
 {% endif %}
 
@@ -197,7 +197,7 @@
 \begin{center}
   \begin{itemize}[label=\faIcon{check}, itemsep=-3pt]
       {% for skill in application.profile.skill_set.all() %}
-      \item {{ skill.name | latex_escape }}
+      \item {{ skill.name|latex_escape }}
       {% endfor %}
   \end{itemize}
 \end{center}
@@ -207,7 +207,7 @@
 \section*{\faIcon{certificate} {{ application.profile.certificate_label }}}
 \begin{itemize}[label=\faIcon{certificate}]
   {% for cert in application.profile.certificate_set.all() %}
-  \item {{ cert.name | latex_escape }}
+  \item {{ cert.name|latex_escape }}
   {% endfor %}
 \end{itemize}
 {% endif %}
@@ -216,8 +216,8 @@
 \section*{\faIcon{code} {{ application.profile.project_label }}}
 {% for proj in application.profile.project_set.all() %}
 \subsection*{
-  {% if proj.url %} \href{ {{- proj.url -}} }{ {{- proj.title | latex_escape -}} } {% else %} {{- proj.title -}} {% endif %}
-  {% if proj.from_to %} ({{ proj.from_to | latex_escape }}) {% endif %}  }
+  {% if proj.url %} \href{ {{ - proj.url - }} }{ {{ - proj.title | latex_escape - }} } {% else %} {{ - proj.title - }} {% endif %}
+  {% if proj.from_to %} ({{ proj.from_to|latex_escape }}) {% endif %}  }
 {{ proj.description }}
 {% endfor %}
 {% endif %}

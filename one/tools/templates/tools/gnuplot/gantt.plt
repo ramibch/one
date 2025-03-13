@@ -1,6 +1,6 @@
 $DATA << EOD
 #Task start      end
-{{ self.data}}
+{{ self.data }}
 EOD
 
 set xdata time

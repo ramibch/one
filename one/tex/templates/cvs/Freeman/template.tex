@@ -53,7 +53,7 @@
 
 	\medskip % Vertical whitespace
 
-	{\cursivefont\Huge\textcolor{headings}{  {{- profile.get_tex_value("jobtitle") -}} }}
+	{\cursivefont\Huge\textcolor{headings}{  {{ - profile.get_tex_value("jobtitle") - }} }}
 
 	\vfill % Push content to the top of the box
 }
@@ -62,14 +62,14 @@
 %	EDUCATION
 %----------------------------------------------------------------------------------------
 {% if profile.education_active and profile.education_set.count() > 0 %}
-\section{ {{- profile.get_tex_value("education_label") -}} }
+\section{ {{ - profile.get_tex_value("education_label") - }} }
 {% for education in profile.education_set.all() %}
 \jobentry
-	{ {{- education.get_tex_value("start_date") -}} -- {{- education.get_tex_value("end_date") -}} }
+	{ {{ - education.get_tex_value("start_date") - }} -- {{ - education.get_tex_value("end_date") - }} }
 	{} % FT/PT (full time or part time)
-	{ {{- education.get_tex_value("institution") -}} }
-	{ {{- education.get_tex_value("title") -}} }
-	{ {{- education.get_tex_value("description") -}} }
+	{ {{ - education.get_tex_value("institution") - }} }
+	{ {{ - education.get_tex_value("title") - }} }
+	{ {{ - education.get_tex_value("description") - }} }
 {% endfor %}
 {% endif %}
 
@@ -80,14 +80,14 @@
 %----------------------------------------------------------------------------------------
 
 {% if profile.experience_active and profile.experience_set.count() > 0 %}
-\section{ {{- profile.experience_label -}} }
+\section{ {{ - profile.experience_label - }} }
 {% for experience in profile.experience_set.all() %}
 \jobentry
 	{ {{ experience.get_tex_value("start_date") }} - {{ experience.get_tex_value("end_date") }} } % Duration
 	{} % FT/PT (full time or part time)
-	{ {{- experience.get_tex_value("company") -}} } % Employer
-	{ {{- experience.get_tex_value("title") -}} } % Job title
-	{ {{- experience.get_tex_value("description") | linebreaks -}} } % Description
+	{ {{ - experience.get_tex_value("company") - }} } % Employer
+	{ {{ - experience.get_tex_value("title") - }} } % Job title
+	{ {{ - experience.get_tex_value("description") | linebreaks - }} } % Description
 {% endfor %}
 {% endif %}
 
@@ -95,14 +95,14 @@
 
 
 {% if profile.publication_active and profile.publication_set.count() > 0 %}
-\section{ {{- profile.get_tex_value("publication_label") -}} }
+\section{ {{ - profile.get_tex_value("publication_label") - }} }
 {% for publication in profile.publication_set.all() %}
 \jobentry
-	{ {{- publication.get_tex_value("date") -}} }
+	{ {{ - publication.get_tex_value("date") - }} }
 	{} % FT/PT (full time or part time)
-	{ {{- publication.get_tex_value("publisher") -}} }
-	{ {{- publication.get_tex_value("title") -}} }
-	{ {{- publication.get_tex_value("authors") -}} }
+	{ {{ - publication.get_tex_value("publisher") - }} }
+	{ {{ - publication.get_tex_value("title") - }} }
+	{ {{ - publication.get_tex_value("authors") - }} }
 {% endfor %}
 {% endif %}
 
@@ -129,11 +129,11 @@
 			{% endif %}
 
 			{% if profile.email_active %}
-			\raisebox{-1pt}{\small\faEnvelope} & \href{mailto: {{- profile.get_tex_value("email") -}} }{ {{- profile.get_tex_value("email") -}} } \\ % Email address
+			\raisebox{-1pt}{\small\faEnvelope} & \href{mailto: {{ - profile.get_tex_value("email") - }} }{ {{ - profile.get_tex_value("email") - }} } \\ % Email address
 			{% endif %}
 
 			{% if profile.website_active %}
-			\raisebox{-1pt}{\small\faDesktop} & \href{ {{- profile.get_tex_value("website") -}} }{ {{- profile.get_tex_value("website") -}} } \\ % Website
+			\raisebox{-1pt}{\small\faDesktop} & \href{ {{ - profile.get_tex_value("website") - }} }{ {{ - profile.get_tex_value("website") - }} } \\ % Website
 			{% endif %}
 
 		\end{supertabular}
@@ -143,7 +143,7 @@
 
 
 
-\section{ {{- profile.get_tex_value("about_label") -}} }
+\section{ {{ - profile.get_tex_value("about_label") - }} }
 
 {{ profile.get_tex_value("about") }}
 
@@ -152,30 +152,30 @@
 
 % skills
 {% if profile.skill_active and profile.skill_set.count() > 0 %}
-\section{ {{- profile.get_tex_value("skill_label") -}} }
+\section{ {{ - profile.get_tex_value("skill_label") - }} }
 \begin{supertabular}{r l} % Start a table with two columns, the table will ensure everything is aligned
 	{% for skill in profile.skill_set.all() %}
-		\tableentry{ {{- skill.get_level_as_tikzcircles(n=5) -}} }{ {{- skill.get_tex_value("name") -}} }{spaceafter}
+		\tableentry{ {{ - skill.get_level_as_tikzcircles(n=5) - }} }{ {{ - skill.get_tex_value("name") - }} }{spaceafter}
 	{% endfor %}
 \end{supertabular}
 {% endif %}
 
 % languages
 {% if profile.language_active and profile.languageability_set.count() > 0 %}
-\section{ {{- profile.get_tex_value("language_label") -}} }
+\section{ {{ - profile.get_tex_value("language_label") - }} }
 \begin{supertabular}{r l} % Start a table with two columns, the table will ensure everything is aligned
 	{% for language in profile.languageability_set.all() %}
-		\tableentry{ {{- language.get_level_as_tikzcircles(n=5) -}} }{ {{- language.get_tex_value("name") -}} }{spaceafter}
+		\tableentry{ {{ - language.get_level_as_tikzcircles(n=5) - }} }{ {{ - language.get_tex_value("name") - }} }{spaceafter}
 	{% endfor %}
 \end{supertabular}
 {% endif %}
 
 % achievements
 {% if profile.achievement_active and profile.achievement_set.count() > 0 %}
-\section{ {{- profile.achievement_label -}} }
+\section{ {{ - profile.achievement_label - }} }
 \begin{supertabular}{r l} % Start a table with two columns, the table will ensure everything is aligned
 {% for achievement in profile.achievement_set.all() %}
-	\tableentry{ {{- achievement.get_tex_value("date") -}} }{ {{- achievement.get_tex_value("title") -}} }{spaceafter}
+	\tableentry{ {{ - achievement.get_tex_value("date") - }} }{ {{ - achievement.get_tex_value("title") - }} }{spaceafter}
 {% endfor %}
 \end{supertabular}
 {% endif %}
@@ -183,14 +183,14 @@
 
 
 {% if profile.project_active and profile.project_set.count() > 0 %}
-\section{ {{- profile.project_label -}} }
+\section{ {{ - profile.project_label - }} }
 {% for project in profile.project_set.all() %}
 \jobentry
-	{ {{- project.get_tex_value("organization") -}} } % Duration
+	{ {{ - project.get_tex_value("organization") - }} } % Duration
 	{} % FT/PT (full time or part time)
 	{} % Employer
-	{ {{- project.get_tex_value("title") -}} }
-	{ {{- project.get_tex_value("role") -}} }
+	{ {{ - project.get_tex_value("title") - }} }
+	{ {{ - project.get_tex_value("role") - }} }
 {% endfor %}
 {% endif %}
 

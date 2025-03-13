@@ -11,12 +11,12 @@
         <textarea class="col-10"
                   type="text"
                   name="message"
-                  placeholder="✍ {% trans 'Write something' %}"></textarea>
+                  placeholder="✍ {% translate 'Write something' %}"></textarea>
         <div class="col-2">
-          <button>{% trans "Send" %} ➡️</button>
+          <button>{% translate "Send" %} ➡️</button>
         </div>
       </form>
     </header>
     {% include "chat/message_list.html" %}
   </article>
-{% endblock %}
+{% endblock content %}

@@ -1,8 +1,9 @@
 {% extends "base.html" %}
-{% load i18n l10n djmoney pricing %}
+{% load djmoney i18n l10n pricing %}
 {% block head_title %}
   {% translate "Plan" %} | {{ plan.name }}
-{% endblock %}
+{% endblock head_title %}
+
 {% block content %}
   {% get_plan_price request=request plan=plan as plan_price %}
   <div class="container">

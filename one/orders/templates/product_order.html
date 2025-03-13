@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block head_title %}
-    {% trans "Thank you for your order" %}
+    {% translate "Thank you for your order" %}
 {% endblock head_title %}
+
 {% block content %}
     <center>
         <i>{{ object.uuid }}</i>
         <hr>
         <br>
-        <h1>{% trans "Thank you for your order" %} 🙂</h1>
+        <h1>{% translate "Thank you for your order" %} 🙂</h1>
         <p>
-            {% trans "The order will be sent to the following Email Address shortly:" %} <i> <b>  {{ object.customer.email }} </b></i>
+            {% translate "The order will be sent to the following Email Address shortly:" %} <i> <b>  {{ object.customer.email }} </b></i>
         </p>
-        <a href="{{ object.invoice_pdf_url }}">{% trans "Get invoice" %}</a>
+        <a href="{{ object.invoice_pdf_url }}">{% translate "Get invoice" %}</a>
     </center>
 {% endblock content %}

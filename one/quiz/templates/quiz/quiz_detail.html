@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+
 {% block head_title %}{{ quiz.name }} | English Stuff Online{% endblock %}
+
 {% block content %}
   <a href="{{ quiz.get_list_url }}">Back</a>
   <h1>{{ quiz.name }}</h1>
@@ -15,4 +17,4 @@
       {% endfor %}
     </div>
   </div>
-{% endblock %}
+{% endblock content %}

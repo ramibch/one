@@ -16,7 +16,7 @@
                   hx-swap="outerHTML">🗑️</span>
           </span>
         {% endif %}
-        <b>[<i>{{ message.time }}</i>] {{ message.user.display_name }}</b>: {{ message.body | linebreaks }}
+        <b>[<i>{{ message.time }}</i>] {{ message.user.display_name }}</b>: {{ message.body|linebreaks }}
       </p>
       <br>
       {% if message.first_in_the_day %}

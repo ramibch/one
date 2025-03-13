@@ -1,7 +1,7 @@
 {% load i18n static %}
 <div class="row">
   <!-- Footer items (with links)-->
-  {% for item  in footer_items %}
+  {% for item in footer_items %}
     <aside {% if footer_items.count == 3 %} class="col-md-4" {% elif footer_items.count == 2 %} class="col-md-6" {% else %} class="col-md-3" {% endif %}>
       <p>
         <strong>{{ item.display_title }}</strong>

@@ -5,38 +5,38 @@
     {% url 'account_email' as email_url_ %}
     {% if email_url_ %}
       <li>
-        <a href="{{ email_url_ }}?ref=userdashboard" class="contrast">{% trans "Change Email" %}</a>
+        <a href="{{ email_url_ }}?ref=userdashboard" class="contrast">{% translate "Change Email" %}</a>
       </li>
     {% endif %}
     {% url 'account_change_password' as change_password_url_ %}
     {% if change_password_url_ %}
       <li>
-        <a href="{{ change_password_url_ }}?ref=userdashboard" class="contrast">{% trans "Change Password" %}</a>
+        <a href="{{ change_password_url_ }}?ref=userdashboard" class="contrast">{% translate "Change Password" %}</a>
       </li>
     {% endif %}
     {% url 'socialaccount_connections' as connections_url_ %}
     {% if connections_url_ %}
       <li>
-        <a href="{{ connections_url_ }}?ref=userdashboard" class="contrast">{% trans "Account Connections" %}</a>
+        <a href="{{ connections_url_ }}?ref=userdashboard" class="contrast">{% translate "Account Connections" %}</a>
       </li>
     {% endif %}
     {% url 'mfa_index' as mfa_url_ %}
     {% if mfa_url_ %}
       <li>
-        <a href="{{ mfa_url_ }}?ref=userdashboard" class="contrast">{% trans "Two-Factor Authentication" %}</a>
+        <a href="{{ mfa_url_ }}?ref=userdashboard" class="contrast">{% translate "Two-Factor Authentication" %}</a>
       </li>
     {% endif %}
     {% url 'usersessions_list' as usersessions_list_url_ %}
     {% if usersessions_list_url_ %}
       <li>
         <a href="{{ usersessions_list_url_ }}?ref=userdashboard"
-           class="contrast">{% trans "Sessions" %}</a>
+           class="contrast">{% translate "Sessions" %}</a>
       </li>
     {% endif %}
     {% url 'account_logout' as logout_url_ %}
     {% if logout_url_ %}
       <li>
-        <a href="{{ logout_url_ }}?ref=userdashboard" class="contrast">{% trans "Sign Out" %}</a>
+        <a href="{{ logout_url_ }}?ref=userdashboard" class="contrast">{% translate "Sign Out" %}</a>
       </li>
     {% endif %}
   </ul>

@@ -2,7 +2,8 @@
 {% load question_related_tags %}
 {% block head_title %}
   {{ question.lection.quiz.name }} | {{ question.lection.name }} | {{ question.text_one }} ___ {{ question.text_two }}
-{% endblock %}
+{% endblock head_title %}
+
 {% block content %}
   <!-- when the answer is checked, we update the progress bar -->
   <div hx-get="{{ question.update_progress_bar_url }}"
@@ -118,4 +119,4 @@
     </dialog>
   </div>
   <div id="progress-bar" class="mt-5">{% include "quiz/partials/progress_bar.html" %}</div>
-{% endblock %}
+{% endblock content %}

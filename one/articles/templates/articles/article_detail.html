@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% load markdownify cache %}
+{% load cache markdownify %}
 {% block content %}
   {% cache 1 article article.id %}
   <section>
     <h1>{{ object.title }}</h1>
   </section>
   <section id="article-body">
-    {{ object.body | markdownify }}
+    {{ object.body|markdownify }}
   </section>
 {% endcache %}
 {% endblock content %}
