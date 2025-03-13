@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load cache markdownify %}
+{% load cache markdownify static %}
 {% block content %}
   {% cache 1 article article.id %}
   <section>
