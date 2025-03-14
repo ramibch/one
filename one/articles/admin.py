@@ -20,9 +20,11 @@ class ArticlesSubmoduleAdmin(admin.ModelAdmin):
 @admin.register(Article)
 class ArticleAdmin(TranslationAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    list_display = ("__str__", "featured", "created_on", "updated_on")
+    # list_display = ("__str__", "featured", "created_on", "updated_on")
+    list_display = ("__str__",)
     readonly_fields = (
         "title",
+        "slug",
         "parent_folder",
         "folder_name",
         "subfolder_name",

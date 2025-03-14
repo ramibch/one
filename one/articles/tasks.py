@@ -21,7 +21,7 @@ def sync_articles(sites=None):
 
     submodule = ArticleParentFolder.submodule
     submodule_path = ArticleParentFolder.submodule_path
-    sites = sites or Site.production.all()
+    sites = sites or Site.objects.all()
 
     to_admin = f"🔄 Syncing {submodule}\n\n"
 
@@ -74,8 +74,10 @@ def sync_articles(sites=None):
                         article=article,
                         name=file_path.name,
                     )[0]
-                    db_file.file = File(file_path.open(mode="rb"), name=file_path.name)
-                    db_file.save()
+
+                    with file_path.open(mode="rb") as f:
+                        db_file.file = File(f, name=file_path.name)
+                        db_file.save()
                     body_replacements[f"]({db_file.name})"] = f"]({db_file.file.url})"
 
                 # Adjust body if markdown file includes files

@@ -51,6 +51,8 @@ ALLOWED_HOSTS = [
     "nicecv.online",
 ]
 
+ALLOWED_HOSTS = [h for h in env.list("ALLOWED_HOSTS", delimiter="\n") if h != ""]
+
 
 INTERNAL_IPS = ["127.0.0.1"]
 

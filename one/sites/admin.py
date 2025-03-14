@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
-from modeltranslation.admin import TranslationAdmin
 
 from one.base.utils.actions import translate_fields
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
@@ -11,9 +10,12 @@ from .models import Site
 
 
 @admin.register(Site)
-class SiteAdmin(TranslationAdmin):
+class SiteAdmin(admin.ModelAdmin):
+    # list_display = ("domain", "brand_name", "picocss_color", "remarks")
+    # has issues: setup_admin_integration.<locals>.display_for_field()
+    # got an unexpected keyword argument 'avoid_link'
+    list_display = ("__str__",)
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    list_display = ("domain", "brand_name", "picocss_color", "remarks")
     readonly_fields = ("domain",)
     actions = ["sync_articles", "sync_pages", translate_fields]
     fieldsets = (
