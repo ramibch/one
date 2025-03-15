@@ -22,7 +22,7 @@ def sync_books(sites=None):
     # Definitions and checks
     submodule = Book.submodule
     submodule_path = Book.submodule_path
-    sites = sites or Site.production.all()
+    sites = sites or Site.objects.all()
 
     to_admin = f"🔄 Syncing {submodule}\n\n"
 

@@ -20,7 +20,7 @@ def sync_pages(sites=None):
     # Definitions and checks
     submodule = PageParentFolder.submodule
     submodule_path = PageParentFolder.submodule_path
-    sites = sites or Site.production.all()
+    sites = sites or Site.objects.all()
     to_admin = f"🔄 Syncing {submodule}\n\n"
 
     for site in sites:

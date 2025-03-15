@@ -77,8 +77,8 @@ def translate_modeltranslation_objects(
             from_lang = db_obj.get_default_language()
             from_field = f"{field}_{from_lang}"
             from_value = getattr(db_obj, from_field)
-            if from_value is None:
-                log += f"Not translating the field {from_field} since it is null.\n"
+            if from_value is None or not isinstance(from_value, str):
+                log += f"No translation for '{from_field}': null or not a string.\n"
                 continue
 
             log += f"{from_lang}: {from_value}\n"

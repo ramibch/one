@@ -44,7 +44,7 @@ class Client(Model):
         except cls.DoesNotExist:
             obj = cls(
                 ip_address=cls.DUMMY_IP_ADDRESS,
-                site=Site.development.first(),
+                site=Site.objects.first(),
             )
             obj.save()
             return obj

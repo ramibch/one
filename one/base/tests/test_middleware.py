@@ -40,7 +40,7 @@ class TestOneMiddleware(TestCase):
     ip = "133.194.187.245"
 
     def get_response(self, ip_address, path="/"):
-        site = Site.development.first()
+        site = Site.objects.first()
         request = self.request_factory.get(path, HTTP_HOST=site.domain)
         request.ip_address = ip_address
         request.user = UserFactory()
@@ -66,7 +66,7 @@ class TestOneMiddleware(TestCase):
         lang: str = Languages.EN,
         rest_langs: None | list = None,
     ):
-        site = Site.development.first()
+        site = Site.objects.first()
         if rest_langs:
             site.rest_languages = rest_langs
             site.save()
@@ -103,7 +103,7 @@ class TestOneMiddleware(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_save_request_skip_saving(self):
-        site = Site.development.first()
+        site = Site.objects.first()
         request = self.request_factory.get("/", HTTP_HOST=site.domain)
         request.ip_address = self.ip
         request.user = SuperuserFactory()

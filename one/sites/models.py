@@ -4,7 +4,7 @@ from auto_prefetch import Manager, Model
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import ManyToManyField, Q, QuerySet
+from django.db.models import ManyToManyField, QuerySet
 from django.db.models.signals import pre_delete, pre_save
 from django.http.request import split_domain_port
 from django.urls import reverse
@@ -18,18 +18,6 @@ from one.base.utils.db import ChoiceArrayField
 from one.menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
 SITE_CACHE = {}
-
-LOCAL_EXPRESSION = Q(domain__icontains="localhost") | Q(domain__icontains="127.0.0.1")
-
-
-class ProductionSiteManager(Manager):
-    def get_queryset(self):
-        return super().get_queryset().exclude(LOCAL_EXPRESSION)
-
-
-class DevelopmentSiteManager(Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(LOCAL_EXPRESSION)
 
 
 def _simple_domain_name_validator(value):
@@ -141,14 +129,12 @@ class Site(TranslatableModel):
     page_folders = ManyToManyField("pages.PageParentFolder", blank=True)
     books = ManyToManyField("books.Book", blank=True)
 
-    objects = SiteManager()
-    production = ProductionSiteManager()
-    development = DevelopmentSiteManager()
-
     # SEO
     page_title = models.CharField(max_length=64)
     page_description = models.TextField(max_length=256)
     page_keywords = models.TextField(max_length=128)
+
+    objects = SiteManager()
 
     def __str__(self):
         return self.domain
