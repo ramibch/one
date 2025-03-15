@@ -5,8 +5,6 @@ import django.db.models.deletion
 import django.db.models.manager
 from django.db import migrations, models
 
-import one.base.utils.mixins
-
 
 class Migration(migrations.Migration):
 
@@ -71,7 +69,7 @@ class Migration(migrations.Migration):
                 "abstract": False,
                 "base_manager_name": "prefetch_manager",
             },
-            bases=(models.Model, one.base.utils.mixins.PageMixin),
+            # bases=(models.Model, one.base.utils.mixins.PageMixin),
             managers=[
                 ("objects", django.db.models.manager.Manager()),
                 ("prefetch_manager", django.db.models.manager.Manager()),
@@ -453,7 +451,7 @@ class Migration(migrations.Migration):
                 "abstract": False,
                 "base_manager_name": "prefetch_manager",
             },
-            bases=(models.Model, one.base.utils.mixins.PageMixin),
+            # bases=(models.Model, one.base.utils.mixins.PageMixin),
             managers=[
                 ("objects", django.db.models.manager.Manager()),
                 ("prefetch_manager", django.db.models.manager.Manager()),

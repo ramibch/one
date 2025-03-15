@@ -1,9 +1,9 @@
 from auto_prefetch import ForeignKey, Model
 from django.db import models
 from django.urls import reverse_lazy
+from django.utils.functional import cached_property
 
 from one.base.utils.abstracts import BaseSubmoduleFolder
-from one.base.utils.mixins import PageMixin
 
 
 class PageParentFolder(BaseSubmoduleFolder, submodule="pages"):
@@ -12,7 +12,7 @@ class PageParentFolder(BaseSubmoduleFolder, submodule="pages"):
     pass
 
 
-class Page(Model, PageMixin):
+class Page(Model):
     """Page model"""
 
     parent_folder = ForeignKey("pages.PageParentFolder", on_delete=models.CASCADE)
@@ -33,3 +33,7 @@ class Page(Model, PageMixin):
 
     def get_absolute_url(self):
         return reverse_lazy("page-detail", kwargs={"slug": self.slug})
+
+    @cached_property
+    def url(self):
+        return self.get_absolute_url()

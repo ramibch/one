@@ -1,4 +1,4 @@
-from auto_prefetch import Model
+from auto_prefetch import ForeignKey
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse, reverse_lazy
@@ -6,12 +6,14 @@ from django.utils.functional import cached_property
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
 
-from one.base.utils.mixins import PageMixin
+from one.base.utils.abstracts import TranslatableModel
 
 
-class Plan(Model, PageMixin):
-    # TODO: Make translatable
-    title = models.CharField(max_length=256, editable=False)
+class Plan(TranslatableModel):
+    LANG_ATTR = "site__language"
+    LANGS_ATTR = "site__languages"
+    site = ForeignKey("sites.Site", on_delete=models.CASCADE)
+    title = models.CharField(max_length=256)
     description = models.CharField(max_length=128, null=True)
     slug = models.SlugField(max_length=128, unique=True, editable=False)
     price_min = MoneyField(
@@ -23,6 +25,10 @@ class Plan(Model, PageMixin):
 
     def get_absolute_url(self):
         return reverse_lazy("plan_detail", kwargs={"slug": self.slug})
+
+    @cached_property
+    def url(self):
+        return self.get_absolute_url()
 
     def get_price(self, country_code="CH"):
         pass

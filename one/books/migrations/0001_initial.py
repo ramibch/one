@@ -5,7 +5,7 @@ import django.db.models.deletion
 import django.db.models.manager
 from django.db import migrations, models
 
-import one.base.utils.mixins
+
 import one.books.models
 
 
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 "base_manager_name": "prefetch_manager",
                 "unique_together": {("folder_name", "subfolder_name")},
             },
-            bases=(models.Model, one.base.utils.mixins.PageMixin),
+            # bases=(models.Model, one.base.utils.mixins.PageMixin),
             managers=[
                 ("objects", django.db.models.manager.Manager()),
                 ("prefetch_manager", django.db.models.manager.Manager()),
