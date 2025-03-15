@@ -21,11 +21,6 @@ class ArticleParentFolder(BaseSubmoduleFolder, submodule="articles"):
 class Article(TranslatableModel):
     """Article model"""
 
-    language = models.CharField(
-        max_length=4,
-        choices=Languages,
-        default=Languages.EN,
-    )
     languages = ChoiceArrayField(
         models.CharField(max_length=8, choices=Languages),
         default=list,
