@@ -5,7 +5,9 @@ from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from one.base import Languages
 from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
+from one.base.utils.db import ChoiceArrayField
 
 User = get_user_model()
 
@@ -19,6 +21,16 @@ class ArticleParentFolder(BaseSubmoduleFolder, submodule="articles"):
 class Article(TranslatableModel):
     """Article model"""
 
+    language = models.CharField(
+        max_length=4,
+        choices=Languages,
+        default=Languages.EN,
+    )
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=Languages),
+        default=list,
+        blank=True,
+    )
     parent_folder = ForeignKey(ArticleParentFolder, on_delete=models.CASCADE)
     title = models.CharField(max_length=256, editable=False)
     slug = models.SlugField(max_length=128, editable=False, db_index=True)
@@ -33,6 +45,10 @@ class Article(TranslatableModel):
 
     def get_absolute_url(self):
         return reverse_lazy("article-detail", kwargs={"slug": self.slug})
+
+    @cached_property
+    def url(self):
+        return self.get_absolute_url()
 
     def __str__(self):
         return f"{self.folder_name}/{self.subfolder_name}"
