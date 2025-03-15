@@ -6,7 +6,6 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
-from one.base.utils.mixins import PageMixin
 
 User = get_user_model()
 
@@ -17,10 +16,15 @@ class ArticleParentFolder(BaseSubmoduleFolder, submodule="articles"):
     pass
 
 
-class Article(TranslatableModel, PageMixin):
+class Article(TranslatableModel):
     """Article model"""
 
-    parent_folder = ForeignKey("articles.ArticleParentFolder", on_delete=models.CASCADE)
+    # LANG_ATTR_LIST = ["LANG_VALUE"]
+    # LANGS_ATTR_LIST = ["LANGS_VALUE"]
+    # LANG_VALUE = DefaultLanguage
+    # LANGS_VALUE = Languages.values
+
+    parent_folder = ForeignKey(ArticleParentFolder, on_delete=models.CASCADE)
     title = models.CharField(max_length=256, editable=False)
     slug = models.SlugField(max_length=128, editable=False, db_index=True)
     folder_name = models.CharField(max_length=128, editable=False)
@@ -52,7 +56,7 @@ def get_article_file_path(obj, filename: str):
 class ArticleFile(Model):
     """Article file model"""
 
-    article = ForeignKey("articles.Article", on_delete=models.CASCADE)
+    article = ForeignKey(Article, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     file = models.FileField(upload_to=get_article_file_path)
 
@@ -61,7 +65,7 @@ class ArticleFile(Model):
 
 
 class Comment(Model):
-    article = ForeignKey("articles.Article", on_delete=models.CASCADE)
+    article = ForeignKey(Article, on_delete=models.CASCADE)
     author = ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(_("Comment"), max_length=512)
 

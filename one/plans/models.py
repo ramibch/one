@@ -10,6 +10,7 @@ from one.base.utils.mixins import PageMixin
 
 
 class Plan(Model, PageMixin):
+    # TODO: Make translatable
     title = models.CharField(max_length=256, editable=False)
     description = models.CharField(max_length=128, null=True)
     slug = models.SlugField(max_length=128, unique=True, editable=False)

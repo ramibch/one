@@ -1,4 +1,4 @@
-from auto_prefetch import ForeignKey, Model, OneToOneField
+from auto_prefetch import ForeignKey, Manager, Model, OneToOneField
 from django.contrib.auth import get_user_model
 from django.core.files.storage import storages
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -16,16 +16,35 @@ from etsyv3.models.listing_request import (
     CreateListingTranslationRequest,
 )
 
+from one.base import Languages
 from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
+from one.base.utils.db import ChoiceArrayField
 from one.base.utils.telegram import Bot
 from one.etsy.enums import ListingType, TaxonomyID, WhenMade, WhoMade
 
 User = get_user_model()
 
 
+class ProductManager(Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return super().get_queryset().filter(is_draft=False)
+
+
 class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     """Product model as folder"""
 
+    LANG_ATTR = "language"
+    LANGS_ATTR = "languages"
+    language = models.CharField(
+        max_length=4,
+        choices=Languages,
+        default=Languages.EN,
+    )
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=Languages),
+        default=list,
+        blank=True,
+    )
     title = models.CharField(max_length=128)
     slug = models.SlugField(max_length=128)
     description = models.TextField(blank=True, null=True)
@@ -39,6 +58,9 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     topics = models.ManyToManyField("base.Topic")
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+    is_draft = models.BooleanField(default=True)
+
+    objects = ProductManager()
 
     def get_absolute_url(self):
         return reverse_lazy("product-detail", kwargs={"slug": self.slug})
@@ -83,6 +105,18 @@ class ProductImage(Model):
 
 
 class EtsyShop(TranslatableModel):
+    LANG_ATTR = "language"
+    LANGS_ATTR = "languages"
+    language = models.CharField(
+        max_length=4,
+        choices=Languages,
+        default=Languages.EN,
+    )
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=Languages),
+        default=list,
+        blank=True,
+    )
     user_shop_auth = OneToOneField("etsy.EtsyAuth", on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=64, default="Shop example")
     generic_listing_description = models.TextField()
@@ -235,7 +269,7 @@ class EtsyListing(Model):
                 )
 
         # Translations
-        for lang in self.shop.languages_without_default:
+        for lang in self.shop.get_languages_without_default():
             with translation.override(lang):
                 listing_translation = CreateListingTranslationRequest(
                     title=self.get_title(),

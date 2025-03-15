@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.contrib.sessions.models import Session
 from django.db.migrations.recorder import MigrationRecorder
-from modeltranslation.admin import TranslationAdmin
 
 from .models import Topic
-from .utils.actions import translate_fields
+from .utils.admin import TranslatableModelAdmin
 
 
 @admin.register(MigrationRecorder.Migration)
@@ -21,5 +20,6 @@ class SessionAdmin(admin.ModelAdmin):
 
 
 @admin.register(Topic)
-class TopicAdmin(TranslationAdmin):
-    actions = [translate_fields]
+class TopicAdmin(TranslatableModelAdmin):
+    list_display = ("name", "slug", "language", "is_public")
+    list_filter = ("language", "is_public")

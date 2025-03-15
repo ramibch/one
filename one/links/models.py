@@ -5,7 +5,9 @@ from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..base.utils.abstracts import TranslatableModel
+from one.base import Languages
+from one.base.utils.abstracts import TranslatableModel
+from one.base.utils.db import ChoiceArrayField
 
 DJ_PATHS = (
     # Only url paths without path arguments
@@ -34,15 +36,50 @@ class LinkManager(Manager):
 
 
 class Link(TranslatableModel):
-    __optional = {"null": True, "blank": True}
-    __foreignkey_args = __optional | {"on_delete": models.CASCADE}
-    custom_title = models.CharField(max_length=128, **__optional)
-    external_url = models.URLField(max_length=256, **__optional)
-    django_url_path = models.CharField(max_length=32, choices=DJ_PATHS, **__optional)
-    page = ForeignKey("pages.Page", **__foreignkey_args)
-    plan = ForeignKey("plans.Plan", **__foreignkey_args)
-    article = ForeignKey("articles.Article", **__foreignkey_args)
-    topic = ForeignKey("base.Topic", **__foreignkey_args)
+    LANG_ATTR = "language"
+    LANGS_ATTR = "languages"
+    language = models.CharField(
+        max_length=4,
+        choices=Languages,
+        default=Languages.EN,
+    )
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=Languages),
+        default=list,
+        blank=True,
+    )
+    custom_title = models.CharField(max_length=128, null=True, blank=True)
+    external_url = models.URLField(max_length=256, null=True, blank=True)
+    django_url_path = models.CharField(
+        max_length=32,
+        choices=DJ_PATHS,
+        null=True,
+        blank=True,
+    )
+    page = ForeignKey(
+        "pages.Page",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    plan = ForeignKey(
+        "plans.Plan",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    article = ForeignKey(
+        "articles.Article",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    topic = ForeignKey(
+        "base.Topic",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
 
     objects: LinkManager = LinkManager()
 

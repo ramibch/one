@@ -13,6 +13,8 @@ class FAQCategory(models.TextChoices):
 
 
 class FAQ(TranslatableModel):
+    LANG_ATTR = "sites__language"
+    LANGS_ATTR = "sites__languages"
     sites = models.ManyToManyField("sites.Site")
     category = models.CharField(max_length=32, choices=FAQCategory)
     question = models.CharField(max_length=256)

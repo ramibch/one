@@ -7,7 +7,7 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..base.utils.abstracts import TranslatableModel
+from one.base.utils.abstracts import TranslatableModel
 
 
 class ShowTypes(models.TextChoices):
@@ -61,6 +61,8 @@ class NavbarLink(Model):
 
 
 class FooterItem(TranslatableModel):
+    LANG_ATTR = "sites__language"
+    LANGS_ATTR = "sites__languages"
     sites = models.ManyToManyField("sites.Site")
     emoji = models.CharField(
         max_length=8,

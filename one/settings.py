@@ -42,17 +42,7 @@ REDIS_CONNECTION_POOL = RedisConnectionPool.from_url(url=REDIS_URL)
 ##################
 """
 
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "ramib.ch",
-    "dgttests.es",
-    "ramiboutas.com",
-    "englishstuff.online",
-    "nicecv.online",
-]
-
 ALLOWED_HOSTS = [h for h in env.list("ALLOWED_HOSTS", delimiter="\n") if h != ""]
-
 
 INTERNAL_IPS = ["127.0.0.1"]
 
@@ -147,7 +137,7 @@ TEMPLATES = [
     {
         "NAME": "tex",
         "BACKEND": "one.tex.backend.TeXEngine",
-        "DIRS": [BASE_DIR / "one" / "_tex_templates"],
+        "DIRS": [BASE_DIR / "one" / "_templates_tex"],
         "APP_DIRS": True,
         "OPTIONS": {
             "environment": "one.tex.environment.environment",

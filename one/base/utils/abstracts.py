@@ -1,15 +1,12 @@
 import subprocess
 from copy import copy
+from itertools import chain
+from statistics import mode
 
 from auto_prefetch import Model
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
-
-from one.base import Languages
-from one.base.utils.db import ChoiceArrayField
 
 from .exceptions import SubmoduleException
 
@@ -59,6 +56,56 @@ class BaseSubmoduleFolder(Model):
             )
 
 
+class TranslatableModel(Model):
+    LANG_ATTR = None
+    LANGS_ATTR = None
+
+    @cached_property
+    def language_count(self):
+        return len(self.get_languages())
+
+    def get_default_language(self):
+        if self.LANG_ATTR is None:
+            raise ValueError("LANG_ATTR not defined in model.")
+
+        langs = list(
+            set(
+                self.__class__.objects.filter(pk=self.pk).values_list(
+                    self.LANG_ATTR, flat=True
+                )
+            )
+        )
+
+        if len(langs) == 0 or settings.LANGUAGE_CODE in langs:
+            return settings.LANGUAGE_CODE
+        elif len(langs) == 1:
+            return langs[0]
+        else:
+            return mode(langs)
+
+    def get_languages(self):
+        if self.LANGS_ATTR is None:
+            raise ValueError("LANGS_ATTR not defined in model.")
+
+        if self.pk is None:
+            raise ValueError("No Primary Key set.")
+
+        lists_of_langs = self.__class__.objects.filter(pk=self.pk).values_list(
+            self.LANGS_ATTR, flat=True
+        )
+        flattened_list = chain.from_iterable(lists_of_langs)
+
+        return list(dict.fromkeys(flattened_list))
+
+    def get_languages_without_default(self):
+        langs = copy(self.get_languages())
+        langs.remove(self.get_default_language())
+        return langs
+
+    class Meta(Model.Meta):
+        abstract = True
+
+
 class SingletonModel(Model):
     """Singleton Django Model"""
 
@@ -74,34 +121,3 @@ class SingletonModel(Model):
     @classmethod
     def get(cls):
         return cls.load()
-
-
-class TranslatableModel(Model):
-    default_language = models.CharField(
-        max_length=4,
-        choices=Languages,
-        default=Languages.EN,
-    )
-    languages = ChoiceArrayField(
-        models.CharField(max_length=8, choices=Languages),
-        default=list,
-        blank=True,
-    )
-
-    @cached_property
-    def language_count(self):
-        return len(self.languages)
-
-    @cached_property
-    def languages_without_default(self):
-        langs = copy(self.languages)
-        langs.remove(self.default_language)
-        return langs
-
-    def clean(self):
-        super().clean()
-        if self.default_language not in self.languages:
-            raise ValidationError(_("Default language must be included in languages"))
-
-    class Meta(Model.Meta):
-        abstract = True

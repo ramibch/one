@@ -1,10 +1,11 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse_lazy
-from django.utils import translation
 from django.utils.functional import cached_property
 from django.utils.text import slugify
+
+from one.base import Languages
+from one.base.utils.db import ChoiceArrayField
 
 from ..articles.models import Article
 from ..products.models import Product
@@ -14,6 +15,19 @@ User = get_user_model()
 
 
 class Topic(TranslatableModel):
+    LANG_ATTR = "language"
+    LANGS_ATTR = "languages"
+
+    language = models.CharField(
+        max_length=4,
+        choices=Languages,
+        default=Languages.EN,
+    )
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=Languages),
+        default=list,
+        blank=True,
+    )
     name = models.CharField(max_length=32)
     slug = models.SlugField(max_length=32, unique=True, blank=True, db_index=True)
     is_public = models.BooleanField(default=False)
@@ -46,7 +60,8 @@ class Topic(TranslatableModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        for lang in settings.LANGUAGE_CODES:
-            with translation.override(lang):
-                setattr(self, f"slug_{lang}", slugify(self.name))
+        for lang in Languages.values:
+            name = getattr(self, f"name_{lang}", None)
+            if name:
+                setattr(self, f"slug_{lang}", slugify(name))
         super().save(*args, **kwargs)

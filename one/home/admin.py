@@ -1,35 +1,35 @@
 from django.contrib import admin
-from django.forms.widgets import CheckboxSelectMultiple
-from modeltranslation.admin import TranslationAdmin
+from modeltranslation.admin import TranslationStackedInline
 
-from one.base.utils.actions import translate_fields
-from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT, TranslatableModelAdmin
 
-from ..base.utils.db import ChoiceArrayField
 from .models import ArticlesSection, FAQsSection, HeroSection, Home
 
 
-@admin.register(Home)
-class HomeAdmin(TranslationAdmin):
+class ArticlesSectionInline(TranslationStackedInline):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    actions = [translate_fields]
+    model = ArticlesSection
+    extra = 0
+
+
+@admin.register(Home)
+class HomeAdmin(TranslatableModelAdmin):
     list_display = ("__str__", "title", "site")
+    inlines = (ArticlesSectionInline,)
 
 
 @admin.register(FAQsSection)
-class FAQsSectionAdmin(TranslationAdmin):
-    formfield_overrides = {ChoiceArrayField: {"widget": CheckboxSelectMultiple}}
+class FAQsSectionAdmin(TranslatableModelAdmin):
+    pass
 
 
 @admin.register(ArticlesSection)
-class ArticlesSectionAdmin(TranslationAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    actions = [translate_fields]
+class ArticlesSectionAdmin(TranslatableModelAdmin):
+    pass
 
 
 @admin.register(HeroSection)
-class HomeHeroAdmin(TranslationAdmin):
+class HomeHeroAdmin(TranslatableModelAdmin):
     list_display = ("headline", "cta_link", "image")
     list_editable = ("cta_link", "image")
     list_filter = ("home",)
-    actions = [translate_fields]

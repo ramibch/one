@@ -1,8 +1,6 @@
 from django.contrib import admin
-from modeltranslation.admin import TranslationAdmin
 
-from one.base.utils.actions import translate_fields
-from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+from one.base.utils.admin import TranslatableModelAdmin
 
 from .models import EtsyListing, EtsyShop, Product, ProductFile, ProductImage
 from .tasks import task_generate_listings_from_products, task_upload_listings
@@ -15,10 +13,8 @@ class ProductFileAdmin(admin.ModelAdmin):
 
 
 @admin.register(Product)
-class ProductAdmin(TranslationAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class ProductAdmin(TranslatableModelAdmin):
     readonly_fields = ("name",)
-    actions = [translate_fields]
 
 
 @admin.register(EtsyListing)
@@ -33,11 +29,10 @@ class ListingAdmin(admin.ModelAdmin):
 
 
 @admin.register(EtsyShop)
-class ShopAdmin(TranslationAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class ShopAdmin(TranslatableModelAdmin):
     list_display = ("__str__", "price_percentage")
     readonly_fields = ("etsy_payload",)
-    actions = [translate_fields, "generate_listings", "get_payload"]
+    actions = ["generate_listings", "get_payload", "translate_fields"]
 
     @admin.action(description="🚀 Create listings from products using topics")
     def generate_listings(modeladmin, request, queryset):

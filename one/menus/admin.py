@@ -1,15 +1,8 @@
 from django.contrib import admin
-from django.db import models
-from django.forms import CheckboxSelectMultiple
-from modeltranslation.admin import TranslationAdmin
 
-from one.base.utils.actions import translate_fields
+from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT, TranslatableModelAdmin
 
 from .models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
-
-FORMFIELD_OVERRIDES_DICT = {
-    models.ManyToManyField: {"widget": CheckboxSelectMultiple},
-}
 
 
 @admin.register(NavbarLink)
@@ -31,6 +24,7 @@ class FooterLinkInline(admin.StackedInline):
     model = FooterLink
     extra = 1
     exclude = ("site",)
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -38,13 +32,11 @@ class FooterLinkInline(admin.StackedInline):
 
 
 @admin.register(FooterItem)
-class FooterItemAdmin(TranslationAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class FooterItemAdmin(TranslatableModelAdmin):
     list_display = ("display_title", "emoji", "show_type", "order")
     list_editable = ("emoji", "show_type", "order")
     list_filter = ("show_type", "order")
     inlines = (FooterLinkInline,)
-    actions = [translate_fields]
 
 
 @admin.register(FooterLink)

@@ -3,12 +3,12 @@ from io import StringIO
 import yaml
 from django.conf import settings
 from django.core.management import call_command
-from django.db.models import Model, QuerySet
+from django.db.models import QuerySet
 from huey import crontab
 from huey.contrib import djhuey as huey
 from huey.signals import SIGNAL_CANCELED, SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_REVOKED
 
-from .utils.abstracts import BaseSubmoduleFolder
+from .utils.abstracts import BaseSubmoduleFolder, TranslatableModel
 from .utils.telegram import Bot
 from .utils.translation import translate_text
 
@@ -65,7 +65,7 @@ def sync_submodule_folders_task():
 
 @huey.db_task()
 def translate_modeltranslation_objects(
-    queryset: QuerySet[type[Model]],
+    queryset: QuerySet[TranslatableModel],
     fields: list[str],
 ):
     log = "🈂️ Translating a multilanguage queryset:\n\n"
@@ -74,7 +74,7 @@ def translate_modeltranslation_objects(
         count = 0
 
         for field in fields:
-            from_lang = db_obj.default_language
+            from_lang = db_obj.get_default_language()
             from_field = f"{field}_{from_lang}"
             from_value = getattr(db_obj, from_field)
             if from_value is None:
@@ -82,7 +82,7 @@ def translate_modeltranslation_objects(
                 continue
 
             log += f"{from_lang}: {from_value}\n"
-            for to_lang in db_obj.languages:
+            for to_lang in db_obj.get_languages_without_default():
                 to_field = f"{field}_{to_lang}"
                 if (
                     hasattr(db_obj, to_field)

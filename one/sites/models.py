@@ -12,7 +12,9 @@ from django.utils.functional import cached_property
 from django.utils.timezone import timedelta
 from django.utils.translation import gettext_lazy as _
 
+from one.base import Languages
 from one.base.utils.abstracts import TranslatableModel
+from one.base.utils.db import ChoiceArrayField
 from one.menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
 SITE_CACHE = {}
@@ -93,6 +95,19 @@ class PicoCssColor(models.TextChoices):
 
 
 class Site(TranslatableModel):
+    LANG_ATTR = "language"
+    LANGS_ATTR = "languages"
+    language = models.CharField(
+        max_length=4,
+        choices=Languages,
+        default=Languages.EN,
+    )
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=Languages),
+        default=list,
+        blank=True,
+    )
+
     domain = models.CharField(
         _("Name"),
         max_length=32,
