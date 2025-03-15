@@ -19,11 +19,6 @@ class ArticleParentFolder(BaseSubmoduleFolder, submodule="articles"):
 class Article(TranslatableModel):
     """Article model"""
 
-    # LANG_ATTR_LIST = ["LANG_VALUE"]
-    # LANGS_ATTR_LIST = ["LANGS_VALUE"]
-    # LANG_VALUE = DefaultLanguage
-    # LANGS_VALUE = Languages.values
-
     parent_folder = ForeignKey(ArticleParentFolder, on_delete=models.CASCADE)
     title = models.CharField(max_length=256, editable=False)
     slug = models.SlugField(max_length=128, editable=False, db_index=True)

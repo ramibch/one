@@ -18,8 +18,7 @@ from ..faqs.models import FAQ, FAQCategory
 
 
 class Home(TranslatableModel):
-    LANG_ATTR_LIST = ["site", "default_language"]
-    LANGS_ATTR_LIST = ["site", "languages"]
+    LANG_ATTR = "sites__language"
     LANGS_ATTR = "sites__languages"
     site = OneToOneField("sites.Site", on_delete=models.CASCADE)
     title = models.CharField(max_length=64, default="")
