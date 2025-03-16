@@ -5,7 +5,6 @@ from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.text import slugify
 
-from one.base import Languages
 from one.base.utils.db import ChoiceArrayField
 
 from ..articles.models import Article
@@ -15,26 +14,17 @@ from .utils.abstracts import TranslatableModel
 User = get_user_model()
 
 
-class DummyModel(TranslatableModel):
-    name = models.CharField(max_length=32)
-    languages = ChoiceArrayField(
-        models.CharField(max_length=8, choices=settings.LANGUAGES),
-        default=list,
-        blank=True,
-    )
-
-
 class Topic(TranslatableModel):
     LANG_ATTR = "language"
     LANGS_ATTR = "languages"
 
     language = models.CharField(
         max_length=4,
-        choices=Languages,
-        default=Languages.EN,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
     )
     languages = ChoiceArrayField(
-        models.CharField(max_length=8, choices=Languages),
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
         default=list,
         blank=True,
     )
@@ -70,7 +60,7 @@ class Topic(TranslatableModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        for lang in Languages.values:
+        for lang in settings.LANGUAGE_CODES:
             name = getattr(self, f"name_{lang}", None)
             if name:
                 setattr(self, f"slug_{lang}", slugify(name))

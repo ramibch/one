@@ -1,12 +1,12 @@
 from http import HTTPStatus
 
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.test import RequestFactory
 from django.urls import reverse
 
-from one.base import Languages
 from one.sites.models import Site
 from one.test import SimpleTestCase, TestCase
 from one.users.factories import SuperuserFactory, UserFactory
@@ -63,12 +63,12 @@ class TestOneMiddleware(TestCase):
     def get_response_from_set_language(
         self,
         user: AnonymousUser | User,
-        lang: str = Languages.EN,
-        rest_langs: None | list = None,
+        lang: str = settings.LANGUAGE_CODE,
+        langs: None | list = None,
     ):
         site = Site.objects.first()
-        if rest_langs:
-            site.rest_languages = rest_langs
+        if langs:
+            site.languages = langs
             site.save()
 
         url = reverse("set_language")
@@ -98,7 +98,7 @@ class TestOneMiddleware(TestCase):
         response = self.get_response_from_set_language(
             user=AnonymousUser(),
             lang=lang,
-            rest_langs=[Languages.DE, Languages.ES],
+            langs=["de", "es"],
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
 

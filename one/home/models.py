@@ -18,14 +18,10 @@ from ..faqs.models import FAQ, FAQCategory
 
 
 class Home(TranslatableModel):
-    LANG_ATTR = "sites__language"
-    LANGS_ATTR = "sites__languages"
+    LANG_ATTR = "site__language"
+    LANGS_ATTR = "site__languages"
     site = OneToOneField("sites.Site", on_delete=models.CASCADE)
     title = models.CharField(max_length=64, default="")
-
-    # Titles
-    benefits_title = models.CharField(max_length=64, null=True, blank=True)
-    steps_title = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
         return f"{self.title} 🌐{self.site}"
@@ -153,13 +149,11 @@ class ProblemSection(HomeChildModel):
 
 
 class SolutionSection(HomeChildModel):
-    home = OneToOneField(Home, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     description = models.TextField()
 
 
 class BenefitsSection(HomeChildModel):
-    home = OneToOneField(Home, on_delete=models.CASCADE)
     emoji = models.CharField(max_length=8)
 
 
@@ -171,7 +165,6 @@ class StepAction(HomeChildModel):
 
 
 class FAQsSection(HomeChildModel):
-    home = OneToOneField(Home, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     categories = ChoiceArrayField(models.CharField(max_length=32, choices=FAQCategory))
 

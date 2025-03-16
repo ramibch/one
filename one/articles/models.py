@@ -1,11 +1,11 @@
 from auto_prefetch import ForeignKey, Model
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from one.base import Languages
 from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
 from one.base.utils.db import ChoiceArrayField
 
@@ -22,7 +22,7 @@ class Article(TranslatableModel):
     """Article model"""
 
     languages = ChoiceArrayField(
-        models.CharField(max_length=8, choices=Languages),
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
         default=list,
         blank=True,
     )

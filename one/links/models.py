@@ -1,11 +1,11 @@
 from auto_prefetch import ForeignKey, Manager
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from one.base import Languages
 from one.base.utils.abstracts import TranslatableModel
 from one.base.utils.db import ChoiceArrayField
 
@@ -40,11 +40,11 @@ class Link(TranslatableModel):
     LANGS_ATTR = "languages"
     language = models.CharField(
         max_length=4,
-        choices=Languages,
-        default=Languages.EN,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
     )
     languages = ChoiceArrayField(
-        models.CharField(max_length=8, choices=Languages),
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
         default=list,
         blank=True,
     )

@@ -1,15 +1,14 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
 
-from ..base import Languages
-
 
 class User(AbstractUser):
     asked_to_verify_email = models.BooleanField(default=False)
     country_code = models.CharField(max_length=8, null=True)
-    language = models.CharField(max_length=8, choices=Languages.choices, null=True)
+    language = models.CharField(max_length=8, choices=settings.LANGUAGES, null=True)
     sites = models.ManyToManyField("sites.Site", blank=True)
     possible_spam = models.BooleanField(default=False)
 

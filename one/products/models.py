@@ -1,4 +1,5 @@
 from auto_prefetch import ForeignKey, Manager, Model, OneToOneField
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.storage import storages
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -16,7 +17,6 @@ from etsyv3.models.listing_request import (
     CreateListingTranslationRequest,
 )
 
-from one.base import Languages
 from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
 from one.base.utils.db import ChoiceArrayField
 from one.base.utils.telegram import Bot
@@ -37,11 +37,11 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     LANGS_ATTR = "languages"
     language = models.CharField(
         max_length=4,
-        choices=Languages,
-        default=Languages.EN,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
     )
     languages = ChoiceArrayField(
-        models.CharField(max_length=8, choices=Languages),
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
         default=list,
         blank=True,
     )
@@ -109,11 +109,11 @@ class EtsyShop(TranslatableModel):
     LANGS_ATTR = "languages"
     language = models.CharField(
         max_length=4,
-        choices=Languages,
-        default=Languages.EN,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
     )
     languages = ChoiceArrayField(
-        models.CharField(max_length=8, choices=Languages),
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
         default=list,
         blank=True,
     )

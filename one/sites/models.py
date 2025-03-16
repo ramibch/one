@@ -12,7 +12,6 @@ from django.utils.functional import cached_property
 from django.utils.timezone import timedelta
 from django.utils.translation import gettext_lazy as _
 
-from one.base import Languages
 from one.base.utils.abstracts import TranslatableModel
 from one.base.utils.db import ChoiceArrayField
 from one.menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
@@ -87,11 +86,11 @@ class Site(TranslatableModel):
     LANGS_ATTR = "languages"
     language = models.CharField(
         max_length=4,
-        choices=Languages,
-        default=Languages.EN,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
     )
     languages = ChoiceArrayField(
-        models.CharField(max_length=8, choices=Languages),
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
         default=list,
         blank=True,
     )
@@ -125,6 +124,7 @@ class Site(TranslatableModel):
     requests_duration = models.DurationField(default=timedelta(days=14))
 
     # Submodules
+    # TODO: use topics?
     article_folders = ManyToManyField("articles.ArticleParentFolder", blank=True)
     page_folders = ManyToManyField("pages.PageParentFolder", blank=True)
     books = ManyToManyField("books.Book", blank=True)
@@ -132,6 +132,7 @@ class Site(TranslatableModel):
     # SEO
     page_title = models.CharField(max_length=64)
     page_description = models.TextField(max_length=256)
+    # TODO: if topics -> generate keywords (method/property)
     page_keywords = models.TextField(max_length=128)
 
     objects = SiteManager()
