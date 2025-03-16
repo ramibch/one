@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-  "django==5.1",
+  "django>=5.2b1",
   "django-auto-prefetch>=1.12.0",
   "django-cleanup>=9.0.0",
   "django-extensions>=3.2.3",
@@ -21,7 +21,8 @@ dependencies = [
   "redis>=5.2.1",
   "hiredis>=3.1.0",
   "geoip2>=5.0.1",
-  "docutils>=0.21.2 ",                     # https://docs.djangoproject.com/en/5.1/ref/contrib/admin/admindocs/
+  "docutils>=0.21.2 ",
+  # https://docs.djangoproject.com/en/5.1/ref/contrib/admin/admindocs/
   "deepl>=1.21.1",
   "Jinja2>=3.1.6",
   "qrcode[pil]>=8.0",
@@ -53,6 +54,7 @@ dependencies = [
   "django-rest-framework>=0.1.0",
   "ruff>=0.9.5",
   "pre-commit>=4.1.0",
+  "django-browser-reload>=1.18.0",
 ]
 
 

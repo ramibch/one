@@ -24,7 +24,6 @@ class Home(TranslatableModel):
     title = models.CharField(max_length=64, default="")
 
     # Management
-    enable_section_changing = models.BooleanField(default=False)
     display_last_articles = models.BooleanField(default=False)
     num_articles = models.PositiveSmallIntegerField(default=6)
     display_faqs = models.BooleanField(default=False)
