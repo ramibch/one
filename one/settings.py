@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "dbbackup",
     "corsheaders",
     "rest_framework",
+    "django_browser_reload",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -113,6 +114,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.admindocs.middleware.XViewMiddleware",
     "one.base.middleware.one.OneMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
 

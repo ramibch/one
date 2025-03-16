@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse_lazy
@@ -12,6 +13,15 @@ from ..products.models import Product
 from .utils.abstracts import TranslatableModel
 
 User = get_user_model()
+
+
+class DummyModel(TranslatableModel):
+    name = models.CharField(max_length=32)
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
+        default=list,
+        blank=True,
+    )
 
 
 class Topic(TranslatableModel):
