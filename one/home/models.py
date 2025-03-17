@@ -101,6 +101,8 @@ class HeroSection(HomeChildModel):
     cta_link = ForeignKey("links.Link", on_delete=models.CASCADE)
     cta_title = models.CharField(max_length=64, null=True, blank=True)
     cta_new_tab = models.BooleanField(default=False)
+    # TODO: Create Animation Model
+    cta_link = ForeignKey("links.Link", on_delete=models.CASCADE)
     cta_animation_type = models.CharField(
         max_length=16,
         null=True,
