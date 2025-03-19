@@ -1,4 +1,5 @@
 from auto_prefetch import ForeignKey, Model
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.storage import storages
 from django.db import models
@@ -8,8 +9,10 @@ from one.base.utils.abstracts import BaseSubmoduleFolder
 
 User = get_user_model()
 
+SUBMODULE_NAME = "books" if settings.ENV == "prod" else "test-books"
 
-class Book(BaseSubmoduleFolder, submodule="books"):
+
+class Book(BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
     """Book model as folder"""
 
     pdf = models.FileField(storage=storages["private"], null=True, upload_to="books/")

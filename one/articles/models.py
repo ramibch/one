@@ -11,8 +11,10 @@ from one.base.utils.db import ChoiceArrayField
 
 User = get_user_model()
 
+SUBMODULE_NAME = "articles" if settings.ENV == "prod" else "test-articles"
 
-class ArticleParentFolder(BaseSubmoduleFolder, submodule="articles"):
+
+class ArticleParentFolder(BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
     """Parent folder of articles"""
 
     pass

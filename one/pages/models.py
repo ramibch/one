@@ -1,12 +1,15 @@
 from auto_prefetch import ForeignKey, Model
+from django.conf import settings
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 
 from one.base.utils.abstracts import BaseSubmoduleFolder
 
+SUBMODULE_NAME = "pages" if settings.ENV == "prod" else "test-pages"
 
-class PageParentFolder(BaseSubmoduleFolder, submodule="pages"):
+
+class PageParentFolder(BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
     """Pages submodule"""
 
     pass
