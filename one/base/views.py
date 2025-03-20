@@ -10,6 +10,11 @@ from django.views.decorators.http import require_GET
 from one.base.utils.http import CustomHttpRequest
 
 
+def slug_page_view(request: CustomHttpRequest) -> HttpResponse:
+    # TODO: Page, Article, Product, ...
+    pass
+
+
 @require_GET
 @cache_control(max_age=60 * 60 * 24 * 30, immutable=True, public=True)  # 30 days
 def favicon(request: CustomHttpRequest) -> HttpResponse:
