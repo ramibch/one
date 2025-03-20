@@ -17,7 +17,7 @@ SUBMODULE_NAME = "articles" if settings.ENV == "prod" else "test-articles"
 class ArticleParentFolder(BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
     """Parent folder of articles"""
 
-    pass
+    topics = models.ManyToManyField("base.Topic", blank=True)
 
 
 class Article(TranslatableModel):

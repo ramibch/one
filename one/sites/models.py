@@ -125,15 +125,16 @@ class Site(TranslatableModel):
 
     # Submodules
     # TODO: use topics?
-    article_folders = ManyToManyField("articles.ArticleParentFolder", blank=True)
-    page_folders = ManyToManyField("pages.PageParentFolder", blank=True)
-    books = ManyToManyField("books.Book", blank=True)
+    # article_folders = ManyToManyField("articles.ArticleParentFolder", blank=True)
+    # page_folders = ManyToManyField("pages.PageParentFolder", blank=True)
+    # books = ManyToManyField("books.Book", blank=True)
+    topics = ManyToManyField("base.Topic", blank=True)
 
     # SEO
-    page_title = models.CharField(max_length=64)
-    page_description = models.TextField(max_length=256)
+    title = models.CharField(max_length=64)
+    description = models.TextField(max_length=256)
     # TODO: if topics -> generate keywords (method/property)
-    page_keywords = models.TextField(max_length=128)
+    # page_keywords = models.TextField(max_length=128)
 
     objects = SiteManager()
 
