@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from one.base.utils.admin import TranslatableModelAdmin
 
 from ..articles.tasks import sync_articles
-from ..pages.tasks import sync_pages
 from .models import Site
 
 
@@ -12,7 +11,7 @@ from .models import Site
 class SiteAdmin(TranslatableModelAdmin):
     list_display = ("domain", "brand_name", "picocss_color", "remarks")
     readonly_fields = ("domain",)
-    actions = ["sync_articles", "sync_pages", "translate_fields"]
+    actions = ["sync_articles", "translate_fields"]
     fieldsets = (
         (
             _("Site fields"),
@@ -61,7 +60,3 @@ class SiteAdmin(TranslatableModelAdmin):
     @admin.action(description="🔄 Sync articles")
     def sync_articles(modeladmin, request, queryset):
         sync_articles(queryset)
-
-    @admin.action(description="🔄 Sync pages")
-    def sync_pages(modeladmin, request, queryset):
-        sync_pages(queryset)

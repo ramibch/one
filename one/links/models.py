@@ -56,12 +56,12 @@ class Link(TranslatableModel):
         null=True,
         blank=True,
     )
-    page = ForeignKey(
-        "pages.Page",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-    )
+    # page = ForeignKey(
+    #     "pages.Page",
+    #     on_delete=models.CASCADE,
+    #     null=True,
+    #     blank=True,
+    # )
     plan = ForeignKey(
         "plans.Plan",
         on_delete=models.CASCADE,

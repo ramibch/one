@@ -7,8 +7,8 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("articles", "0004_rename_folder_article_folder_name_and_more"),
-        ("books", "0001_initial"),
-        ("pages", "0003_rename_folder_page_folder_name_and_more"),
+        # ("books", "0001_initial"),
+        # ("pages", "0003_rename_folder_page_folder_name_and_more"),
         ("sites", "0002_site_books"),
     ]
 
@@ -18,14 +18,14 @@ class Migration(migrations.Migration):
             name="article_folders",
             field=models.ManyToManyField(blank=True, to="articles.articleparentfolder"),
         ),
-        migrations.AlterField(
-            model_name="site",
-            name="books",
-            field=models.ManyToManyField(blank=True, to="books.book"),
-        ),
-        migrations.AlterField(
-            model_name="site",
-            name="page_folders",
-            field=models.ManyToManyField(blank=True, to="pages.pageparentfolder"),
-        ),
+        # migrations.AlterField(
+        #     model_name="site",
+        #     name="books",
+        #     field=models.ManyToManyField(blank=True, to="books.book"),
+        # ),
+        # migrations.AlterField(
+        #     model_name="site",
+        #     name="page_folders",
+        #     field=models.ManyToManyField(blank=True, to="pages.pageparentfolder"),
+        # ),
     ]

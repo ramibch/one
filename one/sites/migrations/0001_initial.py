@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("articles", "0001_initial"),
         ("base", "0001_initial"),
-        ("pages", "0001_initial"),
+        # ("pages", "0001_initial"),
     ]
 
     operations = [
@@ -141,7 +141,7 @@ class Migration(migrations.Migration):
                         verbose_name="Default language",
                     ),
                 ),
-                ("page_folders", models.ManyToManyField(to="pages.pageparentfolder")),
+                # ("page_folders", models.ManyToManyField(to="pages.pageparentfolder")),
                 (
                     "rest_languages",
                     models.ManyToManyField(

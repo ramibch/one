@@ -20,15 +20,15 @@ class Migration(migrations.Migration):
             name="sites",
             field=models.ManyToManyField(to="sites.site"),
         ),
-        migrations.AddField(
-            model_name="page",
-            name="parent_folder",
-            field=auto_prefetch.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="pages.pageparentfolder"
-            ),
-        ),
-        migrations.AlterUniqueTogether(
-            name="page",
-            unique_together={("folder", "subfolder")},
-        ),
+        # migrations.AddField(
+        #     model_name="page",
+        #     name="parent_folder",
+        #     field=auto_prefetch.ForeignKey(
+        #         on_delete=django.db.models.deletion.CASCADE, to="pages.pageparentfolder"
+        #     ),
+        # ),
+        # migrations.AlterUniqueTogether(
+        #     name="page",
+        #     unique_together={("folder", "subfolder")},
+        # ),
     ]

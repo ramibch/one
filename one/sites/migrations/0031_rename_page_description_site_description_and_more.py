@@ -175,14 +175,14 @@ class Migration(migrations.Migration):
             model_name="site",
             name="article_folders",
         ),
-        migrations.RemoveField(
-            model_name="site",
-            name="books",
-        ),
-        migrations.RemoveField(
-            model_name="site",
-            name="page_folders",
-        ),
+        # migrations.RemoveField(
+        #     model_name="site",
+        #     name="books",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="site",
+        #     name="page_folders",
+        # ),
         migrations.RemoveField(
             model_name="site",
             name="page_keywords",

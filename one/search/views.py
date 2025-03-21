@@ -7,7 +7,6 @@ from one.base.utils.http import CustomHttpRequest
 
 from ..articles.models import Article
 from ..faqs.models import FAQ
-from ..pages.models import Page
 from .tasks import save_search_query
 
 User = get_user_model()
@@ -31,12 +30,10 @@ def hx_seach_results(request: CustomHttpRequest) -> HttpResponse:
         }
     )
 
-    pages = Page.objects.filter(body__contains=q)
     articles = Article.objects.filter(body__contains=q)
     faqs = FAQ.objects.filter(question__contains=q)
-    total = pages.count() + articles.count() + faqs.count()
+    total = articles.count() + faqs.count()
     context = {
-        "pages": pages,
         "articles": articles,
         "products": [],
         "faqs": faqs,

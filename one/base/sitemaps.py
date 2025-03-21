@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib.sitemaps import Sitemap
 
 from one.articles.models import Article
-from one.pages.models import Page
 from one.tools.tools import get_active_tools
 
 
@@ -13,6 +12,7 @@ class ArticleSitemap(Sitemap):
     priority = 0.7
 
     def items(self):
+        # TODO: fix!!!
         folders = self.request.site.article_folders.all()
         return Article.objects.filter(
             languages__in=[self.lang],
@@ -21,24 +21,6 @@ class ArticleSitemap(Sitemap):
         )
 
     def lastmod(self, obj: Article):
-        return obj.updated_on
-
-
-class PageSitemap(Sitemap):
-    i18n = True
-    languages = settings.LANGUAGE_CODES
-    changefreq = "yearly"
-    priority = 0.5
-
-    def items(self):
-        folders = self.request.site.page_folders.all()
-        return Page.objects.filter(
-            parent_folder__in=folders,
-            slug__isnull=False,
-            # languages__in=[self.lang], ?? like in ArticleSitemap
-        )
-
-    def lastmod(self, obj: Page):
         return obj.updated_on
 
 
@@ -56,6 +38,5 @@ class ToolSitemap(Sitemap):
 def get_sitemaps(*args, **kwargs):
     return {
         "articles": ArticleSitemap(),
-        "pages": PageSitemap(),
         "tools": ToolSitemap(),
     }

@@ -12,21 +12,21 @@ class Migration(migrations.Migration):
     dependencies = [
         ("base", "0001_initial"),
         ("links", "0001_initial"),
-        ("pages", "0001_initial"),
+        # ("pages", "0001_initial"),
         ("plans", "0001_initial"),
     ]
 
     operations = [
-        migrations.AddField(
-            model_name="link",
-            name="page",
-            field=auto_prefetch.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                to="pages.page",
-            ),
-        ),
+        # migrations.AddField(
+        #     model_name="link",
+        #     name="page",
+        #     field=auto_prefetch.ForeignKey(
+        #         blank=True,
+        #         null=True,
+        #         on_delete=django.db.models.deletion.CASCADE,
+        #         to="pages.page",
+        #     ),
+        # ),
         migrations.AddField(
             model_name="link",
             name="plan",
