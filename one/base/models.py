@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
-from django.utils.text import slugify
 
 from one.base.utils.db import ChoiceArrayField
 
@@ -17,6 +16,7 @@ User = get_user_model()
 class Topic(TranslatableModel):
     LANG_ATTR = "language"
     LANGS_ATTR = "languages"
+    I18N_SLUGIFY_FROM = "name"
 
     language = models.CharField(
         max_length=4,
@@ -58,10 +58,3 @@ class Topic(TranslatableModel):
 
     def __str__(self) -> str:
         return self.name
-
-    def save(self, *args, **kwargs):
-        for lang in settings.LANGUAGE_CODES:
-            name = getattr(self, f"name_{lang}", None)
-            if name:
-                setattr(self, f"slug_{lang}", slugify(name))
-        super().save(*args, **kwargs)

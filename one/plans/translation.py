@@ -5,4 +5,4 @@ from .models import Plan
 
 @register(Plan)
 class PlanOptions(TranslationOptions):
-    fields = ("title", "description", "slug")
+    fields = ("title", "description")

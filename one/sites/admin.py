@@ -19,10 +19,6 @@ class SiteAdmin(TranslatableModelAdmin):
             {"fields": ("domain",)},
         ),
         (
-            _("Submodules"),
-            {"fields": ("article_folders", "page_folders", "books")},
-        ),
-        (
             _("Brand and design"),
             {
                 "fields": (
@@ -45,6 +41,7 @@ class SiteAdmin(TranslatableModelAdmin):
                     "remarks",
                     "language",
                     "languages",
+                    "topics",
                     "requests_duration",
                     "spam_requests_duration",
                 )
@@ -54,9 +51,8 @@ class SiteAdmin(TranslatableModelAdmin):
             _("SEO"),
             {
                 "fields": (
-                    "page_title",
-                    "page_description",
-                    "page_keywords",
+                    "title",
+                    "description",
                 )
             },
         ),

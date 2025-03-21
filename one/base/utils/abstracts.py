@@ -7,6 +7,7 @@ from auto_prefetch import Model
 from django.conf import settings
 from django.db import models
 from django.utils.functional import cached_property
+from django.utils.text import slugify
 
 from .exceptions import SubmoduleException
 
@@ -59,6 +60,7 @@ class BaseSubmoduleFolder(Model):
 class TranslatableModel(Model):
     LANG_ATTR = None
     LANGS_ATTR = None
+    I18N_SLUGIFY_FROM = None
 
     @cached_property
     def language_count(self):
@@ -101,6 +103,18 @@ class TranslatableModel(Model):
         langs = copy(self.get_languages())
         langs.remove(self.get_default_language())
         return langs
+
+    def save(self, *args, **kwargs):
+        if self.I18N_SLUGIFY_FROM:
+            if not hasattr(self, "slug"):
+                raise AttributeError("Model has no 'slug' attribute.")
+
+            for lang in settings.LANGUAGE_CODES:
+                value = getattr(self, f"{self.I18N_SLUGIFY_FROM}_{lang}", None)
+                if value:
+                    setattr(self, f"slug_{lang}", slugify(value))
+
+        super().save(*args, **kwargs)
 
     class Meta(Model.Meta):
         abstract = True
