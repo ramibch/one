@@ -16,7 +16,7 @@ class FAQ(TranslatableModel):
     LANG_ATTR = "sites__language"
     LANGS_ATTR = "sites__languages"
     sites = models.ManyToManyField("sites.Site")
-    category = models.CharField(max_length=32, choices=FAQCategory)
+    category = models.CharField(max_length=32, choices=FAQCategory.choices)
     question = models.CharField(max_length=256)
     answer = models.TextField()
     featured = models.BooleanField(default=False)

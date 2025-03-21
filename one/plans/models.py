@@ -12,10 +12,10 @@ from one.base.utils.abstracts import TranslatableModel
 class Plan(TranslatableModel):
     LANG_ATTR = "site__language"
     LANGS_ATTR = "site__languages"
+
     site = ForeignKey("sites.Site", on_delete=models.CASCADE)
-    title = models.CharField(max_length=256)
+    title = models.CharField(max_length=256, unique=True)
     description = models.CharField(max_length=128, null=True)
-    slug = models.SlugField(max_length=128, unique=True, editable=False)
     price_min = MoneyField(
         max_digits=6, decimal_places=2, default_currency="EUR", default=Money(5, "EUR")
     )

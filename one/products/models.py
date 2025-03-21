@@ -38,6 +38,7 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
 
     LANG_ATTR = "language"
     LANGS_ATTR = "languages"
+    I18N_SLUGIFY_FROM = "title"
     language = models.CharField(
         max_length=4,
         choices=settings.LANGUAGES,

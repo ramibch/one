@@ -123,18 +123,11 @@ class Site(TranslatableModel):
     spam_requests_duration = models.DurationField(default=timedelta(days=1))
     requests_duration = models.DurationField(default=timedelta(days=14))
 
-    # Submodules
-    # TODO: use topics?
-    # article_folders = ManyToManyField("articles.ArticleParentFolder", blank=True)
-    # page_folders = ManyToManyField("pages.PageParentFolder", blank=True)
-    # books = ManyToManyField("books.Book", blank=True)
     topics = ManyToManyField("base.Topic", blank=True)
 
     # SEO
     title = models.CharField(max_length=64)
     description = models.TextField(max_length=256)
-    # TODO: if topics -> generate keywords (method/property)
-    # page_keywords = models.TextField(max_length=128)
 
     objects = SiteManager()
 
@@ -163,6 +156,10 @@ class Site(TranslatableModel):
     @cached_property
     def from_email_address(self):
         return f"{self.display_brand} <no-reply@{self.domain}>"
+
+    @cached_property
+    def keywords(self):
+        return ", ".join([t.name for t in self.topics.all()])
 
     def get_object_admin_url(self, obj) -> str:
         # the url to the Django admin form for the model instance
