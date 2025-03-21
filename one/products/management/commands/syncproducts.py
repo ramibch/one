@@ -1,10 +1,10 @@
 from django.core.management.base import BaseCommand
 
-from ....articles.tasks import sync_articles
+from one.products.tasks import sync_products
 
 
 class Command(BaseCommand):
-    help = "Sync articles"
+    help = "Sync products"
 
     def handle(self, *args, **options):
-        sync_articles()
+        sync_products()

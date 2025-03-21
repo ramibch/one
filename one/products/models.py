@@ -39,6 +39,7 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
     LANG_ATTR = "language"
     LANGS_ATTR = "languages"
     I18N_SLUGIFY_FROM = "title"
+
     language = models.CharField(
         max_length=4,
         choices=settings.LANGUAGES,
@@ -49,6 +50,7 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
         default=list,
         blank=True,
     )
+    topics = models.ManyToManyField("base.Topic")
     title = models.CharField(max_length=128)
     slug = models.SlugField(max_length=128)
     description = models.TextField(blank=True, null=True)
@@ -59,7 +61,7 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
         help_text=_("It is applied to the country with the lowest GDP per capita."),
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
-    topics = models.ManyToManyField("base.Topic")
+
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     is_draft = models.BooleanField(default=True)
