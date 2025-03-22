@@ -1,3 +1,5 @@
+from auto_prefetch import Model
+from django.db import models
 from django.db.models import TextChoices
 
 
@@ -170,3 +172,39 @@ class SlidingExits(TextChoices):
     SLIDE_OUT_LEFT = "slideOutLeft", "slideOutLeft"
     SLIDE_OUT_RIGHT = "slideOutRight", "slideOutRight"
     SLIDE_OUT_UP = "slideOutUp", "slideOutUp"
+
+
+class Animation(Model):
+    animation_type = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        default=AnimationType.VANILLA,
+        choices=AnimationType.choices,
+    )
+    name = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        default=AttentionSeekers.FLASH,
+        choices=AttentionSeekers.choices,
+    )
+    repeat = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        default=AnimationRepeat.ONE,
+        choices=AnimationRepeat.choices,
+    )
+    speed = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        choices=AnimationSpeed.choices,
+    )
+    delay = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        choices=AnimationDelay.choices,
+    )

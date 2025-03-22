@@ -56,12 +56,6 @@ class Link(TranslatableModel):
         null=True,
         blank=True,
     )
-    # page = ForeignKey(
-    #     "pages.Page",
-    #     on_delete=models.CASCADE,
-    #     null=True,
-    #     blank=True,
-    # )
     plan = ForeignKey(
         "plans.Plan",
         on_delete=models.CASCADE,
@@ -99,7 +93,7 @@ class Link(TranslatableModel):
 
     @cached_property
     def model_object_fields(self):
-        return [self.page, self.plan, self.article, self.topic]
+        return [self.plan, self.article, self.topic]
 
     @cached_property
     def other_link_fields(self):

@@ -55,6 +55,7 @@ dependencies = [
   "ruff>=0.9.5",
   "pre-commit>=4.1.0",
   "django-browser-reload>=1.18.0",
+  "holidays>=0.69",
 ]
 
 

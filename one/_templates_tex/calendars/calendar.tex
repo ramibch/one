@@ -19,7 +19,7 @@
 \usetikzlibrary{calc}
 \usetikzlibrary{calendar}
 \renewcommand*\familydefault{\sfdefault}
-\def\year{ {{ - year - }} }
+\def\year{ {{- year -}} }
 
 {% raw %}
 \newcommand{\link}[1]{{ \color{blue}\href{#1}{#1 }}}
@@ -37,7 +37,7 @@
   \Large\textbf{ {{ title }} }\hfill
 }
 {% if footer_url %}
-\cfoot{\footnotesize\texttt{  \link{ {{ - footer_url - }} } }}
+\cfoot{\footnotesize\texttt{  \link{ {{- footer_url -}} } }}
 {% else %}
 \cfoot{\footnotesize\texttt{  }}
 {% endif %}
@@ -72,18 +72,18 @@
     }{}
     \ifdate{Saturday}{\tikzset{every day/.style={fill={{ color }}!10}}}{}
     \ifdate{Sunday}{\tikzset{every day/.style={fill={{ color }}!20}}}{}
-    {% - for holiday in holidays_part1 - %}
-    \ifdate{equals= {{ - holiday.tex_date() - }} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
-    {% - endfor - %}
+    {%- for holiday in holidays_part1 -%}
+    \ifdate{equals= {{- holiday.tex_date() -}} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
+    {%- endfor -%}
     },
  execute at begin day scope=
   {
     \pgftransformyshift{-.53*\pgfcalendarcurrentday cm}
   }
 ];
-{% - for holiday in holidays_part1 - %}
-\termin{ {{ - holiday.tex_date() - }} }{ {{ - holiday.title - }} }
-{% - endfor - %}
+{%- for holiday in holidays_part1 -%}
+\termin{ {{- holiday.tex_date() -}} }{ {{- holiday.title -}} }
+{%- endfor -%}
 \end{tikzpicture}
 \pagebreak
 \begin{tikzpicture}[every day/.style={anchor = north}]
@@ -117,9 +117,9 @@
   }{}
   \ifdate{Saturday}{\tikzset{every day/.style={fill={{ color }}!10}}}{}
   \ifdate{Sunday}{\tikzset{every day/.style={fill={{ color }}!20}}}{}
-  {% - for holiday in holidays_part2 - %}
-    \ifdate{equals= {{ - holiday.tex_date() - }} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
-  {% - endfor - %}
+  {%- for holiday in holidays_part2 -%}
+    \ifdate{equals= {{- holiday.tex_date() -}} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
+  {%- endfor -%}
   },
   execute at begin day scope=
   {
@@ -127,9 +127,9 @@
   }
 ];
 
-{% - for holiday in holidays_part2 - %}
-\termin{ {{ - holiday.tex_date() - }} }{ {{ - holiday.title - }} }
-{% - endfor - %}
+{%- for holiday in holidays_part2 -%}
+\termin{ {{- holiday.tex_date() -}} }{ {{- holiday.title -}} }
+{%- endfor -%}
 \end{tikzpicture}
 \end{center}
 \end{document}

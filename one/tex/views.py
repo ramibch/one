@@ -2,7 +2,8 @@ from datetime import datetime
 
 from django.conf import settings
 from django.http import HttpResponse
-from utils.http import PDFResponse
+
+from one.base.utils.http import PDFResponse
 
 from .compile import render_pdf
 
@@ -37,6 +38,6 @@ def test_calendar(request):
         "holidays_part1": holidays_part1,
         "holidays_part2": holidays_part2,
     }
-    pdf = render_pdf("calendar.tex", context)
+    pdf = render_pdf("calendars/calendar.tex", context)
 
     return PDFResponse(pdf, filename="calendar.pdf")

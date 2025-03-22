@@ -807,6 +807,18 @@ wheels = [
 ]
 
 [[package]]
+name = "holidays"
+version = "0.69"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "python-dateutil" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/85/06/9646b271283c00fa687f4bd2b22109f39f2a071b1a66e3ebb1c3d720fd1b/holidays-0.69.tar.gz", hash = "sha256:7dcd213d9c0a39f492f35c75180b6650522c7131cda9f57107a9c16e9a6c0468", size = 561339 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3c/1c/9e3fc8b8d4f2361b423e726732fcbb81f8817c7399a94d25296fc668586a/holidays-0.69-py3-none-any.whl", hash = "sha256:c179b46bc6326978adb24da108cc3cd3cf28c297bc212065a1041bb2fff51b99", size = 863879 },
+]
+
+[[package]]
 name = "huey"
 version = "2.5.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1103,6 +1115,7 @@ dependencies = [
     { name = "geoip2" },
     { name = "gunicorn" },
     { name = "hiredis" },
+    { name = "holidays" },
     { name = "huey" },
     { name = "ipdb" },
     { name = "ipython" },
@@ -1156,6 +1169,7 @@ requires-dist = [
     { name = "geoip2", specifier = ">=5.0.1" },
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "hiredis", specifier = ">=3.1.0" },
+    { name = "holidays", specifier = ">=0.69" },
     { name = "huey", specifier = ">=2.5.2" },
     { name = "ipdb", specifier = ">=0.13.13" },
     { name = "ipython", specifier = ">=9.0.2" },

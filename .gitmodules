@@ -1,32 +1,24 @@
-[submodule "submodules/pages"]
-	path = submodules/pages
-	url = git@github.com:ramibch/pages.git
-  branch = main
-  ignore = dirty
 [submodule "submodules/articles"]
 	path = submodules/articles
 	url = git@github.com:ramibch/articles.git
   branch = main
   ignore = dirty
-[submodule "submodules/books"]
-	path = submodules/books
-	url = git@github.com:ramibch/books.git
-  branch = main
-  ignore = dirty
+
 [submodule "submodules/products"]
 	path = submodules/products
 	url = git@github.com:ramibch/products.git
   branch = main
   ignore = dirty
+
+
 [submodule "submodules/test-articles"]
 	path = submodules/test-articles
 	url = git@github.com:ramibch/test-articles.git
-[submodule "submodules/test-pages"]
-	path = submodules/test-pages
-	url = git@github.com:ramibch/test-pages.git
+  branch = main
+  ignore = dirty
+
 [submodule "submodules/test-products"]
 	path = submodules/test-products
 	url = git@github.com:ramibch/test-products.git
-[submodule "submodules/test-books"]
-	path = submodules/test-books
-	url = git@github.com:ramibch/test-books.git
+  branch = main
+  ignore = dirty

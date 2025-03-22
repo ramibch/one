@@ -37,8 +37,6 @@ urlpatterns = [
     # Own
     path(_("search/"), include("one.search.urls")),
     path("articles/", include("one.articles.urls")),
-    # path("books/", include("one.books.urls")),
-    # path("pages/", include("one.pages.urls")),
     path("account/", include("one.users.urls")),
     path("plans/", include("one.plans.urls")),
     path("products/", include("one.products.urls")),
@@ -49,6 +47,7 @@ urlpatterns = [
     path("dgt/", include("one.dgt.urls")),
     path("emails/", include("one.emails.urls")),
     path("etsy/", include("one.etsy.urls")),
+    path("tex/", include("one.tex.urls")),
     path("", include("one.base.urls")),
 ]
 

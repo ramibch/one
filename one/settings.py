@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     # Project apps
     # "one.books",
     # "one.pages",
+    "one.animations",
     "one.base",
     "one.clients",
     "one.articles",
