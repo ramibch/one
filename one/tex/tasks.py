@@ -55,5 +55,5 @@ def create_yearly_holiday_calendars():
 
 @huey.db_periodic_task(crontab(minute="15"))
 def render_yearly_calendars():
-    for c in Calendar.objects.filter(pdf__isnull=True, image__isnull=True)[:10]:
+    for c in Calendar.objects.filter(pdf="")[:10]:
         c.render()
