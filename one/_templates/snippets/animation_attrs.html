@@ -1,7 +1,7 @@
-{% if animation_type == 'vanilla' %}
-  class="{{ html_class }}  animate__animated animate__{{ name }} animate__delay-{{ delay }} "
+{% if animation.animation_type == 'vanilla' %}
+  class="{{ html_class }}  animate__animated animate__{{ animation.name }} animate__delay-{{ animation.delay }} "
 {% else %}
   x-data="{ 'active': false }"
-  {% if animation_type == 'onmouseover' %}x-on:mouseover="active = true;" x-on:mouseleave="active = false;"{% endif %}
-  x-bind:class="active ? '{{ html_class }} animate__animated animate__{{ name }} animate__delay-{{ delay }} animate__{{ speed }} animate__{{ repeat }}' : '{{ html_class }}' "
+  {% if animation.animation_type == 'onmouseover' %}x-on:mouseover="active = true;" x-on:mouseleave="active = false;"{% endif %}
+  x-bind:class="active ? '{{ html_class }} animate__animated animate__{{ animation.name }} animate__delay-{{ animation.delay }} animate__{{ animation.speed }} animate__{{ animation.repeat }}' : '{{ html_class }}' "
 {% endif %}

@@ -12,7 +12,12 @@
             <a {% if section.cta_new_tab %}target="_blank"{% endif %}
                href="{{ section.cta_link.url }}?ref=homeherocta"
                role="button"
-               {% include "snippets/animation_attrs.html" with html_class="button mt-5" animation_type=section.cta_animation_type name=section.cta_animation_name speed=section.cta_animation_speed delay=section.cta_animation_delay repeat=section.cta_animation_repeat %}>{{ section.display_cta_title }}</a>
+               {% if section.card_animation %}
+               {% include "snippets/animation_attrs.html" with html_class="button mt-5" animation=section.cta_animation %}
+               {% else %}
+               class="button mt-5"
+               {% endif %}
+               >{{ section.display_cta_title }}</a>
           </center>
         </div>
         <div class="col-md-6 ">
@@ -30,7 +35,7 @@
         </h2>
         {% for article in section.get_articles %}
           <div class="col-md-4">
-            <article {% include "snippets/animation_attrs.html" with animation_type=section.card_animation_type name=section.card_animation_name repeat=section.card_animation_repeat delay=section.card_animation_delay speed=section.card_animation_speed %}>
+            <article {% if section.card_animation %} {% include "snippets/animation_attrs.html" with animation=section.card_animation %} {% endif %}>
               <h3>
                 <a href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a>
               </h3>
