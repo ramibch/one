@@ -23,10 +23,10 @@ class YearlyHolidayCalender(TranslatableModel):
     country = models.CharField(max_length=2, choices=settings.COUNTRIES)
     subdiv = models.CharField(max_length=128, null=True, blank=True)
     lang = models.CharField(max_length=2, choices=settings.LANGUAGES)
-    pdf = models.FileField(null=True, blank=True)
-    image = models.ImageField(null=True, blank=True)
-    image1 = models.ImageField(null=True, blank=True)
-    image2 = models.ImageField(null=True, blank=True)
+    pdf = models.FileField(null=True, blank=True, upload_to="calendars/")
+    image = models.ImageField(null=True, blank=True, upload_to="calendars/")
+    image1 = models.ImageField(null=True, blank=True, upload_to="calendars/")
+    image2 = models.ImageField(null=True, blank=True, upload_to="calendars/")
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
@@ -59,6 +59,8 @@ class YearlyHolidayCalender(TranslatableModel):
         return hdays(subdiv=self.subdiv, years=self.year).items()
 
     def render(self):
+        filename = f"{self.year}-{self.country}-{self.subdiv or ''}{self.lang}"
+
         with translation.override(self.lang):
             # country_holidays = getattr(holidays, self.country)
             holidays_part1, holidays_part2 = [], []
@@ -79,24 +81,24 @@ class YearlyHolidayCalender(TranslatableModel):
             }
 
             pdf_bytes = render_pdf("calendars/calendar.tex", context)
-            self.pdf = ContentFile(pdf_bytes, name="test-calendar.pdf")
+            self.pdf = ContentFile(pdf_bytes, name=f"{filename}.pdf")
             img1, img2 = convert_from_bytes(pdf_bytes)
 
         # image1 (page 1)
         img1_io = BytesIO()
         img1.save(img1_io, format="PNG")
-        self.image1 = ContentFile(img1_io.getvalue(), name="pag_1.png")
+        self.image1 = ContentFile(img1_io.getvalue(), name=f"{filename}_pag_1.png")
 
         # image2 (page 2)
         img2_io = BytesIO()
         img2.save(img2_io, format="PNG")
-        self.image2 = ContentFile(img2_io.getvalue(), name="pag_2.png")
+        self.image2 = ContentFile(img2_io.getvalue(), name=f"{filename}_pag_2.png")
 
         # image (page 1 + page 2)
         img = self.concatenate_images_vertically(img1, img2)
         img_io = BytesIO()
         img.save(img_io, format="PNG")
-        self.image = ContentFile(img_io.getvalue(), name="calendar.png")
+        self.image = ContentFile(img_io.getvalue(), name=f"{filename}.png")
 
         self.save()
 
