@@ -11,4 +11,9 @@ class TODOYearlyHolidayCalenderAdmin(TranslatableModelAdmin):
 
 @admin.register(YearlyHolidayCalender)
 class YearlyHolidayCalenderAdmin(admin.ModelAdmin):
-    pass
+    actions = ["render"]
+
+    @admin.action(description="🔄 Render calendar")
+    def render(modeladmin, request, queryset):
+        for obj in queryset:
+            obj.render()

@@ -1,43 +1,17 @@
-from datetime import datetime
+from django.http import Http404
+from django.views.generic.detail import DetailView
 
-from django.conf import settings
-from django.http import HttpResponse
-
-from one.base.utils.http import PDFResponse
-
-from .compile import render_pdf
-
-DOCUMENT_LANGUAGES = {"en": "english", "de": "german", "es": "spanish"}
+from .models import YearlyHolidayCalender
 
 
-class Holiday:
-    def __init__(self, date, title) -> None:
-        self.date = date
-        self.title = title
-
-    def tex_date(self):
-        return self.date.strftime("%Y-%m-%d")
-
-
-def test_calendar(request):
-    if not settings.DEBUG:
-        return HttpResponse("Unauthorized", status=401)
-    lang_code = "es"
-    year = 2024
-    holidays_part1 = [
-        Holiday(datetime(year, 1, 1), "Neujahr"),
-        Holiday(datetime(year, 4, 3), "Testiing"),
-    ]
-    holidays_part2 = [Holiday(datetime(year, 12, 3), "Testing1!!")]
-
-    context = {
-        "doc_language": DOCUMENT_LANGUAGES[lang_code],
-        "title": "My calendar title",
-        "year": year,
-        "footer_url": "https://ramiboutas.com",
-        "holidays_part1": holidays_part1,
-        "holidays_part2": holidays_part2,
-    }
-    pdf = render_pdf("calendars/calendar.tex", context)
-
-    return PDFResponse(pdf, filename="calendar.pdf")
+class YearlyHolidayCalenderView(DetailView):
+    def get_object(self):
+        year = self.kwargs.get("year")
+        country = self.kwargs.get("country")
+        subdiv = self.kwargs.get("subdiv")
+        try:
+            return YearlyHolidayCalender.objects.exclude(pdf="", image="").get(
+                year=year, country=country, subdiv=subdiv
+            )
+        except YearlyHolidayCalender.DoesNotExist:
+            raise Http404  # noqa: B904

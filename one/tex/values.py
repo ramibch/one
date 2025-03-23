@@ -1,6 +1,22 @@
 from django.utils.translation import gettext_lazy as _
 
-LATEX_LANGUAGES = {"en": "english", "de": "german", "es": "spanish"}
+LATEX_LANGUAGES = {
+    "en": "english",
+    "de": "german",
+    "es": "spanish",
+    "fr": "french",
+    "it": "italian",
+    "pt": "portuguese",
+    "nl": "dutch",
+    "el": "greek",
+    "pl": "polish",
+    "ru": "russian",
+    "sk": "slovak",
+    "sl": "slovene",
+    "sv": "swedish",
+    "tr": "turkish",
+    "uk": "ukrainian",
+}
 
 
 TIPICAL_PAPERSIZES = {
@@ -19,7 +35,7 @@ PAGE_ORIENTATIONS = {
 }
 
 
-def get_margin(papersize):
+def suggest_margin(papersize):
     if papersize == "a3paper":
         return "2.5cm"
     elif papersize == "a4paper":

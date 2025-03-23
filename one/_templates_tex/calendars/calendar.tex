@@ -72,8 +72,8 @@
     }{}
     \ifdate{Saturday}{\tikzset{every day/.style={fill={{ color }}!10}}}{}
     \ifdate{Sunday}{\tikzset{every day/.style={fill={{ color }}!20}}}{}
-    {%- for holiday in holidays_part1 -%}
-    \ifdate{equals= {{- holiday.tex_date() -}} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
+    {%- for date, name in holidays_part1 -%}
+    \ifdate{equals= {{- date.strftime("%Y-%m-%d") -}} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
     {%- endfor -%}
     },
  execute at begin day scope=
@@ -81,8 +81,8 @@
     \pgftransformyshift{-.53*\pgfcalendarcurrentday cm}
   }
 ];
-{%- for holiday in holidays_part1 -%}
-\termin{ {{- holiday.tex_date() -}} }{ {{- holiday.title -}} }
+{%- for date, name in holidays_part1 -%}
+\termin{ {{- date.strftime("%Y-%m-%d") -}} }{ {{- name -}} }
 {%- endfor -%}
 \end{tikzpicture}
 \pagebreak
@@ -117,8 +117,8 @@
   }{}
   \ifdate{Saturday}{\tikzset{every day/.style={fill={{ color }}!10}}}{}
   \ifdate{Sunday}{\tikzset{every day/.style={fill={{ color }}!20}}}{}
-  {%- for holiday in holidays_part2 -%}
-    \ifdate{equals= {{- holiday.tex_date() -}} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
+  {%- for date, name in holidays_part2 -%}
+    \ifdate{equals= {{- date.strftime("%Y-%m-%d") -}} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
   {%- endfor -%}
   },
   execute at begin day scope=
@@ -127,8 +127,8 @@
   }
 ];
 
-{%- for holiday in holidays_part2 -%}
-\termin{ {{- holiday.tex_date() -}} }{ {{- holiday.title -}} }
+{%- for date, name in holidays_part2 -%}
+\termin{ {{- date.strftime("%Y-%m-%d") -}} }{ {{- name -}} }
 {%- endfor -%}
 \end{tikzpicture}
 \end{center}

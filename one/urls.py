@@ -47,7 +47,7 @@ urlpatterns = [
     path("dgt/", include("one.dgt.urls")),
     path("emails/", include("one.emails.urls")),
     path("etsy/", include("one.etsy.urls")),
-    path("tex/", include("one.tex.urls")),
+    path("", include("one.tex.urls")),
     path("", include("one.base.urls")),
 ]
 

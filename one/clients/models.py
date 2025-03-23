@@ -1,4 +1,5 @@
 from auto_prefetch import ForeignKey, Model
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geoip2 import GeoIP2
 from django.db import models
@@ -6,7 +7,6 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..base import Countries
 from ..base.utils.telegram import Bot
 from ..geo.models import GeoInfo
 from ..sites.models import Site
@@ -26,7 +26,7 @@ class Path(Model):
 class Client(Model):
     DUMMY_IP_ADDRESS = "10.10.10.10"
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    country = models.CharField(max_length=2, choices=Countries, default="CH")
+    country = models.CharField(max_length=2, choices=settings.COUNTRIES, default="CH")
     site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
     geoinfo = ForeignKey("geo.GeoInfo", null=True, on_delete=models.SET_NULL)
     ip_address = models.GenericIPAddressField(unique=True, db_index=True)

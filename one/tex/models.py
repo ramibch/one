@@ -1,8 +1,13 @@
 from datetime import datetime
 from io import BytesIO
 
+import holidays
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
+from django.urls import reverse_lazy
+from django.utils import translation
+from django.utils.functional import cached_property
 from pdf2image import convert_from_bytes
 from PIL import Image
 
@@ -12,48 +17,70 @@ from .compile import render_pdf
 from .values import LATEX_LANGUAGES
 
 
-class TexHoliday:
-    def __init__(self, date, title) -> None:
-        self.date = date
-        self.title = title
-
-    def tex_date(self):
-        return self.date.strftime("%Y-%m-%d")
-
-
 class YearlyHolidayCalender(TranslatableModel):
     # https://holidays.readthedocs.io/en/latest/#
     year = models.SmallIntegerField()
-    title = models.CharField(max_length=256)
+    country = models.CharField(max_length=2, choices=settings.COUNTRIES)
+    subdiv = models.CharField(max_length=128, null=True, blank=True)
+    lang = models.CharField(max_length=2, choices=settings.LANGUAGES)
     pdf = models.FileField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)
     image1 = models.ImageField(null=True, blank=True)
     image2 = models.ImageField(null=True, blank=True)
-    image = models.ImageField(null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        if self.subdiv:
+            return reverse_lazy(
+                "tex_yearly_holiday_subdiv_calendar",
+                args=(self.year, self.country, self.subdiv),
+            )
+        else:
+            return reverse_lazy(
+                "tex_yearly_holiday_no_subdiv_calendar",
+                args=(self.year, self.country),
+            )
+
+    class Meta(TranslatableModel.Meta):
+        unique_together = ("year", "country", "subdiv", "lang")
+
+    @cached_property
+    def title(self):
+        extra = f" | {self.subdiv}" if self.subdiv else ""
+        return f"{str(self.get_country_display())}{extra}"
+
+    @cached_property
+    def country_holidays(self):
+        hdays = getattr(holidays, self.country)
+        return hdays(subdiv=self.subdiv, years=self.year).items()
+
     def render(self):
-        lang_code = "es"
+        with translation.override(self.lang):
+            # country_holidays = getattr(holidays, self.country)
+            holidays_part1, holidays_part2 = [], []
 
-        holidays_part1 = [
-            TexHoliday(datetime(self.year, 1, 1), "Neujahr"),
-            TexHoliday(datetime(self.year, 4, 3), "Testiing"),
-        ]
-        holidays_part2 = [TexHoliday(datetime(self.year, 12, 3), "Testing1!!")]
+            for date, name in self.country_holidays:
+                if date >= datetime(self.year, 7, 1).date():
+                    holidays_part2.append((date, name))
+                else:
+                    holidays_part1.append((date, name))
 
-        context = {
-            "doc_language": LATEX_LANGUAGES[lang_code],
-            "title": "My calendar title",
-            "year": self.year,
-            "footer_url": "https://ramiboutas.com",
-            "holidays_part1": holidays_part1,
-            "holidays_part2": holidays_part2,
-        }
+            context = {
+                "doc_language": LATEX_LANGUAGES[self.lang],
+                "title": self.title,
+                "year": self.year,
+                "footer_url": "https://ramib.ch",
+                "holidays_part1": holidays_part1,
+                "holidays_part2": holidays_part2,
+            }
 
-        pdf_bytes = render_pdf("calendars/calendar.tex", context)
-        self.pdf = ContentFile(pdf_bytes, name="test-calendar.pdf")
-        img1, img2 = convert_from_bytes(pdf_bytes)
+            pdf_bytes = render_pdf("calendars/calendar.tex", context)
+            self.pdf = ContentFile(pdf_bytes, name="test-calendar.pdf")
+            img1, img2 = convert_from_bytes(pdf_bytes)
 
         # image1 (page 1)
         img1_io = BytesIO()
