@@ -50,8 +50,24 @@ class YearlyHolidayCalender(TranslatableModel):
 
     @cached_property
     def title(self):
-        extra = f" | {self.subdiv}" if self.subdiv else ""
+        extra = f" | {self.friendly_subdiv}" if self.subdiv else ""
         return f"{str(self.get_country_display())}{extra}"
+
+    @cached_property
+    def friendly_subdiv(self):
+        if self.subdiv is None:
+            return ""
+        else:
+            hdays = getattr(holidays, self.country)
+            try:
+                value = hdays.get_subdivision_aliases()[self.subdiv]
+            except KeyError:
+                return self.subdiv
+
+            if value:
+                return " ".join(value)
+            else:
+                return self.subdiv
 
     @cached_property
     def country_holidays(self):

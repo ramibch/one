@@ -32,20 +32,11 @@ def create_yearly_holiday_calendars():
         if lang is None:
             continue
 
-        subdivision_aliases = list(country_holidays.get_subdivision_aliases().values())
-
-        if len(subdivision_aliases) == 0:
-            subdivisions = country_holidays.subdivisions
-        elif subdivision_aliases[0]:
-            subdivisions = (" ".join(item) for item in subdivision_aliases)
-        else:
-            subdivisions = country_holidays.subdivisions
-
         for year in years:
             objs.append(
                 Calendar(year=year, country=country_code, subdiv=None, lang=lang)
             )
-            for subdiv in subdivisions:
+            for subdiv in country_holidays.subdivisions:
                 objs.append(
                     Calendar(year=year, country=country_code, subdiv=subdiv, lang=lang)
                 )
