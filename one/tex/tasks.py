@@ -7,44 +7,62 @@ from huey.contrib import djhuey as huey
 from .models import YearlyHolidayCalender as Calendar
 from .values import LATEX_LANGUAGES
 
+THIS_YEAR = timezone.now().year
+YEARS = list(range(THIS_YEAR, THIS_YEAR + 3))
+LAST_YEAR = THIS_YEAR - 1
+
 
 @huey.db_periodic_task(crontab(day="5", hour="5", minute="55"))
 def create_yearly_holiday_calendars():
+    """Create calendar objects"""
     objs = []
-    this_year = timezone.now().year
-    years = list(range(this_year, this_year + 3))
-    for country_info in settings.COUNTRIES:
-        country_code = country_info[0]
-        if not hasattr(holidays, country_code):
+
+    # Fetch existing records in bulk
+    existing_records = set(
+        Calendar.objects.filter(year__in=YEARS).values_list(
+            "year", "country", "subdiv", "lang"
+        )
+    )
+
+    for country_code, _ in settings.COUNTRIES:
+        country_holidays = getattr(holidays, country_code, None)
+        if not country_holidays:
             continue
-        country_holidays = getattr(holidays, country_code)
 
-        country_langs = [x.split("_")[0] for x in country_holidays.supported_languages]
-
+        country_langs = {x.split("_")[0] for x in country_holidays.supported_languages}
         default_language = (country_holidays.default_language or "").split("_")[0]
 
-        if default_language in LATEX_LANGUAGES:
-            lang = default_language
-        else:
-            common_langs = list(set(country_langs) & set(LATEX_LANGUAGES.keys()))
-            lang = common_langs[0] if common_langs else None
+        lang = (
+            default_language
+            if default_language in LATEX_LANGUAGES
+            else next((lng for lng in country_langs if lng in LATEX_LANGUAGES), None)
+        )
 
         if lang is None:
             continue
 
-        for year in years:
-            objs.append(
-                Calendar(year=year, country=country_code, subdiv=None, lang=lang)
-            )
-            for subdiv in country_holidays.subdivisions:
-                objs.append(
-                    Calendar(year=year, country=country_code, subdiv=subdiv, lang=lang)
-                )
+        for year in YEARS:
+            for subdiv in [None] + list(country_holidays.subdivisions):
+                if (year, country_code, subdiv, lang) not in existing_records:
+                    objs.append(
+                        Calendar(
+                            year=year, country=country_code, subdiv=subdiv, lang=lang
+                        )
+                    )
 
-    Calendar.objects.bulk_create(objs, ignore_conflicts=True)
+    if objs:
+        Calendar.objects.bulk_create(objs)
+
+
+@huey.db_periodic_task(crontab(day="4", hour="4", minute="44"))
+def remove_old_yearly_holiday_calendars():
+    """Let us forget the past and remove old calendars..."""
+    Calendar.objects.filter(year__lt=LAST_YEAR).delete()
 
 
 @huey.db_periodic_task(crontab(minute="15"))
 def render_yearly_calendars():
-    for c in Calendar.objects.filter(pdf="")[:10]:
+    """Render calendars"""
+
+    for c in Calendar.objects.filter(pdf="").order_by("?")[:20]:
         c.render()
