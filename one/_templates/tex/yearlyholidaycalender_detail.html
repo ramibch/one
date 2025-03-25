@@ -6,10 +6,34 @@
 {% block content %}
 
 <center>
-  <h1 class="my-5">  {{ object.title }}  {{ object.year }}</a></h1>
-  <img src="{{ object.image.url }}" alt="">
-
-  <a class="my-5" role="button" href="{{ object.pdf.url }}" download>{% trans "Download" %}</a>
+  <h1 class="my-5"> {% trans "Holidays" %}:  {{ object.title }}  {{ object.year }}</a></h1>
 </center>
+
+  <ul>
+    {% for date,name in object.country_holidays %}
+    <li> {{ date }} : {{ name }} </li>
+    {% endfor %}
+  </ul>
+  <center>
+    <img class="my-5" src="{{ object.image.url }}" alt="{{ object.title }}">
+    <a class="my-5" role="button" href="{{ object.pdf.url }}" download>{% trans "Download" %}</a>
+  </center>
+
+  {% if related_calendars %}
+  <center>
+    <h2>{% trans "Related calendars" %}</h2>
+  </center>
+  {% endif %}
+  {% for rel in related_calendars %}
+  <div class="col-md-4">
+    <a href="{{ rel.get_absolute_url }}">
+    <article>
+      <header> {{ rel.title }} </header>
+        <img  src="{{ rel.image.url }}" alt="{{ rel.title }}">
+      </article>
+    </a>
+  </div>
+  {% endfor %}
+
 
 {% endblock content %}

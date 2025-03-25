@@ -12,6 +12,7 @@ from pdf2image import convert_from_bytes
 from PIL import Image
 
 from one.base.utils.abstracts import TranslatableModel
+from one.base.utils.telegram import Bot
 
 from .compile import render_pdf
 from .values import LATEX_LANGUAGES
@@ -65,14 +66,21 @@ class YearlyHolidayCalender(TranslatableModel):
                 return self.subdiv
 
             if value:
-                return " ".join(value)
+                return value[0]
+                # return " ".join(value)
             else:
                 return self.subdiv
 
     @cached_property
     def country_holidays(self):
         hdays = getattr(holidays, self.country)
-        return hdays(subdiv=self.subdiv, years=self.year).items()
+        try:
+            return sorted(
+                hdays(subdiv=self.subdiv, years=self.year, language=self.lang).items()
+            )
+        except Exception as e:
+            Bot.to_admin(f"Calendar {self.pk} country_holidays error: {e}")
+            return sorted(hdays(subdiv=self.subdiv, years=self.year).items())
 
     def render(self):
         filename = f"{self.year}-{self.country}-{self.subdiv or ''}{self.lang}"

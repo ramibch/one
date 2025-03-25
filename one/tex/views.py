@@ -1,7 +1,9 @@
+from typing import Any
+
 from django.http import Http404
 from django.views.generic.detail import DetailView
 
-from .models import YearlyHolidayCalender
+from .models import YearlyHolidayCalender as Calendar
 
 
 class YearlyHolidayCalenderView(DetailView):
@@ -10,8 +12,16 @@ class YearlyHolidayCalenderView(DetailView):
         country = self.kwargs.get("country")
         subdiv = self.kwargs.get("subdiv")
         try:
-            return YearlyHolidayCalender.objects.exclude(pdf="", image="").get(
+            return Calendar.objects.exclude(pdf="", image="").get(
                 year=year, country=country, subdiv=subdiv
             )
-        except YearlyHolidayCalender.DoesNotExist:
+        except Calendar.DoesNotExist:
             raise Http404  # noqa: B904
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        obj = self.get_object()
+        context["related_calendars"] = Calendar.objects.exclude(
+            pdf="", image=""
+        ).filter(country=obj.country)
+        return context
