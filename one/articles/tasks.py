@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from django.conf import settings
 from django.core.files import File
 from django.utils.text import slugify
@@ -20,14 +22,19 @@ def sync_articles(sites=None):
     ArticleParentFolder.sync_folders()
 
     submodule = ArticleParentFolder.submodule
-    submodule_path = ArticleParentFolder.submodule_path
+    submodule_path: Path = ArticleParentFolder.submodule_path
     sites = sites or Site.objects.all()
 
     to_admin = f"🔄 Syncing {submodule}\n\n"
 
     # Scanning
     for db_folder in ArticleParentFolder.objects.all():
-        folder = submodule_path / db_folder.name
+        folder: Path = submodule_path / db_folder.name
+
+        if not folder.is_dir():
+            db_folder.present_in_filesystem = False
+            db_folder.save()
+            continue
 
         for subfolder in folder.iterdir():
             if not subfolder.is_dir():

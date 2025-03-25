@@ -14,6 +14,7 @@ from .exceptions import SubmoduleException
 
 class BaseSubmoduleFolder(Model):
     name = models.CharField(max_length=64, unique=True)
+    present_in_filesystem = models.BooleanField(default=True)
 
     def __init_subclass__(cls, submodule, **kwargs):
         cls.submodule = submodule

@@ -8,10 +8,10 @@ from .models import Article, ArticleFile, ArticleParentFolder
 
 @admin.register(ArticleParentFolder)
 class ArticlesSubmoduleAdmin(admin.ModelAdmin):
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT
     readonly_fields = ("name",)
-
-    def has_delete_permission(self, request, obj=...):
-        return False
+    list_display = ("name", "present_in_filesystem")
+    list_filter = ("present_in_filesystem", "topics")
 
     def has_add_permission(self, request):
         return False
@@ -20,8 +20,7 @@ class ArticlesSubmoduleAdmin(admin.ModelAdmin):
 @admin.register(Article)
 class ArticleAdmin(TranslationAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    # list_display = ("__str__", "featured", "created_on", "updated_on")
-    list_display = ("__str__",)
+    list_display = ("__str__", "featured", "created_on", "updated_on")
     readonly_fields = (
         "title",
         "slug",

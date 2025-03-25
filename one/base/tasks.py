@@ -21,7 +21,7 @@ def task_not_executed_handler(signal, task, exc=None):
     yaml_task = yaml.dump(task, default_flow_style=False)
     msg = f"⚠️ Task not executed ({signal})\n\n{yaml_task}"
     if exc:
-        msg += f"\n\n{exc}"
+        msg += f"\nException: {exc}"
     Bot.to_admin(msg)
 
 

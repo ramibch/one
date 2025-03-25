@@ -23,6 +23,11 @@ def sync_products():
     for product in Product.objects.all():
         folder = submodule_path / product.name
 
+        if not folder.is_dir():
+            product.present_in_filesystem = False
+            product.save()
+            continue
+
         for subfolder in folder.iterdir():
             if not subfolder.is_dir():
                 continue
