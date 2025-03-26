@@ -33,7 +33,7 @@
         <h2>
           ✍ {{ section.title }} <span style="float: right;"> <a href="{% url 'article_list' %}">{% translate "All" %}</a> </span>
         </h2>
-        {% for article in section.articles %}
+        {% for article in section.get_articles %}
           <div class="col-md-4">
             <article {% if section.card_animation %} {% include "snippets/animation_attrs.html" with animation=section.card_animation %} {% endif %}>
               <h3>
