@@ -1,5 +1,6 @@
 from auto_prefetch import ForeignKey, OneToOneField
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
@@ -46,8 +47,9 @@ class ArticlesSection(HomeChildModel):
     def __str__(self):
         return self.title
 
-    def get_articles(self):
-        return (
+    @cached_property
+    def articles(self):
+        qs = (
             Article.objects.filter(
                 parent_folder__topics__in=self.home.site.topics.all(),
                 languages__contains=[get_language()],
@@ -55,8 +57,19 @@ class ArticlesSection(HomeChildModel):
                 featured=True,
             )
             .order_by("-id")
-            .distinct()[: self.number_of_articles]
+            .distinct()
         )
+        if qs.count() < self.number_of_articles:
+            qs = (
+                Article.objects.filter(
+                    parent_folder__topics__in=self.home.site.topics.all(),
+                    slug__isnull=False,
+                    featured=True,
+                )
+                .order_by("-id")
+                .distinct()
+            )
+        return qs[: self.number_of_articles]
 
 
 class HeroSection(HomeChildModel):
