@@ -30,7 +30,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
     ),
     # Search
-    path(_("search"), search_view, name="search-page"),
+    path(_("search"), search_view, name="search"),
     path("hx-search-results", hx_search_results_view, name="search-results"),
     # Test
     path(_("translate-this-url"), search_view, name="translate-url"),
