@@ -54,7 +54,6 @@ class ArticlesSection(HomeChildModel):
                 parent_folder__topics__in=self.home.site.topics.all(),
                 languages__contains=[get_language()],
                 slug__isnull=False,
-                featured=True,
             )
             .order_by("-id")
             .distinct()
@@ -64,7 +63,6 @@ class ArticlesSection(HomeChildModel):
                 Article.objects.filter(
                     parent_folder__topics__in=self.home.site.topics.all(),
                     slug__isnull=False,
-                    featured=True,
                 )
                 .order_by("-id")
                 .distinct()
