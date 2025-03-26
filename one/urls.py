@@ -18,7 +18,6 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
-from django.utils.translation import gettext_lazy as _
 
 if settings.ENV == "prod":
     # Custom 404 error view
@@ -35,7 +34,6 @@ urlpatterns = [
     path("allauth/", include("allauth.urls")),  # if changes -> check base.html
     path("__reload__/", include("django_browser_reload.urls")),
     # Own
-    path(_("search/"), include("one.search.urls")),
     path("articles/", include("one.articles.urls")),
     path("account/", include("one.users.urls")),
     path("plans/", include("one.plans.urls")),

@@ -2,15 +2,19 @@ from io import StringIO
 
 import yaml
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.db.models import QuerySet
 from huey import crontab
 from huey.contrib import djhuey as huey
 from huey.signals import SIGNAL_CANCELED, SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_REVOKED
 
+from .models import SearchTerm
 from .utils.abstracts import BaseSubmoduleFolder, TranslatableModel
 from .utils.telegram import Bot
 from .utils.translation import translate_text
+
+User = get_user_model()
 
 
 @huey.signal(SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_CANCELED, SIGNAL_REVOKED)
@@ -127,3 +131,8 @@ def settings_check_task_hourly():
 
     if msg != "":
         Bot.to_admin(f"Settings checker:\n\n{msg}")
+
+
+@huey.db_task()
+def save_search_query(params):
+    SearchTerm.objects.create(**params)

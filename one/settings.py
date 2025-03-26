@@ -207,22 +207,16 @@ LANGUAGES = [
     ("de", _("German")),
     ("es", _("Spanish")),
     ("fr", _("French")),
-    ("el", _("Greek")),
     ("it", _("Italian")),
     ("nl", _("Dutch")),
-    ("pl", _("Polish")),
     ("pt", _("Portuguese")),
-    ("ru", _("Russian")),
-    ("sk", _("Slovak")),
-    ("sl", _("Slovenian")),
-    ("sv", _("Swedish")),
-    ("tr", _("Turkish")),
-    ("uk", _("Ukrainian")),
 ]
 
 LANGUAGE_CODES = [items[0] for items in LANGUAGES]
 LANGUAGE_CODES_WITHOUT_DEFAULT = copy(LANGUAGE_CODES)
 LANGUAGE_CODES_WITHOUT_DEFAULT.remove(LANGUAGE_CODE)
+
+LOCALE_PATHS = [BASE_DIR / "locale"]
 
 # Countries
 COUNTRIES = (

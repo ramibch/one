@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.sitemaps.views import index as django_sitemap_index
 from django.contrib.sitemaps.views import sitemap as django_sitemap
 from django.http import HttpResponse
@@ -8,6 +9,12 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_GET
 
 from one.base.utils.http import CustomHttpRequest
+
+from ..articles.models import Article
+from ..faqs.models import FAQ
+from .tasks import save_search_query
+
+User = get_user_model()
 
 
 def slug_page_view(request: CustomHttpRequest) -> HttpResponse:
@@ -67,3 +74,33 @@ def sitemap(*args, **kwargs):
         kwargs["sitemaps"][key].lang = kwargs.get("lang", settings.LANGUAGE_CODE)
     kwargs.pop("lang", None)
     return django_sitemap(*args, **kwargs)
+
+
+def search_view(request: CustomHttpRequest) -> HttpResponse:
+    return render(request, "search/index.html", {"page_title": _("Search")})
+
+
+def hx_search_results_view(request: CustomHttpRequest) -> HttpResponse:
+    q = request.GET.get("q")
+    if q in ["", None]:
+        return HttpResponse()
+
+    save_search_query(
+        {
+            "user": request.user if isinstance(request.user, User) else None,
+            "client": request.client,
+            "site": request.site,
+            "query": q,
+        }
+    )
+
+    articles = Article.objects.filter(body__contains=q)
+    faqs = FAQ.objects.filter(question__contains=q)
+    total = articles.count() + faqs.count()
+    context = {
+        "articles": articles,
+        "products": [],
+        "faqs": faqs,
+        "total": total,
+    }
+    return render(request, "search/hx_results.html", context)

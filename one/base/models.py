@@ -1,3 +1,4 @@
+from auto_prefetch import ForeignKey, Model
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -9,6 +10,8 @@ from one.base.utils.db import ChoiceArrayField
 from ..articles.models import Article
 from ..products.models import Product
 from .utils.abstracts import TranslatableModel
+
+User = get_user_model()
 
 User = get_user_model()
 
@@ -58,3 +61,18 @@ class Topic(TranslatableModel):
 
     def __str__(self) -> str:
         return self.name
+
+
+class SearchTerm(Model):
+    query = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    client = ForeignKey(
+        "clients.Client", null=True, on_delete=models.SET_NULL, related_name="+"
+    )
+    user = ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="+")
+    site = ForeignKey(
+        "sites.Site", null=True, on_delete=models.SET_NULL, related_name="+"
+    )
+
+    def __str__(self):
+        return self.query
