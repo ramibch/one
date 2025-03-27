@@ -34,6 +34,9 @@ class YearlyHolidayCalender(TranslatableModel):
     def __str__(self):
         return self.title
 
+    class Meta(TranslatableModel.Meta):
+        unique_together = ("year", "country", "subdiv", "lang")
+
     def get_absolute_url(self):
         if self.subdiv:
             return reverse_lazy(
@@ -46,8 +49,9 @@ class YearlyHolidayCalender(TranslatableModel):
                 args=(self.year, self.country),
             )
 
-    class Meta(TranslatableModel.Meta):
-        unique_together = ("year", "country", "subdiv", "lang")
+    @cached_property
+    def related_objects(self):
+        return self.__class__.objects.exclude(image="").filter(country=self.country)
 
     @cached_property
     def title(self):

@@ -1,41 +1,44 @@
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
-from django.views.generic.base import TemplateView
 
-from one.articles.views import ArticleDetailView
-from one.home.views import home
-
-from . import sitemaps
-from .views import favicon, hx_search_results_view, search_view, sitemap
-
-
-def get_sitemaps(*args, **kwargs):
-    return {
-        "articles": sitemaps.ArticleSitemap(),
-        "tools": sitemaps.ToolSitemap(),
-    }
-
+from .sitemaps import get_sitemaps
+from .views import (
+    ArticleDetailView,
+    ArticleListView,
+    FAQListView,
+    PlanDetailView,
+    PlanListView,
+    ProductListView,
+    RobotTxtView,
+    favicon_view,
+    home_view,
+    hx_search_results_view,
+    search_view,
+    sitemap_view,
+)
 
 urlpatterns = [
     # Sitemaps
-    path(
-        "<str:lang>/sitemap.xml", sitemap, {"sitemaps": get_sitemaps()}, name="sitemap"
-    ),
-    path("sitemap.xml", sitemap, {"sitemaps": get_sitemaps()}, name="sitemap"),
+    path("<str:lang>/sitemap.xml", sitemap_view, {"sitemaps": get_sitemaps()}),
+    path("sitemap.xml", sitemap_view, {"sitemaps": get_sitemaps()}, "sitemap"),
     # Favicon
-    path("favicon.ico", favicon, name="favicon"),
+    path("favicon.ico", favicon_view, name="favicon"),
     # robots.txt
-    path(
-        "robots.txt",
-        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
-    ),
+    path("robots.txt", RobotTxtView.as_view()),
     # Search
     path(_("search"), search_view, name="search"),
     path("hx-search-results", hx_search_results_view, name="search-results"),
-    # Test
-    path(_("translate-this-url"), search_view, name="translate-url"),
+    # Article list
+    path(_("articles"), ArticleListView.as_view(), name="article_list"),
+    # Plan list
+    path(_("plans"), PlanListView.as_view(), name="plan_list"),
+    path(_("plan") + "/<slug:slug>/", PlanDetailView.as_view(), name="plan_detail"),
+    # Product list
+    path(_("products"), ProductListView.as_view(), name="plan_list"),
+    # FAQ list
+    path(_("faqs"), FAQListView.as_view(), name="faq_list"),
     # TODO: page url (Topic, Article, Product, ...)
     path("<slug:slug>", ArticleDetailView.as_view(), name="article-detail"),
     # Home
-    path("", home, name="home"),
+    path("", home_view, name="home"),
 ]

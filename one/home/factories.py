@@ -5,13 +5,6 @@ from faker import Faker
 from one.links.factories import LinkFactory
 from one.sites.factories import SiteFactory
 
-from ..base.utils.animate import (
-    AnimationDelay,
-    AnimationRepeat,
-    AnimationSpeed,
-    AnimationType,
-    AttentionSeekers,
-)
 from .models import (
     ArticlesSection,
     BenefitsSection,
@@ -44,11 +37,7 @@ class HomeChildModelFactory(DjangoModelFactory):
 class ArticlesSectionFactory(HomeChildModelFactory):
     title = factory.LazyAttribute(lambda _: faker.sentence())
     number_of_articles = factory.LazyAttribute(lambda _: faker.random_number())
-    card_animation_type = factory.Iterator(AnimationType.values)
-    card_animation_name = factory.Iterator(AttentionSeekers.values)
-    card_animation_repeat = factory.Iterator(AnimationRepeat.values)
-    card_animation_speed = factory.Iterator(AnimationSpeed.values)
-    card_animation_delay = factory.Iterator(AnimationDelay.values)
+    card_animation = None  # TODO:
 
     class Meta:
         model = ArticlesSection
@@ -61,11 +50,7 @@ class HeroSectionFactory(HomeChildModelFactory):
     cta_link = factory.SubFactory(LinkFactory)
     cta_title = factory.LazyAttribute(lambda _: faker.sentence())
     cta_new_tab = factory.LazyAttribute(lambda _: faker.boolean())
-    cta_animation_type = factory.Iterator(AnimationType.values)
-    cta_animation_name = factory.Iterator(AttentionSeekers.values)
-    cta_animation_repeat = factory.Iterator(AnimationRepeat.values)
-    cta_animation_speed = factory.Iterator(AnimationSpeed.values)
-    cta_animation_delay = factory.Iterator(AnimationDelay.values)
+    cta_animation = None  # TODO:
 
     class Meta:
         model = HeroSection

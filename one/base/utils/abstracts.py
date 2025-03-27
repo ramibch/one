@@ -119,20 +119,3 @@ class TranslatableModel(Model):
 
     class Meta(Model.Meta):
         abstract = True
-
-
-class SingletonModel(Model):
-    """Singleton Django Model"""
-
-    _singleton = models.BooleanField(default=True, editable=False, unique=True)
-
-    class Meta(Model.Meta):
-        abstract = True
-
-    @classmethod
-    def load(cls):
-        return cls.objects.get_or_create()[0]
-
-    @classmethod
-    def get(cls):
-        return cls.load()

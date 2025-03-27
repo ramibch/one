@@ -34,17 +34,14 @@ urlpatterns = [
     path("allauth/", include("allauth.urls")),  # if changes -> check base.html
     path("__reload__/", include("django_browser_reload.urls")),
     # Own
-    path("articles/", include("one.articles.urls")),
     path("account/", include("one.users.urls")),
-    path("plans/", include("one.plans.urls")),
-    path("products/", include("one.products.urls")),
     path("tools/", include("one.tools.urls")),
-    path("faqs/", include("one.faqs.urls")),
     path("clients/", include("one.clients.urls")),
     path("englishquizzes/", include("one.quiz.urls")),
     path("dgt/", include("one.dgt.urls")),
     path("emails/", include("one.emails.urls")),
     path("etsy/", include("one.etsy.urls")),
+    path("", include("one.pins.urls")),  # TODO: add pins/
     path("", include("one.tex.urls")),
     path("", include("one.base.urls")),
 ]

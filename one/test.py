@@ -14,9 +14,7 @@ class SquareTests(ParametrizedTestCase):
 """
 
 from django import test
-from unittest_parametrize import ParametrizedTestCase, parametrize
-
-parametrize = parametrize
+from unittest_parametrize import ParametrizedTestCase
 
 
 class SimpleTestCase(ParametrizedTestCase, test.SimpleTestCase):

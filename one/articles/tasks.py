@@ -16,7 +16,7 @@ from .models import Article, ArticleFile, ArticleParentFolder
 @huey.db_periodic_task(crontab(hour="1", minute="10"))
 def sync_articles(sites=None):
     """
-    Sync articles from specified sites
+    Sync articles from the submodules 'articles'
     """
 
     ArticleParentFolder.sync_folders()
