@@ -1,3 +1,4 @@
+import random
 from datetime import datetime
 from io import BytesIO
 
@@ -99,6 +100,16 @@ class YearlyHolidayCalender(TranslatableModel):
                 else:
                     holidays_part1.append((date, name))
 
+            colors = {
+                "lime": "teal",
+                "green": "cyan",
+                "brown": "magenta",
+                "orange": "red",
+            }
+
+            color = random.choice(list(colors.keys()))
+            holiday_color = colors[color]
+
             context = {
                 "doc_language": LATEX_LANGUAGES[self.lang],
                 "title": self.title,
@@ -106,6 +117,8 @@ class YearlyHolidayCalender(TranslatableModel):
                 "footer_url": "https://ramib.ch",
                 "holidays_part1": holidays_part1,
                 "holidays_part2": holidays_part2,
+                "color": color,
+                "holiday_color": holiday_color,
             }
 
             pdf_bytes = render_pdf("calendars/calendar.tex", context)
