@@ -28,7 +28,7 @@ if settings.ENV == "prod":
 urlpatterns = [
     # Django
     path("abcdef/doc/", include("django.contrib.admindocs.urls")),
-    path("abcdef/", admin.site.urls),
+    path("abcdef/", admin.site.urls, name="one_admin"),
     path("i18n/", include("django.conf.urls.i18n")),
     # Third-party
     path("allauth/", include("allauth.urls")),  # if changes -> check base.html

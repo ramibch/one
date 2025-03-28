@@ -56,6 +56,7 @@ dependencies = [
   "pre-commit>=4.1.0",
   "django-browser-reload>=1.18.0",
   "holidays>=0.69",
+  "django-import-export>=4.3.7",
 ]
 
 

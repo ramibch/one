@@ -1,4 +1,5 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.utils.translation import gettext_lazy as _
 
 from .models import (
     PostalDomainDNSError,
@@ -8,6 +9,7 @@ from .models import (
     TemplateAttachment,
     TemplateMessage,
     TemplateRecipient,
+    TemplateRecipientFile,
 )
 from .tasks import task_send_email_templates
 
@@ -49,6 +51,22 @@ class RecipientAdmin(admin.ModelAdmin):
     @admin.action(description="✅ Mark as no draft")
     def mark_as_no_draft(modeladmin, request, queryset):
         queryset.update(draft=False)
+
+
+@admin.register(TemplateRecipientFile)
+class TemplateRecipientFileAdmin(admin.ModelAdmin):
+    list_display = ("file", "email", "processed")
+    list_filter = ("email", "processed")
+    actions = ["generate_recipients"]
+
+    @admin.action(description=_("Generate recipients from file"))
+    def generate_recipients(modeladmin, request, queryset):
+        qs = queryset.filter(processed=False)
+        msg = _(f"{qs.count()} files processed")
+        for obj in qs:
+            obj.generate_recipients()
+        qs.update(processed=True)
+        messages.info(request, msg)
 
 
 @admin.register(Sender)

@@ -19,6 +19,7 @@ from one.sites.models import Site
 class Sender(Model):
     name = models.CharField(max_length=64)
     address = models.EmailField(max_length=64, unique=True)
+    domain_validation = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name_and_address
@@ -29,9 +30,16 @@ class Sender(Model):
 
     def clean(self):
         super().clean()
-        domain = self.address.split("@")[1]
-        if not Site.objects.filter(domain=domain).exists():
-            raise ValidationError(_("Domain does not match any sites."), code="invalid")
+        if self.domain_validation:
+            try:
+                domain = self.address.split("@")[1]
+            except IndexError as err:
+                raise ValidationError(_("No valid domain"), code="invalid") from err
+
+            if not Site.objects.filter(domain=domain).exists():
+                raise ValidationError(
+                    _("Domain does not match any sites."), code="invalid"
+                )
 
 
 class TemplateMessage(Model):
@@ -203,6 +211,32 @@ class TemplateRecipient(Model):
             self.send_times = self.send_times + 1
             self.sent_on = timezone.now()
             self.save()
+
+
+class TemplateRecipientFile(Model):
+    file = models.FileField(upload_to="emails/recipients-files/")
+    email = ForeignKey(TemplateMessage, on_delete=models.CASCADE)
+    processed = models.BooleanField(default=False)
+    process_on_save = models.BooleanField(default=True)
+
+    def generate_recipients(self, mark_as_processed=False):
+        self.file.seek(0)
+        objs = []
+        for line in self.file.readlines():
+            addr = line.decode()
+            objs.append(TemplateRecipient(to_address=addr.strip(), email=self.email))
+
+        TemplateRecipient.objects.bulk_create(objs, ignore_conflicts=True)
+
+        if mark_as_processed:
+            self.processed = True
+            self.save()
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.refresh_from_db()
+        if self.process_on_save and not self.processed:
+            self.generate_recipients(mark_as_processed=True)
 
 
 # Postal models

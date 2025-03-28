@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "django_browser_reload",
+    "import_export",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
