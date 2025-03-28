@@ -19,3 +19,9 @@
 ## Pins
 
 https://help.pinterest.com/en/business/article/pinterest-product-specs
+
+
+
+## svg logos
+
+https://icons8.com/icons

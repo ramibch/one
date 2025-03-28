@@ -157,6 +157,12 @@ class SocialMediaLink(Model):
 
     @cached_property
     def static_icon_url(self) -> str:
+        """
+        svg location of the platform logo
+
+        https://icons8.com/icons
+
+        """
         return f"img/social/small/{self.platform}.svg"
 
     @cached_property
