@@ -152,8 +152,8 @@ class EnglishQuizLectionFeed(Feed):
 
     def items(self):
         past = timezone.now() - timezone.timedelta(days=90)
-        return EnglishQuizLection.objects.filter(
-            created_on__gte=past, image__isnull=False
+        return EnglishQuizLection.objects.exclude(pdf="", image="").filter(
+            created_on__gte=past
         )
 
     def item_title(self, item: EnglishQuizLection):
