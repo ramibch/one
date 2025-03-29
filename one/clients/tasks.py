@@ -45,7 +45,7 @@ def block_bad_clients_creating_user_accounts():
                 request__method="POST",
             ),
         )
-    ).filter(abuse_requests__gt=3)
+    ).filter(abuse_requests__gte=3)
 
     block_spammy_clients(bad_clients)
 
