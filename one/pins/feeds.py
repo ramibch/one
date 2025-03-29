@@ -157,7 +157,7 @@ class EnglishQuizLectionFeed(Feed):
         )
 
     def item_title(self, item: EnglishQuizLection):
-        return f"{item.quiz.name} | {item.name}"
+        return f"{item.lection.quiz.name} | {item.lection.name}"
 
     def item_description(self, item: EnglishQuizLection):
         title = self.item_title(item)
