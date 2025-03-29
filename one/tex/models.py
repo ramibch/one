@@ -172,6 +172,9 @@ class EnglishQuizLection(Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    def get_absolute_url(self):
+        return self.lection.get_absolute_url()
+
     def render(self):
         lection = self.lection
         filename = f"{lection.quiz.slug}-{lection.slug}"
