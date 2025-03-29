@@ -35,8 +35,8 @@ def block_spammy_clients_hourly():
     block_spammy_clients(clients)
 
 
-@huey.db_periodic_task(crontab(minute="47"))
-def block_clients_abuse_in_creating_account():
+@huey.db_periodic_task(crontab(hour="1", minute="4"))
+def block_bad_clients_creating_user_accounts():
     bad_clients = Client.objects.annotate(
         abuse_requests=Count(
             "request",
