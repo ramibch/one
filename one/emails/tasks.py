@@ -3,7 +3,12 @@ from huey.contrib import djhuey as huey
 
 from one.base.utils.telegram import Bot
 
-from .models import PostalReplyMessage, TemplateMessage
+from .models import (
+    PostalMessage,
+    PostalReplyMessage,
+    TemplateMessage,
+    TemplateRecipient,
+)
 
 
 @huey.db_task()
@@ -42,3 +47,13 @@ def task_send_periodic_email_templates_and_reply_postal_messages():
 
     for reply_obj in replies:
         reply_obj.reply(fail_silently=False)
+
+
+@huey.db_periodic_task(crontab(hour="12", minute="18"))
+def task_mark_recipient_as_draft_due_hard_fails():
+    fails = list(
+        PostalMessage.objects.filter(status__in=["HardFail", "SoftFail"])
+        .values_list("mail_to", flat=True)
+        .distinct()
+    )
+    TemplateRecipient.objects.filter(to_address__in=fails).update(draft=True)
