@@ -1,5 +1,10 @@
+import re
+
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django.db.models import Count, Q
+from django.urls import reverse_lazy
 from django.utils import timezone
 from huey import crontab
 from huey.contrib import djhuey as huey
@@ -7,6 +12,8 @@ from huey.contrib import djhuey as huey
 from ..base.utils.telegram import Bot
 from ..sites.models import Site
 from .models import Client, Request
+
+User = get_user_model()
 
 
 @huey.db_task()
@@ -26,6 +33,28 @@ def block_spammy_clients_hourly():
         ip_address=Client.DUMMY_IP_ADDRESS
     )
     block_spammy_clients(clients)
+
+
+@huey.db_periodic_task(crontab(minute="47"))
+def block_clients_abuse_in_creating_account():
+    bad_clients = Client.objects.annotate(
+        abuse_requests=Count(
+            "request",
+            filter=Q(
+                request__path__name=reverse_lazy("account_signup"),
+                request__method="POST",
+            ),
+        )
+    ).filter(abuse_requests__gt=3)
+
+    block_spammy_clients(bad_clients)
+
+    # We remove the users they created
+    text = "".join(
+        Request.objects.filter(client__in=bad_clients).values_list("post", flat=True)
+    )
+    bad_emails = re.findall(r"[\w.+-]+@[\w-]+\.[\w.-]+", text)
+    User.objects.filter(email__in=bad_emails).delete()
 
 
 @huey.db_task()
