@@ -3,6 +3,7 @@ from datetime import datetime
 from io import BytesIO
 
 import holidays
+from auto_prefetch import Model, OneToOneField
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
@@ -14,6 +15,7 @@ from PIL import Image
 
 from one.base.utils.abstracts import TranslatableModel
 from one.base.utils.telegram import Bot
+from one.quiz.models import Lection
 
 from .compile import render_pdf
 from .values import LATEX_LANGUAGES
@@ -161,3 +163,27 @@ class YearlyHolidayCalender(TranslatableModel):
         new_img.paste(img2, (0, height1))
 
         return new_img
+
+
+class EnglishQuizLection(Model):
+    lection = OneToOneField(Lection, on_delete=models.CASCADE)
+    pdf = models.FileField(null=True, blank=True, upload_to="english-quiz-lections/")
+    image = models.ImageField(null=True, blank=True, upload_to="english-quiz-lections/")
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    def render(self):
+        lection = self.lection
+        filename = f"{lection.quiz.slug}-{lection.slug}"
+        context = {"lection": lection}
+        # pdf
+        pdf_bytes = render_pdf("quiz/english_lection.tex", context)
+        self.pdf = ContentFile(pdf_bytes, name=f"{filename}.pdf")
+
+        # image
+        img = convert_from_bytes(pdf_bytes)[0]
+        img_io = BytesIO()
+        img.save(img_io, format="PNG")
+        self.image = ContentFile(img_io.getvalue(), name=f"{filename}.png")
+
+        self.save()

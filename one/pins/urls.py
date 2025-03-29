@@ -20,4 +20,5 @@ urlpatterns = [
     for lang in settings.LANGUAGE_CODES
 ] + [
     path("dgt/pins/questions", feeds.DgtQuestionPinFeed()),  # add to i18n_feeds?
+    path("dgt/pins/english-quiz-questions", feeds.EnglishQuizLectionFeed()),
 ]

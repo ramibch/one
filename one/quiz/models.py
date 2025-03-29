@@ -6,6 +6,7 @@ import auto_prefetch
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 
 QUIZ_LEVEL_CHOICES = (
@@ -22,6 +23,8 @@ QUESTION_TYPE_CHOICES = (
     (2, "2: Two text inputs"),
     (5, "5: One choice selection"),
 )
+
+BASE_URL = "https://englishstuff.online"
 
 
 class Quiz(models.Model):
@@ -58,6 +61,14 @@ class Lection(auto_prefetch.Model):
 
     def get_absolute_url(self):
         return self.get_first_question().get_detail_url()
+
+    @cached_property
+    def url(self):
+        return self.get_absolute_url()
+
+    @cached_property
+    def full_url(self):
+        return BASE_URL + self.url
 
     def __str__(self):
         return f"{self.name} ({self.quiz.name})"
@@ -128,6 +139,14 @@ class Question(auto_prefetch.Model):
                 "id_question": self.id,
             },
         )
+
+    @cached_property
+    def url(self):
+        return self.get_detail_url()
+
+    @cached_property
+    def full_url(self):
+        return BASE_URL + self.url
 
     def get_absolute_url(self):
         return self.get_detail_url()

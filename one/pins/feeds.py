@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..dgt.models import DgtQuestion
 from ..products.models import EtsyListing, Product
-from ..tex.models import YearlyHolidayCalender
+from ..tex.models import EnglishQuizLection, YearlyHolidayCalender
 
 
 class ProductPinFeed(Feed):
@@ -141,4 +141,34 @@ class YearlyHolidayCalenderPinFeed(Feed):
         return item.image.url
 
     def item_enclosure_length(self, item: YearlyHolidayCalender):
+        return item.image.size
+
+
+class EnglishQuizLectionFeed(Feed):
+    title = _("English quizzes")
+    link = "/"
+    description = _("Last English quizzes published in my site")
+    item_enclosure_mime_type = "image/png"
+
+    def items(self):
+        past = timezone.now() - timezone.timedelta(days=90)
+        return EnglishQuizLection.objects.filter(
+            created_on__gte=past, image__isnull=False
+        )
+
+    def item_title(self, item: EnglishQuizLection):
+        return f"{item.quiz.name} | {item.name}"
+
+    def item_description(self, item: EnglishQuizLection):
+        title = self.item_title(item)
+        question_text = "\n".join(q.full_text for q in item.question_set.all())
+        return f"{title}\n\n{question_text}"
+
+    def item_lastupdated(self, item: EnglishQuizLection):
+        return item.created_on
+
+    def item_enclosure_url(self, item: EnglishQuizLection):
+        return item.image.url
+
+    def item_enclosure_length(self, item: EnglishQuizLection):
         return item.image.size
