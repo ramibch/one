@@ -161,7 +161,7 @@ class EnglishQuizLectionFeed(Feed):
 
     def item_description(self, item: EnglishQuizLection):
         title = self.item_title(item)
-        question_text = "\n".join(q.full_text for q in item.question_set.all())
+        question_text = "\n".join(q.full_text for q in item.lection.question_set.all())
         return f"{title}\n\n{question_text}"
 
     def item_lastupdated(self, item: EnglishQuizLection):
