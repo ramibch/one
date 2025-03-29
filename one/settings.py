@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_browser_reload",
     "import_export",
+    "bx_django_utils",  # needed from huey_monitor
+    "huey_monitor",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",

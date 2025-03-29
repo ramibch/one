@@ -202,6 +202,29 @@ wheels = [
 ]
 
 [[package]]
+name = "bx-django-utils"
+version = "84"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "bx-py-utils" },
+    { name = "django" },
+    { name = "python-stdnum" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e9/ee/4dda2fe8c97203eda3d3a702af7af2972d130e77ad6077a4d26dc42e32f2/bx_django_utils-84.tar.gz", hash = "sha256:665d39455ffdb00b6df2948f75f13b379d249b2a5c5a93ccee2f23c5a9c162c2", size = 193256 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/34/5a/0b5667455ee420e130e43dcfb579882a34f136e344dbb0e61e3e0af85ff0/bx_django_utils-84-py3-none-any.whl", hash = "sha256:e42081f04e40e4f273cc539e287348b093654bbc872de25d66b14f431d453eec", size = 202796 },
+]
+
+[[package]]
+name = "bx-py-utils"
+version = "108"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/64/48/49e8cf2ffef4ea2eb5eb6f8de373694ee32951af35cbe00cd58af7c15825/bx_py_utils-108.tar.gz", hash = "sha256:d04fa970393dd1d04d40722327e41f08495b98e751a707558276caea1b807792", size = 217281 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b1/21/c8d9e6220f3ce538938d45363e7044bfaa80f8c769b7c35debc0945c738a/bx_py_utils-108-py3-none-any.whl", hash = "sha256:01768717b8f7a4c44b1c62d0dcf75cee7362ee79c9fd73cd4990d005ebc8586f", size = 176162 },
+]
+
+[[package]]
 name = "certifi"
 version = "2025.1.31"
 source = { registry = "https://pypi.org/simple" }
@@ -520,6 +543,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/dd/3c/8bf0e45b60094bbfc2147d48088a6af712534f319765352d5463c7433064/django_htmx-1.23.0.tar.gz", hash = "sha256:71e6242ac6bd32a0e14fcb12b340f901c9a924f0b4e9b461a5e6a6eea8d9c6dd", size = 63450 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/82/47/53ac27bd75d164fa6f3996367c082933ed7ff7a0d59463e09ae97c148ff8/django_htmx-1.23.0-py3-none-any.whl", hash = "sha256:bca2d7590f3df8611a32a436b9f098d8bccb9762b99b01c08dc42336966700a0", size = 60822 },
+]
+
+[[package]]
+name = "django-huey-monitor"
+version = "0.9.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "bx-django-utils" },
+    { name = "bx-py-utils" },
+    { name = "django" },
+    { name = "huey" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6b/58/b51530283c18dcacda793fbb110ceeb051f7e16fc6c786d2ece1cd1d0aa9/django-huey-monitor-0.9.0.tar.gz", hash = "sha256:03366d98579c07e132672aa760373949fecec108a0e91229e870bb21453c800b", size = 253114 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fe/2d/9203527bc703cb15d5934ece6d304869b5cc6c0737eb91920aece893bcd2/django_huey_monitor-0.9.0-py3-none-any.whl", hash = "sha256:1d5922d182e138e288f99d6cdb326cbed20c831d4c906c96cba148b0979e648a", size = 68457 },
 ]
 
 [[package]]
@@ -1122,6 +1160,7 @@ dependencies = [
     { name = "django-dbbackup" },
     { name = "django-extensions" },
     { name = "django-htmx" },
+    { name = "django-huey-monitor" },
     { name = "django-import-export" },
     { name = "django-markdownify" },
     { name = "django-modeltranslation" },
@@ -1177,6 +1216,7 @@ requires-dist = [
     { name = "django-dbbackup", specifier = ">=4.2.1" },
     { name = "django-extensions", specifier = ">=3.2.3" },
     { name = "django-htmx", specifier = ">=1.22.0" },
+    { name = "django-huey-monitor", specifier = ">=0.9.0" },
     { name = "django-import-export", specifier = ">=4.3.7" },
     { name = "django-markdownify", specifier = ">=0.9.5" },
     { name = "django-modeltranslation", specifier = ">=0.19.11" },
@@ -1497,6 +1537,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/bc/57/e84d88dfe0aec03b7a2d4327012c1627ab5f03652216c63d49846d7a6c58/python-dotenv-1.0.1.tar.gz", hash = "sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca", size = 39115 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6a/3e/b68c118422ec867fa7ab88444e1274aa40681c606d59ac27de5a5588f082/python_dotenv-1.0.1-py3-none-any.whl", hash = "sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a", size = 19863 },
+]
+
+[[package]]
+name = "python-stdnum"
+version = "1.20"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/40/3f/dd322d9408e1850a8f0faab8e2a4bf2a55c0b722a72f7579362177dfad72/python-stdnum-1.20.tar.gz", hash = "sha256:ad2a2cf2eb025de408210235f36b4ae31252de3186240ccaa8126e117cb82690", size = 1191978 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d6/0f/8639d60f6d7c169836694aa81504c4ee9a95dfb73ccdb16be66df4785f52/python_stdnum-1.20-py2.py3-none-any.whl", hash = "sha256:111008e10391d54fb2afad2a10df70d5cb0c6c0a7ec82fec6f022cb8712961d3", size = 1059803 },
 ]
 
 [[package]]
