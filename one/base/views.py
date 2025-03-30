@@ -1,5 +1,3 @@
-import importlib
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sitemaps.views import index as django_sitemap_index
@@ -14,36 +12,41 @@ from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 
+from one.articles.models import Article
 from one.base.utils.generic_views import MultilinguageDetailView
 from one.base.utils.http import CustomHttpRequest
-from one.base.utils.telegram import Bot
+from one.dgt.models import DgtTest
+from one.faqs.models import FAQ
+from one.home.models import ViewType as HomeViewType
+from one.plans.models import Plan
+from one.products.models import Product
+from one.quiz.models import Quiz
 
-from ..articles.models import Article
-from ..faqs.models import FAQ
-from ..plans.models import Plan
-from ..products.models import Product
 from .tasks import save_search_query
 
 User = get_user_model()
 
 
 @require_GET
-def dispatch_home_view(request: CustomHttpRequest) -> HttpResponse:
+def home_view(request: CustomHttpRequest) -> HttpResponse:
     home = getattr(request.site, "home", None)
 
     if not home or not getattr(home, "view_type", "").strip():
         raise Http404("Home view is not configured.")
 
-    try:
-        module_name, _, view_name = home.view_type.rpartition(".")
-        view_module = importlib.import_module(module_name)
-        view_func = getattr(view_module, view_name)
-    except (ModuleNotFoundError, AttributeError, ValueError) as err:
-        msg = "Requested view not found."
-        Bot.to_admin(f"{msg}.\nhome:{home}\nsite:{request.site}")
-        raise Http404(msg) from err
+    match home.view_type:
+        case HomeViewType.HOME.value:
+            return render(request, home.template_name, {"object": home})
 
-    return view_func(request)
+        case HomeViewType.DGT.value:
+            context = {"tests": DgtTest.objects.all(), "object": home}
+            return render(request, "dgt/index.html", context)
+
+        case HomeViewType.ENGLISH.value:
+            context = {"quiz_list": Quiz.objects.all()}
+            return render(request, "quiz/quiz_list.html", context)
+
+    raise Http404
 
 
 def slug_page_view(request: CustomHttpRequest) -> HttpResponse:

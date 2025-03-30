@@ -10,8 +10,8 @@ from .views import (
     PlanListView,
     ProductListView,
     RobotTxtView,
-    dispatch_home_view,
     favicon_view,
+    home_view,
     hx_search_results_view,
     search_view,
     sitemap_view,
@@ -40,5 +40,5 @@ urlpatterns = [
     # TODO: page url (Topic, Article, Product, ...)
     path("<slug:slug>", ArticleDetailView.as_view(), name="article-detail"),
     # Home
-    path("", dispatch_home_view, name="home"),
+    path("", home_view, name="home"),
 ]
