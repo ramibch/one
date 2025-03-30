@@ -168,6 +168,7 @@ class YearlyHolidayCalender(TranslatableModel):
 class EnglishQuizLection(Model):
     lection = OneToOneField(Lection, on_delete=models.CASCADE)
     pdf = models.FileField(null=True, blank=True, upload_to="english-quiz-lections/")
+    print = models.FileField(null=True, blank=True, upload_to="english-quiz-lections/")
     image = models.ImageField(null=True, blank=True, upload_to="english-quiz-lections/")
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -177,11 +178,27 @@ class EnglishQuizLection(Model):
 
     def render(self):
         lection = self.lection
-        filename = f"{lection.quiz.slug}-{lection.slug}"
-        context = {"lection": lection}
+        filename = f"{lection.quiz.slug}-{lection.slug}-{lection.id}"
+        color = random.choice(
+            [
+                "lime",
+                "teal",
+                "green",
+                "cyan",
+                "magenta",
+                "brown",
+                "orange",
+                "red",
+            ]
+        )
+        context = {"lection": lection, "color": color, "size": "LARGE"}
         # pdf
         pdf_bytes = render_pdf("quiz/english_lection.tex", context)
         self.pdf = ContentFile(pdf_bytes, name=f"{filename}.pdf")
+
+        # print
+        print_bytes = render_pdf("quiz/english_lection.tex", {"lection": lection})
+        self.print = ContentFile(print_bytes, name=f"{filename}-print.pdf")
 
         # image
         img = convert_from_bytes(pdf_bytes)[0]
