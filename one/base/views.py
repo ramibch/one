@@ -1,3 +1,5 @@
+import importlib
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sitemaps.views import index as django_sitemap_index
@@ -25,16 +27,12 @@ User = get_user_model()
 
 
 @require_GET
-def home_view(request: CustomHttpRequest) -> HttpResponse:
-    """
-    Home page of a site
-
-    Check out this video to implemtent the sections:
-    https://www.youtube.com/watch?v=g3cmNDlwGEg
-    """
-
+def dispatch_home_view(request: CustomHttpRequest) -> HttpResponse:
     if hasattr(request.site, "home"):
-        return render(request, "home/home.html", {"object": request.site.home})
+        full_view_func_name = request.site.home.view_type
+        module_name, _, view_name = full_view_func_name.rpartition(".")
+        view_func = getattr(importlib.import_module(module_name), view_name)
+        return view_func(request)
     else:
         raise Http404
 
