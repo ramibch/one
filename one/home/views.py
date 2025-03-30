@@ -11,5 +11,5 @@ def home_view(request) -> HttpResponse:
     Check out this video to implemtent the sections:
     https://www.youtube.com/watch?v=g3cmNDlwGEg
     """
-
-    return render(request, "home/home.html", {"object": request.site.home})
+    home = request.site.home
+    return render(request, home.template_name, {"object": home})

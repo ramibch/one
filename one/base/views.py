@@ -16,6 +16,7 @@ from django.views.generic.list import ListView
 
 from one.base.utils.generic_views import MultilinguageDetailView
 from one.base.utils.http import CustomHttpRequest
+from one.base.utils.telegram import Bot
 
 from ..articles.models import Article
 from ..faqs.models import FAQ
@@ -28,13 +29,21 @@ User = get_user_model()
 
 @require_GET
 def dispatch_home_view(request: CustomHttpRequest) -> HttpResponse:
-    if hasattr(request.site, "home"):
-        full_view_func_name = request.site.home.view_type
-        module_name, _, view_name = full_view_func_name.rpartition(".")
-        view_func = getattr(importlib.import_module(module_name), view_name)
-        return view_func(request)
-    else:
-        raise Http404
+    home = getattr(request.site, "home", None)
+
+    if not home or not getattr(home, "view_type", "").strip():
+        raise Http404("Home view is not configured.")
+
+    try:
+        module_name, _, view_name = home.view_type.rpartition(".")
+        view_module = importlib.import_module(module_name)
+        view_func = getattr(view_module, view_name)
+    except (ModuleNotFoundError, AttributeError, ValueError) as err:
+        msg = "Requested view not found."
+        Bot.to_admin(f"{msg}.\nhome:{home}\nsite:{request.site}")
+        raise Http404(msg) from err
+
+    return view_func(request)
 
 
 def slug_page_view(request: CustomHttpRequest) -> HttpResponse:

@@ -7,10 +7,10 @@ from django.utils.functional import cached_property
 
 class User(AbstractUser):
     asked_to_verify_email = models.BooleanField(default=False)
+    when_asked_to_verify = models.DateTimeField(blank=True)
     country_code = models.CharField(max_length=8, null=True)
     language = models.CharField(max_length=8, choices=settings.LANGUAGES, null=True)
     sites = models.ManyToManyField("sites.Site", blank=True)
-    possible_spam = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"User ({self.username} - {self.email})"

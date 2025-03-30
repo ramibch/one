@@ -1,7 +1,7 @@
 from allauth.account.models import EmailAddress
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from django.utils import translation
+from django.utils import timezone, translation
 from django.utils.translation import gettext_lazy as _
 from huey import crontab
 from huey.contrib import djhuey as huey
@@ -38,4 +38,4 @@ def task_ask_users_to_verify_email():
                 to=[user.email],
             ).send(fail_silently=True)
 
-    users.update(asked_to_verify_email=True)
+    users.update(asked_to_verify_email=True, when_asked_to_verify=timezone.now())
