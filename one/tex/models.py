@@ -193,11 +193,19 @@ class EnglishQuizLection(Model):
         )
         context = {"lection": lection, "color": color, "size": "LARGE"}
         # pdf
-        pdf_bytes = render_pdf("quiz/english_lection.tex", context)
+        pdf_bytes = render_pdf(
+            "quiz/english_lection.tex",
+            context,
+            interpreter="xelatex",
+        )
         self.pdf = ContentFile(pdf_bytes, name=f"{filename}.pdf")
 
         # print
-        print_bytes = render_pdf("quiz/english_lection.tex", {"lection": lection})
+        print_bytes = render_pdf(
+            "quiz/english_lection.tex",
+            {"lection": lection},
+            interpreter="xelatex",
+        )
         self.print = ContentFile(print_bytes, name=f"{filename}-print.pdf")
 
         # image
