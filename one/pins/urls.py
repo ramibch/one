@@ -8,9 +8,9 @@ from . import feeds
 
 i18n_feeds = {
     # key/{lang}
-    "pins/yearly-calendars": feeds.YearlyHolidayCalenderPinFeed,
-    "products/pins/products": feeds.ProductPinFeed,
-    "products/pins/etsy": feeds.EtsyListingPinFeed,
+    "yearly-calendars": feeds.YearlyHolidayCalenderPinFeed,
+    "products": feeds.ProductPinFeed,
+    "etsy": feeds.EtsyListingPinFeed,
 }
 
 
@@ -19,6 +19,6 @@ urlpatterns = [
     for url_prefix, feed_class in i18n_feeds.items()
     for lang in settings.LANGUAGE_CODES
 ] + [
-    path("dgt/pins/questions", feeds.DgtQuestionPinFeed()),  # add to i18n_feeds?
-    path("pins/english-quiz-questions", feeds.EnglishQuizLectionFeed()),
+    path("dgt", feeds.DgtQuestionPinFeed()),
+    path("english", feeds.EnglishQuizLectionFeed()),
 ]
