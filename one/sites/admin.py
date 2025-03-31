@@ -53,6 +53,7 @@ class SiteAdmin(TranslatableModelAdmin):
                 "fields": (
                     "title",
                     "description",
+                    "keywords",
                 )
             },
         ),
