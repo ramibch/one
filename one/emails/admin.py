@@ -55,7 +55,7 @@ class RecipientAdmin(admin.ModelAdmin):
 
 @admin.register(TemplateRecipientFile)
 class TemplateRecipientFileAdmin(admin.ModelAdmin):
-    list_display = ("file", "email", "processed")
+    list_display = ("__str__", "email", "processed")
     list_filter = ("email", "processed")
     actions = ["generate_recipients"]
 

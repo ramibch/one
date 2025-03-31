@@ -214,10 +214,16 @@ class TemplateRecipient(Model):
 
 
 class TemplateRecipientFile(Model):
-    file = models.FileField(upload_to="emails/recipients-files/")
+    file = models.FileField(
+        upload_to="emails/recipients-files/",
+        storage=storages["private"],
+    )
     email = ForeignKey(TemplateMessage, on_delete=models.CASCADE)
     processed = models.BooleanField(default=False)
     process_on_save = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.file.name
 
     def generate_recipients(self, mark_as_processed=False):
         self.file.seek(0)

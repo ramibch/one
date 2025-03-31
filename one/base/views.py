@@ -95,14 +95,7 @@ def hx_search_results_view(request: CustomHttpRequest) -> HttpResponse:
     if q in ["", None]:
         return HttpResponse()
 
-    save_search_query(
-        {
-            "user": request.user if isinstance(request.user, User) else None,
-            "client": request.client,
-            "site": request.site,
-            "query": q,
-        }
-    )
+    save_search_query({"client": request.client, "site": request.site, "query": q})
 
     articles = Article.objects.filter(body__contains=q)
     faqs = FAQ.objects.filter(question__contains=q)

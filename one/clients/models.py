@@ -26,7 +26,7 @@ class Path(Model):
 class Client(Model):
     DUMMY_IP_ADDRESS = "10.10.10.10"
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    country = models.CharField(max_length=2, choices=settings.COUNTRIES, default="CH")
+    country = models.CharField(max_length=2, choices=settings.COUNTRIES, null=True)
     site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
     geoinfo = ForeignKey("geo.GeoInfo", null=True, on_delete=models.SET_NULL)
     ip_address = models.GenericIPAddressField(unique=True, db_index=True)
