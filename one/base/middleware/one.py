@@ -115,7 +115,7 @@ class OneMiddleware:
 
         elif request.site.language_count == 1:
             # If the site has just one language, set that one
-            lang = request.site.default_language
+            lang = request.site.language
 
         if lang is not None:
             response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)

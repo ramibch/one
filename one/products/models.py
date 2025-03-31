@@ -227,7 +227,7 @@ class EtsyListing(Model):
         api_client = self.api_client
         shop_id = self.shop_id
 
-        translation.activate(self.shop.default_language)
+        translation.activate(self.shop.language)
         request_listing = CreateDraftListingRequest(
             quantity=self.quantity,
             title=self.get_title(),
