@@ -81,6 +81,12 @@ class PicoCssColor(models.TextChoices):
     GREEN = "green", _("Green")
 
 
+class SiteType(models.TextChoices):
+    STANDARD = "standard", _("Standard")
+    DGT = "dgt", _("DGT")
+    ENGLISH = "english", _("English quizzes")
+
+
 class Site(TranslatableModel):
     LANG_ATTR = "language"
     LANGS_ATTR = "languages"
@@ -94,7 +100,11 @@ class Site(TranslatableModel):
         default=list,
         blank=True,
     )
-
+    site_type = models.CharField(
+        max_length=16,
+        choices=SiteType.choices,
+        default=SiteType.STANDARD,
+    )
     domain = models.CharField(
         _("Name"),
         max_length=32,

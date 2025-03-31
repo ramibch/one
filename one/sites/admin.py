@@ -37,12 +37,13 @@ class SiteAdmin(TranslatableModelAdmin):
             _("Management"),
             {
                 "fields": (
-                    "remarks",
+                    "site_type",
                     "language",
                     "languages",
                     "topics",
                     "requests_duration",
                     "spam_requests_duration",
+                    "remarks",
                 )
             },
         ),

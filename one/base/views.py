@@ -17,10 +17,10 @@ from one.base.utils.generic_views import MultilinguageDetailView
 from one.base.utils.http import CustomHttpRequest
 from one.dgt.models import DgtTest
 from one.faqs.models import FAQ
-from one.home.models import ViewType as HomeViewType
 from one.plans.models import Plan
 from one.products.models import Product
 from one.quiz.models import Quiz
+from one.sites.models import SiteType
 
 from .tasks import save_search_query
 
@@ -29,20 +29,24 @@ User = get_user_model()
 
 @require_GET
 def home_view(request: CustomHttpRequest) -> HttpResponse:
-    home = getattr(request.site, "home", None)
+    """
+    Home page
+    """
 
-    if not home or not getattr(home, "view_type", "").strip():
-        raise Http404("Home view is not configured.")
+    match request.site.site_type:
+        case SiteType.STANDARD.value:
+            home = getattr(request.site, "home", None)
 
-    match home.view_type:
-        case HomeViewType.HOME.value:
-            return render(request, home.template_name, {"object": home})
+            if not home:
+                raise Http404
 
-        case HomeViewType.DGT.value:
-            context = {"tests": DgtTest.objects.all(), "object": home}
+            return render(request, "home/home.html", {"object": home})
+
+        case SiteType.DGT.value:
+            context = {"tests": DgtTest.objects.all()}
             return render(request, "dgt/index.html", context)
 
-        case HomeViewType.ENGLISH.value:
+        case SiteType.ENGLISH.value:
             context = {"quiz_list": Quiz.objects.all()}
             return render(request, "quiz/quiz_list.html", context)
 
