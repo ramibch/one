@@ -120,7 +120,7 @@ class Site(TranslatableModel):
     emoji_in_brand = models.BooleanField(default=True, blank=True)
     picocss_color = models.CharField(
         max_length=16,
-        choices=PicoCssColor,
+        choices=PicoCssColor.choices,
         default=PicoCssColor.PUMPKIN,
     )
 
@@ -136,8 +136,9 @@ class Site(TranslatableModel):
     topics = ManyToManyField("base.Topic", blank=True)
 
     # SEO
-    title = models.CharField(max_length=64)
-    description = models.TextField(max_length=256)
+    title = models.CharField(max_length=64, null=True, blank=True)
+    description = models.TextField(max_length=256, null=True, blank=True)
+    keywords = models.TextField(max_length=256, null=True, blank=True)
 
     objects = SiteManager()
 
@@ -168,7 +169,7 @@ class Site(TranslatableModel):
         return f"{self.display_brand} <no-reply@{self.domain}>"
 
     @cached_property
-    def keywords(self):
+    def topic_keywords(self):
         return ", ".join([t.name for t in self.topics.all()])
 
     def get_object_admin_url(self, obj) -> str:
