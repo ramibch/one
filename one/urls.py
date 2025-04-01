@@ -38,6 +38,7 @@ urlpatterns = [
     path("tools/", include("one.tools.urls")),
     path("clients/", include("one.clients.urls")),
     path("englishquizzes/", include("one.quiz.urls")),
+    path("quiz/", include("one.quiz.urls")),
     path("dgt/", include("one.dgt.urls")),
     path("emails/", include("one.emails.urls")),
     path("etsy/", include("one.etsy.urls")),
