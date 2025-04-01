@@ -3,7 +3,7 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.sessions.models import Session
 from django.core.management import call_command
 from django.http import HttpRequest, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from ...clients.models import Client, PathRedirect, RedirectTypes, Request
 from ...clients.tasks import update_client_task
@@ -122,11 +122,14 @@ class OneMiddleware:
 
     def save_request(self, request, response):
         exempt_paths = [
-            reverse("admin:index"),
-            reverse("favicon"),
+            reverse_lazy("admin:index"),
+            reverse_lazy("favicon"),
+            reverse_lazy("django_browser_reload:events"),
         ]
 
-        path_ok = not any(request.path.startswith(exempt) for exempt in exempt_paths)
+        path_ok = not any(
+            request.path.startswith(str(exempt)) for exempt in exempt_paths
+        )
         user_ok = True  # not request.user.is_staff
 
         if path_ok and user_ok:
