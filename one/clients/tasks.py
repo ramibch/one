@@ -106,7 +106,7 @@ def purge_requests_task():
 
 @huey.db_periodic_task(crontab(day="15", hour="15", minute="15"))
 def inform_admin_about_404_issues():
-    some_time_ago = timezone.now() - timedelta(days=7)
+    some_time_ago = timezone.now() - timedelta(days=90)
 
     qs = (
         Path.objects.annotate(
