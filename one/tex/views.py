@@ -21,12 +21,16 @@ class YearlyHolidayCalenderView(DetailView):
 def temp_calendar(request, sd, c, y):
     c_dict = {
         "austria": "AT",
+        "oesterreich": "AT",
         "germany": "DE",
         "deutschland": "DE",
         "alemania": "DE",
         "spain": "ES",
         "espana": "ES",
         "spanien": "ES",
+        "suiza": "CH",
+        "schweiz": "CH",
+        "switzerland": "CH",
     }
     sd_dict = {
         # Germany
