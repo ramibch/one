@@ -1,4 +1,5 @@
 import re
+from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -11,7 +12,7 @@ from huey.contrib import djhuey as huey
 
 from ..base.utils.telegram import Bot
 from ..sites.models import Site
-from .models import Client, Request
+from .models import Client, Path, Request
 
 User = get_user_model()
 
@@ -101,3 +102,18 @@ def purge_requests_task():
     out = qs.distinct().delete()
     if out[0] > 0:
         Bot.to_admin(f"{out[0]} Requests purged")
+
+
+@huey.db_periodic_task(crontab(day="15", hour="15", minute="15"))
+def inform_admin_about_404_issues():
+    some_time_ago = timezone.now() - timedelta(days=7)
+
+    qs = Path.objects.annotate(
+        num=Count(
+            "request",
+            filter=Q(request__status_code=404, request__time__gt=some_time_ago),
+        )
+    ).order_by("-num")[0:100]
+    text = "Most not-found (404) paths\n\n"
+    text += "\n".join(f"{p.num} {p.name}" for p in qs)
+    Bot.to_admin(text)

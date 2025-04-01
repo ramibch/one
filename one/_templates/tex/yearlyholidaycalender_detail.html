@@ -24,16 +24,19 @@
     <h2>{% trans "Related calendars" %}</h2>
   </center>
   {% endif %}
-  {% for rel in object.related_objects %}
-  <div class="col-md-4">
-    <a href="{{ rel.get_absolute_url }}">
-    <article>
-      <header> {{ rel.title }} </header>
-        <img  src="{{ rel.image.url }}" alt="{{ rel.title }}">
-      </article>
-    </a>
-  </div>
+
+  <div class="row">
+    {% for rel in object.related_objects %}
+    <div class="col-md-4">
+      <a href="{{ rel.get_absolute_url }}">
+        <article>
+          <header> {{ rel.title }} </header>
+          <img  src="{{ rel.image.url }}" alt="{{ rel.title }}">
+        </article>
+      </a>
+    </div>
   {% endfor %}
+  </div>
 
 
 {% endblock content %}
