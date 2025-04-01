@@ -84,8 +84,6 @@ def temp_calendar(request, sd, c, y):
     ).first()
 
     if obj:
-        return render(
-            request, "calendars/yearlyholidaycalender_detail.html", {"object": obj}
-        )
+        return render(request, "tex/yearlyholidaycalender_detail.html", {"object": obj})
 
     raise Http404

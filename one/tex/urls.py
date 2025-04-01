@@ -17,4 +17,7 @@ urlpatterns = [
     path("public-holidays-in-<str:sd>-<str:c>-for-the-year-<int:y>", temp_calendar),
     path("feiertage-in-<str:sd>-<str:c>-fur-das-jahr-<int:y>", temp_calendar),
     path("dias-festivos-en-<str:sd>-<str:c>-para-el-ano-<int:y>", temp_calendar),
+    path("public-holidays-in-<str:sd>-<str:c>-for-the-year-<int:y>/", temp_calendar),
+    path("feiertage-in-<str:sd>-<str:c>-fur-das-jahr-<int:y>/", temp_calendar),
+    path("dias-festivos-en-<str:sd>-<str:c>-para-el-ano-<int:y>/", temp_calendar),
 ]

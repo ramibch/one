@@ -10,8 +10,8 @@ from .models import EnglishQuizLection, YearlyHolidayCalender
 from .values import LATEX_LANGUAGES
 
 THIS_YEAR = timezone.now().year
-YEARS = list(range(THIS_YEAR, THIS_YEAR + 3))
 LAST_YEAR = THIS_YEAR - 1
+YEARS = list(range(LAST_YEAR, THIS_YEAR + 3))
 
 
 # Calendars
