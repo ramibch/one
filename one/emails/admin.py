@@ -72,7 +72,7 @@ class TemplateRecipientFileAdmin(admin.ModelAdmin):
 @admin.register(Sender)
 class SenderAdmin(admin.ModelAdmin):
     search_fields = ("name", "address")
-    list_display = ("__str__", "name", "address")
+    list_display = ("name", "address")
 
 
 @admin.register(TemplateMessage)
