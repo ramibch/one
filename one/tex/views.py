@@ -11,7 +11,7 @@ class YearlyHolidayCalenderView(DetailView):
         country = self.kwargs.get("country")
         subdiv = self.kwargs.get("subdiv")
         try:
-            return YearlyHolidayCalender.objects.exclude(pdf="", image="").get(
+            return YearlyHolidayCalender.objects.exclude(image="").get(
                 year=year, country=country, subdiv=subdiv
             )
         except YearlyHolidayCalender.DoesNotExist:
@@ -78,14 +78,52 @@ def temp_calendar(request, sd, c, y):
         "navarra": "NC",
         "pais-vasco": "PV",
         "balencia": "VC",
+        # CH
+        "aargau": "AG",
+        "appenzell-innerrhoden": "AI",
+        "appenzell-ausserrhoden": "AR",
+        "basel-landschaft": "BL",
+        "basel-stadt": "BS",
+        "bern": "BE",
+        "fribourg": "FR",
+        "geneva": "GE",
+        "glarus": "GL",
+        "graubunden": "GR",
+        "jura": "JU",
+        "lucerne": "LU",
+        "neuchatel": "NE",
+        "nidwalden": "NW",
+        "obwalden": "OW",
+        "st-gallen": "SG",
+        "schaffhausen": "SH",
+        "schwyz": "SZ",
+        "solothurn": "SO",
+        "thurgau": "TG",
+        "ticino": "TI",
+        "uri": "UR",
+        "vaud": "VD",
+        "valais": "VS",
+        "zug": "ZG",
+        "zurich": "ZH",
     }
 
     country = c_dict.get(c)
     subdiv = sd_dict.get(sd)
 
-    obj = YearlyHolidayCalender.objects.filter(
-        year=y, country=country, subdiv=subdiv
-    ).first()
+    obj = (
+        YearlyHolidayCalender.objects.exclude(image="")
+        .filter(year=y, country=country, subdiv=subdiv)
+        .first()
+    )
+
+    if obj:
+        return render(request, "tex/yearlyholidaycalender_detail.html", {"object": obj})
+
+    obj = (
+        YearlyHolidayCalender.objects.exclude(image="")
+        .filter(year=y, country=country)
+        .first()
+    )
 
     if obj:
         return render(request, "tex/yearlyholidaycalender_detail.html", {"object": obj})
