@@ -124,3 +124,20 @@ def inform_admin_about_404_issues():
     text = "Most not-found (404) paths\n\n"
     text += "\n".join(f"{p.num} {p.name}" for p in qs)
     Bot.to_admin(text)
+
+
+@huey.db_periodic_task(crontab(hour="7", minute="30"))
+def cleanup_bot_requests_and_clients():
+    """
+    Remove requests from bot and crawlers: just requests
+    without errors. The ones with errors will be used to
+    improve the application/code.
+
+    Remove bot clients without linked requests
+    """
+
+    Request.objects.filter(client__possible_bot=True, status_code__lt=400).delete()
+
+    Client.objects.annotate(num=Count("request")).filter(
+        possible_bot=True, num=0
+    ).delete()
