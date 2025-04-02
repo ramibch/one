@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geoip2 import GeoIP2
 from django.db import models
+from django.db.models import Case, Q, Value, When
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -33,9 +34,24 @@ class Client(Model):
     is_blocked = models.BooleanField(default=False)
     user_agent = models.CharField(max_length=512, null=True)
     dark_theme = models.BooleanField(default=True)
+    possible_bot = models.GeneratedField(
+        expression=Case(
+            When(
+                Q(user_agent__contains="bot") | Q(user_agent__contains="Bot"),
+                then=Value(True),
+            ),
+            default=Value(False),
+        ),
+        output_field=models.BooleanField(db_default=False),
+        db_persist=True,
+    )
 
     def __str__(self):
-        return self.ip_address
+        return f"{self.emoji} {self.ip_address}"
+
+    @cached_property
+    def emoji(self):
+        return "🤖" if self.possible_bot else "👤"
 
     @classmethod
     def dummy_object(cls):

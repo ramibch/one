@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils import timezone
 
 from .models import Client, Path, PathRedirect, Request
 from .tasks import block_spammy_clients, update_client_task
@@ -28,12 +29,24 @@ class RequestInline(admin.TabularInline):
     def has_change_permission(self, request, obj=None):
         return False
 
+    def get_queryset(self, request):
+        past = timezone.now() - request.site.requests_duration
+        return super().get_queryset(request).filter(time__gte=past)
+
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ("ip_address", "is_blocked", "user", "country", "site")
-    readonly_fields = ("ip_address", "geoinfo", "user", "country", "site", "user_agent")
-    list_filter = ("is_blocked", "site", "country")
+    list_display = ("ip_address", "emoji", "is_blocked", "user", "country", "site")
+    readonly_fields = (
+        "ip_address",
+        "geoinfo",
+        "user",
+        "country",
+        "site",
+        "user_agent",
+        "possible_bot",
+    )
+    list_filter = ("is_blocked", "site", "country", "possible_bot")
     search_fields = ("ip_address", "site", "country")
     actions = ["block_ips", "update_values"]
     inlines = (RequestInline,)
