@@ -30,9 +30,9 @@ from .serializers import (
 class AuthMixin:
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        shop_id = request.META.get("HTTP_X_ETSY_SHOP_ID")
-        user_id = request.META.get("HTTP_X_ETSY_USER_ID")
-        code = request.META.get("HTTP_X_ETSY_CODE")
+        shop_id = request.headers.get("x-etsy-shop-id")
+        user_id = request.headers.get("x-etsy-user-id")
+        code = request.headers.get("x-etsy-code")
         if None in (shop_id, user_id, code):
             msg = "Missing: x-etsy-shop-id, x-etsy-user-id or x-etsy-code"
             raise PermissionDenied(msg)

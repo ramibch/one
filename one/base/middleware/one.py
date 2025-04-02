@@ -51,7 +51,7 @@ class OneMiddleware:
         return response
 
     def valid_secret_key(self, request):
-        return request.META.get("HTTP_X_ONE_SECRET_KEY") == settings.ONE_SECRET_KEY
+        return request.headers.get("x-one-secret-key") == settings.ONE_SECRET_KEY
 
     def get_session(self, request):
         try:
@@ -94,7 +94,7 @@ class OneMiddleware:
                 user=user_or_none,
                 site=request.site,
                 is_blocked=False,
-                user_agent=request.META.get("HTTP_USER_AGENT", "")[:256],
+                user_agent=request.headers.get("user-agent", "")[:256],
             )
             update_client_task(client)
 

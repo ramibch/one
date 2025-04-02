@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.conf import settings
 from django.contrib import admin
-from django.urls import include, path, re_path
+from django.urls import include, path
 
 if settings.ENV == "prod":
     # Custom 404 error view
@@ -50,5 +50,5 @@ urlpatterns = [
 
 if settings.ENV == "dev" and settings.DEBUG:
     urlpatterns = [
-        re_path(r"^rosetta/", include("rosetta.urls")),
+        path("rosetta/", include("rosetta.urls")),
     ] + urlpatterns

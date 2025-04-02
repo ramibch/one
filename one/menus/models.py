@@ -34,7 +34,7 @@ class NavbarLink(Model):
     )
     show_type = models.CharField(
         default=ShowTypes.ALWAYS,
-        choices=ShowTypes.choices,
+        choices=ShowTypes,
         max_length=16,
     )
     new_tab = models.BooleanField(default=False)
@@ -79,7 +79,7 @@ class FooterItem(TranslatableModel):
 
     show_type = models.CharField(
         default=ShowTypes.ALWAYS,
-        choices=ShowTypes.choices,
+        choices=ShowTypes,
         max_length=16,
     )
     title = models.CharField(max_length=64)
@@ -116,7 +116,7 @@ class FooterLink(Model):
     )
     show_type = models.CharField(
         default=ShowTypes.ALWAYS,
-        choices=ShowTypes.choices,
+        choices=ShowTypes,
         max_length=16,
     )
     new_tab = models.BooleanField(default=False)
@@ -145,7 +145,7 @@ class SocialMediaLink(Model):
     )
     show_type = models.CharField(
         default=ShowTypes.ALWAYS,
-        choices=ShowTypes.choices,
+        choices=ShowTypes,
         max_length=16,
     )
 

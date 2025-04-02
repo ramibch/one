@@ -180,31 +180,31 @@ class Animation(Model):
         null=True,
         blank=True,
         default=AnimationType.VANILLA,
-        choices=AnimationType.choices,
+        choices=AnimationType,
     )
     name = models.CharField(
         max_length=16,
         null=True,
         blank=True,
         default=AttentionSeekers.FLASH,
-        choices=AttentionSeekers.choices,
+        choices=AttentionSeekers,
     )
     repeat = models.CharField(
         max_length=16,
         null=True,
         blank=True,
         default=AnimationRepeat.ONE,
-        choices=AnimationRepeat.choices,
+        choices=AnimationRepeat,
     )
     speed = models.CharField(
         max_length=16,
         null=True,
         blank=True,
-        choices=AnimationSpeed.choices,
+        choices=AnimationSpeed,
     )
     delay = models.CharField(
         max_length=16,
         null=True,
         blank=True,
-        choices=AnimationDelay.choices,
+        choices=AnimationDelay,
     )

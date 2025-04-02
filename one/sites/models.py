@@ -102,7 +102,7 @@ class Site(TranslatableModel):
     )
     site_type = models.CharField(
         max_length=16,
-        choices=SiteType.choices,
+        choices=SiteType,
         default=SiteType.STANDARD,
     )
     domain = models.CharField(
@@ -120,7 +120,7 @@ class Site(TranslatableModel):
     emoji_in_brand = models.BooleanField(default=True, blank=True)
     picocss_color = models.CharField(
         max_length=16,
-        choices=PicoCssColor.choices,
+        choices=PicoCssColor,
         default=PicoCssColor.PUMPKIN,
     )
 

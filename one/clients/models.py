@@ -144,7 +144,7 @@ class PathRedirect(Model):
     to_path = ForeignKey(Path, on_delete=models.CASCADE, related_name="+")
     applicable = models.CharField(
         default=RedirectTypes.ALWAYS,
-        choices=RedirectTypes.choices,
+        choices=RedirectTypes,
         max_length=16,
     )
 
