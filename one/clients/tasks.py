@@ -126,7 +126,7 @@ def inform_admin_about_404_issues():
     Bot.to_admin(text)
 
 
-@huey.db_periodic_task(crontab(hour="7", minute="30"))
+@huey.db_periodic_task(crontab(minute="*/5"))
 def cleanup_bot_requests_and_clients():
     """
     Remove requests from bot and crawlers: just requests
@@ -134,6 +134,8 @@ def cleanup_bot_requests_and_clients():
     improve the application/code.
 
     Remove bot clients without linked requests
+
+    # TODO: move logic to OneMiddleware (do not save objs)
     """
 
     Request.objects.filter(client__possible_bot=True, status_code__lt=400).delete()
