@@ -5,7 +5,7 @@ from django.core.management import call_command
 from django.http import HttpRequest, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 
-from one.clients.tasks import save_request_task
+from one.clients.tasks import save_request_task, update_geo_client_values
 
 from ...clients.models import Client, PathRedirect, RedirectTypes
 from ...sites.models import Site
@@ -99,8 +99,7 @@ class OneMiddleware:
                 is_blocked=False,
                 user_agent=self.get_user_agent(request),
             )
-            client.update_geo_values()
-            # update_geo_client_values(client)
+            update_geo_client_values(client)
 
         return client
 
@@ -134,7 +133,6 @@ class OneMiddleware:
 
         path_ok = not any(request.path.startswith(str(exempt)) for exempt in skip_paths)
         user_ok = not request.user.is_staff
-
         status_ok = response.status_code >= 400 and client.is_bot or not client.is_bot
 
         if path_ok and user_ok and status_ok:
