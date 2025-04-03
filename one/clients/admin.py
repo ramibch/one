@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.utils import timezone
 
+from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+
 from .models import Client, Path, PathRedirect, Request
-from .tasks import block_spammy_clients, update_client_task
+from .tasks import block_spammy_clients, update_geo_client_values
 
 
 @admin.register(Path)
@@ -10,7 +12,6 @@ class PathAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     list_display = ("name", "is_spam", "created_on")
     list_filter = ("is_spam", "created_on")
-    readonly_fields = ("created_on",)
     actions = ["mark_as_spam", "mark_as_no_spam"]
 
     @admin.action(description="❗Mark as spam")
@@ -44,9 +45,9 @@ class ClientAdmin(admin.ModelAdmin):
         "country",
         "site",
         "user_agent",
-        "possible_bot",
+        "is_bot",
     )
-    list_filter = ("is_blocked", "site", "country", "possible_bot")
+    list_filter = ("is_blocked", "is_bot", "site", "country")
     search_fields = ("ip_address", "site", "country")
     actions = ["block_ips", "update_values"]
     inlines = (RequestInline,)
@@ -61,7 +62,7 @@ class ClientAdmin(admin.ModelAdmin):
     @admin.action(description="🔄 Update values")
     def update_values(modeladmin, request, queryset):
         for client in queryset:
-            update_client_task(client)
+            update_geo_client_values(client)
 
 
 @admin.register(Request)
@@ -69,17 +70,18 @@ class RequestAdmin(admin.ModelAdmin):
     readonly_fields = tuple(field.name for field in Request._meta.fields)
     list_display = ("__str__", "client", "method", "status_code", "client__is_blocked")
     list_filter = (
-        "client__possible_bot",
+        "client__is_bot",
+        "client__site",
         "status_code",
         "method",
         "time",
         "ref",
-        "client__site",
     )
     search_fields = ("path__name", "client__ip_address")
 
 
 @admin.register(PathRedirect)
 class LinkRedirectAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "site", "from_path", "from_path")
+    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+    list_display = ("__str__", "from_path", "to_path")
     autocomplete_fields = ("from_path", "to_path")

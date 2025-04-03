@@ -18,11 +18,26 @@ User = get_user_model()
 
 
 @huey.db_task()
-def update_client_task(client: Client):
+def update_geo_client_values(client: Client):
     """
     Update values of the client which were not proccessed in the `OneMiddleware`
     """
-    client.update_values()
+    client.update_geo_values()
+
+
+@huey.db_task()
+def save_request_task(params):
+    try:
+        req = Request()
+        pn = params.get("path_name")
+        req.path = Path.objects.get_or_create(name=pn)[0]
+        params.pop("path_name")
+
+        for k, v in params.items():
+            setattr(req, k, v)
+        req.save()
+    except Exception as e:  # pragma: no cover
+        Bot.to_admin(f"Error by saving request obj: {e}")
 
 
 @huey.db_periodic_task(crontab(minute="47"))
@@ -124,22 +139,3 @@ def inform_admin_about_404_issues():
     text = "Most not-found (404) paths\n\n"
     text += "\n".join(f"{p.num} {p.name}" for p in qs)
     Bot.to_admin(text)
-
-
-@huey.db_periodic_task(crontab(minute="*/5"))
-def cleanup_bot_requests_and_clients():
-    """
-    Remove requests from bot and crawlers: just requests
-    without errors. The ones with errors will be used to
-    improve the application/code.
-
-    Remove bot clients without linked requests
-
-    # TODO: move logic to OneMiddleware (do not save objs)
-    """
-
-    Request.objects.filter(client__possible_bot=True, status_code__lt=400).delete()
-
-    Client.objects.annotate(num=Count("request")).filter(
-        possible_bot=True, num=0
-    ).delete()

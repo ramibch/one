@@ -47,10 +47,10 @@
       </i>
     </small>
     {% if request.site.change_theme_light_in_footer %}
-      {% include "snippets/change_theme.html" %}
+      <span style="cursor: pointer" x-on:click="dark_theme = !dark_theme" x-text="dark_theme ? '☀️' : '🌒'"></span>
     {% endif %}
     {% if request.site.change_language_in_footer and request.site.language_count > 1 %}
-      {% include "snippets/change_language.html" %}
+      <span style="cursor: pointer" x-on:click="open_language_modal = ! open_language_modal" x-text="open_language_modal ? '🪛' : '🌐' "></span>
     {% endif %}
   </center>
 </div>

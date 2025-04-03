@@ -1,7 +1,0 @@
-<span hx-put="{% url 'client_theme' %}" style="cursor: pointer">
-  {% if request.client.dark_theme %}
-    <span x-init="dark_theme = true">☀️</span>
-  {% else %}
-    <span x-init="dark_theme = false">🌒</span>
-  {% endif %}
-</span>

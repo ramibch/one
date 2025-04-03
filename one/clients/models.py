@@ -1,3 +1,6 @@
+import operator
+from functools import reduce
+
 from auto_prefetch import ForeignKey, Model
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -7,6 +10,7 @@ from django.db.models import Case, Q, Value, When
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+from huey.contrib import djhuey as huey
 
 from ..base.utils.telegram import Bot
 from ..geo.models import GeoInfo
@@ -26,6 +30,33 @@ class Path(Model):
 
 class Client(Model):
     DUMMY_IP_ADDRESS = "10.10.10.10"
+    BOTS = [
+        "bot",
+        "Bot",
+        "Python",
+        "AppEngine",
+        "Mastodon",
+        "Crawl",
+        "crawl",
+        "facebookexternalhit",
+        "SnoopSecInspect",
+        "letsencrypt.org",
+        ".NET",
+        "sindresorhus/got",
+        "YaSearchApp",
+        "Palo Alto Networks",
+        "ipip.net",
+        "Java",
+        "HttpClient",
+        "spider",
+        "project-resonance.com",
+        "Scanner",
+        "scanner",
+        "Inspect",
+        "inspect",
+        "Grammarly",
+        "GoogleOther",
+    ]
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
     country = models.CharField(max_length=2, choices=settings.COUNTRIES, null=True)
     site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
@@ -34,10 +65,10 @@ class Client(Model):
     is_blocked = models.BooleanField(default=False)
     user_agent = models.CharField(max_length=512, null=True)
     dark_theme = models.BooleanField(default=True)
-    possible_bot = models.GeneratedField(
+    is_bot = models.GeneratedField(
         expression=Case(
             When(
-                Q(user_agent__contains="bot") | Q(user_agent__contains="Bot"),
+                reduce(operator.or_, (Q(user_agent__contains=item) for item in BOTS)),
                 then=Value(True),
             ),
             default=Value(False),
@@ -51,7 +82,7 @@ class Client(Model):
 
     @cached_property
     def emoji(self):
-        return "🤖" if self.possible_bot else "👤"
+        return "🤖" if self.is_bot else "👤"
 
     @classmethod
     def dummy_object(cls):
@@ -81,7 +112,8 @@ class Client(Model):
             Bot.to_admin(f"GeoInfo: GeoIP2 city error: {e}")
             return {}
 
-    def update_values(self):
+    @huey.db_task()
+    def update_geo_values(self):
         # Country
         if self.country_data != {}:
             self.country = self.country_data.get("country_code")
@@ -109,23 +141,10 @@ class Request(Model):
     client = ForeignKey(Client, on_delete=models.CASCADE)
     path = ForeignKey(Path, on_delete=models.CASCADE, null=True)
     method = models.CharField(default="GET", max_length=7)
-    get = models.TextField(null=True)
-    post = models.TextField(null=True)
     ref = models.CharField(max_length=512, null=True, db_index=True)
     headers = models.TextField(null=True)
     status_code = models.PositiveSmallIntegerField(default=200)
     time = models.DateTimeField(_("time"), default=timezone.now, db_index=True)
-
-    def save_from_midddleware(self, request, response):
-        self.client = request.client
-        self.path = Path.objects.get_or_create(name=request.path[:255])[0]
-        self.method = request.method
-        self.get = request.GET
-        self.post = request.POST
-        self.ref = request.GET.get("ref", "")[:256]
-        self.headers = request.headers
-        self.status_code = response.status_code
-        self.save()
 
     def __str__(self):
         time = self.time.strftime("%Y-%m-%d %H:%M")
@@ -139,7 +158,7 @@ class RedirectTypes(models.TextChoices):
 
 
 class PathRedirect(Model):
-    site = ForeignKey("sites.Site", on_delete=models.CASCADE)
+    sites = models.ManyToManyField("sites.Site")
     from_path = ForeignKey(Path, on_delete=models.CASCADE, related_name="+")
     to_path = ForeignKey(Path, on_delete=models.CASCADE, related_name="+")
     applicable = models.CharField(
@@ -149,4 +168,4 @@ class PathRedirect(Model):
     )
 
     def __str__(self):
-        return f"[{self.site}] {self.from_path} ➡️ {self.to_path}"
+        return f"{self.from_path} ➡️ {self.to_path}"

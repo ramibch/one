@@ -5,10 +5,10 @@ from django.core.management import call_command
 from django.http import HttpRequest, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 
-from ...clients.models import Client, PathRedirect, RedirectTypes, Request
-from ...clients.tasks import update_client_task
+from one.clients.tasks import save_request_task
+
+from ...clients.models import Client, PathRedirect, RedirectTypes
 from ...sites.models import Site
-from ..utils.telegram import Bot
 
 
 class OneMiddleware:
@@ -75,10 +75,13 @@ class OneMiddleware:
             RedirectTypes.ALWAYS,
         ]
         return PathRedirect.objects.filter(
-            site=request.site,
+            sites=request.site,
             from_path__name=request.path,
             applicable__in=applicable,
         ).first()
+
+    def get_user_agent(self, request):
+        return request.headers.get("user-agent", "")[:256]
 
     def get_client(self, request) -> Client:
         if request.ip_address is None:
@@ -94,9 +97,10 @@ class OneMiddleware:
                 user=user_or_none,
                 site=request.site,
                 is_blocked=False,
-                user_agent=request.headers.get("user-agent", "")[:256],
+                user_agent=self.get_user_agent(request),
             )
-            update_client_task(client)
+            client.update_geo_values()
+            # update_geo_client_values(client)
 
         return client
 
@@ -121,19 +125,25 @@ class OneMiddleware:
             response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
 
     def save_request(self, request, response):
-        exempt_paths = [
+        skip_paths = [
             reverse_lazy("admin:index"),
             reverse_lazy("favicon"),
             reverse_lazy("django_browser_reload:events"),
         ]
+        client = self.get_client(request)
 
-        path_ok = not any(
-            request.path.startswith(str(exempt)) for exempt in exempt_paths
-        )
-        user_ok = True  # not request.user.is_staff
+        path_ok = not any(request.path.startswith(str(exempt)) for exempt in skip_paths)
+        user_ok = not request.user.is_staff
 
-        if path_ok and user_ok:
-            try:
-                Request().save_from_midddleware(request=request, response=response)
-            except Exception as e:  # pragma: no cover
-                Bot.to_admin(f"Error by saving request obj: {e}")
+        status_ok = response.status_code >= 400 and client.is_bot or not client.is_bot
+
+        if path_ok and user_ok and status_ok:
+            params = {
+                "client": request.client,
+                "path_name": request.path[:255],
+                "method": request.method,
+                "ref": request.GET.get("ref", "")[:256],
+                "headers": request.headers,
+                "status_code": response.status_code,
+            }
+            save_request_task(params)
