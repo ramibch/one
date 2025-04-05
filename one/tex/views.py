@@ -10,12 +10,16 @@ class YearlyHolidayCalenderView(DetailView):
         year = self.kwargs.get("year")
         country = self.kwargs.get("country")
         subdiv = self.kwargs.get("subdiv")
-        try:
-            return YearlyHolidayCalender.objects.exclude(image="").get(
-                year=year, country=country, subdiv=subdiv
-            )
-        except YearlyHolidayCalender.DoesNotExist:
-            raise Http404  # noqa: B904
+        cal = (
+            YearlyHolidayCalender.objects.exclude(image="")
+            .filter(year=year, country=country, subdiv=subdiv)
+            .last()
+        )
+
+        if cal is None:
+            raise Http404
+
+        return cal
 
 
 def temp_calendar(request, sd, c, y):

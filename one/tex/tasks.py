@@ -17,15 +17,17 @@ YEARS = list(range(LAST_YEAR, THIS_YEAR + 3))
 # Calendars
 
 
-@huey.db_periodic_task(crontab(day="5", hour="5", minute="55"))
+# @huey.db_periodic_task(crontab(day="5", hour="5", minute="55"))
 def create_yearly_holiday_calendars():
     """Create calendar objects"""
     objs = []
 
     # Fetch existing records in bulk
-    existing_records = set(
-        YearlyHolidayCalender.objects.filter(year__in=YEARS).values_list(
-            "year", "country", "subdiv", "lang"
+    existing_records = list(
+        set(
+            YearlyHolidayCalender.objects.filter(year__in=YEARS).values_list(
+                "year", "country", "subdiv", "lang"
+            )
         )
     )
 
