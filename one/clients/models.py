@@ -141,6 +141,7 @@ class Request(Model):
     method = models.CharField(default="GET", max_length=7)
     ref = models.CharField(max_length=512, null=True, db_index=True)
     headers = models.TextField(null=True)
+    post = models.TextField(null=True)
     status_code = models.PositiveSmallIntegerField(default=200)
     time = models.DateTimeField(_("time"), default=timezone.now, db_index=True)
 

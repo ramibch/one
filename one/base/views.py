@@ -36,11 +36,8 @@ def home_view(request: CustomHttpRequest) -> HttpResponse:
     match request.site.site_type:
         case SiteType.STANDARD.value:
             home = getattr(request.site, "home", None)
-
-            if not home:
-                raise Http404
-
-            return render(request, "home/home.html", {"object": home})
+            if home:
+                return render(request, "home/home.html", {"object": home})
 
         case SiteType.DGT.value:
             context = {"tests": DgtTest.objects.all()}

@@ -54,14 +54,14 @@ def block_spammy_clients_hourly():
 @huey.db_periodic_task(crontab(hour="1", minute="4"))
 def block_bad_clients_creating_user_accounts():
     bad_clients = Client.objects.annotate(
-        abuse_requests=Count(
+        num_requests=Count(
             "request",
             filter=Q(
                 request__path__name=reverse_lazy("account_signup"),
                 request__method="POST",
             ),
         )
-    ).filter(abuse_requests__gte=3)
+    ).filter(num_requests__gte=2)
 
     block_spammy_clients(bad_clients)
 

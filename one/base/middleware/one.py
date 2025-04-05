@@ -131,17 +131,18 @@ class OneMiddleware:
         ]
         client = self.get_client(request)
 
-        path_ok = not any(request.path.startswith(str(exempt)) for exempt in skip_paths)
+        path_ok = not any(request.path.startswith(str(p)) for p in skip_paths)
         user_ok = not request.user.is_staff
         status_ok = response.status_code >= 400 and client.is_bot or not client.is_bot
 
         if path_ok and user_ok and status_ok:
             params = {
-                "client": request.client,
+                "client": client,
                 "path_name": request.path[:255],
                 "method": request.method,
                 "ref": request.GET.get("ref", "")[:256],
                 "headers": request.headers,
                 "status_code": response.status_code,
+                "post": str(request.POST),
             }
             save_request_task(params)
