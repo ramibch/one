@@ -1,6 +1,6 @@
 import holidays
 from django.conf import settings
-from django.utils import timezone
+from django.utils.timezone import now
 from huey import crontab
 from huey.contrib import djhuey as huey
 
@@ -9,23 +9,21 @@ from one.quiz.models import Lection
 from .models import EnglishQuizLection, YearlyHolidayCalender
 from .values import LATEX_LANGUAGES
 
-THIS_YEAR = timezone.now().year
-LAST_YEAR = THIS_YEAR - 1
-YEARS = list(range(LAST_YEAR, THIS_YEAR + 3))
-
-
 # Calendars
 
 
-# @huey.db_periodic_task(crontab(day="5", hour="5", minute="55"))
+@huey.db_periodic_task(crontab(day="5", hour="5", minute="55"))
 def create_yearly_holiday_calendars():
     """Create calendar objects"""
+    this_year = now().year
+
+    year_list = list(range(this_year - 1, this_year + 3))
     objs = []
 
     # Fetch existing records in bulk
     existing_records = list(
         set(
-            YearlyHolidayCalender.objects.filter(year__in=YEARS).values_list(
+            YearlyHolidayCalender.objects.filter(year__in=year_list).values_list(
                 "year", "country", "subdiv", "lang"
             )
         )
@@ -48,7 +46,7 @@ def create_yearly_holiday_calendars():
         if lang is None:
             continue
 
-        for year in YEARS:
+        for year in year_list:
             for subdiv in [None] + list(country_holidays.subdivisions):
                 if (year, country_code, subdiv, lang) not in existing_records:
                     objs.append(
@@ -64,7 +62,8 @@ def create_yearly_holiday_calendars():
 @huey.db_periodic_task(crontab(day="4", hour="4", minute="44"))
 def remove_old_yearly_holiday_calendars():
     """Let us forget the past and remove old calendars..."""
-    YearlyHolidayCalender.objects.filter(year__lt=LAST_YEAR).delete()
+
+    YearlyHolidayCalender.objects.filter(year__lt=now().year - 1).delete()
 
 
 @huey.db_periodic_task(crontab(minute="15"))
