@@ -10,15 +10,6 @@
       x-data="{'dark_theme' : $persist(true), 'open_language_modal' : false, }"
       x-bind:data-theme="dark_theme ? 'dark' : 'light' ">
   <head>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-KLVSTPVW');
-    </script>
-    <!-- End Google Tag Manager -->
-
     <title>
       {% block head_title %}
         {{ title }}
@@ -56,20 +47,18 @@
     <link href="{% static 'css/rb.css' %}" rel="stylesheet" />
     <link href="{% static 'css/animate.css' %}" rel="stylesheet" />
     <link href="{% static request.site.picocss_static_file %}" rel="stylesheet" />
-    {% if request.client.dark_theme %}
+
+    <template x-if="dark_theme">
       <link href="{{ dark_pygments_css }}" rel="stylesheet" />
-    {% else %}
+    </template>
+
+    <template x-if="!dark_theme">
       <link href="{{ light_pygments_css }}" rel="stylesheet" />
-    {% endif %}
+    </template>
+
     {% block head_extra %}{% endblock %}
   </head>
   <body class="container" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KLVSTPVW"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
     <header>
       {% include "snippets/messages.html" %}
       {% include "menus/navbar.html" %}
