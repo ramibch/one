@@ -4,8 +4,9 @@
 {% firstof page_description object.description request.site.description as description %}
 {% static 'css/pygments_default.css' as light_pygments_css %}
 {% static 'css/pygments_monokai.css' as dark_pygments_css %}
+{% get_current_language as LANG_CODE %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}"
+<html lang="{{ LANG_CODE }}"
       dir="ltr"
       x-data="{'dark_theme' : $persist(true), 'open_language_modal' : false, }"
       x-bind:data-theme="dark_theme ? 'dark' : 'light' ">
