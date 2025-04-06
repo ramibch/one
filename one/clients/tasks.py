@@ -67,7 +67,10 @@ def block_bad_clients_creating_user_accounts():
 
     # We remove the users they created
     text = "".join(
-        Request.objects.filter(client__in=bad_clients).values_list("post", flat=True)
+        Request.objects.filter(
+            client__in=bad_clients,
+            post__isnull=False,
+        ).values_list("post", flat=True)
     )
     bad_emails = re.findall(r"[\w.+-]+@[\w-]+\.[\w.-]+", text)
     User.objects.filter(email__in=bad_emails).delete()
