@@ -81,18 +81,29 @@ class HeroSection(HomeChildModel):
 
 
 class ProblemSection(HomeChildModel):
-    home = OneToOneField(Home, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     description = models.TextField()
+
+    def __str__(self):
+        return self.title
 
 
 class SolutionSection(HomeChildModel):
     title = models.CharField(max_length=64)
     description = models.TextField()
 
+    def __str__(self):
+        return self.title
+
 
 class BenefitsSection(HomeChildModel):
-    emoji = models.CharField(max_length=8)
+    title = models.CharField(max_length=32)
+
+
+class BenefitItem(TranslatableModel):
+    section = ForeignKey(BenefitsSection, on_delete=models.CASCADE)
+    name = models.CharField(max_length=32)
+    description = models.TextField()
 
 
 class StepAction(HomeChildModel):

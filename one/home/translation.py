@@ -1,6 +1,15 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import ArticlesSection, FAQsSection, HeroSection, Home
+from .models import (
+    ArticlesSection,
+    BenefitItem,
+    BenefitsSection,
+    FAQsSection,
+    HeroSection,
+    Home,
+    ProblemSection,
+    SolutionSection,
+)
 
 
 @register(Home)
@@ -21,3 +30,23 @@ class ArticlesSectionOptions(TranslationOptions):
 @register(FAQsSection)
 class FAQsSectionOptions(TranslationOptions):
     fields = ("title",)
+
+
+@register(ProblemSection)
+class ProblemSectionOptions(TranslationOptions):
+    fields = ("title", "description")
+
+
+@register(SolutionSection)
+class SolutionSectionOptions(TranslationOptions):
+    fields = ("title", "description")
+
+
+@register(BenefitsSection)
+class BenefitsSectionOptions(TranslationOptions):
+    fields = ("title",)
+
+
+@register(BenefitItem)
+class BenefitItemOptions(TranslationOptions):
+    fields = ("name", "description")
