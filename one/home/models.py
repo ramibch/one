@@ -16,6 +16,8 @@ class Home(TranslatableModel):
 
     site = OneToOneField("sites.Site", on_delete=models.CASCADE)
     title = models.CharField(max_length=64, default="")
+    benefits_title = models.CharField(max_length=64, null=True, blank=True)
+    steps_title = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
         return f"{self.title} 🌐{self.site}"
@@ -96,18 +98,14 @@ class SolutionSection(HomeChildModel):
         return self.title
 
 
-class BenefitsSection(HomeChildModel):
-    title = models.CharField(max_length=32)
-
-
 class BenefitItem(TranslatableModel):
-    section = ForeignKey(BenefitsSection, on_delete=models.CASCADE)
+    home = ForeignKey(Home, on_delete=models.CASCADE)
     name = models.CharField(max_length=32)
     description = models.TextField()
 
 
 class StepAction(HomeChildModel):
-    home = ForeignKey(Home, on_delete=models.CASCADE)  # override
+    home = ForeignKey(Home, on_delete=models.CASCADE)
     step_label = models.CharField(max_length=4, default="01")
     title = models.CharField(max_length=64)
     description = models.TextField()

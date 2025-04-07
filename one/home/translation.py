@@ -3,12 +3,12 @@ from modeltranslation.translator import TranslationOptions, register
 from .models import (
     ArticlesSection,
     BenefitItem,
-    BenefitsSection,
     FAQsSection,
     HeroSection,
     Home,
     ProblemSection,
     SolutionSection,
+    StepAction,
 )
 
 
@@ -42,11 +42,11 @@ class SolutionSectionOptions(TranslationOptions):
     fields = ("title", "description")
 
 
-@register(BenefitsSection)
-class BenefitsSectionOptions(TranslationOptions):
-    fields = ("title",)
-
-
 @register(BenefitItem)
 class BenefitItemOptions(TranslationOptions):
     fields = ("name", "description")
+
+
+@register(StepAction)
+class StepActionOptions(TranslationOptions):
+    fields = ("title", "description")
