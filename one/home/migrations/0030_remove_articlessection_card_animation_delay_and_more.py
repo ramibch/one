@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("animations", "__first__"),
+        # ("animations", "__first__"),
         ("home", "0029_remove_home_benefits_title_remove_home_steps_title"),
     ]
 
@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
-                to="animations.animation",
+                to="base.animation",
             ),
         ),
         migrations.AddField(
@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
-                to="animations.animation",
+                to="base.animation",
             ),
         ),
     ]
