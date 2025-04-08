@@ -10,7 +10,7 @@ from .models import Site
 @admin.register(Site)
 class SiteAdmin(TranslatableModelAdmin):
     list_display = ("domain", "brand_name", "picocss_color", "remarks")
-    readonly_fields = ("domain",)
+    # readonly_fields = ("domain",)
     actions = ["sync_articles", "translate_fields"]
     fieldsets = (
         (

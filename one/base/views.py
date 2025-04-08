@@ -17,6 +17,7 @@ from one.base.utils.generic_views import MultilinguageDetailView
 from one.base.utils.http import CustomHttpRequest
 from one.dgt.models import DgtTest
 from one.faqs.models import FAQ
+from one.home.models import Home
 from one.plans.models import Plan
 from one.products.models import Product
 from one.quiz.models import Quiz
@@ -35,9 +36,11 @@ def home_view(request: CustomHttpRequest) -> HttpResponse:
 
     match request.site.site_type:
         case SiteType.STANDARD.value:
-            home = getattr(request.site, "home", None)
-            if home:
+            try:
+                home = Home.objects.get(site=request.site)
                 return render(request, "home/home.html", {"object": home})
+            except Home.DoesNotExist:
+                pass
 
         case SiteType.DGT.value:
             context = {"tests": DgtTest.objects.all()}
