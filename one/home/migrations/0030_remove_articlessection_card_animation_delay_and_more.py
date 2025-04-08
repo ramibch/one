@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("animations", "__first__"),
+        # ("animations", "__first__"),
         ("home", "0029_remove_home_benefits_title_remove_home_steps_title"),
     ]
 
