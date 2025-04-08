@@ -36,7 +36,7 @@ class ArticlesSection(HomeChildModel):
     title = models.CharField(max_length=64)
     number_of_articles = models.PositiveSmallIntegerField(default=6)
     card_animation = ForeignKey(
-        "animations.Animation",
+        "base.Animation",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -69,7 +69,7 @@ class HeroSection(HomeChildModel):
     cta_title = models.CharField(max_length=64, null=True, blank=True)
     cta_new_tab = models.BooleanField(default=False)
     cta_animation = ForeignKey(
-        "animations.Animation",
+        "base.Animation",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
