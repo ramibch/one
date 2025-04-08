@@ -9,14 +9,13 @@ from one.base.utils.db import ChoiceArrayField
 
 from ..articles.models import Article
 from ..products.models import Product
-
-# from .animations import (
-#     AnimationDelay,
-#     AnimationRepeat,
-#     AnimationSpeed,
-#     AnimationType,
-#     AttentionSeekers,
-# )
+from .animations import (
+    AnimationDelay,
+    AnimationRepeat,
+    AnimationSpeed,
+    AnimationType,
+    AttentionSeekers,
+)
 from .utils.abstracts import TranslatableModel
 
 User = get_user_model()
@@ -81,37 +80,37 @@ class SearchTerm(Model):
         return self.query
 
 
-# class Animation(Model):
-#     animation_type = models.CharField(
-#         max_length=16,
-#         null=True,
-#         blank=True,
-#         default=AnimationType.VANILLA,
-#         choices=AnimationType.choices,
-#     )
-#     name = models.CharField(
-#         max_length=16,
-#         null=True,
-#         blank=True,
-#         default=AttentionSeekers.FLASH,
-#         choices=AttentionSeekers.choices,
-#     )
-#     repeat = models.CharField(
-#         max_length=16,
-#         null=True,
-#         blank=True,
-#         default=AnimationRepeat.ONE,
-#         choices=AnimationRepeat.choices,
-#     )
-#     speed = models.CharField(
-#         max_length=16,
-#         null=True,
-#         blank=True,
-#         choices=AnimationSpeed.choices,
-#     )
-#     delay = models.CharField(
-#         max_length=16,
-#         null=True,
-#         blank=True,
-#         choices=AnimationDelay.choices,
-#     )
+class Animation(Model):
+    animation_type = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        default=AnimationType.VANILLA,
+        choices=AnimationType.choices,
+    )
+    name = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        default=AttentionSeekers.FLASH,
+        choices=AttentionSeekers.choices,
+    )
+    repeat = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        default=AnimationRepeat.ONE,
+        choices=AnimationRepeat.choices,
+    )
+    speed = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        choices=AnimationSpeed.choices,
+    )
+    delay = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        choices=AnimationDelay.choices,
+    )

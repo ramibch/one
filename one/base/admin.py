@@ -2,8 +2,13 @@ from django.contrib import admin
 from django.contrib.sessions.models import Session
 from django.db.migrations.recorder import MigrationRecorder
 
-from .models import SearchTerm, Topic
+from .models import Animation, SearchTerm, Topic
 from .utils.admin import TranslatableModelAdmin
+
+
+@admin.register(Animation)
+class AnimationAdmin(admin.ModelAdmin):
+    list_display = ("animation_type", "name", "repeat", "speed", "delay")
 
 
 @admin.register(MigrationRecorder.Migration)
