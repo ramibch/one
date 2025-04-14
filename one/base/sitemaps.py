@@ -14,7 +14,7 @@ class ArticleSitemap(Sitemap):
     def items(self):
         return Article.objects.filter(
             languages__in=[self.lang],
-            parent_folder__name__in=self.request.site.topics,
+            main_topic__name__in=self.request.site.topics,
             slug__isnull=False,
         )
 

@@ -20,7 +20,7 @@ class Command(BaseCommand):
             # Article folders and articles itself
             article_folders = ArticleParentFolderFactory.create_batch(5)
             for article_folder in article_folders:
-                ArticleFactory.create_batch(10, parent_folder=article_folder)
+                ArticleFactory.create_batch(10, main_topic=article_folder)
             article_folder.sites.set(site)
 
             # Page folders and pages itself

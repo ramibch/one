@@ -43,7 +43,7 @@ def sync_articles(sites=None):
             to_admin += f"✍ {maintopic}/{subfolder.name}\n"
 
             article = Article.objects.get_or_create(
-                parent_folder=maintopic,
+                main_topic=maintopic,
                 subfolder_name=subfolder.name,
                 folder_name=maintopic.name,
             )[0]

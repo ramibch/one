@@ -52,7 +52,7 @@ class ArticlesSection(HomeChildModel):
     def get_articles(self):
         return (
             Article.objects.filter(
-                parent_folder__name__in=self.home.site.topics,
+                main_topic__name__in=self.home.site.topics,
                 languages__contains=[get_language()],
                 slug__isnull=False,
             )
