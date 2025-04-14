@@ -68,11 +68,11 @@ class Link(TranslatableModel):
         null=True,
         blank=True,
     )
-    topic = ForeignKey(
-        "base.Topic",
-        on_delete=models.CASCADE,
-        null=True,
+    topic = models.CharField(
+        max_length=16,
         blank=True,
+        null=True,
+        choices=settings.TOPICS,
     )
 
     objects: LinkManager = LinkManager()
@@ -93,11 +93,11 @@ class Link(TranslatableModel):
 
     @cached_property
     def model_object_fields(self):
-        return [self.plan, self.article, self.topic]
+        return [self.plan, self.article]
 
     @cached_property
     def other_link_fields(self):
-        return [self.django_url_path, self.external_url]
+        return [self.django_url_path, self.external_url, self.topic]
 
     @cached_property
     def link_fields(self):
@@ -121,6 +121,9 @@ class Link(TranslatableModel):
 
         if self.model_obj:
             return self.model_obj.url
+
+        if self.topic:
+            return f"/{self.topic}"
 
     @cached_property
     def title(self):

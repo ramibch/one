@@ -133,7 +133,12 @@ class Site(TranslatableModel):
     spam_requests_duration = models.DurationField(default=timedelta(days=1))
     requests_duration = models.DurationField(default=timedelta(days=14))
 
-    topics = ManyToManyField("base.Topic", blank=True)
+    topics = ManyToManyField("base.Topic", blank=True)  # TODO: Remove
+    topics_new = ChoiceArrayField(
+        models.CharField(max_length=16, choices=settings.TOPICS),
+        default=list,
+        blank=True,
+    )
 
     # SEO
     title = models.CharField(max_length=64, null=True, blank=True)
@@ -170,6 +175,7 @@ class Site(TranslatableModel):
 
     @cached_property
     def topic_keywords(self):
+        # TODO: fix
         return ", ".join([t.name for t in self.topics.all()])
 
     def get_object_admin_url(self, obj) -> str:

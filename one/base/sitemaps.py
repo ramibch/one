@@ -12,10 +12,11 @@ class ArticleSitemap(Sitemap):
     priority = 0.7
 
     def items(self):
-        topics = self.request.site.topics.all()
+        topics = self.request.site.topics.all()  # TODO:
+
         return Article.objects.filter(
             languages__in=[self.lang],
-            parent_folder__topics__in=topics,
+            parent_folder__name__in=topics,
             slug__isnull=False,
         )
 

@@ -15,9 +15,13 @@ SUBMODULE_NAME = "articles" if settings.ENV == "prod" else "test-articles"
 
 
 class ArticleParentFolder(BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
-    """Parent folder of articles"""
+    """
+    Parent folder of articles
 
-    topics = models.ManyToManyField("base.Topic", blank=True)
+    The name attr is the topic
+    """
+
+    topics = models.ManyToManyField("base.Topic", blank=True)  # TODO: Remove
 
 
 class Article(TranslatableModel):

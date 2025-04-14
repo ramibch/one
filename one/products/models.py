@@ -50,7 +50,14 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
         default=list,
         blank=True,
     )
-    topics = models.ManyToManyField("base.Topic")
+
+    topics = models.ManyToManyField("base.Topic")  # TODO: Remove
+    topics_new = ChoiceArrayField(
+        models.CharField(max_length=16, choices=settings.TOPICS),
+        default=list,
+        blank=True,
+    )
+
     title = models.CharField(max_length=128)
     slug = models.SlugField(max_length=128)
     description = models.TextField(blank=True, null=True)
@@ -126,7 +133,14 @@ class EtsyShop(TranslatableModel):
     user_shop_auth = OneToOneField("etsy.EtsyAuth", on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=64, default="Shop example")
     generic_listing_description = models.TextField()
-    topics = models.ManyToManyField("base.Topic")
+
+    topics = models.ManyToManyField("base.Topic")  # TODO: Remove
+    topics_new = ChoiceArrayField(
+        models.CharField(max_length=16, choices=settings.TOPICS),
+        default=list,
+        blank=True,
+    )
+
     price_percentage = models.SmallIntegerField(
         default=150,
         verbose_name=_("Price percentace"),
@@ -155,6 +169,11 @@ class EtsyShop(TranslatableModel):
         return self.name
 
 
+# TODO:
+# class Tag(Model):
+#     name = models.CharField()
+
+
 class EtsyListing(Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -170,23 +189,26 @@ class EtsyListing(Model):
     who_made = models.CharField(
         max_length=32,
         default=WhoMade.I_DID,
-        choices=WhoMade,
+        choices=WhoMade.choices,
     )
     when_made = models.CharField(
         max_length=32,
         default=WhenMade.YEARS_2020_2025,
-        choices=WhenMade,
+        choices=WhenMade.choices,
     )
     taxonomy_id = models.PositiveIntegerField(
         default=TaxonomyID.DIGITAL_PRINTS,
-        choices=TaxonomyID,
+        choices=TaxonomyID.choices,
     )
 
     listing_type = models.CharField(
         max_length=32,
         default=ListingType.DOWNLOAD,
-        choices=ListingType,
+        choices=ListingType.choices,
     )
+
+    # tags =
+    # TODO: add tags
 
     # Attrs after response
     response = models.JSONField(null=True, blank=True)
@@ -209,6 +231,7 @@ class EtsyListing(Model):
             return self.product.description
 
     def get_tags(self) -> list[str]:
+        # TODO: REmove
         return list(self.product.topics.all().values_list("name", flat=True))
 
     @cached_property

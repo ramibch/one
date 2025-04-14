@@ -434,6 +434,24 @@ COUNTRIES = (
 )
 
 
+TOPICS = (
+    ("django", "Django"),
+    ("htmx", "htmx"),
+    ("alpinejs", "AlpineJS"),
+    ("devops", "DevOps"),
+    ("python", "Python"),
+    ("linux", "Linux"),
+    ("latex", "LaTex"),
+    ("matlab", "Matlab"),
+    ("siemens", "Siemens"),
+    ("excel", "Excel"),
+    ("maths", _("Maths")),
+    ("mechanics", _("Mechanics")),
+    ("english", _("English")),
+    ("electronics", _("Electronics")),
+    ("calendar", _("Calendars")),
+)
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
