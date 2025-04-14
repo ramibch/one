@@ -28,6 +28,9 @@ def sync_products():
             product.save()
             continue
 
+        if folder.name.startswith("_"):
+            continue
+
         for subfolder in folder.iterdir():
             if not subfolder.is_dir():
                 continue
