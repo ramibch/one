@@ -4,7 +4,7 @@ from auto_prefetch import Manager, Model
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import ManyToManyField, QuerySet
+from django.db.models import QuerySet
 from django.db.models.signals import pre_delete, pre_save
 from django.http.request import split_domain_port
 from django.urls import reverse
@@ -133,8 +133,7 @@ class Site(TranslatableModel):
     spam_requests_duration = models.DurationField(default=timedelta(days=1))
     requests_duration = models.DurationField(default=timedelta(days=14))
 
-    topics = ManyToManyField("base.Topic", blank=True)  # TODO: Remove
-    topics_new = ChoiceArrayField(
+    topics = ChoiceArrayField(
         models.CharField(max_length=16, choices=settings.TOPICS),
         default=list,
         blank=True,
@@ -175,8 +174,7 @@ class Site(TranslatableModel):
 
     @cached_property
     def topic_keywords(self):
-        # TODO: fix
-        return ", ".join([t.name for t in self.topics.all()])
+        return ", ".join(self.topics)
 
     def get_object_admin_url(self, obj) -> str:
         # the url to the Django admin form for the model instance

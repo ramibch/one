@@ -11,7 +11,7 @@ class ArticlesSubmoduleAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     readonly_fields = ("name",)
     list_display = ("name", "present_in_filesystem")
-    list_filter = ("present_in_filesystem", "topics")
+    list_filter = ("present_in_filesystem",)
 
     def has_add_permission(self, request):
         return False
@@ -26,12 +26,6 @@ class ArticleAdmin(TranslationAdmin):
     search_fields = ("title", "folder_name", "subfolder_name", "body")
 
     actions = ["mark_as_featured", "mark_as_not_featured"]
-
-    def has_delete_permission(self, request, obj=...):
-        return False
-
-    def has_add_permission(self, request):
-        return False
 
     @admin.action(description="✅ Mark as featured")
     def mark_as_featured(modeladmin, request, queryset):

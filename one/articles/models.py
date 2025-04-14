@@ -21,7 +21,7 @@ class ArticleParentFolder(BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
     The name attr is the topic
     """
 
-    topics = models.ManyToManyField("base.Topic", blank=True)  # TODO: Remove
+    pass
 
 
 class Article(TranslatableModel):

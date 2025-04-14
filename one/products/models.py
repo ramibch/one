@@ -51,8 +51,7 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
         blank=True,
     )
 
-    topics = models.ManyToManyField("base.Topic")  # TODO: Remove
-    topics_new = ChoiceArrayField(
+    topics = ChoiceArrayField(
         models.CharField(max_length=16, choices=settings.TOPICS),
         default=list,
         blank=True,
@@ -134,8 +133,7 @@ class EtsyShop(TranslatableModel):
     name = models.CharField(max_length=64, default="Shop example")
     generic_listing_description = models.TextField()
 
-    topics = models.ManyToManyField("base.Topic")  # TODO: Remove
-    topics_new = ChoiceArrayField(
+    topics = ChoiceArrayField(
         models.CharField(max_length=16, choices=settings.TOPICS),
         default=list,
         blank=True,
