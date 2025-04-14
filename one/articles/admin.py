@@ -3,18 +3,15 @@ from modeltranslation.admin import TranslationAdmin
 
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from .models import Article, ArticleFile, ArticleParentFolder
+from .models import Article, ArticleFile, MainTopic
 
 
-@admin.register(ArticleParentFolder)
-class ArticlesSubmoduleAdmin(admin.ModelAdmin):
+@admin.register(MainTopic)
+class MainTopicAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    readonly_fields = ("name",)
     list_display = ("name", "present_in_filesystem")
+    # readonly_fields = ("name", "present_in_filesystem")
     list_filter = ("present_in_filesystem",)
-
-    def has_add_permission(self, request):
-        return False
 
 
 @admin.register(Article)
@@ -22,7 +19,7 @@ class ArticleAdmin(TranslationAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = ("__str__", "featured", "created_on", "updated_on")
 
-    list_filter = ("parent_folder", "folder_name", "created_on", "updated_on")
+    list_filter = ("main_topic", "folder_name", "created_on", "updated_on")
     search_fields = ("title", "folder_name", "subfolder_name", "body")
 
     actions = ["mark_as_featured", "mark_as_not_featured"]

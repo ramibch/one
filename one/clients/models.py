@@ -63,7 +63,6 @@ class Client(Model):
     ip_address = models.GenericIPAddressField(unique=True, db_index=True)
     is_blocked = models.BooleanField(default=False)
     user_agent = models.CharField(max_length=512, null=True)
-    dark_theme = models.BooleanField(default=True)
     is_bot = models.GeneratedField(
         expression=Case(
             When(

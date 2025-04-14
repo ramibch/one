@@ -3,19 +3,19 @@ from factory.django import DjangoModelFactory, FileField
 
 from one.users.factories import UserFactory
 
-from .models import Article, ArticleFile, ArticleParentFolder, Comment
+from .models import Article, ArticleFile, Comment, MainTopic
 
 
 class ArticleParentFolderFactory(DjangoModelFactory):
     name = Faker("word")
 
     class Meta:
-        model = ArticleParentFolder
+        model = MainTopic
         django_get_or_create = ("name",)
 
 
 class ArticleFactory(DjangoModelFactory):
-    parent_folder = SubFactory(ArticleParentFolderFactory)
+    main_topic = SubFactory(ArticleParentFolderFactory)
     title = Faker("sentence")
     slug = Faker("slug")
     folder_name = Faker("word")

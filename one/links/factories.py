@@ -3,7 +3,7 @@ from django.conf import settings
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from .models import DJ_PATHS
+from .models import PATH_NAMES
 
 faker = Faker()
 
@@ -13,7 +13,7 @@ class LinkFactory(DjangoModelFactory):
     languages = ["en", "de", "es"]
     custom_title = factory.LazyAttribute(lambda _: faker.sentence())
     external_url = factory.LazyAttribute(lambda _: faker.url())
-    django_url_path = factory.Iterator([p[0] for p in DJ_PATHS])
+    django_url_path = factory.Iterator([p[0] for p in PATH_NAMES])
     page = None  # TODO: factory.SubFactory(PageFactory) with "00_test" folder
     article = None  # TODO: factory.SubFactory(ArticleFactory)  with "00_test" folder
     plan = None  # TODO: factory.SubFactory(PlanFactory)

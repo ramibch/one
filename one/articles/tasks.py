@@ -10,7 +10,7 @@ from one.base.utils.md import check_md_file_conventions
 
 from ..base.utils.telegram import Bot
 from ..sites.models import Site
-from .models import Article, ArticleFile, ArticleParentFolder
+from .models import Article, ArticleFile, MainTopic
 
 
 @huey.db_periodic_task(crontab(hour="1", minute="10"))
@@ -19,33 +19,33 @@ def sync_articles(sites=None):
     Sync articles from the submodules 'articles'
     """
 
-    ArticleParentFolder.sync_folders()
+    MainTopic.sync_folders()
 
-    submodule = ArticleParentFolder.submodule
-    submodule_path: Path = ArticleParentFolder.submodule_path
+    submodule = MainTopic.submodule
+    submodule_path: Path = MainTopic.submodule_path
     sites = sites or Site.objects.all()
 
     to_admin = f"🔄 Syncing {submodule}\n\n"
 
     # Scanning
-    for db_folder in ArticleParentFolder.objects.all():
-        folder: Path = submodule_path / db_folder.name
+    for maintopic in MainTopic.objects.all():
+        folder: Path = submodule_path / maintopic.name
 
         if not folder.is_dir():
-            db_folder.present_in_filesystem = False
-            db_folder.save()
+            maintopic.present_in_filesystem = False
+            maintopic.save()
             continue
 
         for subfolder in folder.iterdir():
             if not subfolder.is_dir():
                 continue
 
-            to_admin += f"✍ {db_folder}/{subfolder.name}\n"
+            to_admin += f"✍ {maintopic}/{subfolder.name}\n"
 
             article = Article.objects.get_or_create(
-                parent_folder=db_folder,
+                parent_folder=maintopic,
                 subfolder_name=subfolder.name,
-                folder_name=db_folder.name,
+                folder_name=maintopic.name,
             )[0]
             lang_count = 0
             # Markdown files (.md) need to be processed first

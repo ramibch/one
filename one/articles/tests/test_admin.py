@@ -1,7 +1,7 @@
 from django.contrib.admin.sites import AdminSite
 
 from one.articles.admin import ArticleAdmin, ArticleFileAdmin, ArticlesSubmoduleAdmin
-from one.articles.models import Article, ArticleFile, ArticleParentFolder
+from one.articles.models import Article, ArticleFile, MainTopic
 from one.test import TestCase
 
 
@@ -18,7 +18,7 @@ class TestAdmin(TestCase):
         self.request = MockRequest()
 
     def test_article_parent_folder_perms(self):
-        folder_admin = ArticlesSubmoduleAdmin(ArticleParentFolder, self.admin_site)
+        folder_admin = ArticlesSubmoduleAdmin(MainTopic, self.admin_site)
         self.assertFalse(folder_admin.has_delete_permission(self.request))
         self.assertFalse(folder_admin.has_add_permission(self.request))
 

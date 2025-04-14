@@ -7,7 +7,6 @@ from .models import Link
 
 @admin.register(Link)
 class LinkAdmin(TranslatableModelAdmin):
-    list_display = ("__str__", "django_url_path", "plan", "article")
-    list_editable = ("django_url_path", "plan", "article")
-    search_fields = ("article", "plan")
-    autocomplete_fields = ("article", "plan")
+    list_display = ("__str__", "url_path", "topic", "external_url", "custom_title_en")
+    list_editable = ("url_path", "topic", "external_url", "custom_title_en")
+    search_fields = ("topic", "url_path", "external_url")

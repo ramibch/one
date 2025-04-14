@@ -15,6 +15,7 @@ from copy import copy
 from datetime import datetime
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 from environs import Env
 from redis import ConnectionPool as RedisConnectionPool
@@ -28,6 +29,11 @@ now = datetime.now()
 
 SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
 ENV = env("ENV")
+
+if ENV not in ("dev", "prod"):
+    raise ImproperlyConfigured(f"ENV '{ENV}' is not a valid enviorment.")
+
+
 DEBUG = env.bool("DEBUG")
 HTTPS = env.bool("HTTPS")
 STATIC_HOST = env("STATIC_HOST", "")
@@ -42,7 +48,8 @@ REDIS_CONNECTION_POOL = RedisConnectionPool.from_url(url=REDIS_URL)
 ##################
 """
 
-ALLOWED_HOSTS = [h for h in env.list("ALLOWED_HOSTS", delimiter="\n") if h != ""]
+ALLOWED_HOSTS = [h for h in env.list("ALLOWED_HOSTS", delimiter=";") if h != ""]
+
 
 INTERNAL_IPS = ["127.0.0.1"]
 
@@ -65,6 +72,7 @@ INSTALLED_APPS = [
     "import_export",
     "bx_django_utils",  # needed from huey_monitor
     "huey_monitor",
+    "debug_toolbar",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -103,6 +111,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "one.base.middleware.ip.IpAddressMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",

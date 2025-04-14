@@ -38,15 +38,6 @@ class RequestInline(admin.TabularInline):
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ("ip_address", "emoji", "is_blocked", "user", "country", "site")
-    readonly_fields = (
-        "ip_address",
-        "geoinfo",
-        "user",
-        "country",
-        "site",
-        "user_agent",
-        "is_bot",
-    )
     list_filter = ("is_blocked", "is_bot", "site", "country")
     search_fields = ("ip_address", "site", "country")
     actions = ["block_ips", "update_values"]

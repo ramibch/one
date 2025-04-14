@@ -14,7 +14,7 @@ User = get_user_model()
 SUBMODULE_NAME = "articles" if settings.ENV == "prod" else "test-articles"
 
 
-class ArticleParentFolder(BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
+class MainTopic(BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
     """
     Parent folder of articles
 
@@ -32,7 +32,7 @@ class Article(TranslatableModel):
         default=list,
         blank=True,
     )
-    parent_folder = ForeignKey(ArticleParentFolder, on_delete=models.CASCADE)
+    main_topic = ForeignKey(MainTopic, on_delete=models.CASCADE)
     title = models.CharField(max_length=256, editable=False)
     slug = models.SlugField(max_length=128, editable=False, db_index=True)
     folder_name = models.CharField(max_length=128, editable=False)

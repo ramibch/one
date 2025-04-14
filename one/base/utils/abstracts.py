@@ -13,8 +13,8 @@ from .exceptions import SubmoduleException
 
 
 class BaseSubmoduleFolder(Model):
-    name = models.CharField(max_length=64, unique=True)
-    present_in_filesystem = models.BooleanField(default=True)
+    name = models.CharField(max_length=64, unique=True, editable=False)
+    present_in_filesystem = models.BooleanField(default=True, editable=False)
 
     def __init_subclass__(cls, submodule, **kwargs):
         cls.submodule = submodule
@@ -102,7 +102,10 @@ class TranslatableModel(Model):
 
     def get_languages_without_default(self):
         langs = copy(self.get_languages())
-        langs.remove(self.get_default_language())
+        try:
+            langs.remove(self.get_default_language())
+        except ValueError:
+            pass
         return langs
 
     def save(self, *args, **kwargs):

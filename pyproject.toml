@@ -22,7 +22,7 @@ dependencies = [
   "hiredis>=3.1.0",
   "geoip2>=5.0.1",
   "docutils>=0.21.2 ",
-  # https://docs.djangoproject.com/en/5.1/ref/contrib/admin/admindocs/
+  # https://docs.djangoproject.com/en/stable/ref/contrib/admin/admindocs/
   "deepl>=1.21.1",
   "Jinja2>=3.1.6",
   "qrcode[pil]>=8.0",
@@ -58,6 +58,7 @@ dependencies = [
   "holidays>=0.69",
   "django-import-export>=4.3.7",
   "django-huey-monitor>=0.9.0",
+  "django-debug-toolbar>=5.1.0",
 ]
 
 
