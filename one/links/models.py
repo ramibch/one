@@ -28,9 +28,9 @@ class LinkManager(Manager):
     def sync_django_paths(self):
         new_links = []
         for url_path in PATH_NAMES:
-            if self.filter(django_url_path=url_path[0]).exists():
+            if self.filter(url_path=url_path[0]).exists():
                 continue
-            new_links.append(Link(django_url_path=url_path[0]))
+            new_links.append(Link(url_path=url_path[0]))
 
         self.bulk_create(new_links)
 

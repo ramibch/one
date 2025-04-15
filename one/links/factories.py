@@ -1,20 +1,20 @@
-import factory
 from django.conf import settings
+from factory import Iterator, LazyAttribute
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from .models import PATH_NAMES
+from .models import PATH_NAMES, Link
 
 faker = Faker()
 
 
 class LinkFactory(DjangoModelFactory):
-    language = factory.Iterator(settings.LANGUAGE_CODES)
+    class Meta:
+        model = Link
+
+    language = Iterator(settings.LANGUAGE_CODES)
     languages = ["en", "de", "es"]
-    custom_title = factory.LazyAttribute(lambda _: faker.sentence())
-    external_url = factory.LazyAttribute(lambda _: faker.url())
-    django_url_path = factory.Iterator([p[0] for p in PATH_NAMES])
-    page = None  # TODO: factory.SubFactory(PageFactory) with "00_test" folder
-    article = None  # TODO: factory.SubFactory(ArticleFactory)  with "00_test" folder
-    plan = None  # TODO: factory.SubFactory(PlanFactory)
-    topic = None  # TODO: factory.SubFactory(TopicFactory) )
+    custom_title = LazyAttribute(lambda _: faker.sentence())
+    external_url = LazyAttribute(lambda _: faker.url())
+    url_path = Iterator([p[0] for p in PATH_NAMES])
+    topic = Iterator([t[0] for t in settings.TOPICS])
