@@ -461,6 +461,9 @@ TOPICS = (
     ("calendar", _("Calendars")),
 )
 
+
+TOPICS_DICT = [i[0] for i in TOPICS]
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

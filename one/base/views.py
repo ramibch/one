@@ -1,8 +1,11 @@
+import operator
+from functools import reduce
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sitemaps.views import index as django_sitemap_index
 from django.contrib.sitemaps.views import sitemap as django_sitemap
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import get_language
@@ -53,9 +56,31 @@ def home_view(request: CustomHttpRequest) -> HttpResponse:
     raise Http404
 
 
-def slug_page_view(request: CustomHttpRequest) -> HttpResponse:
-    # TODO: Page, Article, Product, ...
-    pass
+def slug_page_view(request: CustomHttpRequest, slug) -> HttpResponse:
+    params = {f"slug_{lang_code}": slug for lang_code in settings.LANGUAGE_CODES}
+    exp = reduce(operator.or_, (Q(**d) for d in [dict([i]) for i in params.items()]))
+
+    try:
+        obj = Article.objects.get(exp)
+        return render(request, "articles/article_detail.html", {"object": obj})
+    except Article.DoesNotExist:
+        pass
+
+    try:
+        obj = Product.objects.get(exp)
+        return render(request, "products/product_detail.html", {"object": obj})
+    except Product.DoesNotExist:
+        pass
+
+    if slug in settings.TOPICS_DICT:
+        context = {
+            "page_title": settings.TOPICS_DICT[slug],
+            "related_articles": Article.objects.filter(main_topic__name=slug),
+            "related_products": Product.objects.filter(topics=[slug]),
+        }
+        return render(request, "base/topic.html", context)
+
+    raise Http404
 
 
 class ArticleDetailView(MultilinguageDetailView):
