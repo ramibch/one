@@ -1,10 +1,8 @@
 from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
 
 class PaymentsConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "one.payments"
-    verbose_name = "00 Payments"
-
-    def ready(self):
-        from . import signals  # noqa: F401
+    verbose_name = _("Payments")

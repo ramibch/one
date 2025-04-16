@@ -45,7 +45,7 @@ class Article(TranslatableModel):
     featured = models.BooleanField(default=False)
 
     def get_absolute_url(self):
-        return reverse_lazy("article-detail", kwargs={"slug": self.slug})
+        return reverse_lazy("page-detail", kwargs={"slug": self.slug})
 
     @cached_property
     def url(self):

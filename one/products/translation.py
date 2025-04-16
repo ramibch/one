@@ -5,7 +5,7 @@ from .models import EtsyShop, Product
 
 @register(Product)
 class ProductOptions(TranslationOptions):
-    fields = ("title", "description")
+    fields = ("title", "slug", "description")
 
 
 @register(EtsyShop)

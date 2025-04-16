@@ -16,7 +16,6 @@ from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 
 from one.articles.models import Article
-from one.base.utils.generic_views import MultilinguageDetailView
 from one.base.utils.http import CustomHttpRequest
 from one.dgt.models import DgtTest
 from one.faqs.models import FAQ
@@ -83,19 +82,6 @@ def slug_page_view(request: CustomHttpRequest, slug) -> HttpResponse:
     raise Http404
 
 
-class ArticleDetailView(MultilinguageDetailView):
-    # TODO: Remove
-    model = Article
-
-
-class PlanDetailView(MultilinguageDetailView):
-    model = Plan
-
-
-class ProductDetailView(MultilinguageDetailView):
-    model = Product
-
-
 class ProductListView(ListView):
     model = Product
 
@@ -141,11 +127,7 @@ def hx_search_results_view(request: CustomHttpRequest) -> HttpResponse:
 @require_GET
 @cache_control(max_age=60 * 60 * 24 * 30, immutable=True, public=True)  # 30 days
 def favicon_view(request: CustomHttpRequest) -> HttpResponse:
-    try:
-        emoji = request.site.emoji
-    except AttributeError:
-        emoji = "🌐"
-
+    emoji = request.site.emoji or "🌐"
     return HttpResponse(
         (
             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
@@ -162,21 +144,11 @@ class RobotTxtView(TemplateView):
 
 
 def error_404(request: CustomHttpRequest, exception):
-    return render(
-        request,
-        "error.html",
-        {"page_title": _("Page not found")},
-        status=404,
-    )
+    return render(request, "error.html", {"page_title": _("Not found")}, status=404)
 
 
 def error_500(request: CustomHttpRequest):
-    return render(
-        request,
-        "error.html",
-        {"page_title": _("Internal Server Error")},
-        status=500,
-    )
+    return render(request, "error.html", {"page_title": _("Server Error")}, status=500)
 
 
 def sitemap_index(*args, **kwargs):

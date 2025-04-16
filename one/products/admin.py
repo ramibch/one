@@ -14,7 +14,8 @@ class ProductFileAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(TranslatableModelAdmin):
-    readonly_fields = ("name",)
+    pass
+    # readonly_fields = ("name",)
 
 
 @admin.register(EtsyListing)

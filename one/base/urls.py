@@ -3,10 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 from .sitemaps import get_sitemaps
 from .views import (
-    ArticleDetailView,
     ArticleListView,
     FAQListView,
-    PlanDetailView,
     PlanListView,
     ProductListView,
     RobotTxtView,
@@ -15,6 +13,7 @@ from .views import (
     hx_search_results_view,
     search_view,
     sitemap_view,
+    slug_page_view,
 )
 
 urlpatterns = [
@@ -32,13 +31,12 @@ urlpatterns = [
     path(_("articles"), ArticleListView.as_view(), name="article_list"),
     # Plan list
     path(_("plans"), PlanListView.as_view(), name="plan_list"),
-    path(_("plan") + "/<slug:slug>/", PlanDetailView.as_view(), name="plan_detail"),
     # Product list
     path(_("products"), ProductListView.as_view(), name="plan_list"),
     # FAQ list
     path(_("faqs"), FAQListView.as_view(), name="faq_list"),
-    # TODO: page url (Topic, Article, Product, ...)
-    path("<slug:slug>", ArticleDetailView.as_view(), name="article-detail"),
+    # Article, Product, topic ...
+    path("<slug:slug>", slug_page_view, name="page-detail"),
     # Home
     path("", home_view, name="home"),
 ]

@@ -461,8 +461,9 @@ TOPICS = (
     ("calendar", _("Calendars")),
 )
 
-
-TOPICS_DICT = [i[0] for i in TOPICS]
+TOPICS_DICT = {t[0]: t[1] for t in TOPICS}
+TOPIC_KEYS = list(TOPICS_DICT.keys())
+TOPIC_VALUES = list(TOPICS_DICT.values())
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
