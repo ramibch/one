@@ -117,7 +117,6 @@ class OneMiddleware:
         skip_paths = [
             reverse_lazy("admin:index"),
             reverse_lazy("favicon"),
-            reverse_lazy("django_browser_reload:events"),
         ]
         client = self.get_client(request)
 
