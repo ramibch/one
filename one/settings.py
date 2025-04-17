@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "geoip2",
-    # "djmoney", # Add if issue is solved: https://github.com/django-money/django-money/issues/790
+    "djmoney",
     "dbbackup",
     "corsheaders",
     "rest_framework",

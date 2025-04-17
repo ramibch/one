@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 
 from one.clients.tasks import save_request_task, update_geo_client_values
 
-from ...clients.models import Client, PathRedirect, RedirectTypes
+from ...clients.models import Client, PathRedirect
 from ...sites.models import Site
 
 
@@ -66,18 +66,8 @@ class OneMiddleware:
         return db_session
 
     def get_redirect_or_none(self, request):
-        applicable = [
-            (
-                RedirectTypes.USER
-                if request.user.is_authenticated
-                else RedirectTypes.NO_USER
-            ),
-            RedirectTypes.ALWAYS,
-        ]
         return PathRedirect.objects.filter(
-            sites=request.site,
-            from_path__name=request.path,
-            applicable__in=applicable,
+            sites=request.site, from_path__name=request.path
         ).first()
 
     def get_user_agent(self, request):

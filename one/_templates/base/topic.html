@@ -1,48 +1,41 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n humanize %}
 
+
+
 {% block content %}
+  <center>
+    <h1>{{ title }}</h1>
+  </center>
 
-
-<center>
-  <h1> {{ title }} </h1>
-</center>
-
-<div class="row mt-5">
+  <div class="row mt-5">
     <section class="row col-md-9">
       {% for a in related_articles %}
-      <div class="col-md-4">
+        <div class="col-md-4">
+          <article>
+            <h3><a href="{{ a.url }}" title="{{ a.title }}">{{ a.title }}</a></h3>
+            {% if a.description %}{{ a.description }}{% endif %}
+            <footer>{{ a.created_on|naturaltime }}</footer>
+          </article>
+        </div>
+      {% endfor %}
+    </section>
+    <section class="col-md-3">
       <article>
-        <h3>
-          <a href="{{ a.url }}" title="{{ a.title }}">{{ a.title }}</a>
-        </h3>
-        {% if a.description %}{{ a.description }}{% endif %}
-        <footer>
-          {{ a.created_on|naturaltime }}
-        </footer>
+        <header>
+          <h4>{% trans 'Do you want more content like this?' %}</h4>
+        </header>
+        <a href="mailto:ramiboutas@protonmail.com?subject={{ title }}">📧{% trans 'Send me an Email then!' %}</a>
       </article>
-    </div>
-    {% endfor %}
-  </section>
-  <section class="col-md-3">
-    <article>
-      <header>
-        <h4>{% trans "Do you want more content like this?" %}</h4>
-      </header>
-      <a href="mailto:ramiboutas@protonmail.com?subject={{ title }}">📧 {% trans "Write me an Email then!" %}</a>
-    </article>
 
-    {% for p in related_products %}
+      {% for p in related_products %}
         <article>
           <header>
-            <a href="{{ p.page_url }}"title="{{ p.title }}">{{ p.title }}</a>
+            <a href="{{ p.page_url }}" title="{{ p.title }}">{{ p.title }}</a>
           </header>
-          <a href="{{ p.page_url }}"> <img src="{{ p.image.url }}" alt="{{ p.title }}"> </a>
+          <a href="{{ p.page_url }}"><img src="{{ p.image.url }}" alt="{{ p.title }}" /></a>
         </article>
       {% endfor %}
-  </section>
-</div>
-
-
-
-{% endblock content %}
+    </section>
+  </div>
+{% endblock %}

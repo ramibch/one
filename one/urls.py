@@ -33,11 +33,9 @@ urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
     # Third-party
     path("allauth/", include("allauth.urls")),  # if changes -> check base.html
-    path("__reload__/", include("django_browser_reload.urls")),
     # Own
     path("account/", include("one.users.urls")),
     path("tools/", include("one.tools.urls")),
-    path("clients/", include("one.clients.urls")),
     path("englishquizzes/", include("one.quiz.urls")),
     path("quiz/", include("one.quiz.urls")),
     path("dgt/", include("one.dgt.urls")),
@@ -53,6 +51,7 @@ if settings.ENV == "dev" and settings.DEBUG:
     urlpatterns = (
         [
             path("rosetta/", include("rosetta.urls")),
+            path("__reload__/", include("django_browser_reload.urls")),
         ]
         + debug_toolbar_urls()
         + urlpatterns

@@ -149,21 +149,10 @@ class Request(Model):
         return f"[{time}] {self.method} {self.path} {self.status_code}"
 
 
-class RedirectTypes(models.TextChoices):
-    USER = "user", "👤 " + _("For logged users")
-    NO_USER = "no_user", "🕵🏻 " + _("For anonymous users")
-    ALWAYS = "always", "🔄 " + _("Always")
-
-
 class PathRedirect(Model):
     sites = models.ManyToManyField("sites.Site")
     from_path = ForeignKey(Path, on_delete=models.CASCADE, related_name="+")
     to_path = ForeignKey(Path, on_delete=models.CASCADE, related_name="+")
-    applicable = models.CharField(
-        default=RedirectTypes.ALWAYS,
-        choices=RedirectTypes,
-        max_length=16,
-    )
 
     def __str__(self):
         return f"{self.from_path} ➡️ {self.to_path}"

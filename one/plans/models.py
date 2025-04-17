@@ -19,10 +19,16 @@ class Plan(TranslatableModel):
     slug = models.SlugField()
     description = models.CharField(max_length=128, null=True)
     price_min = MoneyField(
-        max_digits=6, decimal_places=2, default_currency="EUR", default=Money(5, "EUR")
+        max_digits=6,
+        decimal_places=2,
+        default_currency="EUR",
+        default=Money(5, "EUR"),
     )
     price_max = MoneyField(
-        max_digits=6, decimal_places=2, default_currency="EUR", default=Money(50, "EUR")
+        max_digits=6,
+        decimal_places=2,
+        default_currency="EUR",
+        default=Money(50, "EUR"),
     )
 
     def get_absolute_url(self):

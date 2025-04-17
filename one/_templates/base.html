@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n static           %}
 {% firstof page_title object.title request.site.title as title %}
 {% firstof page_keywords object.keywords request.site.keywords request.site.topic_keywords as keywords %}
 {% firstof page_description object.description request.site.description as description %}

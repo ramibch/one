@@ -615,16 +615,16 @@ wheels = [
 
 [[package]]
 name = "django-money"
-version = "3.5.3"
+version = "3.5.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
     { name = "py-moneyed" },
     { name = "setuptools" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/98/8c/a1f63e1b94f477d6f28b890c15f5352f9ecd6861e60d7e7dd4b8a6f88634/django_money-3.5.3.tar.gz", hash = "sha256:cb8ef1adea8c682b792cc565ace45ace9525de26e3b116290951cd78c7393eab", size = 42264 }
+sdist = { url = "https://files.pythonhosted.org/packages/4b/7c/b3c5154e1927a74239d99c4997396d232595c68da6b7c34cfdf8b2a1b9cf/django_money-3.5.4.tar.gz", hash = "sha256:25933ed6177f8dc981114db813c7c5d36c7c89bc4017f2b1b2bb0209b5f68876", size = 42629 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/32/05/5712bb009945cb8e15ca340598707782b48db65bdffc57e042a0dce19914/django_money-3.5.3-py3-none-any.whl", hash = "sha256:3020c0f6b77eb4c30bdd711c7c660af67ed4b7a4750fdbdf5894788848dc6fc6", size = 35917 },
+    { url = "https://files.pythonhosted.org/packages/42/12/5fc531d267d8a8add794985b60c1ec0b6516eab1b4907ec9d82f1076ea0c/django_money-3.5.4-py3-none-any.whl", hash = "sha256:628b3afb6671edc2cbd26743d858c31d3b99a735357f7acb6a399ab3ab008d2b", size = 36085 },
 ]
 
 [package.optional-dependencies]
@@ -1235,7 +1235,7 @@ requires-dist = [
     { name = "django-import-export", specifier = ">=4.3.7" },
     { name = "django-markdownify", specifier = ">=0.9.5" },
     { name = "django-modeltranslation", specifier = ">=0.19.11" },
-    { name = "django-money", extras = ["exchange"], specifier = ">=3.5.3" },
+    { name = "django-money", extras = ["exchange"], specifier = ">=3.5.4" },
     { name = "django-nested-inline", specifier = ">=0.4.6" },
     { name = "django-rest-framework", specifier = ">=0.1.0" },
     { name = "django-rosetta", specifier = ">=0.10.1" },

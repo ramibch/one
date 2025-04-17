@@ -16,5 +16,12 @@
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "basic",
   "ruff.format.preview": true,
-  "python.analysis.autoFormatStrings": true
+  "python.analysis.autoFormatStrings": true,
+  "[django-html]": {
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": true,
+        "strings": true
+    }
+  }
 }
