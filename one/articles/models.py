@@ -44,15 +44,15 @@ class Article(TranslatableModel):
     is_premium = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.folder_name}/{self.subfolder_name}"
+
     def get_absolute_url(self):
         return reverse_lazy("page-detail", kwargs={"slug": self.slug})
 
     @cached_property
     def url(self):
         return self.get_absolute_url()
-
-    def __str__(self):
-        return f"{self.folder_name}/{self.subfolder_name}"
 
     @cached_property
     def has_equations(self):

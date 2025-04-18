@@ -171,7 +171,3 @@ nginx/*
 
 # tmp files
 tmp/*
-
-
-# geo dbs
-geoip2dbs/*

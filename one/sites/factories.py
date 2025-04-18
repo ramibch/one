@@ -34,6 +34,6 @@ class SiteFactory(DjangoModelFactory):
     # page_folders = ManyToManyField("pages.PageParentFolder", blank=True)
     # books = ManyToManyField("books.Book", blank=True)
 
-    page_title = factory.LazyAttribute(lambda _: faker.sentence())
-    page_description = factory.LazyAttribute(lambda _: faker.text())
-    page_keywords = factory.LazyAttribute(lambda _: faker.sentence())
+    title = factory.LazyAttribute(lambda _: faker.sentence())
+    description = factory.LazyAttribute(lambda _: faker.text())
+    keywords = factory.LazyAttribute(lambda _: faker.sentence())

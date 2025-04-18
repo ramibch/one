@@ -7,7 +7,7 @@ from one.sites.factories import SiteFactory
 
 from .models import (
     ArticlesSection,
-    BenefitsSection,
+    BenefitItem,
     FAQsSection,
     HeroSection,
     Home,
@@ -60,15 +60,18 @@ class ProblemSectionFactory(HomeChildModelFactory):
     class Meta:
         model = ProblemSection
 
+    title = factory.LazyAttribute(lambda _: faker.sentence())
+    description = factory.LazyAttribute(lambda _: faker.paragraph())
+
 
 class SolutionSectionFactory(HomeChildModelFactory):
     class Meta:
         model = SolutionSection
 
 
-class BenefitsSectionFactory(HomeChildModelFactory):
+class BenefitItemFactory(HomeChildModelFactory):
     class Meta:
-        model = BenefitsSection
+        model = BenefitItem
 
 
 class StepActionFactory(HomeChildModelFactory):

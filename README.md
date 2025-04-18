@@ -1,5 +1,10 @@
 # Django Project Template for my future SaaS sites
 
+## Setup
+
+- Add GeoIP2 dbs in the folder `geoip2dbs`
+- texmf under `/home/<user>/texm`
+
 
 ## TODO:
 - [ ] payments and stripe checkout

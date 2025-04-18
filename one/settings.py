@@ -442,6 +442,8 @@ COUNTRIES = (
     ("ZW", _("Zimbabwe")),
 )
 
+COUNTRY_CODES = [c[0] for c in COUNTRIES]
+
 
 TOPICS = (
     ("django", "Django"),
