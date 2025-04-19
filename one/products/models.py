@@ -25,15 +25,12 @@ from one.etsy.enums import ListingType, TaxonomyID, WhenMade, WhoMade
 User = get_user_model()
 
 
-SUBMODULE_NAME = "products" if settings.ENV == "prod" else "test-products"
-
-
 class ProductManager(Manager):
     def get_queryset(self) -> models.QuerySet:
         return super().get_queryset().filter(is_draft=False)
 
 
-class Product(TranslatableModel, BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
+class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     """Product model as folder"""
 
     LANG_ATTR = "language"

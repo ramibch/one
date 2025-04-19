@@ -17,7 +17,7 @@ from .models import Animation
 faker = Faker()
 
 
-class SearchTerm(DjangoModelFactory):
+class SearchTermFactory(DjangoModelFactory):
     query = factory.LazyAttribute(lambda _: faker.sentence())
     client = factory.SubFactory(ClientFactory)
     site = factory.SubFactory(SiteFactory)

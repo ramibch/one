@@ -8,7 +8,7 @@ from .models import (
     Home,
     ProblemSection,
     SolutionSection,
-    StepAction,
+    StepActionSection,
 )
 
 
@@ -47,6 +47,6 @@ class BenefitItemOptions(TranslationOptions):
     fields = ("name", "description")
 
 
-@register(StepAction)
-class StepActionOptions(TranslationOptions):
+@register(StepActionSection)
+class StepActionSectionOptions(TranslationOptions):
     fields = ("title", "description")

@@ -1,10 +1,46 @@
 # Django Project Template for my future SaaS sites
 
-## Setup
 
-- Add GeoIP2 dbs in the folder `geoip2dbs`
-- texmf under `/home/<user>/texm`
+## GeoIP2 dbs
 
+(`geoip2dbs`) are stored with GIT LFS.
+
+Here a small description (Credits: Gabriel Staples on stackoverflow):
+
+```bash
+# Fetch git lfs files for just the currently-checked-out branch or commit (Ex: 20
+# GB of data). This downloads the files into your `.git/lfs` dir but does NOT
+# update them in your working file system for the branch or commit you have
+# currently checked-out.
+git lfs fetch
+
+# Fetch git lfs files for ALL remote branches (Ex: 1000 GB of data), downloading
+# all files into your `.git/lfs` directory.
+git lfs fetch --all
+
+# Fetch git lfs files for just these 3 branches (Ex: 60 GB of data)
+# See `man git-lfs-fetch` for details. The example they give is:
+# `git lfs fetch origin main mybranch e445b45c1c9c6282614f201b62778e4c0688b5c8`
+git lfs fetch origin main mybranch1 mybranch2
+
+# Check out, or "activate" the git lfs files for your currently-checked-out
+# branch or commit, by updating all file placeholders or pointers in your
+# active filesystem for the current branch with the actual files these git lfs
+# placeholders point to.
+git lfs checkout
+
+# Fetch and check out in one step. This one command is the equivalent of these 2
+# commands:
+#       git lfs fetch
+#       git lfs checkout
+git lfs pull
+#
+# Note that `git lfs pull` is similar to how `git pull` is the equivalent
+# of these 2 commands:
+#       git fetch
+#       git merge
+
+```
 
 ## TODO:
 - [ ] payments and stripe checkout

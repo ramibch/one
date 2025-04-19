@@ -1,3 +1,5 @@
+from random import randint, sample
+
 import factory
 from django.conf import settings
 from factory.django import DjangoModelFactory
@@ -7,13 +9,15 @@ from .models import PicoCssColor, Site
 
 faker = Faker()
 
+LANGS = settings.LANGUAGE_CODES
+
 
 class SiteFactory(DjangoModelFactory):
     class Meta:
         model = Site
 
-    language = factory.Iterator(settings.LANGUAGE_CODES)
-    languages = ["en", "es", "de"]  # TODO: improve
+    language = factory.Iterator(LANGS)
+    languages = factory.List(sample(LANGS, k=randint(0, len(LANGS))))
     domain = factory.LazyAttribute(lambda _: faker.domain_name())
     remarks = factory.LazyAttribute(lambda _: faker.sentence())
     brand_name = factory.LazyAttribute(lambda _: faker.company())

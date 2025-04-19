@@ -20,7 +20,7 @@ class Home(TranslatableModel):
     steps_title = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.title} 🌐{self.site}"
+        return f"{self.title}"
 
 
 class HomeChildModel(TranslatableModel):
@@ -84,7 +84,10 @@ class HeroSection(HomeChildModel):
 
 class ProblemSection(HomeChildModel):
     title = models.CharField(max_length=64)
-    description = models.TextField()
+    description = models.TextField(
+        help_text=_("Reflect here the problem of the user. Use bullet list")
+    )
+    emoji = models.CharField(max_length=8, db_default="⚠️")
 
     def __str__(self):
         return self.title
@@ -92,7 +95,10 @@ class ProblemSection(HomeChildModel):
 
 class SolutionSection(HomeChildModel):
     title = models.CharField(max_length=64)
-    description = models.TextField()
+    description = models.TextField(
+        help_text=_("Introduce our product/service as the solution.")
+    )
+    emoji = models.CharField(max_length=8, db_default="💡")
 
     def __str__(self):
         return self.title
@@ -100,13 +106,12 @@ class SolutionSection(HomeChildModel):
 
 class BenefitItem(TranslatableModel):
     home = ForeignKey(Home, on_delete=models.CASCADE)
+    emoji = models.CharField(max_length=8, db_default="🚀")
     name = models.CharField(max_length=32)
     description = models.TextField()
 
 
-class StepAction(HomeChildModel):
-    home = ForeignKey(Home, on_delete=models.CASCADE)
-    step_label = models.CharField(max_length=4, default="01")
+class StepActionSection(HomeChildModel):
     title = models.CharField(max_length=64)
     description = models.TextField()
 
@@ -126,7 +131,6 @@ class FAQsSection(HomeChildModel):
         return (
             FAQ.objects.filter(
                 category__in=self.categories,
-                languages__contains=[get_language()],
                 sites=self.home.site,
                 featured=True,
             )

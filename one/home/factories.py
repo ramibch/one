@@ -1,7 +1,10 @@
+from random import randint, sample
+
 import factory
 from factory.django import DjangoModelFactory
 from faker import Faker
 
+from one.faqs.models import FAQCategory
 from one.links.factories import LinkFactory
 from one.sites.factories import SiteFactory
 
@@ -13,7 +16,7 @@ from .models import (
     Home,
     ProblemSection,
     SolutionSection,
-    StepAction,
+    StepActionSection,
 )
 
 faker = Faker()
@@ -61,24 +64,41 @@ class ProblemSectionFactory(HomeChildModelFactory):
         model = ProblemSection
 
     title = factory.LazyAttribute(lambda _: faker.sentence())
-    description = factory.LazyAttribute(lambda _: faker.paragraph())
+    description = factory.LazyAttribute(
+        lambda _: "\n".join(f"- {faker.sentence()}" for _ in range(4)) + "\n"
+    )
 
 
 class SolutionSectionFactory(HomeChildModelFactory):
     class Meta:
         model = SolutionSection
 
+    title = factory.LazyAttribute(lambda _: faker.sentence())
+    description = factory.LazyAttribute(lambda _: (faker.text(max_nb_chars=400)))
+
 
 class BenefitItemFactory(HomeChildModelFactory):
     class Meta:
         model = BenefitItem
 
+    emoji = factory.Iterator(["🎁", "🦊", "🚀", "✅", "📚"])
+    name = factory.LazyAttribute(lambda _: faker.sentence(nb_words=2))
+    description = factory.LazyAttribute(lambda _: faker.paragraph())
 
-class StepActionFactory(HomeChildModelFactory):
+
+class StepActionSectionFactory(HomeChildModelFactory):
     class Meta:
-        model = StepAction
+        model = StepActionSection
+
+    title = factory.LazyAttribute(lambda _: faker.sentence())
+    description = factory.LazyAttribute(lambda _: (faker.text(max_nb_chars=400)))
 
 
 class FAQsSectionFactory(HomeChildModelFactory):
     class Meta:
         model = FAQsSection
+
+    title = factory.LazyAttribute(lambda _: faker.sentence(nb_words=4))
+    categories = factory.List(
+        sample(FAQCategory.values, k=randint(1, len(FAQCategory.values)))
+    )

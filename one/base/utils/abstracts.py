@@ -46,10 +46,10 @@ class BaseSubmoduleFolder(Model):
         else:
             if not cls.submodule_path.is_dir():
                 raise SubmoduleException(f"{cls.submodule_path} is not a directory")
-            objs = []
-            folder_names = [p.name for p in cls.submodule_path.iterdir() if p.is_dir()]
-            for folder_name in folder_names:
-                objs.append(cls._meta.model(name=folder_name))
+
+            ModelClass = cls._meta.model
+            dir_names = [p.name for p in cls.submodule_path.iterdir() if p.is_dir()]
+            objs = [ModelClass(name=dn) for dn in dir_names if not dn.startswith("_")]
             cls.objects.bulk_create(
                 objs,
                 update_fields=["name"],

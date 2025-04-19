@@ -11,10 +11,8 @@ from one.base.utils.db import ChoiceArrayField
 
 User = get_user_model()
 
-SUBMODULE_NAME = "articles" if settings.ENV == "prod" else "test-articles"
 
-
-class MainTopic(BaseSubmoduleFolder, submodule=SUBMODULE_NAME):
+class MainTopic(BaseSubmoduleFolder, submodule="articles"):
     """
     Parent folder of articles
 

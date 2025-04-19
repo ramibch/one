@@ -589,7 +589,13 @@ MARKDOWNIFY = {
                 "linenums": False,
             },
         },
-    }
+    },
+    "simple_text": {
+        "WHITELIST_TAGS": ["li", "ol", "strong", "i", "br"],
+    },
+    "text_and_headings": {
+        "WHITELIST_TAGS": ["h2", "h3", "h4", "h5", "li", "ol", "strong", "i", "br"],
+    },
 }
 
 # Email

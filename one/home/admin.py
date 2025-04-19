@@ -1,8 +1,18 @@
 from django.contrib import admin
+from django.db import IntegrityError
 from modeltranslation.admin import TranslationStackedInline
 
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT, TranslatableModelAdmin
 
+from .factories import (
+    ArticlesSectionFactory,
+    BenefitItemFactory,
+    FAQsSectionFactory,
+    HeroSectionFactory,
+    ProblemSectionFactory,
+    SolutionSectionFactory,
+    StepActionSectionFactory,
+)
 from .models import (
     ArticlesSection,
     BenefitItem,
@@ -11,7 +21,7 @@ from .models import (
     Home,
     ProblemSection,
     SolutionSection,
-    StepAction,
+    StepActionSection,
 )
 
 
@@ -37,8 +47,8 @@ class BenefitItemInline(TranslationStackedInline):
     extra = 0
 
 
-class StepActionInline(TranslationStackedInline):
-    model = StepAction
+class StepActionSectionInline(TranslationStackedInline):
+    model = StepActionSection
     extra = 0
 
 
@@ -62,7 +72,61 @@ class HomeAdmin(TranslatableModelAdmin):
         ProblemSectionInline,
         SolutionSectionInline,
         BenefitItemInline,
-        StepActionInline,
+        StepActionSectionInline,
         ArticlesSectionInline,
         FAQsSectionInline,
     )
+
+    actions = ["fake_sections"]
+
+    @admin.action(description="🏭 Fake sections")
+    def fake_sections(modeladmin, request, queryset):
+        OneTwoOneModels = [
+            HeroSectionFactory,
+            ArticlesSectionFactory,
+            HeroSectionFactory,
+            ProblemSectionFactory,
+            SolutionSectionFactory,
+            FAQsSectionFactory,
+            StepActionSectionFactory,
+        ]
+
+        for home in queryset:
+            if not home.benefititem_set.filter().exists():
+                BenefitItemFactory.create_batch(6, home=home)
+
+            for OneTwoOneModel in OneTwoOneModels:
+                try:
+                    OneTwoOneModel(home=home)
+                except IntegrityError:
+                    pass
+
+
+@admin.register(HeroSection)
+class HeroSectionAdmin(TranslatableModelAdmin):
+    list_display = ("home", "home__site", "headline", "cta_link")
+    list_filter = ("home__site",)
+
+
+@admin.register(ProblemSection)
+class ProblemSectionAdmin(TranslatableModelAdmin):
+    list_display = ("home", "home__site", "title", "emoji")
+    list_filter = ("home__site",)
+
+
+@admin.register(SolutionSection)
+class SolutionSectionAdmin(TranslatableModelAdmin):
+    list_display = ("home", "home__site", "title", "emoji")
+    list_filter = ("home__site",)
+
+
+@admin.register(BenefitItem)
+class BenefitItemAdmin(TranslatableModelAdmin):
+    list_display = ("home", "home__site", "name_en", "emoji", "description")
+    list_filter = ("home__site",)
+    list_editable = ("name_en", "emoji")
+
+
+@admin.register(StepActionSection)
+class StepActionSectionAdmin(TranslatableModelAdmin):
+    list_display = ("home", "home__site")
