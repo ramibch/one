@@ -21,7 +21,6 @@ dependencies = [
   "hiredis>=3.1.0",
   "geoip2>=5.0.1",
   "docutils>=0.21.2 ",
-  # https://docs.djangoproject.com/en/stable/ref/contrib/admin/admindocs/
   "deepl>=1.21.1",
   "Jinja2>=3.1.6",
   "qrcode[pil]>=8.0",
@@ -58,7 +57,7 @@ dependencies = [
   "django-import-export>=4.3.7",
   "django-huey-monitor>=0.9.0",
   "django-debug-toolbar>=5.1.0",
-  "django-money[exchange]>=3.5.4",
+  "django-money>=3.5.4",
 ]
 
 

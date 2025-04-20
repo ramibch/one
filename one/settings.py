@@ -493,7 +493,7 @@ CACHES = {
 }
 
 # Append slash
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 # Uploads
 

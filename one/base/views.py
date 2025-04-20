@@ -14,6 +14,7 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
+from django_htmx.http import retarget
 
 from one.articles.models import Article
 from one.base.utils.http import CustomHttpRequest
@@ -25,6 +26,7 @@ from one.products.models import Product
 from one.quiz.models import Quiz
 from one.sites.models import SiteType
 
+from .forms import ContactMessageForm
 from .tasks import save_search_query
 
 User = get_user_model()
@@ -122,6 +124,26 @@ def hx_search_results_view(request: CustomHttpRequest) -> HttpResponse:
         "total": total,
     }
     return render(request, "search/hx_results.html", context)
+
+
+def contact_view(request: CustomHttpRequest) -> HttpResponse:
+    form = ContactMessageForm(request.POST or None)
+
+    if request.method == "GET":
+        context = {"form": form}
+        return render(request, "base/contact.html", context)
+    elif request.method == "POST":
+        form = ContactMessageForm(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.client = request.client
+            obj.site = request.site
+            obj.save()
+            msg = _("Thank you for your message. I will reply as soon as I can.")
+            return HttpResponse(f"<center> ✅ {msg}</center>")
+
+        res = HttpResponse("⚠️ " + form.errors.as_text())
+        return retarget(res, "#errors")
 
 
 @require_GET

@@ -5,7 +5,7 @@ from one.base.utils.telegram import Bot
 
 from .models import (
     PostalMessage,
-    PostalReplyMessage,
+    ReplyMessage,
     TemplateMessage,
     TemplateRecipient,
 )
@@ -43,7 +43,7 @@ def task_send_periodic_email_templates_and_reply_postal_messages():
     if emails.count() > 0:
         task_send_email_templates.schedule((emails,), delay=1)
 
-    replies = PostalReplyMessage.objects.filter(replied=False, draft=False)
+    replies = ReplyMessage.objects.filter(replied=False, draft=False)
 
     for reply_obj in replies:
         reply_obj.reply(fail_silently=False)

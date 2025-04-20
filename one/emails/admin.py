@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from .models import (
     PostalDomainDNSError,
     PostalMessage,
-    PostalReplyMessage,
+    ReplyMessage,
     Sender,
     TemplateAttachment,
     TemplateMessage,
@@ -102,11 +102,12 @@ class DomainDNSErrorAdmin(admin.ModelAdmin):
     readonly_fields = tuple(field.name for field in PostalDomainDNSError._meta.fields)
 
 
-class PostalReplyMessageInline(admin.TabularInline):
-    model = PostalReplyMessage
+class ReplyMessageInline(admin.TabularInline):
+    model = ReplyMessage
     extra = 1
     max_num = 1
     readonly_fields = ("replied", "replied_on")
+    exclude = ("contact_message",)
 
 
 @admin.register(PostalMessage)
@@ -121,4 +122,4 @@ class PostalMessageAdmin(admin.ModelAdmin):
     )
     list_filter = ("received_at", "status", "tag", "spam_status", "direction")
     readonly_fields = ["url"] + [field.name for field in PostalMessage._meta.fields]
-    inlines = [PostalReplyMessageInline]
+    inlines = [ReplyMessageInline]

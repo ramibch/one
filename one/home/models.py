@@ -1,5 +1,6 @@
 from auto_prefetch import ForeignKey, OneToOneField
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
@@ -49,7 +50,8 @@ class ArticlesSection(HomeChildModel):
     def __str__(self):
         return self.title
 
-    def get_articles(self):
+    @cached_property
+    def articles(self):
         return (
             Article.objects.filter(
                 main_topic__name__in=self.home.site.topics,
@@ -78,12 +80,13 @@ class HeroSection(HomeChildModel):
     def __str__(self):
         return f"{self.headline} - {self.home}"
 
+    @cached_property
     def display_cta_title(self):
         return self.cta_title if self.cta_title else self.cta_link.title
 
 
 class ProblemSection(HomeChildModel):
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=128)
     description = models.TextField(
         help_text=_("Reflect here the problem of the user. Use bullet list")
     )
@@ -94,7 +97,7 @@ class ProblemSection(HomeChildModel):
 
 
 class SolutionSection(HomeChildModel):
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=128)
     description = models.TextField(
         help_text=_("Introduce our product/service as the solution.")
     )
@@ -112,12 +115,12 @@ class BenefitItem(TranslatableModel):
 
 
 class StepActionSection(HomeChildModel):
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=128)
     description = models.TextField()
 
 
 class FAQsSection(HomeChildModel):
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=128)
     categories = ChoiceArrayField(models.CharField(max_length=32, choices=FAQCategory))
 
     class Meta(HomeChildModel.Meta):
@@ -127,7 +130,8 @@ class FAQsSection(HomeChildModel):
     def __str__(self):
         return self.title
 
-    def get_faqs(self):
+    @cached_property
+    def faqs(self):
         return (
             FAQ.objects.filter(
                 category__in=self.categories,
@@ -137,3 +141,18 @@ class FAQsSection(HomeChildModel):
             .order_by("-id")
             .distinct()
         )
+
+
+class FinalCTASection(HomeChildModel):
+    title = models.TextField(max_length=256)
+    description = models.TextField()
+    cta_link = ForeignKey("links.Link", on_delete=models.CASCADE)
+    cta_title = models.CharField(max_length=64, null=True, blank=True)
+    cta_new_tab = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.title} - {self.home}"
+
+    @cached_property
+    def display_cta_title(self):
+        return self.cta_title if self.cta_title else self.cta_link.title

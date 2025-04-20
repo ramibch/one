@@ -10,7 +10,7 @@
           <p class="mt-3">{{ section.subheadline|linebreaks }}</p>
           <center>
             <a {% if section.cta_new_tab %}target="_blank"{% endif %}
-               href="{{ section.cta_link.url }}?ref=homeherocta" role="button"
+               href="{{ section.cta_link.url }}" role="button"
                {% include "snippets/animation_attrs.html" with html_class="button my-5" animation=section.cta_animation %}>
               {{ section.display_cta_title }}
             </a>
@@ -105,7 +105,7 @@
           ✍ {{ section.title }} <span style="float: right;"> <a href="{% url 'article_list' %}">{% translate "All" %}</a> </span>
         </h2>
         <div class="row mt-5">
-        {% for article in section.get_articles %}
+        {% for article in section.articles %}
           <div class="col-md-4">
             <article {% if section.card_animation %} {% include "snippets/animation_attrs.html" with animation=section.card_animation %} {% endif %}>
               <h3>
@@ -132,7 +132,7 @@
           <h2>{{ section.title }} </h2>
         </center>
         <div class="col-md-6 offset-md-3 mt-5">
-          {% for faq in section.get_faqs %}
+          {% for faq in section.faqs %}
           <article>
             <details x-data="{ isExpanded: false }">
               <summary  x-on:click="isExpanded = !isExpanded"><strong>  {{ faq.question }}</strong></summary>
@@ -140,6 +140,28 @@
             </details>
           </article>
           {% endfor %}
+        </div>
+      </section>
+    {% endwith %}
+  {% endif %}
+
+
+  <!-- Final CTA -->
+
+  {% if object.finalctasection %}
+    {% with section=object.finalctasection %}
+      <br> <br> <hr> <br>
+      <section class="mt-5" >
+        <div class="col-md-6 offset-md-3 mt-5">
+          <center>
+            <h2>{{ section.title }} </h2>
+            <p> {{ section.description|markdownify:"simple_text"|linebreaks }} </p>
+            <a {% if section.cta_new_tab %}target="_blank"{% endif %}
+               href="{{ section.cta_link.url }}" role="button"
+               {% include "snippets/animation_attrs.html" with html_class="button my-5" animation=section.cta_animation %}>
+                 {{ section.display_cta_title }}
+            </a>
+          </center>
         </div>
       </section>
     {% endwith %}

@@ -8,6 +8,7 @@ from .factories import (
     ArticlesSectionFactory,
     BenefitItemFactory,
     FAQsSectionFactory,
+    FinalCTASectionFactory,
     HeroSectionFactory,
     ProblemSectionFactory,
     SolutionSectionFactory,
@@ -17,6 +18,7 @@ from .models import (
     ArticlesSection,
     BenefitItem,
     FAQsSection,
+    FinalCTASection,
     HeroSection,
     Home,
     ProblemSection,
@@ -64,6 +66,11 @@ class FAQsSectionInline(TranslationStackedInline):
     extra = 0
 
 
+class FinalCTASectionInline(TranslationStackedInline):
+    model = FinalCTASection
+    extra = 0
+
+
 @admin.register(Home)
 class HomeAdmin(TranslatableModelAdmin):
     list_display = ("__str__", "title", "site")
@@ -75,6 +82,7 @@ class HomeAdmin(TranslatableModelAdmin):
         StepActionSectionInline,
         ArticlesSectionInline,
         FAQsSectionInline,
+        FinalCTASectionInline,
     )
 
     actions = ["fake_sections"]
@@ -89,6 +97,7 @@ class HomeAdmin(TranslatableModelAdmin):
             SolutionSectionFactory,
             FAQsSectionFactory,
             StepActionSectionFactory,
+            FinalCTASectionFactory,
         ]
 
         for home in queryset:

@@ -10,7 +10,7 @@
         <menu>
           {% for footerlink in item.footerlink_set.all %}
             <li>
-              <a href="{{ footerlink.link.url }}?ref=footeritemlink"
+              <a href="{{ footerlink.link.url }}"
                  {% if footerlink.new_tab %}target="_blank"{% endif %}>{{ footerlink.display_title }}</a>
             </li>
           {% endfor %}
@@ -22,7 +22,7 @@
     <!-- Footer links -->
     <p>
       {% for footerlink in footer_links %}
-        <a href="{{ footerlink.link.url }}?ref=footerlink"
+        <a href="{{ footerlink.link.url }}"
            {% if footerlink.new_tab %}target="_blank"{% endif %}>{{ footerlink.display_title }}</a>
         {% if not forloop.last %}{{ request.site.footer_links_separator }}{% endif %}
       {% endfor %}
@@ -31,13 +31,9 @@
     <p>
       {% for link in social_media_links %}
         {% if link.url %}
-          <a href="{{ link.url }}?ref={{ request.get_host }}"
-             style="text-decoration: none"
-             title="{{ link.platform }}"
-             {% if link.new_tab %}target="_blank"{% endif %}>
-            <img src='{% static link.static_icon_url %}'
-                 alt="{{ link.platform }}"
-                 height="32">
+          <a href="{{ link.url }}?ref={{ request.get_host }}" style="text-decoration: none"
+             title="{{ link.platform }}" {% if link.new_tab %}target="_blank"{% endif %}>
+            <img src='{% static link.static_icon_url %}' alt="{{ link.platform }}" height="32">
           </a>
         {% endif %}
       {% endfor %}

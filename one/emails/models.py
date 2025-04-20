@@ -2,6 +2,7 @@ from copy import copy
 from datetime import datetime, timedelta
 
 from auto_prefetch import ForeignKey, Model
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.files.storage import storages
 from django.core.mail import EmailMessage
@@ -331,11 +332,22 @@ class PostalMessage(Model):
         return f"[{self.id}] {self.subject}"[:40]
 
 
-class PostalReplyMessage(Model):
+class ReplyMessage(Model):
     def get_file_path(self, filename):
         return f"emails/replies/{self.id}/{filename}"
 
-    postal_message = ForeignKey(PostalMessage, on_delete=models.CASCADE)
+    postal_message = ForeignKey(
+        PostalMessage,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    contact_message = ForeignKey(
+        "base.ContactMessage",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
     body = models.TextField()
     replied = models.BooleanField(default=False)
     draft = models.BooleanField(default=False)
@@ -346,15 +358,31 @@ class PostalReplyMessage(Model):
 
     @cached_property
     def subject(self):
-        return f"Re: {self.postal_message.subject}"
+        if self.postal_message:
+            return f"Re: {self.postal_message.subject}"
+
+        if self.contact_message:
+            return f"Re: {self.contact_message.site.brand_name}"
+
+        return _("No object associated with reply")
 
     @cached_property
     def mail_to(self):
-        return self.postal_message.mail_from
+        if self.postal_message:
+            return self.postal_message.mail_from
+
+        if self.contact_message:
+            return self.contact_message.email
+
+        return settings.ADMINS[0][1]
 
     @cached_property
     def mail_from(self):
-        return self.postal_message.mail_to
+        if self.postal_message:
+            return self.postal_message.mail_to
+
+        if self.contact_message:
+            return self.contact_message.site.from_email_address
 
     @cached_property
     def local_file(self):
@@ -364,10 +392,11 @@ class PostalReplyMessage(Model):
 
     @cached_property
     def mail_headers(self):
-        return {
-            "References": self.postal_message.large_id,
-            "In-Reply-To": self.postal_message.large_id,
-        }
+        if self.postal_message:
+            ref_id = self.postal_message.large_id
+            return {"References": ref_id, "In-Reply-To": ref_id}
+
+        return {}
 
     @cached_property
     def sender(self) -> Sender:

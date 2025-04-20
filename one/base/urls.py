@@ -8,6 +8,7 @@ from .views import (
     PlanListView,
     ProductListView,
     RobotTxtView,
+    contact_view,
     favicon_view,
     home_view,
     hx_search_results_view,
@@ -27,6 +28,11 @@ urlpatterns = [
     # Search
     path(_("search"), search_view, name="search"),
     path("hx-search-results", hx_search_results_view, name="search-results"),
+    # Contact
+    path(_("contact"), contact_view, name="contact"),
+    path(_("contact") + "/", contact_view),
+    path("feedback", contact_view, name="contact-feedback"),
+    path("feedback/", contact_view),
     # Article list
     path(_("articles"), ArticleListView.as_view(), name="article_list"),
     # Plan list

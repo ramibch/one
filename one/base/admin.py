@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.contrib.sessions.models import Session
 from django.db.migrations.recorder import MigrationRecorder
 
-from .models import Animation, SearchTerm
+from one.emails.models import ReplyMessage
+
+from .models import Animation, ContactMessage, SearchTerm
 
 
 @admin.register(Animation)
@@ -31,3 +33,19 @@ class SearchTermAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+class ReplyMessageInline(admin.TabularInline):
+    model = ReplyMessage
+    extra = 1
+    max_num = 1
+    readonly_fields = ("replied", "replied_on")
+    exclude = ("postal_message",)
+
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "message", "client", "client__is_blocked")
+    list_filter = ("client__is_blocked", "site")
+    readonly_fields = tuple(field.name for field in ContactMessage._meta.fields)
+    inlines = [ReplyMessageInline]

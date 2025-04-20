@@ -12,6 +12,7 @@ from .models import (
     ArticlesSection,
     BenefitItem,
     FAQsSection,
+    FinalCTASection,
     HeroSection,
     Home,
     ProblemSection,
@@ -35,15 +36,6 @@ class HomeChildModelFactory(DjangoModelFactory):
 
     class Meta:
         abstract = True
-
-
-class ArticlesSectionFactory(HomeChildModelFactory):
-    title = factory.LazyAttribute(lambda _: faker.sentence())
-    number_of_articles = factory.LazyAttribute(lambda _: faker.random_number())
-    card_animation = None  # TODO:
-
-    class Meta:
-        model = ArticlesSection
 
 
 class HeroSectionFactory(HomeChildModelFactory):
@@ -94,6 +86,15 @@ class StepActionSectionFactory(HomeChildModelFactory):
     description = factory.LazyAttribute(lambda _: (faker.text(max_nb_chars=400)))
 
 
+class ArticlesSectionFactory(HomeChildModelFactory):
+    title = factory.LazyAttribute(lambda _: faker.sentence())
+    number_of_articles = factory.LazyAttribute(lambda _: faker.random_number())
+    card_animation = None  # TODO:
+
+    class Meta:
+        model = ArticlesSection
+
+
 class FAQsSectionFactory(HomeChildModelFactory):
     class Meta:
         model = FAQsSection
@@ -102,3 +103,14 @@ class FAQsSectionFactory(HomeChildModelFactory):
     categories = factory.List(
         sample(FAQCategory.values, k=randint(1, len(FAQCategory.values)))
     )
+
+
+class FinalCTASectionFactory(HomeChildModelFactory):
+    class Meta:
+        model = FinalCTASection
+
+    title = factory.LazyAttribute(lambda _: faker.sentence())
+    description = factory.LazyAttribute(lambda _: (faker.text(max_nb_chars=200)))
+    cta_link = factory.SubFactory(LinkFactory)
+    cta_title = factory.LazyAttribute(lambda _: faker.sentence())
+    cta_new_tab = factory.LazyAttribute(lambda _: faker.boolean())

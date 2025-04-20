@@ -10,7 +10,7 @@
     {% for tool in tools %}
       {% if tool.index_listing %}
         <div class="col-md-6">
-          <a href="{{ tool.url }}?ref=toollist" title="{{ tool.title }}">{{ tool.icon }} {{ tool.title }}</a>
+          <a href="{{ tool.url }}" title="{{ tool.title }}">{{ tool.icon }} {{ tool.title }}</a>
         </div>
       {% endif %}
     {% endfor %}

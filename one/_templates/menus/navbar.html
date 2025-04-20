@@ -3,7 +3,7 @@
   <menu>
     <li>
       <strong>
-        <a href="{% url "home" %}?ref=brandheader">
+        <a href="{% url "home" %}">
           {% if request.site.emoji and request.site.emoji_in_brand %}{{ request.site.emoji }}{% endif %}
           {{ request.site.brand_name }}
         </a>
@@ -14,7 +14,7 @@
     {% for navlink in navbar_links %}
       <li>
         <a class="contrast"
-           href="{{ navlink.link.url }}?ref=navbarlink"
+           href="{{ navlink.link.url }}"
            {% if navlink.new_tab %}target="_blank"{% endif %}>{{ navlink.display_title }}</a>
       </li>
     {% endfor %}

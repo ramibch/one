@@ -4,6 +4,7 @@ from .models import (
     ArticlesSection,
     BenefitItem,
     FAQsSection,
+    FinalCTASection,
     HeroSection,
     Home,
     ProblemSection,
@@ -50,3 +51,8 @@ class BenefitItemOptions(TranslationOptions):
 @register(StepActionSection)
 class StepActionSectionOptions(TranslationOptions):
     fields = ("title", "description")
+
+
+@register(FinalCTASection)
+class FinalCTASectionOptions(TranslationOptions):
+    fields = ("title", "description", "cta_title")

@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                     location="private",
                     querystring_auth=True,
                 ),
-                upload_to=one.emails.models.PostalReplyMessage.get_file_path,
+                upload_to=one.emails.models.ReplyMessage.get_file_path,
             ),
         ),
     ]

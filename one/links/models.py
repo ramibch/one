@@ -14,6 +14,7 @@ PATH_NAMES = (
     ("home", _("Home")),
     ("search", _("Search")),
     ("sitemap", _("Sitemap")),
+    ("contact", _("Contact")),
     ("article_list", _("Articles")),
     ("plan_list", _("Plans")),
     ("account_login", _("Sign In")),
