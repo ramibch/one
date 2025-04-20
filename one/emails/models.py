@@ -400,6 +400,12 @@ class ReplyMessage(Model):
 
     @cached_property
     def sender(self) -> Sender:
+        if self.contact_message:
+            return Sender.objects.get_or_create(
+                address=self.mail_from,
+                name=self.contact_message.site.brand_name,
+            )[0]
+
         try:
             return Sender.objects.get(address=self.mail_from)
         except Sender.DoesNotExist:

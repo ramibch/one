@@ -175,7 +175,7 @@ class Site(TranslatableModel):
 
     @cached_property
     def brand_email_address(self):
-        return f"{slugify(self.brand_name)}@{self.domain}>"
+        return f"{slugify(self.brand_name)}@{self.domain}"
 
     @cached_property
     def topic_keywords(self):
