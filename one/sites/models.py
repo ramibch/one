@@ -1,6 +1,6 @@
 import string
 
-from auto_prefetch import Manager, Model
+from auto_prefetch import ForeignKey, Manager, Model
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -9,7 +9,6 @@ from django.db.models.signals import pre_delete, pre_save
 from django.http.request import split_domain_port
 from django.urls import reverse
 from django.utils.functional import cached_property
-from django.utils.text import slugify
 from django.utils.timezone import timedelta
 from django.utils.translation import gettext_lazy as _
 
@@ -145,6 +144,20 @@ class Site(TranslatableModel):
     description = models.TextField(max_length=256, null=True, blank=True)
     keywords = models.TextField(max_length=256, null=True, blank=True)
 
+    # Emails
+    brand_email_sender = ForeignKey(
+        "emails.Sender",
+        null=True,
+        on_delete=models.DO_NOTHING,
+        related_name="+",
+    )
+    nonreply_email_sender = ForeignKey(
+        "emails.Sender",
+        null=True,
+        on_delete=models.DO_NOTHING,
+        related_name="+",
+    )
+
     objects = SiteManager()
 
     def __str__(self):
@@ -168,14 +181,6 @@ class Site(TranslatableModel):
     def url(self) -> str:
         schema = "https" if settings.HTTPS else "http"
         return f"{schema}://{self.domain}"
-
-    @cached_property
-    def from_email(self):
-        return f"{self.display_brand} <no-reply@{self.domain}>"
-
-    @cached_property
-    def brand_email_address(self):
-        return f"{slugify(self.brand_name)}@{self.domain}"
 
     @cached_property
     def topic_keywords(self):

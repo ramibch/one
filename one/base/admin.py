@@ -46,6 +46,6 @@ class ReplyMessageInline(admin.TabularInline):
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ("name", "email", "message", "client", "client__is_blocked")
-    list_filter = ("client__is_blocked", "site")
+    list_filter = ("client__is_blocked", "site", "created_on")
     readonly_fields = tuple(field.name for field in ContactMessage._meta.fields)
     inlines = [ReplyMessageInline]

@@ -35,7 +35,7 @@ def task_send_email_templates(queryset):
 
 
 @huey.db_periodic_task(crontab(minute="*"))
-def task_send_periodic_email_templates_and_reply_postal_messages():
+def task_send_periodic_email_templates_and_reply_messages():
     """
     Send emails for recipients from Email Templates.
     """
@@ -43,10 +43,14 @@ def task_send_periodic_email_templates_and_reply_postal_messages():
     if emails.count() > 0:
         task_send_email_templates.schedule((emails,), delay=1)
 
-    replies = ReplyMessage.objects.filter(replied=False, draft=False)
+    reply_objs = ReplyMessage.objects.filter(
+        replied=False,
+        draft=False,
+        sender__isnull=False,
+    )
 
-    for reply_obj in replies:
-        reply_obj.reply(fail_silently=False)
+    for obj in reply_objs:
+        obj.reply(fail_silently=False)
 
 
 @huey.db_periodic_task(crontab(hour="12", minute="18"))

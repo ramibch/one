@@ -2,7 +2,6 @@ from copy import copy
 from datetime import datetime, timedelta
 
 from auto_prefetch import ForeignKey, Model
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.files.storage import storages
 from django.core.mail import EmailMessage
@@ -12,6 +11,7 @@ from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
+from one import settings
 from one.base.utils.telegram import Bot
 from one.base.utils.tmp import TmpFile
 from one.sites.models import Site
@@ -348,41 +348,44 @@ class ReplyMessage(Model):
         null=True,
         blank=True,
     )
+    sender = ForeignKey(Sender, null=True, on_delete=models.SET_NULL)
     body = models.TextField()
     replied = models.BooleanField(default=False)
     draft = models.BooleanField(default=False)
     replied_on = models.DateTimeField(null=True, blank=True, editable=False)
     file = models.FileField(
-        upload_to=get_file_path, storage=storages["private"], null=True, blank=True
+        upload_to=get_file_path,
+        storage=storages["private"],
+        null=True,
+        blank=True,
     )
 
     @cached_property
-    def subject(self):
+    def subject(self) -> str:
         if self.postal_message:
             return f"Re: {self.postal_message.subject}"
 
         if self.contact_message:
             return f"Re: {self.contact_message.site.brand_name}"
 
-        return _("No object associated with reply")
+        return "Email Reply has error."
 
     @cached_property
-    def mail_to(self):
+    def mail_to(self) -> str:
         if self.postal_message:
             return self.postal_message.mail_from
 
         if self.contact_message:
             return self.contact_message.email
 
-        return settings.ADMINS[0][1]
+        return f"{settings.ADMINS[0][0]}<{settings.ADMINS[0][1]}>"
 
     @cached_property
-    def mail_from(self):
+    def mail_headers(self) -> dict:
         if self.postal_message:
-            return self.postal_message.mail_to
-
-        if self.contact_message:
-            return self.contact_message.site.brand_email_address
+            ref_id = self.postal_message.large_id
+            return {"References": ref_id, "In-Reply-To": ref_id}
+        return {}
 
     @cached_property
     def local_file(self):
@@ -390,31 +393,8 @@ class ReplyMessage(Model):
             raise ValueError("Attachment field cannot be null")
         return TmpFile(self.file).path
 
-    @cached_property
-    def mail_headers(self):
-        if self.postal_message:
-            ref_id = self.postal_message.large_id
-            return {"References": ref_id, "In-Reply-To": ref_id}
-
-        return {}
-
-    @cached_property
-    def sender(self) -> Sender:
-        if self.contact_message:
-            return Sender.objects.get_or_create(
-                address=self.mail_from,
-                name=self.contact_message.site.brand_name,
-            )[0]
-
-        try:
-            return Sender.objects.get(address=self.mail_from)
-        except Sender.DoesNotExist:
-            name = self.mail_from.split("@")[0]
-            Bot.to_admin(f"⚠️ Rename sender name: {self.mail_from}")
-            return Sender.objects.create(address=self.mail_from, name=name)
-
     def reply(self, fail_silently=False):
-        if self.replied:
+        if self.replied or self.sender is None:
             return
 
         msg = EmailMessage(

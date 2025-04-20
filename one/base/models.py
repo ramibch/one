@@ -25,9 +25,6 @@ class SearchTerm(Model):
 
 
 class ContactMessage(Model):
-    name = models.CharField(_("Your name"), max_length=128)
-    email = models.EmailField(_("Email address"), max_length=128)
-    message = models.TextField(_("Message"), max_length=1000)
     client = ForeignKey(
         "clients.Client",
         on_delete=models.SET_NULL,
@@ -40,6 +37,10 @@ class ContactMessage(Model):
         null=True,
         blank=True,
     )
+    name = models.CharField(_("Your name"), max_length=128)
+    email = models.EmailField(_("Email address"), max_length=128)
+    message = models.TextField(_("Message"), max_length=1000)
+    created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return f"{self.name}  <{self.email}>"
