@@ -129,10 +129,7 @@ def hx_search_results_view(request: CustomHttpRequest) -> HttpResponse:
 def contact_view(request: CustomHttpRequest) -> HttpResponse:
     form = ContactMessageForm(request.POST or None)
 
-    if request.method == "GET":
-        context = {"form": form}
-        return render(request, "base/contact.html", context)
-    elif request.method == "POST":
+    if request.method == "POST":
         form = ContactMessageForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
@@ -144,6 +141,8 @@ def contact_view(request: CustomHttpRequest) -> HttpResponse:
 
         res = HttpResponse("⚠️ " + form.errors.as_text())
         return retarget(res, "#errors")
+
+    return render(request, "base/contact.html", {"form": form})
 
 
 @require_GET
