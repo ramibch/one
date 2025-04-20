@@ -34,7 +34,7 @@ def task_ask_users_to_verify_email():
             EmailMessage(
                 subject=subject,
                 body=body,
-                from_email=site.from_email_address,
+                from_email=site.from_email,
                 to=[user.email],
             ).send(fail_silently=True)
 

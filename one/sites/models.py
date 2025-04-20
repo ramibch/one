@@ -9,6 +9,7 @@ from django.db.models.signals import pre_delete, pre_save
 from django.http.request import split_domain_port
 from django.urls import reverse
 from django.utils.functional import cached_property
+from django.utils.text import slugify
 from django.utils.timezone import timedelta
 from django.utils.translation import gettext_lazy as _
 
@@ -169,8 +170,12 @@ class Site(TranslatableModel):
         return f"{schema}://{self.domain}"
 
     @cached_property
-    def from_email_address(self):
+    def from_email(self):
         return f"{self.display_brand} <no-reply@{self.domain}>"
+
+    @cached_property
+    def brand_email_address(self):
+        return f"{slugify(self.brand_name)}@{self.domain}>"
 
     @cached_property
     def topic_keywords(self):

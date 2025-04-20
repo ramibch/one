@@ -382,7 +382,7 @@ class ReplyMessage(Model):
             return self.postal_message.mail_to
 
         if self.contact_message:
-            return self.contact_message.site.from_email_address
+            return self.contact_message.site.brand_email_address
 
     @cached_property
     def local_file(self):
