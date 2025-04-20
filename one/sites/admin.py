@@ -43,6 +43,8 @@ class SiteAdmin(TranslatableModelAdmin):
                     "topics",
                     "requests_duration",
                     "spam_requests_duration",
+                    "brand_email_sender",
+                    "noreply_email_sender",
                     "remarks",
                 )
             },

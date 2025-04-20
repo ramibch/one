@@ -151,7 +151,7 @@ class Site(TranslatableModel):
         on_delete=models.DO_NOTHING,
         related_name="+",
     )
-    nonreply_email_sender = ForeignKey(
+    noreply_email_sender = ForeignKey(
         "emails.Sender",
         null=True,
         on_delete=models.DO_NOTHING,
