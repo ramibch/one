@@ -68,8 +68,8 @@ def task_mark_recipient_as_draft_due_hard_fails():
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="43"))
-def remove_messages_sent_to_admins():
+def delete_messages_sent_to_admins():
     PostalMessage.objects.filter(
-        received_at__lt=timezone.now() - timedelta(days=2),
+        received_at__lt=timezone.now() - timedelta(days=1),
         mail_to__in=[a[1] for a in settings.ADMINS],
     ).delete()
