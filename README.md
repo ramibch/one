@@ -44,9 +44,12 @@ git lfs pull
 
 ## TODO:
 - [ ] payments and stripe checkout
-- [ ] Plans (TimeFixedPlan, SubscriptionPlan, ....)
-- [ ] https://holidays.readthedocs.io/en/latest/
-
+- [ ] Plans (Type: TimeFixed, Subscription, NoSubscription, ... )
+- [ ] Write units tests
+- [ ] admin.py (search, filters...)
+- [ ] privacy policy page
+- [ ] terms of service page
+- [ ] impress
 
 ## Commercial Etsy App
 

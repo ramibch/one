@@ -16,7 +16,7 @@ class NavbarLinkAdmin(admin.ModelAdmin):
         "new_tab",
         "order",
     )
-    list_filter = ("show_type", "show_as_emoji", "new_tab", "order")
+    list_filter = ("sites", "show_type", "show_as_emoji", "new_tab", "order")
     list_editable = ("show_type", "order", "emoji", "show_as_emoji", "new_tab")
 
 
@@ -35,7 +35,7 @@ class FooterLinkInline(admin.StackedInline):
 class FooterItemAdmin(TranslatableModelAdmin):
     list_display = ("display_title", "emoji", "show_type", "order")
     list_editable = ("emoji", "show_type", "order")
-    list_filter = ("show_type", "order")
+    list_filter = ("sites", "show_type", "order")
     inlines = (FooterLinkInline,)
 
 
@@ -44,7 +44,7 @@ class FooterLinkAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = ("display_title", "footer_item", "show_type", "new_tab", "order")
     list_editable = ("show_type", "footer_item", "new_tab", "order")
-    list_filter = ("show_type", "order", "new_tab", "footer_item")
+    list_filter = ("sites", "show_type", "order", "new_tab", "footer_item")
 
 
 @admin.register(SocialMediaLink)
@@ -52,4 +52,4 @@ class SocialMediaLinkAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = ("platform", "new_tab", "show_type", "order")
     list_editable = ("show_type", "new_tab", "order")
-    list_filter = ("show_type", "new_tab", "order")
+    list_filter = ("sites", "show_type", "new_tab", "order")

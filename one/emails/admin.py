@@ -83,6 +83,7 @@ class EmailMessageTemplateAdmin(admin.ModelAdmin):
     actions = ("send_emails",)
     list_display = ("subject", "body", "sender", "reply_to", "cc")
     list_filter = ("is_periodic", "sender")
+    search_fields = ("subject", "body")
 
     @admin.action(description="📧 Send Emails")
     def send_emails(modeladmin, request, queryset):
@@ -122,4 +123,5 @@ class PostalMessageAdmin(admin.ModelAdmin):
     )
     list_filter = ("received_at", "status", "tag", "spam_status", "direction")
     readonly_fields = ["url"] + [field.name for field in PostalMessage._meta.fields]
+    search_fields = ("mail_from", "mail_to", "subject")
     inlines = [ReplyMessageInline]

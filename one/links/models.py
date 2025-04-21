@@ -69,18 +69,24 @@ class Link(TranslatableModel):
     def __str__(self):
         return f"<Link to {self.title}>"
 
-    def clean_custom_title(self):
-        if self.external_url and self.custom_title is None:
-            raise ValidationError(
-                _("Enter a custom title if an external url is entered."), code="invalid"
-            )
-
     def clean(self):
+        L = self.__class__
+        ext_url = self.external_url
+
         if self.link_fields.count(None) != self.count_link_fields - 1:
             raise ValidationError(_("One link must be entered."), code="invalid")
 
-        if self.external_url and self.custom_title is None:
+        if ext_url and self.custom_title is None:
             raise ValidationError(_("Custom title is required."), code="invalid")
+
+        if ext_url and L.objects.filter(external_url=ext_url).exists():
+            raise ValidationError(_("External url already exists."), code="invalid")
+
+        if self.url_path and L.objects.filter(url_path=self.url_path).exists():
+            raise ValidationError(_("Url path already exists."), code="invalid")
+
+        if self.topic and L.objects.filter(topic=self.topic).exists():
+            raise ValidationError(_("Topic already exists."), code="invalid")
 
         super().clean()
 
@@ -103,7 +109,7 @@ class Link(TranslatableModel):
         if self.topic:
             return f"/{self.topic}", self.get_topic_display()
 
-        return "#", ""  # TODO: Improve this
+        return "#", ""
 
     @cached_property
     def url(self):

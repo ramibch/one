@@ -136,6 +136,11 @@ class BenefitItemAdmin(TranslatableModelAdmin):
     list_editable = ("name_en", "emoji")
 
 
+@admin.register(ArticlesSection)
+class ArticlesSectionAdmin(TranslatableModelAdmin):
+    pass
+
+
 @admin.register(StepActionSection)
 class StepActionSectionAdmin(TranslatableModelAdmin):
     list_display = ("home", "home__site")

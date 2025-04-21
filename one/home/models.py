@@ -34,8 +34,11 @@ class HomeChildModel(TranslatableModel):
 
 
 class ArticlesSection(HomeChildModel):
+    emoji = models.CharField(max_length=8, db_default="📝")
     title = models.CharField(max_length=64)
     number_of_articles = models.PositiveSmallIntegerField(default=6)
+    show_all_link = models.BooleanField(db_default=True)
+    show_created_on = models.BooleanField(db_default=True)
     card_animation = ForeignKey(
         "base.Animation",
         on_delete=models.SET_NULL,
@@ -61,6 +64,10 @@ class ArticlesSection(HomeChildModel):
             .order_by("-id")
             .distinct()
         )[: self.number_of_articles]
+
+    @cached_property
+    def articles_available(self):
+        return self.articles.count() > 0
 
 
 class HeroSection(HomeChildModel):

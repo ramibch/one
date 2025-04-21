@@ -97,12 +97,16 @@
   {% endif %}
 
   <!-- articles section -->
-  {% if object.articlessection %}
+  {% if object.articlessection and object.articlessection.articles_available %}
     {% with section=object.articlessection %}
       <br> <br> <hr> <br>
       <section>
         <h2>
-          ✍ {{ section.title }} <span style="float: right;"> <a href="{% url 'article_list' %}">{% translate "All" %}</a> </span>
+          {% if section.emoji %}{{ section.emoji }}{% endif %}
+          {{ section.title }}
+          {% if section.show_all_link %}
+            <span style="float: right;"> <a href="{% url 'article_list' %}">{% translate "All" %}</a> </span>
+          {% endif %}
         </h2>
         <div class="row mt-5">
         {% for article in section.articles %}
@@ -112,9 +116,9 @@
                 <a href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a>
               </h3>
               {% if article.description %}{{ article.description }}{% endif %}
-              <footer>
-                {{ article.created_on|naturaltime }}
-              </footer>
+              {% if section.show_created_on %}
+                <footer>{{ article.created_on|naturaltime }}</footer>
+              {% endif %}
             </article>
           </div>
         {% endfor %}
@@ -145,9 +149,7 @@
     {% endwith %}
   {% endif %}
 
-
   <!-- Final CTA -->
-
   {% if object.finalctasection %}
     {% with section=object.finalctasection %}
       <br> <br> <hr> <br>

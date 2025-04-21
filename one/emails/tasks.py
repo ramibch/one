@@ -1,6 +1,10 @@
+from datetime import timedelta
+
+from django.utils import timezone
 from huey import crontab
 from huey.contrib import djhuey as huey
 
+from one import settings
 from one.base.utils.telegram import Bot
 
 from .models import (
@@ -61,3 +65,11 @@ def task_mark_recipient_as_draft_due_hard_fails():
         .distinct()
     )
     TemplateRecipient.objects.filter(to_address__in=fails).update(draft=True)
+
+
+@huey.db_periodic_task(crontab(hour="0", minute="43"))
+def remove_messages_sent_to_admins():
+    PostalMessage.objects.filter(
+        received_at__lt=timezone.now() - timedelta(days=2),
+        mail_to__in=[a[1] for a in settings.ADMINS],
+    ).delete()

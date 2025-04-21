@@ -215,3 +215,8 @@ class EnglishQuizLection(Model):
         self.image = ContentFile(img_io.getvalue(), name=f"{filename}.png")
 
         self.save()
+
+
+class TexProfiledCv(Model):
+    class Meta(Model.Meta):
+        abstract = True  # TODO: remove this

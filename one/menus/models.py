@@ -8,6 +8,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from one.base.utils.abstracts import TranslatableModel
+from one.base.utils.telegram import Bot
 
 
 class ShowTypes(models.TextChoices):
@@ -19,10 +20,7 @@ class ShowTypes(models.TextChoices):
 
 class NavbarLink(Model):
     sites = models.ManyToManyField("sites.Site")
-    link = ForeignKey(
-        "links.Link",
-        on_delete=models.CASCADE,
-    )
+    link = ForeignKey("links.Link", on_delete=models.CASCADE)
     emoji = models.CharField(max_length=8, null=True, blank=True)
     show_as_emoji = models.BooleanField(default=False)
     order = models.PositiveSmallIntegerField(
@@ -82,6 +80,7 @@ class FooterItem(TranslatableModel):
         choices=ShowTypes,
         max_length=16,
     )
+
     title = models.CharField(max_length=64)
 
     class Meta(Model.Meta):
@@ -97,10 +96,7 @@ class FooterItem(TranslatableModel):
 
 class FooterLink(Model):
     sites = models.ManyToManyField("sites.Site")
-    link = ForeignKey(
-        "links.Link",
-        on_delete=models.CASCADE,
-    )
+    link = ForeignKey("links.Link", on_delete=models.CASCADE)
     footer_item = ForeignKey(
         "menus.FooterItem",
         on_delete=models.SET_NULL,
@@ -160,10 +156,38 @@ class SocialMediaLink(Model):
         """
         svg location of the platform logo
 
+        48 x 48
+
         https://icons8.com/icons
 
         """
-        return f"img/social/small/{self.platform}.svg"
+        icons = [
+            "discord",
+            "fosstodon",
+            "google",
+            "linkedin",
+            "medium",
+            "reddit",
+            "threads",
+            "twitter",
+            "whatsapp",
+            "x",
+            "facebook",
+            "github",
+            "instagram",
+            "mastodon",
+            "pinterest",
+            "telegram",
+            "tiktok",
+            "xing",
+            "youtube",
+        ]
+
+        if self.platform in icons:
+            return f"img/social/small/{self.platform}.svg"
+        else:
+            Bot.to_admin(f"No icon for social media platform: {self.platform}")
+            return "img/social/small/globe-grid.svg"
 
     @cached_property
     def platform(self) -> str:

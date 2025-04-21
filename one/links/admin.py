@@ -7,6 +7,6 @@ from .models import Link
 
 @admin.register(Link)
 class LinkAdmin(TranslatableModelAdmin):
-    list_display = ("__str__", "url_path", "topic", "external_url", "custom_title_en")
-    list_editable = ("url_path", "topic", "external_url", "custom_title_en")
+    list_display = ("__str__", "url_path", "topic", "external_url")
+    list_editable = ("url_path", "topic", "external_url")
     search_fields = ("topic", "url_path", "external_url")
