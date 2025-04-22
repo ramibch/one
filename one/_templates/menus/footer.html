@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n static markdownify %}
 <div class="row">
   <!-- Footer items (with links)-->
   {% for item in footer_items %}
@@ -39,6 +39,9 @@
       {% endfor %}
     </p>
     <small>
+    {% if request.site.footer_text %}
+    {{ request.site.footer_text|markdownify:"simple_text"|linebreaks }}
+    {% endif %}
       <i>&copy; <span x-text="new Date().getFullYear()"></span> {{ request.site.domain }}
       </i>
     </small>

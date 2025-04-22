@@ -125,6 +125,7 @@ class Site(TranslatableModel):
     )
 
     footer_links_separator = models.CharField(max_length=4, default="|")
+    footer_text = models.TextField(null=True, blank=True)
     change_theme_light_in_footer = models.BooleanField(default=True)
     change_theme_light_in_navbar = models.BooleanField(default=True)
     change_language_in_navbar = models.BooleanField(default=True)

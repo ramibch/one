@@ -25,6 +25,7 @@ class SiteAdmin(TranslatableModelAdmin):
                     "emoji",
                     "emoji_in_brand",
                     "picocss_color",
+                    "footer_text",
                     "footer_links_separator",
                     "change_theme_light_in_navbar",
                     "change_language_in_navbar",

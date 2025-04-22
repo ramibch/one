@@ -22,6 +22,9 @@ PATH_NAMES = (
     ("user_dashboard", _("Account")),
     ("faq_list", _("FAQs")),
     ("quiz_list", _("English Quizzes")),
+    ("privacy", _("Privacy Policy")),
+    ("terms", _("Terms and Conditions")),
+    ("impress", _("Impress")),
 )
 
 

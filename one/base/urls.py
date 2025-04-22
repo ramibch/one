@@ -5,9 +5,12 @@ from .sitemaps import get_sitemaps
 from .views import (
     ArticleListView,
     FAQListView,
+    ImpressView,
     PlanListView,
+    PrivacyView,
     ProductListView,
     RobotTxtView,
+    TermsView,
     contact_view,
     favicon_view,
     home_view,
@@ -40,7 +43,11 @@ urlpatterns = [
     # Product list
     path(_("products"), ProductListView.as_view(), name="plan_list"),
     # FAQ list
-    path(_("faqs"), FAQListView.as_view(), name="faq_list"),
+    path("faqs", FAQListView.as_view(), name="faq_list"),
+    # "static" pages
+    path("~/p", PrivacyView.as_view(), name="privacy"),
+    path("~/t", TermsView.as_view(), name="terms"),
+    path("~/i", ImpressView.as_view(), name="impress"),
     # Article, Product, topic ...
     path("<slug:slug>", slug_page_view, name="page-detail"),
     # Home

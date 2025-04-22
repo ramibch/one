@@ -103,6 +103,18 @@ class FAQListView(ListView):
     model = FAQ
 
 
+class PrivacyView(TemplateView):
+    template_name = "base/privacy.html"
+
+
+class TermsView(TemplateView):
+    template_name = "base/terms.html"
+
+
+class ImpressView(TemplateView):
+    template_name = "base/impress.html"
+
+
 def search_view(request: CustomHttpRequest) -> HttpResponse:
     return render(request, "search/index.html", {"page_title": _("Search")})
 
