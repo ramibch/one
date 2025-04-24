@@ -57,9 +57,9 @@ class Client(Model):
         "GoogleOther",
     ]
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    country = models.CharField(max_length=2, choices=settings.COUNTRIES, null=True)
-    site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
     geoinfo = ForeignKey("geo.GeoInfo", null=True, on_delete=models.SET_NULL)
+    site = ForeignKey(Site, on_delete=models.SET_NULL, null=True)
+    country = models.CharField(max_length=2, choices=settings.COUNTRIES, null=True)
     ip_address = models.GenericIPAddressField(unique=True, db_index=True)
     is_blocked = models.BooleanField(default=False)
     user_agent = models.CharField(max_length=512, null=True)
@@ -136,13 +136,14 @@ class Request(Model):
     """
 
     client = ForeignKey(Client, on_delete=models.CASCADE)
-    path = ForeignKey(Path, on_delete=models.CASCADE, null=True)
+    path = ForeignKey(Path, on_delete=models.CASCADE)
+    site = ForeignKey(Site, on_delete=models.SET_NULL, null=True)
     method = models.CharField(default="GET", max_length=7)
-    ref = models.CharField(max_length=512, null=True, db_index=True)
+    ref = models.CharField(max_length=512, null=True)
     headers = models.TextField(null=True)
     post = models.TextField(null=True)
     status_code = models.PositiveSmallIntegerField(default=200)
-    time = models.DateTimeField(_("time"), default=timezone.now, db_index=True)
+    time = models.DateTimeField(_("time"), default=timezone.now)
 
     def __str__(self):
         time = self.time.strftime("%Y-%m-%d %H:%M")

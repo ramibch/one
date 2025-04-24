@@ -73,11 +73,15 @@ def slug_page_view(request: CustomHttpRequest, slug) -> HttpResponse:
     except Product.DoesNotExist:
         pass
 
+        # TODO: LandingPage
+
     if slug in settings.TOPICS_DICT:
         context = {
             "page_title": settings.TOPICS_DICT[slug],
             "related_articles": Article.objects.filter(main_topic__name=slug),
             "related_products": Product.objects.filter(topics=[slug]),
+            # "related_landing_pages": LandingPage.objects.filter(
+            # topics=[slug], slug__isnull=False)
         }
         return render(request, "base/topic.html", context)
 

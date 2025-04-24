@@ -1,3 +1,4 @@
+from datetime import timedelta
 from io import StringIO
 
 import yaml
@@ -5,9 +6,11 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.db.models import QuerySet
+from django.utils import timezone
 from huey import crontab
 from huey.contrib import djhuey as huey
 from huey.signals import SIGNAL_CANCELED, SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_REVOKED
+from huey_monitor.models import TaskModel
 
 from .models import SearchTerm
 from .utils.abstracts import BaseSubmoduleFolder, TranslatableModel
@@ -136,3 +139,16 @@ def settings_check_task_hourly():
 @huey.db_task()
 def save_search_query(params):
     SearchTerm.objects.create(**params)
+
+
+@huey.db_periodic_task(crontab(hour="3", minute="23"))
+def remove_db_huey_monitor_task_results():
+    """
+    Task to remove old task results saved in db.
+
+    Keep the task db objects which have error for debugging.
+
+    """
+    TaskModel.objects.filter(
+        update_dt__lt=timezone.now() - timedelta(days=3),
+    ).exclude(signal_name=SIGNAL_ERROR).delete()

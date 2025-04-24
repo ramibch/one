@@ -37,9 +37,9 @@ class RequestInline(admin.TabularInline):
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ("ip_address", "emoji", "is_blocked", "user", "country", "site")
-    list_filter = ("is_blocked", "is_bot", "site", "country")
-    search_fields = ("ip_address", "site", "country")
+    list_display = ("ip_address", "emoji", "is_blocked", "user", "country")
+    list_filter = ("is_blocked", "is_bot", "country")
+    search_fields = ("ip_address", "country")
     actions = ["block_ips", "update_values"]
     inlines = (RequestInline,)
 
@@ -62,7 +62,6 @@ class RequestAdmin(admin.ModelAdmin):
     list_display = ("__str__", "client", "method", "status_code", "client__is_blocked")
     list_filter = (
         "client__is_bot",
-        "client__site",
         "status_code",
         "method",
         "time",

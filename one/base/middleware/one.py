@@ -10,6 +10,8 @@ from one.clients.tasks import save_request_task, update_geo_client_values
 from ...clients.models import Client, PathRedirect
 from ...sites.models import Site
 
+SESSION_CACHE = {}
+
 
 class OneMiddleware:
     """Project middleware"""
@@ -54,6 +56,8 @@ class OneMiddleware:
         return request.headers.get("x-one-secret-key") == settings.ONE_SECRET_KEY
 
     def get_session(self, request):
+        if request.session["sessionid"] in SESSION_CACHE:
+            return SESSION_CACHE[request.session["sessionid"]]
         try:
             session_key = request.session.session_key
             db_session = Session.objects.get(pk=session_key)
@@ -63,6 +67,8 @@ class OneMiddleware:
             session_key = session_store.session_key
             request.session["sessionid"] = session_key
             db_session = Session.objects.get(session_key=session_key)
+            SESSION_CACHE[session_key] = db_session
+
         return db_session
 
     def get_redirect_or_none(self, request):
@@ -85,7 +91,6 @@ class OneMiddleware:
             client = Client.objects.create(
                 ip_address=request.ip_address,
                 user=user_or_none,
-                site=request.site,
                 is_blocked=False,
                 user_agent=self.get_user_agent(request),
             )
