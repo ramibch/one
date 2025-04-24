@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ("image", models.ImageField(null=True, upload_to="listings")),
                 ("created_on", models.DateTimeField(auto_now_add=True)),
                 ("updated_on", models.DateTimeField(auto_now=True)),
-                ("topics", models.ManyToManyField(to="base.topic")),
+                # ("topics", models.ManyToManyField(to="base.topic")),
                 ("tags", models.ManyToManyField(to="products.producttag")),
             ],
             options={

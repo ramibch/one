@@ -10,9 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameField(
-            model_name="topic",
-            old_name="rest_languages",
-            new_name="languages",
-        ),
+        # migrations.RenameField(
+        #     model_name="topic",
+        #     old_name="rest_languages",
+        #     new_name="languages",
+        # ),
     ]

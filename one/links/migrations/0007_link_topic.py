@@ -13,14 +13,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name="link",
-            name="topic",
-            field=auto_prefetch.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                to="base.topic",
-            ),
-        ),
+        # migrations.AddField(
+        #     model_name="link",
+        #     name="topic",
+        #     field=auto_prefetch.ForeignKey(
+        #         blank=True,
+        #         null=True,
+        #         on_delete=django.db.models.deletion.CASCADE,
+        #         to="base.topic",
+        #     ),
+        # ),
     ]

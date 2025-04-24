@@ -112,7 +112,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("etsy_payload", models.JSONField(blank=True, null=True)),
-                ("topics", models.ManyToManyField(to="base.topic")),
+                # ("topics", models.ManyToManyField(to="base.topic")),
                 (
                     "user_shop_auth",
                     auto_prefetch.OneToOneField(

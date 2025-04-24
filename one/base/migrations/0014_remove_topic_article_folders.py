@@ -10,8 +10,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="topic",
-            name="article_folders",
-        ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="article_folders",
+        # ),
     ]

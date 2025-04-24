@@ -113,11 +113,11 @@ class Migration(migrations.Migration):
                 verbose_name="Overprice percentace",
             ),
         ),
-        migrations.AddField(
-            model_name="shop",
-            name="topics",
-            field=models.ManyToManyField(to="base.topic"),
-        ),
+        # migrations.AddField(
+        #     model_name="shop",
+        #     name="topics",
+        #     field=models.ManyToManyField(to="base.topic"),
+        # ),
         migrations.CreateModel(
             name="Listing",
             fields=[

@@ -138,6 +138,7 @@ class OneMiddleware:
                 "method": request.method,
                 "ref": request.GET.get("ref", "")[:256],
                 "headers": request.headers,
+                "site": request.site,
                 "status_code": response.status_code,
                 "post": str(request.POST),
             }

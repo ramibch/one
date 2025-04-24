@@ -10,12 +10,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="etsyshop",
-            name="topics",
-        ),
-        migrations.RemoveField(
-            model_name="product",
-            name="topics",
-        ),
+        # migrations.RemoveField(
+        #     model_name="etsyshop",
+        #     name="topics",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="product",
+        #     name="topics",
+        # ),
     ]

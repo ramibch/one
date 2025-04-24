@@ -10,10 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="shop",
-            name="topics",
-        ),
+        # migrations.RemoveField(
+        #     model_name="shop",
+        #     name="topics",
+        # ),
         migrations.RemoveField(
             model_name="shop",
             name="user_shop_auth",

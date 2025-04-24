@@ -10,30 +10,30 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name="link",
-            name="topic",
-            field=models.CharField(
-                blank=True,
-                choices=[
-                    ("django", "Django"),
-                    ("htmx", "htmx"),
-                    ("alpinejs", "AlpineJS"),
-                    ("devops", "DevOps"),
-                    ("python", "Python"),
-                    ("linux", "Linux"),
-                    ("latex", "LaTex"),
-                    ("matlab", "Matlab"),
-                    ("siemens", "Siemens"),
-                    ("excel", "Excel"),
-                    ("maths", "Maths"),
-                    ("mechanics", "Mechanics"),
-                    ("english", "English"),
-                    ("electronics", "Electronics"),
-                    ("calendar", "Calendars"),
-                ],
-                max_length=16,
-                null=True,
-            ),
-        ),
+        # migrations.AlterField(
+        #     model_name="link",
+        #     name="topic",
+        #     field=models.CharField(
+        #         blank=True,
+        #         choices=[
+        #             ("django", "Django"),
+        #             ("htmx", "htmx"),
+        #             ("alpinejs", "AlpineJS"),
+        #             ("devops", "DevOps"),
+        #             ("python", "Python"),
+        #             ("linux", "Linux"),
+        #             ("latex", "LaTex"),
+        #             ("matlab", "Matlab"),
+        #             ("siemens", "Siemens"),
+        #             ("excel", "Excel"),
+        #             ("maths", "Maths"),
+        #             ("mechanics", "Mechanics"),
+        #             ("english", "English"),
+        #             ("electronics", "Electronics"),
+        #             ("calendar", "Calendars"),
+        #         ],
+        #         max_length=16,
+        #         null=True,
+        #     ),
+        # ),
     ]

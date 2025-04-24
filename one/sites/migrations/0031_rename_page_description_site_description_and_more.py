@@ -247,9 +247,9 @@ class Migration(migrations.Migration):
             model_name="site",
             name="page_keywords_uk",
         ),
-        migrations.AddField(
-            model_name="site",
-            name="topics",
-            field=models.ManyToManyField(blank=True, to="base.topic"),
-        ),
+        # migrations.AddField(
+        #     model_name="site",
+        #     name="topics",
+        #     field=models.ManyToManyField(blank=True, to="base.topic"),
+        # ),
     ]

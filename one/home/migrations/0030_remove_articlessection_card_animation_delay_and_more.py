@@ -53,24 +53,24 @@ class Migration(migrations.Migration):
             model_name="herosection",
             name="cta_animation_type",
         ),
-        migrations.AddField(
-            model_name="articlessection",
-            name="card_animation",
-            field=auto_prefetch.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.SET_NULL,
-                to="animations.animation",
-            ),
-        ),
-        migrations.AddField(
-            model_name="herosection",
-            name="cta_animation",
-            field=auto_prefetch.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.SET_NULL,
-                to="animations.animation",
-            ),
-        ),
+        # migrations.AddField(
+        #     model_name="articlessection",
+        #     name="card_animation",
+        #     field=auto_prefetch.ForeignKey(
+        #         blank=True,
+        #         null=True,
+        #         on_delete=django.db.models.deletion.SET_NULL,
+        #         to="animations.animation",
+        #     ),
+        # ),
+        # migrations.AddField(
+        #     model_name="herosection",
+        #     name="cta_animation",
+        #     field=auto_prefetch.ForeignKey(
+        #         blank=True,
+        #         null=True,
+        #         on_delete=django.db.models.deletion.SET_NULL,
+        #         to="animations.animation",
+        #     ),
+        # ),
     ]

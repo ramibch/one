@@ -10,14 +10,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameField(
-            model_name="etsyshop",
-            old_name="topics_new",
-            new_name="topics",
-        ),
-        migrations.RenameField(
-            model_name="product",
-            old_name="topics_new",
-            new_name="topics",
-        ),
+        # migrations.RenameField(
+        #     model_name="etsyshop",
+        #     old_name="topics_new",
+        #     new_name="topics",
+        # ),
+        # migrations.RenameField(
+        #     model_name="product",
+        #     old_name="topics_new",
+        #     new_name="topics",
+        # ),
     ]

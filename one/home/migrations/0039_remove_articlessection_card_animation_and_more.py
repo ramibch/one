@@ -10,12 +10,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="articlessection",
-            name="card_animation",
-        ),
-        migrations.RemoveField(
-            model_name="herosection",
-            name="cta_animation",
-        ),
+        # migrations.RemoveField(
+        #     model_name="articlessection",
+        #     name="card_animation",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="herosection",
+        #     name="cta_animation",
+        # ),
     ]

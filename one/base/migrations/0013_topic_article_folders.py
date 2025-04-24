@@ -11,9 +11,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name="topic",
-            name="article_folders",
-            field=models.ManyToManyField(blank=True, to="articles.articleparentfolder"),
-        ),
+        # migrations.AddField(
+        #     model_name="topic",
+        #     name="article_folders",
+        #     field=models.ManyToManyField(blank=True, to="articles.articleparentfolder"),
+        # ),
     ]

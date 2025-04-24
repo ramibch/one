@@ -12,37 +12,37 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="topic",
-            name="languages",
-        ),
-        migrations.AddField(
-            model_name="topic",
-            name="rest_languages",
-            field=one.base.utils.db.ChoiceArrayField(
-                base_field=models.CharField(
-                    choices=[
-                        ("en", "English"),
-                        ("de", "German"),
-                        ("es", "Spanish"),
-                        ("fr", "French"),
-                        ("el", "Greek"),
-                        ("it", "Italian"),
-                        ("nl", "Dutch"),
-                        ("pl", "Polish"),
-                        ("pt", "Portuguese"),
-                        ("ru", "Russian"),
-                        ("sk", "Slovak"),
-                        ("sl", "Slovenian"),
-                        ("sv", "Swedish"),
-                        ("tr", "Turkish"),
-                        ("uk", "Ukrainian"),
-                    ],
-                    max_length=8,
-                ),
-                blank=True,
-                default=list,
-                size=None,
-            ),
-        ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="languages",
+        # ),
+        # migrations.AddField(
+        #     model_name="topic",
+        #     name="rest_languages",
+        #     field=one.base.utils.db.ChoiceArrayField(
+        #         base_field=models.CharField(
+        #             choices=[
+        #                 ("en", "English"),
+        #                 ("de", "German"),
+        #                 ("es", "Spanish"),
+        #                 ("fr", "French"),
+        #                 ("el", "Greek"),
+        #                 ("it", "Italian"),
+        #                 ("nl", "Dutch"),
+        #                 ("pl", "Polish"),
+        #                 ("pt", "Portuguese"),
+        #                 ("ru", "Russian"),
+        #                 ("sk", "Slovak"),
+        #                 ("sl", "Slovenian"),
+        #                 ("sv", "Swedish"),
+        #                 ("tr", "Turkish"),
+        #                 ("uk", "Ukrainian"),
+        #             ],
+        #             max_length=8,
+        #         ),
+        #         blank=True,
+        #         default=list,
+        #         size=None,
+        #     ),
+        # ),
     ]

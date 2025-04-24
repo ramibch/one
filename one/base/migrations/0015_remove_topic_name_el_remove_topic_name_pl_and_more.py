@@ -11,106 +11,106 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="topic",
-            name="name_el",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="name_pl",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="name_ru",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="name_sk",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="name_sl",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="name_sv",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="name_tr",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="name_uk",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="slug_el",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="slug_pl",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="slug_ru",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="slug_sk",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="slug_sl",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="slug_sv",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="slug_tr",
-        ),
-        migrations.RemoveField(
-            model_name="topic",
-            name="slug_uk",
-        ),
-        migrations.AlterField(
-            model_name="topic",
-            name="language",
-            field=models.CharField(
-                choices=[
-                    ("en", "English"),
-                    ("de", "German"),
-                    ("es", "Spanish"),
-                    ("fr", "French"),
-                    ("it", "Italian"),
-                    ("nl", "Dutch"),
-                    ("pt", "Portuguese"),
-                ],
-                default="en",
-                max_length=4,
-            ),
-        ),
-        migrations.AlterField(
-            model_name="topic",
-            name="languages",
-            field=one.base.utils.db.ChoiceArrayField(
-                base_field=models.CharField(
-                    choices=[
-                        ("en", "English"),
-                        ("de", "German"),
-                        ("es", "Spanish"),
-                        ("fr", "French"),
-                        ("it", "Italian"),
-                        ("nl", "Dutch"),
-                        ("pt", "Portuguese"),
-                    ],
-                    max_length=8,
-                ),
-                blank=True,
-                default=list,
-                size=None,
-            ),
-        ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="name_el",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="name_pl",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="name_ru",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="name_sk",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="name_sl",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="name_sv",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="name_tr",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="name_uk",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="slug_el",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="slug_pl",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="slug_ru",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="slug_sk",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="slug_sl",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="slug_sv",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="slug_tr",
+        # ),
+        # migrations.RemoveField(
+        #     model_name="topic",
+        #     name="slug_uk",
+        # ),
+        # migrations.AlterField(
+        #     model_name="topic",
+        #     name="language",
+        #     field=models.CharField(
+        #         choices=[
+        #             ("en", "English"),
+        #             ("de", "German"),
+        #             ("es", "Spanish"),
+        #             ("fr", "French"),
+        #             ("it", "Italian"),
+        #             ("nl", "Dutch"),
+        #             ("pt", "Portuguese"),
+        #         ],
+        #         default="en",
+        #         max_length=4,
+        #     ),
+        # ),
+        # migrations.AlterField(
+        #     model_name="topic",
+        #     name="languages",
+        #     field=one.base.utils.db.ChoiceArrayField(
+        #         base_field=models.CharField(
+        #             choices=[
+        #                 ("en", "English"),
+        #                 ("de", "German"),
+        #                 ("es", "Spanish"),
+        #                 ("fr", "French"),
+        #                 ("it", "Italian"),
+        #                 ("nl", "Dutch"),
+        #                 ("pt", "Portuguese"),
+        #             ],
+        #             max_length=8,
+        #         ),
+        #         blank=True,
+        #         default=list,
+        #         size=None,
+        #     ),
+        # ),
     ]
