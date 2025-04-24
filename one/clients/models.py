@@ -58,7 +58,6 @@ class Client(Model):
     ]
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
     geoinfo = ForeignKey("geo.GeoInfo", null=True, on_delete=models.SET_NULL)
-    site = ForeignKey(Site, on_delete=models.SET_NULL, null=True)
     country = models.CharField(max_length=2, choices=settings.COUNTRIES, null=True)
     ip_address = models.GenericIPAddressField(unique=True, db_index=True)
     is_blocked = models.BooleanField(default=False)
@@ -137,7 +136,7 @@ class Request(Model):
 
     client = ForeignKey(Client, on_delete=models.CASCADE)
     path = ForeignKey(Path, on_delete=models.CASCADE)
-    site = ForeignKey(Site, on_delete=models.SET_NULL, null=True)
+    site = ForeignKey(Site, on_delete=models.CASCADE)
     method = models.CharField(default="GET", max_length=7)
     ref = models.CharField(max_length=512, null=True)
     headers = models.TextField(null=True)

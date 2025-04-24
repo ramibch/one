@@ -56,8 +56,10 @@ class OneMiddleware:
         return request.headers.get("x-one-secret-key") == settings.ONE_SECRET_KEY
 
     def get_session(self, request):
-        if request.session["sessionid"] in SESSION_CACHE:
-            return SESSION_CACHE[request.session["sessionid"]]
+        # TODO: ??
+        # if request.session["sessionid"] in SESSION_CACHE:
+        #     return SESSION_CACHE[request.session["sessionid"]]
+
         try:
             session_key = request.session.session_key
             db_session = Session.objects.get(pk=session_key)
