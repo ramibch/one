@@ -83,15 +83,7 @@ class Client(Model):
 
     @classmethod
     def dummy_object(cls):
-        try:
-            return cls.objects.get(ip_address=cls.DUMMY_IP_ADDRESS)
-        except cls.DoesNotExist:
-            obj = cls(
-                ip_address=cls.DUMMY_IP_ADDRESS,
-                site=Site.objects.first(),
-            )
-            obj.save()
-            return obj
+        return cls.objects.get_or_create(ip_address=cls.DUMMY_IP_ADDRESS)[0]
 
     @cached_property
     def country_data(self) -> dict:
