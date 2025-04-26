@@ -25,7 +25,7 @@ class LandingPage(TranslatableModel):
 
     def clean(self) -> None:
         home_exits = LandingPage.objects.filter(site=self.site, is_home=True).exists()
-        if self.pk is None and home_exits and self.is_home is True:
+        if home_exits and self.is_home is True:
             raise ValidationError(
                 _("Home already exists for this site..."),
                 code="unique_home_per_site",
