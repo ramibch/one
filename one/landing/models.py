@@ -1,4 +1,5 @@
 from auto_prefetch import ForeignKey, OneToOneField
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
@@ -21,6 +22,15 @@ class LandingPage(TranslatableModel):
     slug = models.SlugField(null=True, blank=True)
     is_home = models.BooleanField(default=True, db_default=True)
     benefits_title = models.CharField(max_length=64, null=True, blank=True)
+
+    def clean(self) -> None:
+        home_exits = LandingPage.objects.filter(site=self.site, is_home=True).exists()
+        if self.pk is None and home_exits and self.is_home is True:
+            raise ValidationError(
+                _("Home already exists for this site..."),
+                code="unique_home_per_site",
+            )
+        return super().clean()
 
     def __str__(self):
         return f"{self.title}"

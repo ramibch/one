@@ -13,8 +13,8 @@ from .views import (
     TermsView,
     contact_view,
     favicon_view,
-    home_view,
     hx_search_results_view,
+    landing_home_view,
     search_view,
     sitemap_view,
     slug_page_view,
@@ -51,5 +51,5 @@ urlpatterns = [
     # Article, Product, topic ...
     path("<slug:slug>", slug_page_view, name="page-detail"),
     # Home
-    path("", home_view, name="home"),
+    path("", landing_home_view, name="home"),
 ]

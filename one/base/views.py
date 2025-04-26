@@ -58,6 +58,31 @@ def home_view(request: CustomHttpRequest) -> HttpResponse:
     raise Http404
 
 
+@require_GET
+def landing_home_view(request: CustomHttpRequest) -> HttpResponse:
+    """
+    Landing home page
+    """
+
+    match request.site.site_type:
+        case SiteType.STANDARD.value:
+            try:
+                home = LandingPage.objects.get(site=request.site, is_home=True)
+                return render(request, "home/home.html", {"object": home})
+            except Home.DoesNotExist:
+                pass
+
+        case SiteType.DGT.value:
+            context = {"tests": DgtTest.objects.all()}
+            return render(request, "dgt/index.html", context)
+
+        case SiteType.ENGLISH.value:
+            context = {"quiz_list": Quiz.objects.all()}
+            return render(request, "quiz/quiz_list.html", context)
+
+    raise Http404
+
+
 def slug_page_view(request: CustomHttpRequest, slug) -> HttpResponse:
     params = {f"slug_{lang_code}": slug for lang_code in settings.LANGUAGE_CODES}
     exp = reduce(operator.or_, (Q(**d) for d in [dict([i]) for i in params.items()]))
