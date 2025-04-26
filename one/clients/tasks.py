@@ -107,13 +107,13 @@ def purge_requests_task():
 
     for site in Site.objects.all():
         qs = qs | Request.objects.filter(
-            client__site=site,
+            site=site,
             path__is_spam=True,
             time__lt=now - site.spam_requests_duration,
         )
 
         qs = qs | Request.objects.filter(
-            client__site=site,
+            site=site,
             time__lt=now - site.requests_duration,
         )
 

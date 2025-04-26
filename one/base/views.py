@@ -36,31 +36,6 @@ User = get_user_model()
 @require_GET
 def home_view(request: CustomHttpRequest) -> HttpResponse:
     """
-    Home page
-    """
-
-    match request.site.site_type:
-        case SiteType.STANDARD.value:
-            try:
-                home = Home.objects.get(site=request.site)
-                return render(request, "home/home.html", {"object": home})
-            except Home.DoesNotExist:
-                pass
-
-        case SiteType.DGT.value:
-            context = {"tests": DgtTest.objects.all()}
-            return render(request, "dgt/index.html", context)
-
-        case SiteType.ENGLISH.value:
-            context = {"quiz_list": Quiz.objects.all()}
-            return render(request, "quiz/quiz_list.html", context)
-
-    raise Http404
-
-
-@require_GET
-def landing_home_view(request: CustomHttpRequest) -> HttpResponse:
-    """
     Landing home page
     """
 
@@ -68,7 +43,7 @@ def landing_home_view(request: CustomHttpRequest) -> HttpResponse:
         case SiteType.STANDARD.value:
             try:
                 home = LandingPage.objects.get(site=request.site, is_home=True)
-                return render(request, "home/home.html", {"object": home})
+                return render(request, "landing/landing_page.html", {"object": home})
             except Home.DoesNotExist:
                 pass
 
