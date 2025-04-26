@@ -19,16 +19,16 @@ class LandingPage(TranslatableModel):
     site = OneToOneField("sites.Site", on_delete=models.CASCADE)
     title = models.CharField(max_length=64, default="")
     slug = models.SlugField(null=True, blank=True)
+    is_home = models.BooleanField(default=True, db_default=True)
     benefits_title = models.CharField(max_length=64, null=True, blank=True)
-    steps_title = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
         return f"{self.title}"
 
 
 class _ChildModel(TranslatableModel):
-    LANG_ATTR = "home__site__language"
-    LANGS_ATTR = "home__site__languages"
+    LANG_ATTR = "landing__site__language"
+    LANGS_ATTR = "landing__site__languages"
     landing = OneToOneField(LandingPage, on_delete=models.CASCADE)
 
     class Meta(TranslatableModel.Meta):
@@ -46,6 +46,7 @@ class ArticlesSection(_ChildModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name="+",
     )
 
     class Meta(_ChildModel.Meta):
@@ -76,7 +77,7 @@ class HeroSection(_ChildModel):
     headline = models.TextField(max_length=256)
     subheadline = models.TextField(max_length=256)
     image = models.ImageField(upload_to="homepages/hero/")
-    cta_link = ForeignKey("links.Link", on_delete=models.CASCADE)
+    cta_link = ForeignKey("links.Link", on_delete=models.CASCADE, related_name="+")
     cta_title = models.CharField(max_length=64, null=True, blank=True)
     cta_new_tab = models.BooleanField(default=False)
     cta_animation = ForeignKey(
@@ -84,6 +85,7 @@ class HeroSection(_ChildModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name="+",
     )
 
     def __str__(self):
@@ -117,7 +119,7 @@ class SolutionSection(_ChildModel):
 
 
 class BenefitItem(TranslatableModel):
-    home = ForeignKey(LandingPage, on_delete=models.CASCADE)
+    landing = ForeignKey(LandingPage, on_delete=models.CASCADE)
     emoji = models.CharField(max_length=8, db_default="🚀")
     name = models.CharField(max_length=32)
     description = models.TextField()
@@ -155,7 +157,7 @@ class FAQsSection(_ChildModel):
 class FinalCTASection(_ChildModel):
     title = models.TextField(max_length=256)
     description = models.TextField()
-    cta_link = ForeignKey("links.Link", on_delete=models.CASCADE)
+    cta_link = ForeignKey("links.Link", on_delete=models.CASCADE, related_name="+")
     cta_title = models.CharField(max_length=64, null=True, blank=True)
     cta_new_tab = models.BooleanField(default=False)
 

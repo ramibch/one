@@ -21,6 +21,7 @@ from one.base.utils.http import CustomHttpRequest
 from one.dgt.models import DgtTest
 from one.faqs.models import FAQ
 from one.home.models import Home
+from one.landing.models import LandingPage
 from one.plans.models import Plan
 from one.products.models import Product
 from one.quiz.models import Quiz
@@ -61,27 +62,27 @@ def slug_page_view(request: CustomHttpRequest, slug) -> HttpResponse:
     params = {f"slug_{lang_code}": slug for lang_code in settings.LANGUAGE_CODES}
     exp = reduce(operator.or_, (Q(**d) for d in [dict([i]) for i in params.items()]))
 
-    try:
-        obj = Article.objects.get(exp)
-        return render(request, "articles/article_detail.html", {"object": obj})
-    except Article.DoesNotExist:
-        pass
+    models_templates = {
+        Article: "articles/article_detail.html",
+        Product: "products/product_detail.html",
+        LandingPage: "landing/landing_page.html",
+    }
 
-    try:
-        obj = Product.objects.get(exp)
-        return render(request, "products/product_detail.html", {"object": obj})
-    except Product.DoesNotExist:
-        pass
-
-        # TODO: LandingPage
+    for model_class, template_name in models_templates.items():
+        try:
+            obj = model_class.objects.get(exp)
+            return render(request, template_name, {"object": obj})
+        except model_class.DoesNotExist:
+            pass
 
     if slug in settings.TOPICS_DICT:
         context = {
             "page_title": settings.TOPICS_DICT[slug],
             "related_articles": Article.objects.filter(main_topic__name=slug),
             "related_products": Product.objects.filter(topics=[slug]),
-            # "related_landing_pages": LandingPage.objects.filter(
-            # topics=[slug], slug__isnull=False)
+            "related_landing_pages": LandingPage.objects.filter(
+                site__topics=[slug], slug__isnull=False
+            ),
         }
         return render(request, "base/topic.html", context)
 

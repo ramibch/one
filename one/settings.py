@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.linkedin_oauth2",
     # Project apps
     "one.base",
+    "one.landing",
     "one.clients",
     "one.articles",
     "one.menus",
@@ -493,7 +494,7 @@ CACHES = {
 }
 
 # Append slash
-APPEND_SLASH = True
+APPEND_SLASH = False
 
 # Uploads
 
