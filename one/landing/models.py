@@ -17,7 +17,7 @@ class LandingPage(TranslatableModel):
     LANGS_ATTR = "site__languages"
     I18N_SLUGIFY_FROM = "title"
 
-    site = OneToOneField("sites.Site", on_delete=models.CASCADE)
+    site = ForeignKey("sites.Site", on_delete=models.CASCADE)
     title = models.CharField(max_length=64, default="")
     slug = models.SlugField(null=True, blank=True)
     is_home = models.BooleanField(default=True, db_default=True)
