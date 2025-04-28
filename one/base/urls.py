@@ -49,7 +49,7 @@ urlpatterns = [
     path("~/t", TermsView.as_view(), name="terms"),
     path("~/i", ImpressView.as_view(), name="impress"),
     # Article, Product, topic ...
-    path("<slug:slug>", slug_page_view, name="page-detail"),
+    path("<slug:slug>", slug_page_view, name="slug_page"),
     # Home
     path("", home_view, name="home"),
 ]

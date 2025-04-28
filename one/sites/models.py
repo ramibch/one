@@ -94,11 +94,13 @@ class Site(TranslatableModel):
         max_length=4,
         choices=settings.LANGUAGES,
         default=settings.LANGUAGE_CODE,
+        db_index=True,
     )
     languages = ChoiceArrayField(
         models.CharField(max_length=8, choices=settings.LANGUAGES),
         default=list,
         blank=True,
+        db_index=True,
     )
     site_type = models.CharField(
         max_length=16,

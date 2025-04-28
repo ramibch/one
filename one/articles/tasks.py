@@ -25,7 +25,7 @@ def sync_articles(sites=None):
     submodule_path: Path = MainTopic.submodule_path
     sites = sites or Site.objects.all()
 
-    to_admin = f"🔄 Syncing {submodule}\n\n"
+    log = f"🔄 Syncing {submodule}\n\n"
 
     # Scanning
     for maintopic in MainTopic.objects.all():
@@ -43,7 +43,7 @@ def sync_articles(sites=None):
             if not subfolder.is_dir():
                 continue
 
-            to_admin += f"✍ {maintopic}/{subfolder.name}\n"
+            log += f"✍ {maintopic}/{subfolder.name}\n"
 
             article = Article.objects.get_or_create(
                 main_topic=maintopic,
@@ -55,7 +55,7 @@ def sync_articles(sites=None):
             md_paths = (p for p in subfolder.iterdir() if p.name.endswith(".md"))
             for md_path in md_paths:
                 if not check_md_file_conventions(md_path):
-                    to_admin += f"⚠️ File '{md_path.name}' does not meet conventions\n"
+                    log += f"⚠️ File '{md_path.name}' does not meet conventions\n"
                     continue
 
                 lang_code = md_path.name[:2]
@@ -98,4 +98,4 @@ def sync_articles(sites=None):
             if lang_count > 0:
                 article.save()
 
-    Bot.to_admin(to_admin)
+    Bot.to_admin(log)

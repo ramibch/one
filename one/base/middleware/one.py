@@ -5,12 +5,10 @@ from django.core.management import call_command
 from django.http import HttpRequest, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 
-from one.clients.tasks import save_request_task, update_geo_client_values
+from one.clients.tasks import save_request_task
 
 from ...clients.models import Client, PathRedirect
 from ...sites.models import Site
-
-SESSION_CACHE = {}
 
 
 class OneMiddleware:
@@ -56,10 +54,6 @@ class OneMiddleware:
         return request.headers.get("x-one-secret-key") == settings.ONE_SECRET_KEY
 
     def get_session(self, request):
-        # TODO: ??
-        # if request.session["sessionid"] in SESSION_CACHE:
-        #     return SESSION_CACHE[request.session["sessionid"]]
-
         try:
             session_key = request.session.session_key
             db_session = Session.objects.get(pk=session_key)
@@ -69,8 +63,6 @@ class OneMiddleware:
             session_key = session_store.session_key
             request.session["sessionid"] = session_key
             db_session = Session.objects.get(session_key=session_key)
-            SESSION_CACHE[session_key] = db_session
-
         return db_session
 
     def get_redirect_or_none(self, request):
@@ -82,21 +74,20 @@ class OneMiddleware:
         return request.headers.get("user-agent", "")[:256]
 
     def get_client(self, request) -> Client:
-        if request.ip_address is None:
+        if request.ip_address == Client.DUMMY_IP_ADDRESS:
             return Client.dummy_object()
-
-        user_or_none = request.user if request.user.is_authenticated else None
 
         try:
             client = Client.objects.get(ip_address=request.ip_address)
         except Client.DoesNotExist:
             client = Client.objects.create(
                 ip_address=request.ip_address,
-                user=user_or_none,
+                user=request.user if request.user.is_authenticated else None,
                 is_blocked=False,
                 user_agent=self.get_user_agent(request),
             )
-            update_geo_client_values(client)
+
+            client.update_geo_values()
 
         return client
 

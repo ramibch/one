@@ -101,7 +101,11 @@ class ArticleListView(ListView):
     model = Article
 
     def get_queryset(self) -> QuerySet:
-        return super().get_queryset().filter(languages__contains=[get_language()])
+        qs = super().get_queryset()
+        return qs.filter(
+            languages__contains=[get_language()],
+            main_topic__name__in=self.request.site.topics,
+        )
 
 
 class FAQListView(ListView):

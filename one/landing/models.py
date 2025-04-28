@@ -1,6 +1,7 @@
 from auto_prefetch import ForeignKey, OneToOneField
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
@@ -31,6 +32,15 @@ class LandingPage(TranslatableModel):
                 code="unique_home_per_site",
             )
         return super().clean()
+
+    def get_absolute_url(self):
+        if self.is_home:
+            return reverse_lazy("home")
+        return reverse_lazy("slug_page", kwargs={"slug": self.slug})
+
+    @cached_property
+    def url(self):
+        return self.get_absolute_url()
 
     def __str__(self):
         return f"{self.title}"

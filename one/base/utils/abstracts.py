@@ -13,7 +13,7 @@ from .exceptions import SubmoduleException
 
 
 class BaseSubmoduleFolder(Model):
-    name = models.CharField(max_length=64, unique=True, editable=False)
+    name = models.CharField(max_length=64, unique=True, editable=False, db_index=True)
     present_in_filesystem = models.BooleanField(default=True, editable=False)
 
     def __init_subclass__(cls, submodule, **kwargs):

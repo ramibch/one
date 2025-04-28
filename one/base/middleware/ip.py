@@ -1,11 +1,10 @@
 import ipaddress
 
-from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpRequest, HttpResponseForbidden
 from django.utils.translation import gettext_lazy as _
 
-from ..utils.telegram import Bot
+from one.clients.models import Client
 
 
 class IpAddressMiddleware:
@@ -14,15 +13,18 @@ class IpAddressMiddleware:
 
     def __call__(self, request: HttpRequest):
         # Assign ip address to request
-        request.ip_address = self.get_ip_address_or_none(request)
+        request.ip_address = self.get_ip_address(request)
 
         # Do not continue with this client if his IP is blocked.
-        if request.ip_address in cache.get("blocked_ips", {}):
+        if (
+            request.ip_address in cache.get("blocked_ips", {})
+            and request.ip_address != Client.DUMMY_IP_ADDRESS
+        ):
             return HttpResponseForbidden(_("Request blocked"))
 
         return self.get_response(request)
 
-    def get_ip_address_or_none(self, request) -> str | None:
+    def get_ip_address(self, request) -> str:
         x_forwarded_for_ips = request.headers.get("X-Forwarded-For", "").split(", ")
         x_real_ip = request.headers.get("X-Real-Ip", "")
         remote_addr = request.META.get("REMOTE_ADDR", "")
@@ -40,5 +42,4 @@ class IpAddressMiddleware:
         if ipsv6:
             return ipsv6[0]
 
-        if settings.ENV == "prod":  # pragma: no cover
-            Bot.to_admin(f"No IPv4 or IPv6 Addresses found for {request}\n{ips}")
+        return Client.DUMMY_IP_ADDRESS

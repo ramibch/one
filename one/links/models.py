@@ -1,4 +1,4 @@
-from auto_prefetch import Manager
+from auto_prefetch import ForeignKey, Manager
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -67,42 +67,63 @@ class Link(TranslatableModel):
         choices=settings.TOPICS,
     )
 
+    landing = ForeignKey(
+        "landing.LandingPage",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
+    product = ForeignKey(
+        "products.Product",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
     objects: LinkManager = LinkManager()
 
     def __str__(self):
         return f"<Link to {self.title}>"
 
     def clean(self):
-        L = self.__class__
         ext_url = self.external_url
 
-        if self.link_fields.count(None) != self.count_link_fields - 1:
+        if self.link_fields.count(None) != len(self.link_fields) - 1:
             raise ValidationError(_("One link must be entered."), code="invalid")
 
         if ext_url and self.custom_title is None:
             raise ValidationError(_("Custom title is required."), code="invalid")
 
-        if ext_url and L.objects.filter(external_url=ext_url).exists():
+        if ext_url and Link.objects.filter(external_url=ext_url).exists():
             raise ValidationError(_("External url already exists."), code="invalid")
 
-        if self.url_path and L.objects.filter(url_path=self.url_path).exists():
+        if self.url_path and Link.objects.filter(url_path=self.url_path).exists():
             raise ValidationError(_("Url path already exists."), code="invalid")
 
-        if self.topic and L.objects.filter(topic=self.topic).exists():
-            raise ValidationError(_("Topic already exists."), code="invalid")
+        if self.topic and Link.objects.filter(topic=self.topic).exists():
+            raise ValidationError(_("Topic link already exists."), code="invalid")
 
-        super().clean()
+        if self.landing and Link.objects.filter(landing=self.landing).exists():
+            raise ValidationError(_("Landing link already exists."), code="invalid")
+
+        if self.product and Link.objects.filter(product=self.product).exists():
+            raise ValidationError(_("Product link already exists."), code="invalid")
+
+        return super().clean()
 
     @cached_property
     def link_fields(self):
-        return [self.url_path, self.external_url, self.topic]
+        return [
+            self.url_path,
+            self.external_url,
+            self.topic,
+            self.landing,
+            self.product,
+        ]
 
     @cached_property
-    def count_link_fields(self):
-        return len(self.link_fields)
-
-    @cached_property
-    def url_and_title(self):
+    def url_and_title(self) -> tuple[str, str]:
         if self.url_path:
             return reverse_lazy(self.url_path), self.get_url_path_display()
 
@@ -112,12 +133,18 @@ class Link(TranslatableModel):
         if self.topic:
             return f"/{self.topic}", self.get_topic_display()
 
+        if self.landing:
+            return self.landing.url, self.landing.title
+
+        if self.product:
+            return self.product.url, self.product.title
+
         return "#", ""
 
     @cached_property
-    def url(self):
+    def url(self) -> str:
         return self.url_and_title[0]
 
     @cached_property
-    def title(self):
+    def title(self) -> str:
         return self.url_and_title[1]

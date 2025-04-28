@@ -46,7 +46,7 @@ class Article(TranslatableModel):
         return f"{self.folder_name}/{self.subfolder_name}"
 
     def get_absolute_url(self):
-        return reverse_lazy("page-detail", kwargs={"slug": self.slug})
+        return reverse_lazy("slug_page", kwargs={"slug": self.slug})
 
     @cached_property
     def url(self):

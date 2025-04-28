@@ -5,6 +5,7 @@ import yaml
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
+from django.db import connection
 from django.db.models import QuerySet
 from django.utils import timezone
 from huey import crontab
@@ -83,8 +84,8 @@ def translate_modeltranslation_objects(
         count = 0
 
         for field in fields:
-            from_lang = db_obj.get_default_language()
-            from_field = f"{field}_{from_lang}"
+            from_lang: str = db_obj.get_default_language()
+            from_field: str = f"{field}_{from_lang}"
             from_value = getattr(db_obj, from_field)
             if from_value is None or not isinstance(from_value, str):
                 log += f"No translation for '{from_field}': null or not a string.\n"
@@ -152,3 +153,27 @@ def remove_db_huey_monitor_task_results():
     SignalInfoModel.objects.filter(
         create_dt__lt=timezone.now() - timedelta(days=3),
     ).exclude(signal_name=SIGNAL_ERROR).delete()
+
+
+@huey.db_periodic_task(crontab(day_of_week="6", hour="14", minute="00"))
+def inform_to_admin_about_db_table_sizes():
+    with connection.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT relname AS table_name,
+                pg_size_pretty(pg_total_relation_size(c.oid)) AS size_pretty
+            FROM pg_class c
+            JOIN pg_namespace n ON n.oid = c.relnamespace
+            WHERE n.nspname = 'public'
+            AND c.relkind = 'r'
+            ORDER BY pg_total_relation_size(c.oid) DESC;
+        """
+        )
+        results = cursor.fetchall()
+
+    text = "DB table sizes\n\n"
+
+    for table_name, size_pretty in results:
+        text += f"{size_pretty}\t{table_name}\n"
+
+    Bot.to_admin(text)

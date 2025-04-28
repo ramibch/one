@@ -34,7 +34,7 @@ def translate_text(
     from_lang: str,
     to_lang: str,
     text: str,
-    output_if_error: str = None,
+    output_if_error: str | None = None,
 ) -> str | None:
     """
     Translate text with DeepL API

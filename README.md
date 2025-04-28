@@ -1,6 +1,16 @@
 # Django Project Template for my future SaaS sites
 
 
+## TODO:
+- [ ] payments and stripe checkout
+- [ ] Plans (Type: TimeFixed, Subscription, NoSubscription, ... )
+- [ ] Write units tests
+- [ ] admin.py (search, filters...)
+- [ ] privacy policy page
+- [ ] terms of service page
+- [ ] impress
+
+
 ## GeoIP2 dbs
 
 (`geoip2dbs`) are stored with GIT LFS.
@@ -42,14 +52,7 @@ git lfs pull
 
 ```
 
-## TODO:
-- [ ] payments and stripe checkout
-- [ ] Plans (Type: TimeFixed, Subscription, NoSubscription, ... )
-- [ ] Write units tests
-- [ ] admin.py (search, filters...)
-- [ ] privacy policy page
-- [ ] terms of service page
-- [ ] impress
+
 
 ## Commercial Etsy App
 
@@ -66,6 +69,6 @@ https://help.pinterest.com/en/business/article/pinterest-product-specs
 
 
 
-## svg logos
+## Source used
 
-https://icons8.com/icons
+- icons: https://icons8.com/icons

@@ -4,7 +4,7 @@ from django.utils import timezone
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
 from .models import Client, Path, PathRedirect, Request
-from .tasks import block_spammy_clients, update_geo_client_values
+from .tasks import block_spammy_clients
 
 
 @admin.register(Path)
@@ -53,7 +53,7 @@ class ClientAdmin(admin.ModelAdmin):
     @admin.action(description="🔄 Update values")
     def update_values(modeladmin, request, queryset):
         for client in queryset:
-            update_geo_client_values(client)
+            client.update_geo_values()
 
 
 @admin.register(Request)

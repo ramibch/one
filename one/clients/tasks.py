@@ -1,10 +1,9 @@
 import re
-from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
-from django.db.models import Count, Q
+from django.db.models import Count, Max, Q
 from django.urls import reverse_lazy
 from django.utils import timezone
 from huey import crontab
@@ -15,14 +14,6 @@ from ..sites.models import Site
 from .models import Client, Path, Request
 
 User = get_user_model()
-
-
-@huey.db_task()
-def update_geo_client_values(client: Client):
-    """
-    Update values of the client which were not proccessed in the `OneMiddleware`
-    """
-    client.update_geo_values()
 
 
 @huey.db_task()
@@ -124,7 +115,11 @@ def purge_requests_task():
 
 @huey.db_periodic_task(crontab(day="15", hour="15", minute="15"))
 def inform_admin_about_404_issues():
-    some_time_ago = timezone.now() - timedelta(days=90)
+    dt_diff = Site.objects.aggregate(Max("requests_duration")).get(
+        "requests_duration__max"
+    )
+
+    some_time_ago = timezone.now() - dt_diff
 
     qs = (
         Path.objects.annotate(
