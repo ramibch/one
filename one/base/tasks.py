@@ -158,7 +158,7 @@ def remove_db_huey_monitor_task_results():
     ).exclude(name=SIGNAL_ERROR).delete()
 
 
-@huey.db_periodic_task(crontab(day_of_week="6", hour="14", minute="00"))
+@huey.periodic_task(crontab(day_of_week="6", hour="14", minute="00"))
 def inform_to_admin_about_db_table_sizes():
     with connection.cursor() as cursor:
         cursor.execute(

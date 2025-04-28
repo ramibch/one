@@ -10,7 +10,6 @@ from django.db.models import Case, Q, Value, When
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from huey.contrib import djhuey as huey
 
 from ..base.utils.telegram import Bot
 from ..geo.models import GeoInfo
@@ -102,7 +101,6 @@ class Client(Model):
             Bot.to_admin(f"GeoInfo: GeoIP2 city error: {e}")
             return {}
 
-    @huey.db_task()
     def update_geo_values(self):
         # Country
         if self.country_data != {}:
