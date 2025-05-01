@@ -20,7 +20,6 @@ from one.articles.models import Article
 from one.base.utils.http import CustomHttpRequest
 from one.dgt.models import DgtTest
 from one.faqs.models import FAQ
-from one.home.models import Home
 from one.landing.models import LandingPage
 from one.plans.models import Plan
 from one.products.models import Product
@@ -44,7 +43,7 @@ def home_view(request: CustomHttpRequest) -> HttpResponse:
             try:
                 home = LandingPage.objects.get(site=request.site, is_home=True)
                 return render(request, "landing/landing_page.html", {"object": home})
-            except Home.DoesNotExist:
+            except LandingPage.DoesNotExist:
                 pass
 
         case SiteType.DGT.value:

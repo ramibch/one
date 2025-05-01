@@ -57,3 +57,9 @@ def scrape_dgt_task_monthly():
                 )
             )
         DgtQuestion.objects.bulk_create(questions)
+
+
+@huey.db_periodic_task(crontab(hour="20", minute="30"))
+def process_unsaved_image_of_dgt_questions():
+    for q in DgtQuestion.objects.filter(image=""):
+        q.save()

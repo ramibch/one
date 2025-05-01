@@ -8,9 +8,13 @@ class Command(BaseCommand):
     help = "Create a Postgres db"
 
     def handle(self, *args, **options):
-        db_name, host, port = settings.DB_NAME, settings.DB_HOST, settings.DB_PORT
-        su, su_pw = settings.DB_SUPERUSER, settings.DB_SUPERPASSWORD
-        u, pw = settings.DB_USER, settings.DB_PASSWORD
+        db_name: str = settings.DB_NAME
+        host: str = settings.DB_HOST
+        port: str = settings.DB_PORT
+        su: str = settings.DB_SUPERUSER
+        su_pw: str = settings.DB_SUPERPASSWORD
+        u: str = settings.DB_USER
+        pw: str = settings.DB_PASSWORD
 
         conn = f"user='{su}' password='{su_pw}' host='{host}' port='{port}'"
 

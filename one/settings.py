@@ -95,7 +95,6 @@ INSTALLED_APPS = [
     "one.menus",
     "one.tex",
     "one.users",
-    "one.home",
     "one.plans",
     "one.tools",
     "one.links",
