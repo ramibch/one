@@ -54,7 +54,7 @@ def run_commands_daily():
     Bot.to_admin(f"Commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n")
 
 
-@huey.db_periodic_task(crontab(hour="0", minute="0"))
+@huey.db_periodic_task(crontab(day_of_week="1", hour="3", minute="2"))
 def run_commands_weekly():
     """
     Some commands to run weekly

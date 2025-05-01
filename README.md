@@ -9,7 +9,9 @@
 - [ ] privacy policy page
 - [ ] terms of service page
 - [ ] impress
-
+- [ ] match jobs & candidates:
+  - [ ] https://github.com/jamesturk/jellyfish/issues/229
+  - [ ] https://github.com/seatgeek/thefuzz/issues/90
 
 ## GeoIP2 dbs
 
