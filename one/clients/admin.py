@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.utils import timezone
 
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
@@ -30,10 +29,6 @@ class RequestInline(admin.TabularInline):
     def has_change_permission(self, request, obj=None):
         return False
 
-    def get_queryset(self, request):
-        past = timezone.now() - request.site.requests_duration
-        return super().get_queryset(request).filter(time__gte=past)
-
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
@@ -41,7 +36,7 @@ class ClientAdmin(admin.ModelAdmin):
     list_filter = ("is_blocked", "is_bot", "country")
     search_fields = ("ip_address", "country")
     actions = ["block_ips", "update_values"]
-    inlines = (RequestInline,)
+    # inlines = (RequestInline,)
 
     @admin.action(description="🚫 Block its IP Address")
     def block_ips(modeladmin, request, queryset):

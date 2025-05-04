@@ -5,6 +5,7 @@ from auto_prefetch import ForeignKey, Model
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geoip2 import GeoIP2
+from django.contrib.gis.geos import Point
 from django.db import models
 from django.db.models import Case, Q, Value, When
 from django.utils import timezone
@@ -57,7 +58,12 @@ class Client(Model):
         "GoogleOther",
     ]
     user = ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    geoinfo = ForeignKey("geo.GeoInfo", null=True, on_delete=models.SET_NULL)
+    geoinfo = ForeignKey(
+        "geo.GeoInfo",
+        null=True,
+        on_delete=models.SET_NULL,
+        db_index=False,  # Set in meta
+    )
     country = models.CharField(max_length=2, choices=settings.COUNTRIES, null=True)
     ip_address = models.GenericIPAddressField(unique=True, db_index=True)
     is_blocked = models.BooleanField(default=False)
@@ -74,8 +80,17 @@ class Client(Model):
         db_persist=True,
     )
 
+    class Meta(Model.Meta):
+        indexes = [
+            models.Index(
+                name="client_geoinfo_fkey",
+                fields=["geoinfo"],
+                condition=models.Q(geoinfo__isnull=False),
+            )
+        ]
+
     def __str__(self):
-        return f"{self.emoji} {self.ip_address}"
+        return f"{self.emoji}{'🚫' if self.is_blocked else ''} {self.ip_address}"
 
     @cached_property
     def emoji(self):
@@ -113,7 +128,8 @@ class Client(Model):
             if geoinfo:
                 self.geoinfo = geoinfo
             else:
-                self.geoinfo = GeoInfo.objects.create(**self.city_data)
+                params = self.city_data | {"location": Point(lon, lat)}
+                self.geoinfo = GeoInfo.objects.create(**params)
 
         self.save()
 

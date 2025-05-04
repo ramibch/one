@@ -860,6 +860,15 @@ wheels = [
 ]
 
 [[package]]
+name = "googlemaps"
+version = "4.10.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fe/26/bca4d737a9acea25e94c19940a780bbf0be64a691f7caf3a68467d3a5838/googlemaps-4.10.0.tar.gz", hash = "sha256:3055fcbb1aa262a9159b589b5e6af762b10e80634ae11c59495bd44867e47d88", size = 33056 }
+
+[[package]]
 name = "gunicorn"
 version = "23.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1220,6 +1229,7 @@ dependencies = [
     { name = "etsyv3" },
     { name = "factory-boy" },
     { name = "geoip2" },
+    { name = "googlemaps" },
     { name = "gunicorn" },
     { name = "hiredis" },
     { name = "holidays" },
@@ -1277,6 +1287,7 @@ requires-dist = [
     { name = "etsyv3", git = "https://github.com/anitabyte/etsyv3" },
     { name = "factory-boy", specifier = ">=3.3.3" },
     { name = "geoip2", specifier = ">=5.0.1" },
+    { name = "googlemaps", specifier = ">=4.10.0" },
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "hiredis", specifier = ">=3.1.0" },
     { name = "holidays", specifier = ">=0.69" },

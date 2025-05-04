@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "django.contrib.gis",
     "django.db.migrations",
     "django.contrib.admindocs",
     "allauth.socialaccount",
@@ -106,6 +107,7 @@ INSTALLED_APPS = [
     "one.dgt",
     "one.emails",
     "one.etsy",
+    "one.companies",
 ]
 
 MIDDLEWARE = [
@@ -171,7 +173,8 @@ DB_PORT = env("POSTGRES_PORT")
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        # "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": DB_NAME,
         "USER": DB_USER,
         "PASSWORD": DB_PASSWORD,
@@ -547,8 +550,10 @@ CORS_ALLOWED_ORIGINS = []
 
 
 # geoip2
-
 GEOIP_PATH = BASE_DIR / "geoip2dbs"
+
+# Google maps
+GOOGLE_MAPS_API_KEY = env("GOOGLE_MAPS_API_KEY")
 
 
 # django-markdownify

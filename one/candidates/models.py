@@ -1,18 +1,46 @@
+from copy import copy
+
 from auto_prefetch import ForeignKey, Model
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
-from django.db.models import Max
+from django.db.models import Max, Value
+from django.db.models.functions import Concat
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from one.base.utils.abstracts import TranslatableModel
+from one.base.utils.choices import Genders
+from one.base.utils.db import ChoiceArrayField
 
-class CandidateProfile(Model):  # TODO: Check TranslatableModel?
-    lang = models.CharField(max_length=8, choices=settings.LANGUAGES, default="de")
+
+class Profile(TranslatableModel):
+    LANG_ATTR = "language"
+    LANGS_ATTR = "languages"
+    language = models.CharField(
+        max_length=4,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
+        db_index=True,
+    )
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
+        default=list,
+        blank=True,
+        db_index=True,
+    )
+
+    gender = models.CharField(max_length=64, choices=Genders, null=True, blank=True)
     position = ForeignKey(Position, on_delete=models.SET_NULL, null=True)
     locations = models.ManyToManyField(Location)
-    fullname = models.CharField(max_length=64)
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
+    full_name = models.GeneratedField(
+        expression=Concat("first_name", Value(" "), "last_name"),
+        output_field=models.CharField(max_length=128),
+        db_persist=True,
+    )
     job_title = models.CharField(max_length=64)
     email = models.EmailField(max_length=64)
     phone = models.CharField(max_length=32)
@@ -133,7 +161,7 @@ class CandidateProfile(Model):  # TODO: Check TranslatableModel?
         clone.signature = None
         clone.photo = None
         clone.docs = None
-        clone.pk = CandidateProfile.objects.aggregate(Max("id"))["id__max"] + 1
+        clone.pk = Profile.objects.aggregate(Max("id"))["id__max"] + 1
 
         for key, value in attrs.items():
             setattr(clone, key, value)
@@ -166,14 +194,16 @@ class CandidateProfile(Model):  # TODO: Check TranslatableModel?
         return f"{self.fullname} - {self.job_title}"
 
 
-class CandidateChildrenModel(Model):
-    profile = ForeignKey(CandidateProfile, on_delete=models.CASCADE)
+class CandidateBaseChildModel(TranslatableModel):
+    LANG_ATTR = "profile__language"
+    LANGS_ATTR = "profile__languages"
+    profile = ForeignKey(Profile, on_delete=models.CASCADE)
 
     class Meta(Model.Meta):
         abstract = True
 
 
-class CandidateExperience(CandidateChildrenModel):
+class Experience(CandidateBaseChildModel):
     company_name = models.CharField(max_length=64)
     job_title = models.CharField(max_length=64)
     from_to = models.CharField(max_length=32)
@@ -183,7 +213,7 @@ class CandidateExperience(CandidateChildrenModel):
         return f"{self.job_title} - {self.company_name}"
 
 
-class Education(CandidateChildrenModel):
+class Education(CandidateBaseChildModel):
     institution_name = models.CharField(max_length=64)
     title = models.CharField(max_length=64)
     from_to = models.CharField(max_length=32)
@@ -193,21 +223,21 @@ class Education(CandidateChildrenModel):
         return f"{self.title} - {self.institution_name}"
 
 
-class Skill(CandidateChildrenModel):
+class Skill(CandidateBaseChildModel):
     name = models.CharField(max_length=64)
 
     def __str__(self):
         return self.name
 
 
-class Certificate(CandidateChildrenModel):
+class Certificate(CandidateBaseChildModel):
     name = models.CharField(max_length=128)
 
     def __str__(self):
         return self.name
 
 
-class Project(CandidateChildrenModel):
+class Project(CandidateBaseChildModel):
     title = models.CharField(max_length=64)
     url = models.URLField(max_length=128, null=True, blank=True)
     from_to = models.CharField(max_length=32, null=True, blank=True)
@@ -217,7 +247,7 @@ class Project(CandidateChildrenModel):
         return self.title
 
 
-class LanguageSkill(CandidateChildrenModel):
+class LanguageSkill(CandidateBaseChildModel):
     name = models.CharField(max_length=128)
 
     def __str__(self):
@@ -228,27 +258,27 @@ def cv_upload_path(cv, filename):
     return f"profiles-{cv.profile.category}/{now.year}/{now.month}/{now.day}/{cv.profile.id}/{cv.tex.id}/{filename}"
 
 
-class TexTemplate(models.TextChoices):
+class CvTexTemplates(models.TextChoices):
     ALICE = "tex/cvs/alice/cv.tex", "Alice"
     ## TODO: add
 
 
 class CandidateCv(Model):
-    profile = ForeignKey(CandidateProfile, on_delete=models.CASCADE)
-    tex_template = models.CharField(max_length=64, choices=TexTemplate)
+    profile = ForeignKey(Profile, on_delete=models.CASCADE)
+    tex_template = models.CharField(max_length=64, choices=CvTexTemplates)
     rendered_text = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to=cv_upload_path)
     pdf = models.FileField(upload_to=cv_upload_path)
     pdf_time = models.FloatField(default=0)
     image_time = models.FloatField(default=0)
-    rendering_time = models.FloatField(default=0)
+    render_time = models.FloatField(default=0)
     auto_created = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
     def render_files(self):
         pdf_start = time.time()
         # rendering pdf file
-        template = get_template(self.tex.template_name, using="tex")
+        template = get_template(self.tex_template, using="tex")
         self.rendered_text = template.render({"profile": self.profile})
         with tempfile.TemporaryDirectory() as tempdir:
             temppath = Path(tempdir)
@@ -299,7 +329,7 @@ class CandidateCv(Model):
                 )
             # total and image time calculations
             self.image_time = time.time() - pdf_end
-            self.rendering_time = self.image_time + self.pdf_time
+            self.render_time = self.image_time + self.pdf_time
 
             self.save()
 
