@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from .models import Company, CompanyLocation
+from .models import Company, CompanyLocation, Person
 
 
 class CompanyLocationInline(admin.TabularInline):
@@ -14,6 +14,7 @@ class CompanyLocationInline(admin.TabularInline):
 @admin.register(CompanyLocation)
 class CompanyLocationAdmin(admin.ModelAdmin):
     list_display = ("company", "geo_info")
+    search_fields = ("geo_info__address", "company__name")
     autocomplete_fields = ("company", "geo_info")
 
 
@@ -24,3 +25,8 @@ class CompanyAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     search_fields = ("name", "website")
     inlines = [CompanyLocationInline]
+
+
+@admin.register(Person)
+class PersonAdmin(admin.ModelAdmin):
+    search_fields = ("full_name", "email")

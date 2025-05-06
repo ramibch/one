@@ -254,10 +254,6 @@ class LanguageSkill(CandidateBaseChildModel):
         return self.name
 
 
-def cv_upload_path(cv, filename):
-    return f"profiles-{cv.profile.category}/{now.year}/{now.month}/{now.day}/{cv.profile.id}/{cv.tex.id}/{filename}"
-
-
 class CvTexTemplates(models.TextChoices):
     ALICE = "tex/cvs/alice/cv.tex", "Alice"
     ## TODO: add
@@ -267,76 +263,16 @@ class CandidateCv(Model):
     profile = ForeignKey(Profile, on_delete=models.CASCADE)
     tex_template = models.CharField(max_length=64, choices=CvTexTemplates)
     rendered_text = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to=cv_upload_path)
-    pdf = models.FileField(upload_to=cv_upload_path)
+    image = models.ImageField(upload_to="to.be.defined")
+    pdf = models.FileField(upload_to="to.be.defined")
     pdf_time = models.FloatField(default=0)
     image_time = models.FloatField(default=0)
     render_time = models.FloatField(default=0)
     auto_created = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
-    def render_files(self):
-        pdf_start = time.time()
-        # rendering pdf file
-        template = get_template(self.tex_template, using="tex")
-        self.rendered_text = template.render({"profile": self.profile})
-        with tempfile.TemporaryDirectory() as tempdir:
-            temppath = Path(tempdir)
-            filename = "texput.tex"
-            with open(temppath / filename, "x", encoding="utf-8") as f:
-                f.write(self.rendered_text)
-            args = f"{self.tex.interpreter} -interaction=batchmode {self.tex.interpreter_options} {filename} 2>&1 > /dev/null"
-            try:
-                run(args, shell=True, stdout=PIPE, stderr=PIPE, check=True, cwd=tempdir)
-            except CalledProcessError as called_process_error:
-                try:
-                    with open(temppath / "texput.log", encoding="utf-8") as f:
-                        log = f.read()
-                except FileNotFoundError:
-                    raise called_process_error
-                else:
-                    raise TexError(
-                        log=log,
-                        source=self.rendered_text,
-                        template_name=self.tex.template_name,
-                    )
-            with open(temppath / "texput.pdf", "rb") as f:
-                bytes_pdf = f.read()
-
-            filename = f"CV_{now.hour}{now.minute}{now.second}{now.microsecond}"
-
-            self.pdf.save(
-                f"{filename}.pdf",
-                ContentFile(bytes_pdf),
-                save=False,
-            )
-            # pdf time calculations
-            pdf_end = time.time()
-            self.pdf_time = pdf_end - pdf_start
-            # create the image  file
-            image = convert_from_path(
-                pdf_path=temppath / "texput.pdf",
-                first_page=1,
-                last_page=1,
-                fmt="jpg",
-                output_folder=temppath,
-            )[0]
-            with open(image.filename, "rb") as f:
-                self.image.save(
-                    f"{filename}.jpg",
-                    ContentFile(f.read()),
-                    save=False,
-                )
-            # total and image time calculations
-            self.image_time = time.time() - pdf_end
-            self.render_time = self.image_time + self.pdf_time
-
-            self.save()
-
-        return self
+    class Meta(Model.Meta):
+        ordering = ["-created_on"]
 
     def __str__(self) -> str:
         return f"CV ({self.profile.fullname} {self.tex})"
-
-    class Meta(Model.Meta):
-        ordering = ["-created_on"]
