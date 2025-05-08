@@ -1,10 +1,7 @@
-from random import randint, sample
-
 import factory
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from one.faqs.models import FAQCategory
 from one.links.factories import LinkFactory
 from one.sites.factories import SiteFactory
 
@@ -100,9 +97,12 @@ class FAQsSectionFactory(LandingPageChildModelFactory):
         model = FAQsSection
 
     title = factory.LazyAttribute(lambda _: faker.sentence(nb_words=4))
-    categories = factory.List(
-        sample(FAQCategory.values, k=randint(1, len(FAQCategory.values)))
-    )
+
+    @factory.post_generation
+    def categories(self, create, extracted, **kwargs):
+        if not create or not extracted:
+            return
+        self.categories.add(*extracted)
 
 
 class FinalCTASectionFactory(LandingPageChildModelFactory):

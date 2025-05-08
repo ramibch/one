@@ -9,8 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from one.articles.models import Article
 
 from ..base.utils.abstracts import TranslatableModel
-from ..base.utils.db import ChoiceArrayField
-from ..faqs.models import FAQ, FAQCategory
+from ..faqs.models import FAQ
 
 
 class LandingPage(TranslatableModel):
@@ -19,18 +18,15 @@ class LandingPage(TranslatableModel):
     I18N_SLUGIFY_FROM = "title"
 
     site = ForeignKey("sites.Site", on_delete=models.CASCADE)
-    title = models.CharField(max_length=64, default="")
-    slug = models.SlugField(null=True, blank=True)
-    is_home = models.BooleanField(default=True, db_default=True)
+    title = models.CharField(max_length=128, default="")
+    slug = models.SlugField(max_length=128, null=True, blank=True)
+    is_home = models.BooleanField(default=True)
     benefits_title = models.CharField(max_length=64, null=True, blank=True)
 
     def clean(self) -> None:
         home_exits = LandingPage.objects.filter(site=self.site, is_home=True).exists()
         if home_exits and self.is_home is True:
-            raise ValidationError(
-                _("Home already exists for this site..."),
-                code="unique_home_per_site",
-            )
+            raise ValidationError(_("Home already exists"), code="unique_home_per_site")
         return super().clean()
 
     def get_absolute_url(self):
@@ -152,7 +148,7 @@ class StepActionSection(_ChildModel):
 
 class FAQsSection(_ChildModel):
     title = models.CharField(max_length=128)
-    categories = ChoiceArrayField(models.CharField(max_length=32, choices=FAQCategory))
+    categories = models.ManyToManyField("faqs.FAQCategory")
 
     class Meta(_ChildModel.Meta):
         verbose_name = _("FAQs Section")
@@ -165,9 +161,8 @@ class FAQsSection(_ChildModel):
     def faqs(self):
         return (
             FAQ.objects.filter(
-                category__in=self.categories,
+                categories__in=self.categories.all(),
                 sites=self.landing.site,
-                featured=True,
             )
             .order_by("-id")
             .distinct()

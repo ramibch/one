@@ -7,11 +7,16 @@ from .models import FAQ, FAQCategory
 faker = Faker()
 
 
+class FAQCategoryFactory(DjangoModelFactory):
+    name = factory.Faker("word")
+
+    class Meta:
+        model = FAQCategory
+
+
 class FAQFactory(DjangoModelFactory):
-    category = factory.Iterator(FAQCategory.values)
     question = factory.LazyAttribute(lambda _: f"{faker.sentence().replace('.', '?')}")
     answer = factory.Faker("text")
-    featured = factory.Faker("boolean", chance_of_getting_true=80)
 
     class Meta:
         model = FAQ
@@ -21,3 +26,9 @@ class FAQFactory(DjangoModelFactory):
         if not create or not extracted:
             return
         self.sites.add(*extracted)
+
+    @factory.post_generation
+    def categories(self, create, extracted, **kwargs):
+        if not create or not extracted:
+            return
+        self.categories.add(*extracted)
