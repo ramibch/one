@@ -59,6 +59,7 @@ dependencies = [
   "django-debug-toolbar>=5.1.0",
   "django-money>=3.5.4",
   "googlemaps>=4.10.0",
+  "markdownify>=1.1.0",
 ]
 
 

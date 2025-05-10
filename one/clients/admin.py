@@ -22,7 +22,7 @@ class PathAdmin(admin.ModelAdmin):
         queryset.update(is_spam=False)
 
 
-class RequestInline(admin.TabularInline):
+class RequestInline(admin.StackedInline):
     model = Request
     extra = 0
 
@@ -36,7 +36,8 @@ class ClientAdmin(admin.ModelAdmin):
     list_filter = ("is_blocked", "is_bot", "country")
     search_fields = ("ip_address", "country")
     actions = ["block_ips", "update_values"]
-    # inlines = (RequestInline,)
+    list_select_related = ("user", "geoinfo")
+    inlines = (RequestInline,)
 
     @admin.action(description="🚫 Block its IP Address")
     def block_ips(modeladmin, request, queryset):
