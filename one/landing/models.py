@@ -148,7 +148,7 @@ class StepActionSection(_ChildModel):
 
 class FAQsSection(_ChildModel):
     title = models.CharField(max_length=128)
-    # categories = models.ManyToManyField("faqs.FAQCategory")
+    categories = models.ManyToManyField("faqs.FAQCategory")
 
     class Meta(_ChildModel.Meta):
         verbose_name = _("FAQs Section")
