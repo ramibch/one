@@ -41,12 +41,23 @@ def generate_jobs():
         c.jobs_page_html = r.text
         c.save()
 
-        soup = BeautifulSoup(r.content.decode("utf-8"), "html.parser")
+        page_soup = BeautifulSoup(r.content.decode("utf-8"), "html.parser")
+
+        if c.jobs_container_class:
+            soup = page_soup.find(c.jobs_container_tag, c.jobs_container_class)
+        else:
+            soup = page_soup.find(c.jobs_container_tag)
 
         if c.job_link_class:
             elements = soup.find_all("a", c.job_link_class, href=True)
         else:
             elements = soup.find_all("a", href=True)
+
+        loc = (
+            c.companylocation_set.first()
+            if c.companylocation_set.count() == 1
+            else None
+        )
 
         for element in elements:
             href = element.get("href")
@@ -64,6 +75,7 @@ def generate_jobs():
                     title=element.text[:64],
                     source_url=url,
                     expires_on=timezone.now() + timedelta(days=60),
+                    company_location=loc,
                 )
             )
 

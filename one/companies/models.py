@@ -22,7 +22,9 @@ class Company(Model):
     website = models.URLField(max_length=128)
     jobs_page_url = models.CharField(max_length=128, null=True, blank=True)
     jobs_page_html = models.TextField(null=True, blank=True)
-    job_link_class = models.CharField(max_length=32, null=True, blank=True)
+    jobs_container_tag = models.CharField(default="div")
+    jobs_container_class = models.CharField(max_length=256, null=True, blank=True)
+    job_link_class = models.CharField(max_length=256, null=True, blank=True)
     remarks = models.TextField(blank=True, null=True)
     application_methods = ChoiceArrayField(
         models.CharField(max_length=32, choices=ApplicationMethods),
