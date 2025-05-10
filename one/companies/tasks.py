@@ -1,3 +1,4 @@
+from datetime import timedelta
 from http import HTTPStatus
 from urllib.parse import urlparse
 
@@ -5,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+from django.utils import timezone
 from huey import crontab
 from huey.contrib import djhuey as huey
 
@@ -61,6 +63,7 @@ def generate_jobs():
                 Job(
                     title=element.text[:64],
                     source_url=url,
+                    expires_on=timezone.now() + timedelta(days=60),
                 )
             )
 
