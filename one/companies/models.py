@@ -49,6 +49,9 @@ class CompanyLocation(Model):
     company = ForeignKey(Company, on_delete=models.CASCADE)
     geo_info = ForeignKey("geo.GoogleGeoInfo", on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.geo_info.address
+
 
 class Person(Model):
     is_hr = models.BooleanField(default=False)

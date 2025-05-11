@@ -40,7 +40,7 @@ def generate_jobs():
         response = requests.get(company.jobs_page_url, headers=headers)
 
         if response.status_code != HTTPStatus.OK:
-            log += f"{response.status_code} {company.jobs_page_url}"
+            log += f"{response.status_code} {company.jobs_page_url}\n"
             continue
 
         if company.jobs_page_html == response.text:
@@ -83,8 +83,12 @@ def generate_jobs():
                 validate_url(href)
                 url = href
             except ValidationError:
-                purl = urlparse(response.url)
-                url = f"{purl.scheme}//{purl.netloc}{href}"
+                parsed_url = urlparse(response.url)
+                url = f"{parsed_url.scheme}//{parsed_url.netloc}{href}"
+                try:
+                    validate_url(url)
+                except ValidationError:
+                    log += f"Error with {url}\n"
 
             if Job.objects.filter(source_url=url).exists():
                 continue
@@ -102,4 +106,4 @@ def generate_jobs():
     Job.objects.bulk_create(jobs, ignore_conflicts=True)
 
     if log:
-        Bot.to_admin(log)
+        Bot.to_admin("Generating jobs\n" + log)
