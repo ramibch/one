@@ -84,7 +84,6 @@ class LandingPageAdmin(TranslatableModelAdmin):
         FAQsSectionInline,
         FinalCTASectionInline,
     )
-
     actions = ["fake_sections"]
 
     @admin.action(description="🏭 Fake sections")

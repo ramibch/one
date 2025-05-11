@@ -14,10 +14,10 @@ class JobManager(Manager):
 
 class Job(Model):
     language = models.CharField(max_length=8, choices=settings.LANGUAGES, default="de")
-    title = models.CharField(max_length=64)
-    body = models.TextField()
-    job_id = models.CharField(max_length=32, blank=True, null=True)
-    source_url = models.URLField(max_length=128, blank=True, null=True)
+    title = models.CharField(max_length=128)
+    body = models.TextField(blank=True, null=True)
+    job_id = models.CharField(max_length=64, blank=True, null=True)
+    source_url = models.URLField(max_length=256, blank=True, null=True)
     recruiter = ForeignKey(
         "companies.Person",
         on_delete=models.SET_NULL,
@@ -33,7 +33,7 @@ class Job(Model):
         null=True,
         db_index=False,  # Set in Meta
     )
-    duration = models.DurationField(default=timedelta(days=30))
+    duration = models.DurationField(default=timedelta(days=60))
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     expires_on = models.DateTimeField(editable=False)

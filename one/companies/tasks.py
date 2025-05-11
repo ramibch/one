@@ -2,6 +2,7 @@ from datetime import timedelta
 from http import HTTPStatus
 from urllib.parse import urlparse
 
+import langdetect
 import requests
 from bs4 import BeautifulSoup
 from django.core.exceptions import ValidationError
@@ -29,35 +30,50 @@ validate_url = URLValidator()
 def generate_jobs():
     log = ""
     jobs = []
-    for c in Company.objects.filter(jobs_page_url__isnull=False):
-        r = requests.get(c.jobs_page_url, headers=headers)
-        if r.status_code != HTTPStatus.OK:
-            log += f"{r.status_code} {c.jobs_page_url}"
+
+    companies = Company.objects.filter(
+        jobs_page_url__isnull=False,
+        jobs_scrape_ready=True,
+    )
+
+    for company in companies:
+        response = requests.get(company.jobs_page_url, headers=headers)
+
+        if response.status_code != HTTPStatus.OK:
+            log += f"{response.status_code} {company.jobs_page_url}"
             continue
 
-        if c.jobs_page_html == r.text:
+        if company.jobs_page_html == response.text:
             continue
 
-        c.jobs_page_html = r.text
-        c.save()
+        company.jobs_page_html = response.text
 
-        page_soup = BeautifulSoup(r.content.decode("utf-8"), "html.parser")
+        company.save()
 
-        if c.jobs_container_class:
-            soup = page_soup.find(c.jobs_container_tag, c.jobs_container_class)
+        page_soup = BeautifulSoup(response.content.decode("utf-8"), "html.parser")
+
+        if company.jobs_container_class:
+            soup = page_soup.find(
+                company.jobs_container_tag, company.jobs_container_class
+            )
         else:
-            soup = page_soup.find(c.jobs_container_tag)
+            soup = page_soup.find(company.jobs_container_tag)
 
-        if c.job_link_class:
-            elements = soup.find_all("a", c.job_link_class, href=True)
+        if soup is None:
+            continue
+
+        if company.job_link_class:
+            elements = soup.find_all("a", company.job_link_class, href=True)
         else:
             elements = soup.find_all("a", href=True)
 
         loc = (
-            c.companylocation_set.first()
-            if c.companylocation_set.count() == 1
+            company.companylocation_set.first()
+            if company.companylocation_set.count() == 1
             else None
         )
+
+        language = langdetect.detect(page_soup.text)
 
         for element in elements:
             href = element.get("href")
@@ -67,15 +83,19 @@ def generate_jobs():
                 validate_url(href)
                 url = href
             except ValidationError:
-                purl = urlparse(r.url)
+                purl = urlparse(response.url)
                 url = f"{purl.scheme}//{purl.netloc}{href}"
+
+            if Job.objects.filter(source_url=url).exists():
+                continue
 
             jobs.append(
                 Job(
-                    title=element.text[:64],
+                    title=element.text[:128],
                     source_url=url,
                     expires_on=timezone.now() + timedelta(days=60),
                     company_location=loc,
+                    language=language,
                 )
             )
 

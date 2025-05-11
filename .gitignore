@@ -171,3 +171,7 @@ nginx/*
 
 # tmp files
 tmp/*
+
+
+# private data
+data_private/*
