@@ -20,7 +20,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 
-if settings.ENV == "prod":
+if settings.ENV == settings.PROD:
     # Custom 404 error view
     handler404 = "one.base.views.error_404"
     # Custom 500 error view
@@ -48,7 +48,7 @@ urlpatterns = [
 ]
 
 
-if settings.ENV == "dev" and settings.DEBUG:
+if settings.ENV == settings.DEV and settings.DEBUG:
     urlpatterns = (
         [
             path("rosetta/", include("rosetta.urls")),

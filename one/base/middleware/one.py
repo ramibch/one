@@ -37,7 +37,7 @@ class OneMiddleware:
         request.has_valid_one_secret_key = self.valid_secret_key(request)
 
         # Clear cache in development
-        if settings.ENV == "dev" and settings.CLEAR_CACHE_IN_DEV:
+        if settings.ENV == settings.DEV and settings.CLEAR_CACHE_IN_DEV:
             call_command("clear_cache")
 
         # Get response (view process)

@@ -36,40 +36,44 @@ def generate_jobs():
         jobs_scrape_ready=True,
     )
 
-    for company in companies:
-        response = requests.get(company.jobs_page_url, headers=headers)
+    for c in companies:
+        response = requests.get(c.jobs_page_url, headers=headers)
 
         if response.status_code != HTTPStatus.OK:
-            log += f"{response.status_code} {company.jobs_page_url}\n"
+            log += f"{response.status_code} {c.jobs_page_url}\n"
             continue
 
-        if company.jobs_page_html == response.text:
+        if c.jobs_page_html == response.text:
             continue
 
-        company.jobs_page_html = response.text
+        c.jobs_page_html = response.text
 
-        company.save()
+        c.save()
 
         page_soup = BeautifulSoup(response.content.decode("utf-8"), "html.parser")
 
-        if company.jobs_container_class:
+        if c.jobs_container_id and c.jobs_container_class:
             soup = page_soup.find(
-                company.jobs_container_tag, company.jobs_container_class
+                c.jobs_container_tag, c.jobs_container_class, id=c.jobs_container_id
             )
+        elif c.jobs_container_class:
+            soup = page_soup.find(c.jobs_container_tag, c.jobs_container_class)
+        elif c.jobs_container_id:
+            soup = page_soup.find(c.jobs_container_tag, id=c.jobs_container_id)
         else:
-            soup = page_soup.find(company.jobs_container_tag)
+            soup = page_soup.find(c.jobs_container_tag)
 
         if soup is None:
             continue
 
-        if company.job_link_class:
-            elements = soup.find_all("a", company.job_link_class, href=True)
+        if c.job_link_class:
+            elements = soup.find_all("a", c.job_link_class, href=True)
         else:
             elements = soup.find_all("a", href=True)
 
         loc = (
-            company.companylocation_set.first()
-            if company.companylocation_set.count() == 1
+            c.companylocation_set.first()
+            if c.companylocation_set.count() == 1
             else None
         )
 
@@ -79,16 +83,22 @@ def generate_jobs():
             href = element.get("href")
             if not href:
                 continue
+
+            if href.startswith("mailto"):
+                continue
+
             try:
                 validate_url(href)
                 url = href
             except ValidationError:
                 parsed_url = urlparse(response.url)
+                href = href if href.startswith("/") else f"/{href}"
                 url = f"{parsed_url.scheme}//{parsed_url.netloc}{href}"
                 try:
                     validate_url(url)
                 except ValidationError:
                     log += f"Error with {url}\n"
+                    continue
 
             if Job.objects.filter(source_url=url).exists():
                 continue

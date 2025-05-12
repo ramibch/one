@@ -26,6 +26,7 @@ class Company(Model):
     jobs_scrape_ready = models.BooleanField(default=False)
     jobs_container_tag = models.CharField(default="div")
     jobs_container_class = models.CharField(max_length=256, null=True, blank=True)
+    jobs_container_id = models.CharField(max_length=256, null=True, blank=True)
     job_link_class = models.CharField(max_length=256, null=True, blank=True)
     job_application_methods = ChoiceArrayField(
         models.CharField(max_length=32, choices=JobApplicationMethods),

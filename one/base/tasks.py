@@ -124,8 +124,8 @@ def settings_check_task_hourly():
 
     msg = ""
 
-    if settings.ENV != "prod":
-        msg += "⚠️ ENV is not 'prod'\n\n"
+    if settings.ENV != settings.PROD:
+        msg += f"⚠️ ENV is not {settings.PROD}\n\n"
 
     if settings.DEBUG:
         msg += "⚠️ DEBUG is True\n\n"

@@ -28,9 +28,14 @@ now = datetime.now()
 
 
 SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
-ENV = env("ENV")
 
-if ENV not in ("dev", "prod"):
+# Enviornments
+ENV = env("ENV")
+PROD = "prod"
+DEV = "dev"
+ENVS = (DEV, PROD)
+
+if ENV not in ENVS:
     raise ImproperlyConfigured(f"ENV '{ENV}' is not a valid enviorment.")
 
 
@@ -288,7 +293,7 @@ HUEY = {
     "name": DATABASES["default"]["NAME"],  # Use db name for huey.
     "results": True,  # Store return values of tasks.
     "store_none": False,  # If a task returns None, do not save to results.
-    "immediate": ENV == "dev",  # If DEBUG=True, run synchronously.
+    "immediate": ENV == DEV,  # If DEBUG=True, run synchronously.
     "utc": True,  # Use UTC for all times internally.
     "blocking": True,  # Perform blocking pop rather than poll Redis.
     "connection": {"connection_pool": REDIS_CONNECTION_POOL},
