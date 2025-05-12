@@ -93,7 +93,7 @@ def generate_jobs():
             except ValidationError:
                 parsed_url = urlparse(response.url)
                 href = href if href.startswith("/") else f"/{href}"
-                url = f"{parsed_url.scheme}//{parsed_url.netloc}{href}"
+                url = f"{parsed_url.scheme}://{parsed_url.netloc}{href}"
                 try:
                     validate_url(url)
                 except ValidationError:
