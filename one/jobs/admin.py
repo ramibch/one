@@ -5,7 +5,7 @@ from .models import Job
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
-    autocomplete_fields = ("company_locations", "recruiter")
+    autocomplete_fields = ("company_locations", "recruiter", "company")
     search_fields = ("title", "company__name", "recruiter__name", "extern_id")
     list_display = ("__str__", "recruiter", "source_url")
     list_filter = ("language",)

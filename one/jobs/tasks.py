@@ -116,6 +116,7 @@ def scrape_and_create_jobs():
                 Job(
                     title=element.text[:128],
                     source_url=url,
+                    company=c,
                     expires_on=timezone.now() + timedelta(days=60),
                     company_location=loc,
                     language=language,
