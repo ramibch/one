@@ -28,6 +28,9 @@ class Company(Model):
     jobs_container_class = models.CharField(max_length=256, null=True, blank=True)
     jobs_container_id = models.CharField(max_length=256, null=True, blank=True)
     job_link_class = models.CharField(max_length=256, null=True, blank=True)
+    job_detail_container_tag = models.CharField(default="main")
+    job_detail_container_class = models.CharField(max_length=256, null=True, blank=True)
+    job_detail_container_id = models.CharField(max_length=256, null=True, blank=True)
     job_application_methods = ChoiceArrayField(
         models.CharField(max_length=32, choices=JobApplicationMethods),
         default=list,

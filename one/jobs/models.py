@@ -25,14 +25,14 @@ class Job(Model):
         null=True,
         db_index=False,  # Set in Meta
     )
-
-    company_location = ForeignKey(
-        "companies.CompanyLocation",
-        on_delete=models.CASCADE,
-        blank=True,
+    company = ForeignKey(
+        "companies.Company",
+        on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         db_index=False,  # Set in Meta
     )
+    company_locations = models.ManyToManyField("companies.CompanyLocation", blank=True)
     duration = models.DurationField(default=timedelta(days=60))
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -45,9 +45,9 @@ class Job(Model):
     class Meta(Model.Meta):
         indexes = [
             models.Index(
-                name="job_company_location_fkey",
-                fields=["company_location"],
-                condition=Q(company_location__isnull=False) & Q(is_active=True),
+                name="job_company_fkey",
+                fields=["company"],
+                condition=Q(company__isnull=False) & Q(is_active=True),
             ),
             models.Index(
                 name="job_recruiter_fkey",
