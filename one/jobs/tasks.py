@@ -35,11 +35,9 @@ def update_job_status_daily_task():
 validate_url = URLValidator()
 
 
-@huey.db_periodic_task(crontab(hour="21", minute="30"))
+@huey.db_periodic_task(crontab(hour="*/4", minute="30"))
 def scrape_and_create_jobs():
     log = ""
-    jobs = []
-
     companies = Company.objects.filter(
         jobs_page_url__isnull=False,
         jobs_scrape_ready=True,
@@ -112,24 +110,21 @@ def scrape_and_create_jobs():
             if Job.objects.filter(source_url=url).exists():
                 continue
 
-            jobs.append(
-                Job(
-                    title=element.text[:128],
-                    source_url=url,
-                    company=c,
-                    expires_on=timezone.now() + timedelta(days=60),
-                    company_location=loc,
-                    language=language,
-                )
+            job = Job.objects.create(
+                title=element.text[:128],
+                source_url=url,
+                company=c,
+                expires_on=timezone.now() + timedelta(days=60),
+                language=language,
             )
-
-    Job.objects.bulk_create(jobs, ignore_conflicts=True)
+            if loc:
+                job.company_locations.add(loc)
 
     if log:
         Bot.to_admin("Generating jobs\n" + log)
 
 
-@huey.db_periodic_task(crontab(hour="23", minute="30"))
+@huey.db_periodic_task(crontab(hour="*/4", minute="45"))
 def scrape_job_detail_pages_and_update_its_attrs():
     log = ""
 
