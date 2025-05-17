@@ -12,6 +12,8 @@ from ..base.utils.telegram import Bot
 from ..sites.models import Site
 from .models import Article, ArticleFile, MainTopic
 
+LARGE_LOG = False
+
 
 @huey.db_periodic_task(crontab(hour="1", minute="10"))
 def sync_articles(sites=None):
@@ -25,7 +27,7 @@ def sync_articles(sites=None):
     submodule_path: Path = MainTopic.submodule_path
     sites = sites or Site.objects.all()
 
-    log = f"🔄 Syncing {submodule}\n\n"
+    log = f"🔄 {submodule} sync\n\n"
 
     # Scanning
     for maintopic in MainTopic.objects.all():
@@ -43,7 +45,8 @@ def sync_articles(sites=None):
             if not subfolder.is_dir():
                 continue
 
-            log += f"✍ {maintopic}/{subfolder.name}\n"
+            if LARGE_LOG:
+                log += f"✍ {maintopic}/{subfolder.name}\n"
 
             article = Article.objects.get_or_create(
                 main_topic=maintopic,

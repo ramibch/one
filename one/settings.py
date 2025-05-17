@@ -113,7 +113,6 @@ INSTALLED_APPS = [
     "one.emails",
     "one.etsy",
     "one.companies",
-    "one.jobs",
 ]
 
 MIDDLEWARE = [

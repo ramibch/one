@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
-from .models import Company, CompanyLocation, Person
+from .models import Company, CompanyLocation, Job, Person
 
 
 class CompanyLocationInline(admin.TabularInline):
@@ -34,3 +34,12 @@ class CompanyLocationAdmin(admin.ModelAdmin):
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     search_fields = ("full_name", "email")
+
+
+@admin.register(Job)
+class JobAdmin(admin.ModelAdmin):
+    autocomplete_fields = ("company_locations", "recruiter", "company")
+    search_fields = ("title", "company__name", "recruiter__name", "extern_id")
+    list_display = ("__str__", "recruiter", "source_url")
+    list_filter = ("language",)
+    readonly_fields = ("is_active", "expires_on")

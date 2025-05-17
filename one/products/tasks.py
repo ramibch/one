@@ -5,6 +5,8 @@ from huey.contrib import djhuey as huey
 from ..base.utils.telegram import Bot
 from .models import EtsyListing, Product, ProductFile, ProductImage
 
+LARGE_LOG = False
+
 
 @huey.db_periodic_task(crontab(hour="4", minute="10"))
 def sync_products():
@@ -17,7 +19,7 @@ def sync_products():
     submodule = Product.submodule
     submodule_path = Product.submodule_path
 
-    log = f"🔄 Syncing {submodule}\n\n"
+    log = f"🔄 {submodule} sync\n\n"
 
     # Scanning
     for product in Product.objects.all():
@@ -35,7 +37,8 @@ def sync_products():
             if not subfolder.is_dir():
                 continue
 
-            log += f"🎁 {product}/{subfolder.name}\n"
+            if LARGE_LOG:
+                log += f"🎁 {product}/{subfolder.name}\n"
 
             if subfolder.name == "files":
                 FileModel = ProductFile

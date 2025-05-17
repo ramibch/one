@@ -21,6 +21,9 @@ from .utils.translation import translate_text
 User = get_user_model()
 
 
+LARGE_LOG = False
+
+
 @huey.signal(SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_CANCELED, SIGNAL_REVOKED)
 def task_not_executed_handler(signal, task, exc=None):
     # This handler will be called for the 4 signals listed, which
@@ -51,7 +54,10 @@ def run_commands_daily():
     call_command("clearsessions", stdout=out, stderr=err)
     # call_command("update_rates", verbosity=0, stdout=out, stderr=err)
     # TODO: first install djmoney
-    Bot.to_admin(f"Commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n")
+
+    if LARGE_LOG:
+        msg = f"Commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n"
+        Bot.to_admin(msg)
 
 
 @huey.db_periodic_task(crontab(day_of_week="1", hour="3", minute="2"))
@@ -61,9 +67,10 @@ def run_commands_weekly():
     """
     out, err = StringIO(), StringIO()
     call_command("dbbackup", verbosity=0, stdout=out, stderr=err)
-    Bot.to_admin(
-        f"Weekly commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n"
-    )
+
+    if LARGE_LOG:
+        msg = f"Commands\n\nstdout=\n{out.getvalue()}\n\nstderr:{err.getvalue()}\n"
+        Bot.to_admin(msg)
 
 
 @huey.db_periodic_task(crontab(hour="0", minute="20"))
@@ -75,8 +82,7 @@ def sync_submodule_folders_task():
 
 @huey.db_task()
 def translate_modeltranslation_objects(
-    queryset: QuerySet[TranslatableModel],
-    fields: list[str],
+    queryset: QuerySet[TranslatableModel], fields: list[str]
 ):
     log = "🈂️ Translating a multilanguage queryset:\n\n"
     for db_obj in queryset:
