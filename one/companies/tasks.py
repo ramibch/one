@@ -48,8 +48,8 @@ def scrape_company_pages(qs=None):
     for c in companies:
         try:
             response = requests.get(c.jobs_page_url, headers=headers, timeout=10)
-        except Exception:
-            log += f"⚠️ Request {response.status_code} {c.jobs_page_url}\n"
+        except Exception as e:
+            log += f"⚠️ Request {response.status_code} {c.jobs_page_url}: {e}\n"
 
         if response.status_code != HTTPStatus.OK:
             log += f"⚠️ Status {response.status_code} {c.jobs_page_url}\n"
@@ -146,8 +146,8 @@ def scrape_job_detail_pages(qs=None):
     for job in jobs:
         try:
             response = requests.get(job.source_url, headers=headers, timeout=10)
-        except Exception:
-            log += f"⚠️ Request {response.status_code} {job.source_url}\n"
+        except Exception as e:
+            log += f"⚠️ Request {response.status_code} {job.source_url}: {e}\n"
 
         if response.status_code != HTTPStatus.OK:
             log += f"⚠️ Status code {response.status_code} {job.source_url}\n"
