@@ -46,10 +46,13 @@ def scrape_company_pages(qs=None):
     )
 
     for c in companies:
-        response = requests.get(c.jobs_page_url, headers=headers, timeout=10)
+        try:
+            response = requests.get(c.jobs_page_url, headers=headers, timeout=10)
+        except Exception:
+            log += f"⚠️ Request {response.status_code} {c.jobs_page_url}\n"
 
         if response.status_code != HTTPStatus.OK:
-            log += f"{response.status_code} {c.jobs_page_url}\n"
+            log += f"⚠️ Status {response.status_code} {c.jobs_page_url}\n"
             continue
 
         if c.jobs_page_html == response.text:
@@ -141,10 +144,13 @@ def scrape_job_detail_pages(qs=None):
     )
 
     for job in jobs:
-        response = requests.get(job.source_url, headers=headers, timeout=10)
+        try:
+            response = requests.get(job.source_url, headers=headers, timeout=10)
+        except Exception:
+            log += f"⚠️ Request {response.status_code} {job.source_url}\n"
 
         if response.status_code != HTTPStatus.OK:
-            log += f"{response.status_code} {job.source_url}\n"
+            log += f"⚠️ Status code {response.status_code} {job.source_url}\n"
             continue
 
         page_soup = BeautifulSoup(response.content.decode("utf-8"), "html.parser")
