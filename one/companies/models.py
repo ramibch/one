@@ -55,10 +55,10 @@ class Company(Model):
 
 class CompanyLocation(Model):
     company = ForeignKey(Company, on_delete=models.CASCADE)
-    geo_info = ForeignKey("geo.GoogleGeoInfo", on_delete=models.CASCADE)
+    geoinfo = ForeignKey("geo.GoogleGeoInfo", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.geo_info.address
+        return self.geoinfo.address
 
 
 class Person(Model):

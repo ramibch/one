@@ -13,8 +13,7 @@ from huey import crontab
 from huey.contrib import djhuey as huey
 
 from one.base.utils.telegram import Bot
-from one.companies.models import Company
-from one.jobs.models import Job
+from one.companies.models import Company, Job
 
 headers = {
     "User-Agent": (
@@ -23,22 +22,25 @@ headers = {
     )
 }
 
+validate_url = URLValidator()
+
 
 @huey.db_periodic_task(crontab(hour="3", minute="12"))
-def update_job_status_daily_task():
+def update_job_status():
     now = timezone.now()
     active_jobs = Job.objects.filter(is_active=True)
     pk_list = [job.pk for job in active_jobs if job.expires_on < now]
     Job.objects.filter(pk__in=pk_list).update(is_active=False)
 
 
-validate_url = URLValidator()
-
-
 @huey.db_periodic_task(crontab(hour="*/4", minute="30"))
-def scrape_and_create_jobs():
+def scrape_company_pages(qs=None):
     log = ""
-    companies = Company.objects.filter(
+
+    if qs is None:
+        qs = Company.objects
+
+    companies = qs.filter(
         jobs_page_url__isnull=False,
         jobs_scrape_ready=True,
     )
@@ -125,10 +127,13 @@ def scrape_and_create_jobs():
 
 
 @huey.db_periodic_task(crontab(hour="*/4", minute="45"))
-def scrape_job_detail_pages_and_update_its_attrs():
+def scrape_job_detail_pages(qs=None):
     log = ""
 
-    jobs = Job.objects.filter(
+    if qs is None:
+        qs = Job.objects
+
+    jobs = qs.filter(
         body__isnull=True,
         source_url__isnull=False,
         company__isnull=False,

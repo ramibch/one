@@ -3,12 +3,13 @@ from django.contrib import admin
 from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
 
 from .models import Company, CompanyLocation, Job, Person
+from .tasks import scrape_company_pages, scrape_job_detail_pages
 
 
 class CompanyLocationInline(admin.TabularInline):
     model = CompanyLocation
     extra = 1
-    autocomplete_fields = ("geo_info",)
+    autocomplete_fields = ("geoinfo",)
 
 
 @admin.register(Company)
@@ -17,18 +18,22 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ("__str__", "website", "jobs_page_html_is_empty")
     search_fields = ("name", "website")
     inlines = [CompanyLocationInline]
-    actions = ["reset_jobs_page_html"]
+    actions = ["reset_jobs_page_html", "scrape_pages"]
 
     @admin.action(description="🗑️ Reset html content of job list page")
     def reset_jobs_page_html(modeladmin, request, queryset):
         queryset.update(jobs_page_html=None)
 
+    @admin.action(description="🧐 Scrape company pages")
+    def scrape_pages(modeladmin, request, queryset):
+        scrape_company_pages(queryset)
+
 
 @admin.register(CompanyLocation)
 class CompanyLocationAdmin(admin.ModelAdmin):
-    list_display = ("company", "geo_info")
-    search_fields = ("geo_info__address", "company__name")
-    autocomplete_fields = ("company", "geo_info")
+    list_display = ("company", "geoinfo")
+    search_fields = ("geoinfo__address", "company__name")
+    autocomplete_fields = ("company", "geoinfo")
 
 
 @admin.register(Person)
@@ -43,3 +48,9 @@ class JobAdmin(admin.ModelAdmin):
     list_display = ("__str__", "recruiter", "source_url")
     list_filter = ("language",)
     readonly_fields = ("is_active", "expires_on")
+
+    actions = ["scrape_pages"]
+
+    @admin.action(description="🧐 Scrape job pages")
+    def scrape_pages(modeladmin, request, queryset):
+        scrape_job_detail_pages(queryset)
