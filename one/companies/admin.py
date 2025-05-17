@@ -17,8 +17,9 @@ class CompanyAdmin(admin.ModelAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = ("__str__", "website", "jobs_page_html_is_empty")
     search_fields = ("name", "website")
-    inlines = [CompanyLocationInline]
+    list_filter = ("jobs_scrape_ready",)
     actions = ["reset_jobs_page_html", "scrape_pages"]
+    inlines = [CompanyLocationInline]
 
     @admin.action(description="🗑️ Reset html content of job list page")
     def reset_jobs_page_html(modeladmin, request, queryset):

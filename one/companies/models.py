@@ -54,6 +54,7 @@ class Company(Model):
 
 
 class CompanyLocation(Model):
+    local_name = models.CharField(max_length=128, blank=True, null=True)
     company = ForeignKey(Company, on_delete=models.CASCADE)
     geoinfo = ForeignKey("geo.GoogleGeoInfo", on_delete=models.CASCADE)
 

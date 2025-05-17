@@ -61,6 +61,7 @@ dependencies = [
   "googlemaps>=4.10.0",
   "markdownify>=1.1.0",
   "langdetect>=1.0.9",
+  "selenium>=4.32.0",
 ]
 
 

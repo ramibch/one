@@ -46,7 +46,7 @@ def scrape_company_pages(qs=None):
     )
 
     for c in companies:
-        response = requests.get(c.jobs_page_url, headers=headers)
+        response = requests.get(c.jobs_page_url, headers=headers, timeout=10)
 
         if response.status_code != HTTPStatus.OK:
             log += f"{response.status_code} {c.jobs_page_url}\n"
@@ -73,6 +73,7 @@ def scrape_company_pages(qs=None):
             soup = page_soup.find(c.jobs_container_tag)
 
         if soup is None:
+            log += f"No bs4 object found for company {c.pk}: {c.jobs_page_url}\n"
             continue
 
         if c.job_link_class:
@@ -140,7 +141,7 @@ def scrape_job_detail_pages(qs=None):
     )
 
     for job in jobs:
-        response = requests.get(job.source_url, headers=headers)
+        response = requests.get(job.source_url, headers=headers, timeout=10)
 
         if response.status_code != HTTPStatus.OK:
             log += f"{response.status_code} {job.source_url}\n"
@@ -162,7 +163,7 @@ def scrape_job_detail_pages(qs=None):
             soup = page_soup.find(container_tag)
 
         if soup is None:
-            log += f"No bs4 object found for job {job.pk}: {job.source_url}"
+            log += f"No bs4 object found for job {job.pk}: {job.source_url}\n"
             continue
 
         job.body = markdownify.markdownify(soup.decode())
