@@ -33,7 +33,7 @@ def update_job_status():
     Job.objects.filter(pk__in=pk_list).update(is_active=False)
 
 
-@huey.db_periodic_task(crontab(hour="*/4", minute="30"))
+@huey.db_periodic_task(crontab(hour="*/8", minute="30"))
 def scrape_company_pages(qs=None):
     log = ""
 
@@ -130,7 +130,7 @@ def scrape_company_pages(qs=None):
         Bot.to_admin("Generating jobs\n" + log)
 
 
-@huey.db_periodic_task(crontab(hour="*/4", minute="45"))
+@huey.db_periodic_task(crontab(hour="*/8", minute="45"))
 def scrape_job_detail_pages(qs=None):
     log = ""
 
