@@ -176,6 +176,12 @@ def error_404(request, exception):
     return render(request, "error.html", {"page_title": _("Not found")}, status=404)
 
 
+def error_403(request, exception):
+    return render(
+        request, "error.html", {"page_title": _("Request blocked")}, status=403
+    )
+
+
 def error_500(request):
     return render(request, "error.html", {"page_title": _("Server Error")}, status=500)
 
