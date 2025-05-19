@@ -19,8 +19,10 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
+from django.utils.translation import gettext_lazy as _
 
 if settings.ENV == settings.PROD:
+    handler403 = "one.base.views.error_403"
     # Custom 404 error view
     handler404 = "one.base.views.error_404"
     # Custom 500 error view
@@ -42,7 +44,11 @@ urlpatterns = [
     path("emails/", include("one.emails.urls")),
     path("etsy/", include("one.etsy.urls")),
     path("pins/", include("one.pins.urls")),
-    path("companies/", include("one.companies.urls")),
+    path("faqs/", include("one.faqs.urls")),
+    path(_("plans/"), include("one.plans.urls")),
+    path(_("articles/"), include("one.articles.urls")),
+    path(_("products/"), include("one.products.urls")),
+    path(_("companies/"), include("one.companies.urls")),
     path("", include("one.tex.urls")),
     path("", include("one.base.urls")),
 ]

@@ -50,6 +50,7 @@ def scrape_company_pages(qs=None):
             response = requests.get(c.jobs_page_url, headers=headers, timeout=10)
         except Exception as e:
             log += f"⚠️ Request {response.status_code} {c.jobs_page_url}: {e}\n"
+            continue
 
         if response.status_code != HTTPStatus.OK:
             log += f"⚠️ Status {response.status_code} {c.jobs_page_url}\n"
@@ -59,7 +60,6 @@ def scrape_company_pages(qs=None):
             continue
 
         c.jobs_page_html = response.text
-
         c.save()
 
         page_soup = BeautifulSoup(response.content.decode("utf-8"), "html.parser")
@@ -97,7 +97,7 @@ def scrape_company_pages(qs=None):
             if not href:
                 continue
 
-            if href.startswith("mailto"):
+            if href.startswith(("mailto:", "tel:", "#")):
                 continue
 
             try:
@@ -148,6 +148,7 @@ def scrape_job_detail_pages(qs=None):
             response = requests.get(job.source_url, headers=headers, timeout=10)
         except Exception as e:
             log += f"⚠️ Request {response.status_code} {job.source_url}: {e}\n"
+            continue
 
         if response.status_code != HTTPStatus.OK:
             log += f"⚠️ Status code {response.status_code} {job.source_url}\n"

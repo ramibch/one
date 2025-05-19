@@ -1,9 +1,7 @@
-from ...menus.models import ShowTypes
-from .http import CustomHttpRequest
+from .models import ShowTypes
 
 
-def site_utilities(request: CustomHttpRequest) -> dict:
-    # show_types = ["user" if request.user.is_authenticated else "no_user", "always"]
+def menu_items(request) -> dict:
     show_types = [
         ShowTypes.USER if request.user.is_authenticated else ShowTypes.NO_USER,
         ShowTypes.ALWAYS,

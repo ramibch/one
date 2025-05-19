@@ -5,10 +5,12 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Q, Value
 from django.db.models.functions import Concat
+from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
+from one.base.utils.admin import get_edit_object_admin_url
 from one.base.utils.choices import Genders
 from one.base.utils.db import ChoiceArrayField
 
@@ -40,6 +42,10 @@ class Company(Model):
         default=list,
         blank=True,
     )
+
+    @cached_property
+    def admin_url(self):
+        return get_edit_object_admin_url(self)
 
     def __str__(self) -> str:
         return self.name
@@ -139,3 +145,10 @@ class Job(Model):
 
     def __str__(self) -> str:
         return self.title
+
+    def get_absolute_url(self):
+        return reverse("job_detail", kwargs={"pk": self.pk})
+
+    @cached_property
+    def url(self):
+        return self.get_absolute_url()

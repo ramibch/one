@@ -147,7 +147,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "one.base.utils.context_processors.site_utilities",
+                "one.menus.context_processors.menu_items",
             ],
             "debug": DEBUG,
         },

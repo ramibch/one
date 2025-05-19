@@ -3,21 +3,17 @@ from django.utils.translation import gettext_lazy as _
 
 from .sitemaps import get_sitemaps
 from .views import (
-    ArticleListView,
-    FAQListView,
+    ContactView,
+    HomeView,
     ImpressView,
-    PlanListView,
     PrivacyView,
-    ProductListView,
     RobotTxtView,
+    SearchResultsView,
+    SearchView,
+    SlugPageView,
     TermsView,
-    contact_view,
     favicon_view,
-    home_view,
-    hx_search_results_view,
-    search_view,
     sitemap_view,
-    slug_page_view,
 )
 
 urlpatterns = [
@@ -29,27 +25,16 @@ urlpatterns = [
     # robots.txt
     path("robots.txt", RobotTxtView.as_view()),
     # Search
-    path(_("search"), search_view, name="search"),
-    path("hx-search-results", hx_search_results_view, name="search-results"),
+    path(_("search"), SearchView.as_view(), name="search"),
+    path("hx-search-results", SearchResultsView.as_view(), name="search-results"),
     # Contact
-    path(_("contact"), contact_view, name="contact"),
-    path(_("contact") + "/", contact_view),
-    path("feedback", contact_view, name="contact-feedback"),
-    path("feedback/", contact_view),
-    # Article list
-    path(_("articles"), ArticleListView.as_view(), name="article_list"),
-    # Plan list
-    path(_("plans"), PlanListView.as_view(), name="plan_list"),
-    # Product list
-    path(_("products"), ProductListView.as_view(), name="plan_list"),
-    # FAQ list
-    path("faqs", FAQListView.as_view(), name="faq_list"),
+    path(_("contact"), ContactView.as_view(), name="contact"),
     # "static" pages
     path("~/p", PrivacyView.as_view(), name="privacy"),
     path("~/t", TermsView.as_view(), name="terms"),
     path("~/i", ImpressView.as_view(), name="impress"),
     # Article, Product, topic ...
-    path("<slug:slug>", slug_page_view, name="slug_page"),
+    path("<slug:slug>", SlugPageView.as_view(), name="slug_page"),
     # Home
-    path("", home_view, name="home"),
+    path("", HomeView.as_view(), name="home"),
 ]

@@ -1,9 +1,13 @@
 {% extends "base.html" %}
+{% load cache markdownify static %}
 
 {% block content %}
 
+<center>
+  <h1>{{ job.title }} </h1>
+</center>
 
-
+  {{ job.body|markdownify }}
 
 
 {% endblock content %}

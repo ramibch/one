@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django.forms.widgets import CheckboxSelectMultiple
+from django.urls import reverse
 from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator
 
@@ -32,3 +33,9 @@ class TranslatableModelAdmin(TranslationAdmin):
 
         field_names = translator.get_options_for_model(Model).get_field_names()
         translate_modeltranslation_objects(queryset, field_names)
+
+
+def get_edit_object_admin_url(obj) -> str:
+    return reverse(
+        f"admin:{obj._meta.app_label}_{obj._meta.model_name}_change", args=(obj.pk,)
+    )
