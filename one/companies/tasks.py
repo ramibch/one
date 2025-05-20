@@ -49,7 +49,7 @@ def scrape_company_pages(qs=None):
         try:
             response = requests.get(c.jobs_page_url, headers=headers, timeout=10)
         except Exception as e:
-            log += f"⚠️ Request {response.status_code} {c.jobs_page_url}: {e}\n"
+            log += f"⚠️ Request GET {c.jobs_page_url}: {e}\n"
             continue
 
         if response.status_code != HTTPStatus.OK:
@@ -147,7 +147,7 @@ def scrape_job_detail_pages(qs=None):
         try:
             response = requests.get(job.source_url, headers=headers, timeout=10)
         except Exception as e:
-            log += f"⚠️ Request {response.status_code} {job.source_url}: {e}\n"
+            log += f"⚠️ Request GET {job.source_url}: {e}\n"
             continue
 
         if response.status_code != HTTPStatus.OK:
