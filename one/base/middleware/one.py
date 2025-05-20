@@ -1,6 +1,4 @@
 from django.conf import settings
-from django.contrib.sessions.backends.db import SessionStore
-from django.contrib.sessions.models import Session
 from django.core.management import call_command
 from django.http import HttpRequest, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -29,9 +27,6 @@ class OneMiddleware:
         # Assign client attribute to request object
         request.client = self.get_client(request)
 
-        # Assign session
-        request.db_session = self.get_session(request)
-
         # Valid Project api secret
         # Use for API POST calls without user authentication
         request.has_valid_one_secret_key = self.valid_secret_key(request)
@@ -52,18 +47,6 @@ class OneMiddleware:
 
     def valid_secret_key(self, request):
         return request.headers.get("x-one-secret-key") == settings.ONE_SECRET_KEY
-
-    def get_session(self, request):
-        try:
-            session_key = request.session.session_key
-            db_session = Session.objects.get(pk=session_key)
-        except (KeyError, Session.DoesNotExist):
-            session_store = SessionStore()
-            session_store.create()
-            session_key = session_store.session_key
-            request.session["sessionid"] = session_key
-            db_session = Session.objects.get(session_key=session_key)
-        return db_session
 
     def get_redirect_or_none(self, request):
         return PathRedirect.objects.filter(

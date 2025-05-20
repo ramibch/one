@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
+from one.base.utils.session import get_db_session_object
+
 from .models import DgtQuestion, DgtTest, SessionDgtQuestion, SessionDgtTest
 
 
@@ -17,9 +19,10 @@ def question_detail(request, id):
 @csrf_exempt
 def check_question(request, id):
     question = DgtQuestion.objects.get(id=id)
+    db_session = get_db_session_object(request)
     SessionDgtQuestion.objects.create(
         question=question,
-        session=request.db_session,
+        session=db_session,
         selected_option=request.POST.get("selected_option", ""),
         test=question.test,
     )
@@ -31,11 +34,11 @@ def check_question(request, id):
     next_or_done = "next" if question.has_next else "done"
     if not question.has_next:
         session_test = SessionDgtTest.objects.create(
-            session=request.db_session, test=question.test
+            session=db_session, test=question.test
         )
         session_questions = SessionDgtQuestion.objects.filter(
             test=question.test,
-            session=request.db_session,
+            session=db_session,
             session_test__isnull=True,
         )
         session_questions.update(session_test=session_test)
