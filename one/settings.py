@@ -472,9 +472,9 @@ Project settings
 ################
 """
 
+MAIN_WEBSITE_URL = "https://ramib.ch"
+
 # https
-
-
 if HTTPS:
     # https in production
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -487,7 +487,6 @@ if HTTPS:
 
 
 # One secret key
-
 ONE_SECRET_KEY = env("ONE_SECRET_KEY")
 
 # cache clear

@@ -46,14 +46,15 @@ def scrape_company_pages(qs=None):
     )
 
     for c in companies:
+        company_details = f"{c.name}\n{c.full_admin_url}\n\n"
         try:
             response = requests.get(c.jobs_page_url, headers=headers, timeout=10)
         except Exception as e:
-            log += f"⚠️ Request GET {c.jobs_page_url}: {e}\n"
+            log += f"⚠️ Request GET Error: {e}\n{company_details}"
             continue
 
         if response.status_code != HTTPStatus.OK:
-            log += f"⚠️ Status {response.status_code} {c.jobs_page_url}\n"
+            log += f"⚠️ Status {response.status_code} \n{company_details}"
             continue
 
         if c.jobs_page_html == response.text:
@@ -76,7 +77,7 @@ def scrape_company_pages(qs=None):
             soup = page_soup.find(c.jobs_container_tag)
 
         if soup is None:
-            log += f"No bs4 object found for company {c.pk}: {c.jobs_page_url}\n"
+            log += f"No bs4 object found for company\n{company_details}"
             continue
 
         if c.job_link_class:
@@ -110,7 +111,7 @@ def scrape_company_pages(qs=None):
                 try:
                     validate_url(url)
                 except ValidationError:
-                    log += f"Error with {url}\n"
+                    log += f"Error with {url}\n{company_details}"
                     continue
 
             if Job.objects.filter(source_url=url).exists():
@@ -144,14 +145,18 @@ def scrape_job_detail_pages(qs=None):
     )
 
     for job in jobs:
+        job_details = f"{job.pk} {job.title}\n{job.full_admin_url}\n"
+        if job.company:
+            job_details += f"{job.company.name}\n{job.company.full_admin_url}\n\n"
+
         try:
             response = requests.get(job.source_url, headers=headers, timeout=10)
         except Exception as e:
-            log += f"⚠️ Request GET {job.source_url}: {e}\n"
+            log += f"⚠️ Request GET error: {e}\n{job_details}"
             continue
 
         if response.status_code != HTTPStatus.OK:
-            log += f"⚠️ Status code {response.status_code} {job.source_url}\n"
+            log += f"⚠️ Status code {response.status_code}\n{job_details}"
             continue
 
         page_soup = BeautifulSoup(response.content.decode("utf-8"), "html.parser")
@@ -170,7 +175,7 @@ def scrape_job_detail_pages(qs=None):
             soup = page_soup.find(container_tag)
 
         if soup is None:
-            log += f"No bs4 object found for job {job.pk}: {job.source_url}\n"
+            log += f"No bs4 object found for job\n{job_details}"
             continue
 
         job.body = markdownify.markdownify(soup.decode())

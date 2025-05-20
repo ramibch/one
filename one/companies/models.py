@@ -43,10 +43,6 @@ class Company(Model):
         blank=True,
     )
 
-    @cached_property
-    def admin_url(self):
-        return get_edit_object_admin_url(self)
-
     def __str__(self) -> str:
         return self.name
 
@@ -57,6 +53,21 @@ class Company(Model):
     @cached_property
     def jobs_page_html_is_empty(self):
         return self.jobs_page_html is None
+
+    def get_absolute_url(self):
+        return reverse("company_detail", kwargs={"pk": self.pk})
+
+    @cached_property
+    def url(self):
+        return self.get_absolute_url()
+
+    @cached_property
+    def admin_url(self):
+        return get_edit_object_admin_url(self)
+
+    @cached_property
+    def full_admin_url(self):
+        return settings.MAIN_WEBSITE_URL + self.admin_url
 
 
 class CompanyLocation(Model):
@@ -152,3 +163,11 @@ class Job(Model):
     @cached_property
     def url(self):
         return self.get_absolute_url()
+
+    @cached_property
+    def admin_url(self):
+        return get_edit_object_admin_url(self)
+
+    @cached_property
+    def full_admin_url(self):
+        return settings.MAIN_WEBSITE_URL + self.admin_url
