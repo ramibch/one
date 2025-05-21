@@ -1,7 +1,7 @@
 import operator
 from functools import reduce
 
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geoip2 import GeoIP2
@@ -12,14 +12,16 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from ..base.utils.telegram import Bot
+from one.db import OneModel
+
+from ..bot import Bot
 from ..geo.models import GeoInfo
 from ..sites.models import Site
 
 User = get_user_model()
 
 
-class Path(Model):
+class Path(OneModel):
     name = models.CharField(max_length=512, unique=True, db_index=True)
     is_spam = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -28,7 +30,7 @@ class Path(Model):
         return self.name
 
 
-class Client(Model):
+class Client(OneModel):
     DUMMY_IP_ADDRESS = "10.10.10.10"
     BOTS = [
         "bot",
@@ -80,7 +82,7 @@ class Client(Model):
         db_persist=True,
     )
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         indexes = [
             models.Index(
                 name="client_geoinfo_fkey",
@@ -134,7 +136,7 @@ class Client(Model):
         self.save()
 
 
-class Request(Model):
+class Request(OneModel):
     """
     Model to register request data
     Check this repo for inspiration:
@@ -157,7 +159,7 @@ class Request(Model):
         return f"[{time}] {self.method} {self.path} {self.status_code}"
 
 
-class PathRedirect(Model):
+class PathRedirect(OneModel):
     sites = models.ManyToManyField("sites.Site")
     from_path = ForeignKey(Path, on_delete=models.CASCADE, related_name="+")
     to_path = ForeignKey(Path, on_delete=models.CASCADE, related_name="+")

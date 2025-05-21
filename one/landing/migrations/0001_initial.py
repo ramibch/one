@@ -3,7 +3,7 @@
 import auto_prefetch
 import django.db.models.deletion
 import django.db.models.manager
-import one.base.utils.db
+import one.db
 from django.db import migrations, models
 
 
@@ -266,7 +266,7 @@ class Migration(migrations.Migration):
                 ("title_pt", models.CharField(max_length=128, null=True)),
                 (
                     "categories",
-                    one.base.utils.db.ChoiceArrayField(
+                    one.db.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 ("plans", "Plans"),

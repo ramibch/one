@@ -45,7 +45,7 @@ class Bot:
         Bot.to_chat(chat_id=settings.TELEGRAM_ADMIN_CHAT_ID, text=text)
 
     @staticmethod
-    def to_group(cls, group_id, text, file_url=None):
+    def to_group(group_id, text, file_url=None):
         """Send text and optionally an image to a group"""
         chat_id = "@" + group_id if not group_id.startswith("@") else group_id
 

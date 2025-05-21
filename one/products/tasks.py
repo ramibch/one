@@ -2,7 +2,7 @@ from django.core.files import File
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from ..base.utils.telegram import Bot
+from ..bot import Bot
 from .models import EtsyListing, Product, ProductFile, ProductImage
 
 LARGE_LOG = False

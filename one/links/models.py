@@ -6,8 +6,7 @@ from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from one.base.utils.abstracts import TranslatableModel
-from one.base.utils.db import ChoiceArrayField
+from one.db import ChoiceArrayField, TranslatableModel
 
 PATH_NAMES = (
     # Only url paths without path arguments

@@ -5,7 +5,7 @@ import django.contrib.postgres.fields
 import django.core.validators
 import django.db.models.deletion
 import django.db.models.manager
-import one.base.utils.db
+import one.db
 import one.etsy.models
 import storages.backends.s3
 from django.db import migrations, models
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "scopes",
-                    one.base.utils.db.ChoiceArrayField(
+                    one.db.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 (
@@ -491,7 +491,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "scopes",
-                    one.base.utils.db.ChoiceArrayField(
+                    one.db.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 (

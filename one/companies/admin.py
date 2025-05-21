@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+from one.admin import FORMFIELD_OVERRIDES_DICT
 
 from .models import Company, CompanyLocation, Job, Person
 from .tasks import scrape_company_pages, scrape_job_detail_pages

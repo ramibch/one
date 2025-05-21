@@ -6,9 +6,9 @@ from django.utils.text import slugify
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from one.base.utils.md import check_md_file_conventions
+from one.md import check_md_file_conventions
 
-from ..base.utils.telegram import Bot
+from ..bot import Bot
 from ..sites.models import Site
 from .models import Article, ArticleFile, MainTopic
 

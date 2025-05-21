@@ -1,14 +1,14 @@
 from urllib.parse import urlparse
 
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from one.base.utils.abstracts import TranslatableModel
-from one.base.utils.telegram import Bot
+from one.bot import Bot
+from one.db import OneModel, TranslatableModel
 
 
 class ShowTypes(models.TextChoices):
@@ -18,7 +18,7 @@ class ShowTypes(models.TextChoices):
     NEVER = "never", "🫣 " + _("Never show")
 
 
-class NavbarLink(Model):
+class NavbarLink(OneModel):
     sites = models.ManyToManyField("sites.Site")
     link = ForeignKey("links.Link", on_delete=models.CASCADE)
     emoji = models.CharField(max_length=8, null=True, blank=True)
@@ -37,7 +37,7 @@ class NavbarLink(Model):
     )
     new_tab = models.BooleanField(default=False)
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         ordering = ("order",)
 
     def __str__(self):
@@ -83,7 +83,7 @@ class FooterItem(TranslatableModel):
 
     title = models.CharField(max_length=64)
 
-    class Meta(Model.Meta):
+    class Meta(TranslatableModel.Meta):
         ordering = ("order",)
 
     def __str__(self) -> str:
@@ -94,7 +94,7 @@ class FooterItem(TranslatableModel):
         return f"{self.emoji} {self.title}" if self.emoji else self.title
 
 
-class FooterLink(Model):
+class FooterLink(OneModel):
     sites = models.ManyToManyField("sites.Site")
     link = ForeignKey("links.Link", on_delete=models.CASCADE)
     footer_item = ForeignKey(
@@ -117,7 +117,7 @@ class FooterLink(Model):
     )
     new_tab = models.BooleanField(default=False)
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         ordering = ("order",)
 
     def __str__(self):
@@ -128,7 +128,7 @@ class FooterLink(Model):
         return self.link.title
 
 
-class SocialMediaLink(Model):
+class SocialMediaLink(OneModel):
     sites = models.ManyToManyField("sites.Site")
     url = models.URLField(max_length=256)
     new_tab = models.BooleanField(default=True)
@@ -145,7 +145,7 @@ class SocialMediaLink(Model):
         max_length=16,
     )
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         ordering = ("order",)
 
     def __str__(self):

@@ -3,7 +3,7 @@ from datetime import datetime
 from io import BytesIO
 
 import holidays
-from auto_prefetch import Model, OneToOneField
+from auto_prefetch import OneToOneField
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
@@ -13,8 +13,8 @@ from django.utils.functional import cached_property
 from pdf2image import convert_from_bytes
 from PIL import Image
 
-from one.base.utils.abstracts import TranslatableModel
-from one.base.utils.telegram import Bot
+from one.bot import Bot
+from one.db import OneModel, TranslatableModel
 from one.quiz.models import Lection
 
 from .compile import render_pdf
@@ -165,7 +165,7 @@ class YearlyHolidayCalender(TranslatableModel):
         return new_img
 
 
-class EnglishQuizLection(Model):
+class EnglishQuizLection(OneModel):
     lection = OneToOneField(Lection, on_delete=models.CASCADE)
     pdf = models.FileField(null=True, blank=True, upload_to="english-quiz-lections/")
     print = models.FileField(null=True, blank=True, upload_to="english-quiz-lections/")
@@ -215,8 +215,3 @@ class EnglishQuizLection(Model):
         self.image = ContentFile(img_io.getvalue(), name=f"{filename}.png")
 
         self.save()
-
-
-class TexProfiledCv(Model):
-    class Meta(Model.Meta):
-        abstract = True  # TODO: remove this

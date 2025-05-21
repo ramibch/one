@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
-from one.base.utils.session import get_db_session_object
+from one.db import get_db_session_object
 
 from .models import DgtQuestion, DgtTest, SessionDgtQuestion, SessionDgtTest
 

@@ -1,5 +1,5 @@
-from auto_prefetch import Model
+from one.db import OneModel
 
 
-class ExampleModel(Model):
+class ExampleModel(OneModel):
     pass

@@ -1,4 +1,4 @@
-from auto_prefetch import ForeignKey, Model, OneToOneField
+from auto_prefetch import ForeignKey, OneToOneField
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.core.files.storage import storages
@@ -16,8 +16,8 @@ from etsyv3.models.listing_request import (
     UpdateListingRequest,
 )
 
-from one.base.utils.db import ChoiceArrayField, update_model_from_dict
-from one.base.utils.telegram import Bot
+from one.bot import Bot
+from one.db import ChoiceArrayField, OneModel, update_model_from_dict
 
 from .enums import ListingType, Scopes, TaxonomyID, WhenMade, WhoMade
 from .etsy_api import ExtendedEtsyAPI
@@ -57,7 +57,7 @@ def auth_refresh_save(access_token, refresh_token, expires_at):
         Bot.to_admin(f"Etsy: Failed to save tokens, user_id = {user_id}")
 
 
-class App(Model):
+class App(OneModel):
     name = models.CharField(max_length=32)
     keystring = models.CharField(
         max_length=256,
@@ -88,7 +88,7 @@ class App(Model):
         return self.get_absolute_url()
 
 
-class EtsyAuth(Model):
+class EtsyAuth(OneModel):
     app = ForeignKey(App, on_delete=models.CASCADE, null=True)
     user = ForeignKey(User, on_delete=models.CASCADE, null=True)
     etsy_user_id = models.PositiveBigIntegerField(null=True)
@@ -140,7 +140,7 @@ class EtsyAuth(Model):
         return api.get_shop(shop_id=self.shop_id)
 
 
-class Shop(Model):
+class Shop(OneModel):
     etsy_auth = OneToOneField(EtsyAuth, on_delete=models.CASCADE)
     shop_id = models.PositiveBigIntegerField(primary_key=True)
     shop_name = models.CharField(max_length=128)
@@ -205,7 +205,7 @@ class Shop(Model):
         return self.shop_name
 
 
-class Listing(Model):
+class Listing(OneModel):
     etsy_auth = ForeignKey(EtsyAuth, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveSmallIntegerField(
         default=999,
@@ -432,7 +432,7 @@ def get_file_path(obj, filename: str):
     return f"etsy/users/{obj.listing.id}/{obj._meta.model_name}/{filename}"
 
 
-class ListingFile(Model):
+class ListingFile(OneModel):
     listing = ForeignKey(Listing, on_delete=models.CASCADE, related_name="files")
     file = models.FileField(upload_to=get_file_path, storage=storages["private"])
     rank = models.PositiveSmallIntegerField(default=1)
@@ -463,7 +463,7 @@ class ListingFile(Model):
         return self.file.name.split("/")[-1]
 
 
-class ListingImage(Model):
+class ListingImage(OneModel):
     listing = ForeignKey(Listing, on_delete=models.CASCADE, related_name="images")
     file = models.ImageField(upload_to=get_file_path, storage=storages["private"])
     rank = models.PositiveSmallIntegerField(default=1)

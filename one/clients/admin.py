@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+from one.admin import FORMFIELD_OVERRIDES_DICT
 
 from .models import Client, Path, PathRedirect, Request
 from .tasks import block_spammy_clients

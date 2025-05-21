@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from auto_prefetch import ForeignKey, Manager, Model
+from auto_prefetch import ForeignKey, Manager
 from django.conf import settings
 from django.db import models
 from django.db.models import Q, Value
@@ -10,9 +10,7 @@ from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
-from one.base.utils.admin import get_edit_object_admin_url
-from one.base.utils.choices import Genders
-from one.base.utils.db import ChoiceArrayField
+from one.db import ChoiceArrayField, Genders, OneModel
 
 
 class JobApplicationMethods(models.TextChoices):
@@ -21,7 +19,7 @@ class JobApplicationMethods(models.TextChoices):
     EXTERNAL = "external", _("External service")
 
 
-class Company(Model):
+class Company(OneModel):
     name = models.CharField(max_length=128, unique=True)
     website = models.URLField(max_length=128, null=True)
     remarks = models.TextField(blank=True, null=True)
@@ -46,7 +44,7 @@ class Company(Model):
     def __str__(self) -> str:
         return self.name
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         verbose_name = _("company")
         verbose_name_plural = _("companies")
 
@@ -61,16 +59,8 @@ class Company(Model):
     def url(self):
         return self.get_absolute_url()
 
-    @cached_property
-    def admin_url(self):
-        return get_edit_object_admin_url(self)
 
-    @cached_property
-    def full_admin_url(self):
-        return settings.MAIN_WEBSITE_URL + self.admin_url
-
-
-class CompanyLocation(Model):
+class CompanyLocation(OneModel):
     local_name = models.CharField(max_length=128, blank=True, null=True)
     company = ForeignKey(Company, on_delete=models.CASCADE)
     geoinfo = ForeignKey("geo.GoogleGeoInfo", on_delete=models.CASCADE)
@@ -79,7 +69,7 @@ class CompanyLocation(Model):
         return self.geoinfo.address
 
 
-class Person(Model):
+class Person(OneModel):
     is_hr = models.BooleanField(default=False)
     company = ForeignKey(Company, on_delete=models.CASCADE)
 
@@ -104,7 +94,7 @@ class JobManager(Manager):
         return super().get_queryset().filter(is_active=True)
 
 
-class Job(Model):
+class Job(OneModel):
     language = models.CharField(max_length=8, choices=settings.LANGUAGES, default="de")
     title = models.CharField(max_length=128)
     body = models.TextField(blank=True, null=True)
@@ -134,7 +124,7 @@ class Job(Model):
     objects = JobManager()
     all_objects = Manager()
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         indexes = [
             models.Index(
                 name="job_company_fkey_idx",
@@ -163,11 +153,3 @@ class Job(Model):
     @cached_property
     def url(self):
         return self.get_absolute_url()
-
-    @cached_property
-    def admin_url(self):
-        return get_edit_object_admin_url(self)
-
-    @cached_property
-    def full_admin_url(self):
-        return settings.MAIN_WEBSITE_URL + self.admin_url

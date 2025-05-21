@@ -3,7 +3,7 @@ from pathlib import Path
 from django.conf import settings
 from django.utils.functional import cached_property
 
-from .telegram import Bot
+from one.bot import Bot
 
 
 class TmpFile:

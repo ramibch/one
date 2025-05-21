@@ -7,8 +7,8 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
 from one.articles.models import Article
+from one.db import TranslatableModel
 
-from ..base.utils.abstracts import TranslatableModel
 from ..faqs.models import FAQ
 
 

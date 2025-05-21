@@ -1,6 +1,6 @@
 from django.db import models
 
-from ..base.utils.abstracts import TranslatableModel
+from one.db import TranslatableModel
 
 
 class FAQCategory(TranslatableModel):

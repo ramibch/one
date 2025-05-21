@@ -1,4 +1,4 @@
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -6,8 +6,7 @@ from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
-from one.base.utils.db import ChoiceArrayField
+from one.db import BaseSubmoduleFolder, ChoiceArrayField, OneModel, TranslatableModel
 
 User = get_user_model()
 
@@ -63,7 +62,7 @@ def get_article_file_path(obj, filename: str):
     return f"articles/{folder}/{subfolder}/{filename}"
 
 
-class ArticleFile(Model):
+class ArticleFile(OneModel):
     """Article file model"""
 
     article = ForeignKey(Article, on_delete=models.CASCADE)
@@ -74,7 +73,7 @@ class ArticleFile(Model):
         return self.name
 
 
-class Comment(Model):
+class Comment(OneModel):
     article = ForeignKey(Article, on_delete=models.CASCADE)
     author = ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(_("Comment"), max_length=512)

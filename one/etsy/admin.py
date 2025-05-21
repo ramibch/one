@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
-from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+from one.admin import FORMFIELD_OVERRIDES_DICT
 
 from .models import App, EtsyAuth, Listing, ListingFile, ListingImage, Shop
 

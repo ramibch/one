@@ -14,7 +14,7 @@ from rest_framework.generics import (
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 
-from one.base.utils.telegram import Bot
+from one.bot import Bot
 
 from ..models import App, EtsyAuth, Listing, ListingFile, ListingImage, Shop
 from .serializers import (

@@ -1,7 +1,9 @@
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from one.db import OneModel
 
 from .animations import (
     AnimationDelay,
@@ -14,7 +16,7 @@ from .animations import (
 User = get_user_model()
 
 
-class SearchTerm(Model):
+class SearchTerm(OneModel):
     query = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     client = ForeignKey("clients.Client", null=True, on_delete=models.SET_NULL)
@@ -24,7 +26,7 @@ class SearchTerm(Model):
         return self.query
 
 
-class ContactMessage(Model):
+class ContactMessage(OneModel):
     client = ForeignKey(
         "clients.Client",
         on_delete=models.SET_NULL,
@@ -46,7 +48,7 @@ class ContactMessage(Model):
         return f"{self.name}  <{self.email}>"
 
 
-class Animation(Model):
+class Animation(OneModel):
     animation_type = models.CharField(
         max_length=16,
         null=True,

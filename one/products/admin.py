@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from one.base.utils.admin import TranslatableModelAdmin
+from one.admin import TranslatableModelAdmin
 
 from .models import EtsyListing, EtsyShop, Product, ProductFile, ProductImage
 from .tasks import task_generate_listings_from_products, task_upload_listings

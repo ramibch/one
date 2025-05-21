@@ -1,4 +1,4 @@
-from auto_prefetch import ForeignKey, Manager, Model, OneToOneField
+from auto_prefetch import ForeignKey, Manager, OneToOneField
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.storage import storages
@@ -17,9 +17,8 @@ from etsyv3.models.listing_request import (
     CreateListingTranslationRequest,
 )
 
-from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
-from one.base.utils.db import ChoiceArrayField
-from one.base.utils.telegram import Bot
+from one.bot import Bot
+from one.db import BaseSubmoduleFolder, ChoiceArrayField, OneModel, TranslatableModel
 from one.etsy.enums import ListingType, TaxonomyID, WhenMade, WhoMade
 
 User = get_user_model()
@@ -93,7 +92,7 @@ def get_file_path(obj, filename: str):
     return f"products/{obj._meta.model_name}/{filename}"
 
 
-class ProductFile(Model):
+class ProductFile(OneModel):
     """Product file model"""
 
     product = ForeignKey(Product, on_delete=models.CASCADE)
@@ -104,7 +103,7 @@ class ProductFile(Model):
         return self.name
 
 
-class ProductImage(Model):
+class ProductImage(OneModel):
     product = ForeignKey(Product, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     file = models.FileField(upload_to=get_file_path)
@@ -165,11 +164,11 @@ class EtsyShop(TranslatableModel):
 
 
 # TODO:
-# class Tag(Model):
+# class Tag(OneModel):
 #     name = models.CharField()
 
 
-class EtsyListing(Model):
+class EtsyListing(OneModel):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     include_generic_description = models.BooleanField(default=True)

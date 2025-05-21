@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import IntegrityError
 from modeltranslation.admin import TranslationStackedInline
 
-from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT, TranslatableModelAdmin
+from one.admin import FORMFIELD_OVERRIDES_DICT, TranslatableModelAdmin
 
 from .factories import (
     ArticlesSectionFactory,

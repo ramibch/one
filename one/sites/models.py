@@ -1,6 +1,6 @@
 import string
 
-from auto_prefetch import ForeignKey, Manager, Model
+from auto_prefetch import ForeignKey, Manager
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -12,8 +12,7 @@ from django.utils.functional import cached_property
 from django.utils.timezone import timedelta
 from django.utils.translation import gettext_lazy as _
 
-from one.base.utils.abstracts import TranslatableModel
-from one.base.utils.db import ChoiceArrayField
+from one.db import ChoiceArrayField, TranslatableModel
 from one.menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
 SITE_CACHE = {}
@@ -213,7 +212,7 @@ class Site(TranslatableModel):
     def get_social_media_links(self, show_types: list) -> QuerySet[SocialMediaLink]:
         return self.socialmedialink_set.filter(show_type__in=show_types).distinct()
 
-    class Meta(Model.Meta):
+    class Meta(TranslatableModel.Meta):
         verbose_name = _("site")
         verbose_name_plural = _("sites")
 

@@ -1,7 +1,7 @@
 import deepl
 from django.conf import settings
 
-from .telegram import Bot
+from one.bot import Bot
 
 
 def rename_deepl_source(lang: str) -> str:

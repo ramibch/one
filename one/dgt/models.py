@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
 
-from one.base.utils.telegram import Bot
+from one.bot import Bot
 
 
 class DgtTest(models.Model):
