@@ -19,7 +19,7 @@ class ArticleSitemap(Sitemap):
         )
 
     def lastmod(self, obj: Article):
-        return obj.updated_on
+        return obj.updated_at
 
 
 class ToolSitemap(Sitemap):

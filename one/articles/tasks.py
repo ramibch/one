@@ -6,13 +6,21 @@ from django.utils.text import slugify
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from one.md import check_md_file_conventions
-
 from ..bot import Bot
 from ..sites.models import Site
 from .models import Article, ArticleFile, MainTopic
 
 LARGE_LOG = False
+
+
+def check_md_file_conventions(md_path):
+    return all(
+        (
+            md_path.name[:2] in settings.LANGUAGE_CODES,
+            len(md_path.read_text().split("\n")) > 2,
+            md_path.read_text().strip().startswith("#"),
+        )
+    )
 
 
 @huey.db_periodic_task(crontab(hour="1", minute="10"))

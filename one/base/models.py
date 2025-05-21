@@ -18,7 +18,7 @@ User = get_user_model()
 
 class SearchTerm(OneModel):
     query = models.TextField()
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     client = ForeignKey("clients.Client", null=True, on_delete=models.SET_NULL)
     site = ForeignKey("sites.Site", null=True, on_delete=models.SET_NULL)
 
@@ -42,7 +42,7 @@ class ContactMessage(OneModel):
     name = models.CharField(_("Your name"), max_length=128)
     email = models.EmailField(_("Email address"), max_length=128)
     message = models.TextField(_("Message"), max_length=1000)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return f"{self.name}  <{self.email}>"

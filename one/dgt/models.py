@@ -103,7 +103,7 @@ class DgtQuestion(auto_prefetch.Model):
 class SessionDgtTest(auto_prefetch.Model):
     session = auto_prefetch.ForeignKey(Session, on_delete=models.CASCADE)
     test = auto_prefetch.ForeignKey(DgtTest, on_delete=models.CASCADE, null=True)
-    created_on = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.test} session={self.session}"
@@ -170,7 +170,7 @@ class SessionDgtQuestion(auto_prefetch.Model):
     )
     selected_option = models.CharField(max_length=1)
     is_correct = models.BooleanField(default=False)
-    created_on = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now)
 
     @cached_property
     def correct_emoji(self):

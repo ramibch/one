@@ -35,8 +35,6 @@ class Article(TranslatableModel):
     folder_name = models.CharField(max_length=128, editable=False)
     subfolder_name = models.CharField(max_length=256, editable=False)
     body = models.TextField(editable=False)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
     allow_comments = models.BooleanField(default=True)
     is_premium = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)

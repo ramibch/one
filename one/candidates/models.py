@@ -260,10 +260,10 @@ class CandidateCv(OneModel):
     image_time = models.FloatField(default=0)
     render_time = models.FloatField(default=0)
     auto_created = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta(OneModel.Meta):
-        ordering = ["-created_on"]
+        ordering = ["-created_at"]
 
     def __str__(self) -> str:
         return f"CV ({self.profile.fullname} {self.tex})"

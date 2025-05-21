@@ -31,8 +31,6 @@ class YearlyHolidayCalender(TranslatableModel):
     image = models.ImageField(null=True, blank=True, upload_to="calendars/")
     image1 = models.ImageField(null=True, blank=True, upload_to="calendars/")
     image2 = models.ImageField(null=True, blank=True, upload_to="calendars/")
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
@@ -170,8 +168,6 @@ class EnglishQuizLection(OneModel):
     pdf = models.FileField(null=True, blank=True, upload_to="english-quiz-lections/")
     print = models.FileField(null=True, blank=True, upload_to="english-quiz-lections/")
     image = models.ImageField(null=True, blank=True, upload_to="english-quiz-lections/")
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return self.lection.get_absolute_url()

@@ -23,7 +23,7 @@ class ProductPinFeed(Feed):
     def items(self):
         past = timezone.now() - timezone.timedelta(days=90)
         return Product.objects.filter(
-            created_on__gte=past,
+            created_at__gte=past,
             productimage__isnull=False,
         )
 
@@ -34,7 +34,7 @@ class ProductPinFeed(Feed):
         return item.description
 
     def item_lastupdated(self, item: Product):
-        return item.updated_on
+        return item.updated_at
 
     def item_enclosure_url(self, item: Product):
         return item.productimage_set.first().file.url
@@ -57,7 +57,7 @@ class EtsyListingPinFeed(Feed):
     def items(self):
         past = timezone.now() - timezone.timedelta(days=90)
         return EtsyListing.objects.filter(
-            created_on__gte=past,
+            created_at__gte=past,
             product__productimage__isnull=False,
         )
 
@@ -68,7 +68,7 @@ class EtsyListingPinFeed(Feed):
         return item.get_description()
 
     def item_lastupdated(self, item: EtsyListing):
-        return item.updated_on
+        return item.updated_at
 
     def item_enclosure_url(self, item: EtsyListing):
         return item.product.productimage_set.first().file.url
@@ -123,7 +123,7 @@ class YearlyHolidayCalenderPinFeed(Feed):
     def items(self):
         past = timezone.now() - timezone.timedelta(days=90)
         return YearlyHolidayCalender.objects.exclude(pdf="", image="").filter(
-            created_on__gte=past, lang=self.lang
+            created_at__gte=past, lang=self.lang
         )
 
     def item_title(self, item: YearlyHolidayCalender):
@@ -135,7 +135,7 @@ class YearlyHolidayCalenderPinFeed(Feed):
         )
 
     def item_lastupdated(self, item: YearlyHolidayCalender):
-        return item.updated_on
+        return item.updated_at
 
     def item_enclosure_url(self, item: YearlyHolidayCalender):
         return item.image.url
@@ -153,7 +153,7 @@ class EnglishQuizLectionFeed(Feed):
     def items(self):
         past = timezone.now() - timezone.timedelta(days=90)
         return EnglishQuizLection.objects.exclude(pdf="", image="").filter(
-            created_on__gte=past
+            created_at__gte=past
         )
 
     def item_title(self, item: EnglishQuizLection):
@@ -165,7 +165,7 @@ class EnglishQuizLectionFeed(Feed):
         return f"{title}\n\n{question_text}"
 
     def item_lastupdated(self, item: EnglishQuizLection):
-        return item.created_on
+        return item.created_at
 
     def item_enclosure_url(self, item: EnglishQuizLection):
         return item.image.url

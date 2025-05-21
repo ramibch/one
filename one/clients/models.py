@@ -24,7 +24,7 @@ User = get_user_model()
 class Path(OneModel):
     name = models.CharField(max_length=512, unique=True, db_index=True)
     is_spam = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

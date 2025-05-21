@@ -64,8 +64,6 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
 
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
     is_draft = models.BooleanField(default=True)
 
     objects = ProductManager()
@@ -142,8 +140,6 @@ class EtsyShop(TranslatableModel):
         validators=[MinValueValidator(50), MaxValueValidator(300)],
     )
     etsy_payload = models.JSONField(null=True, blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
     @cached_property
     def api_client(self):
@@ -169,8 +165,6 @@ class EtsyShop(TranslatableModel):
 
 
 class EtsyListing(OneModel):
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
     include_generic_description = models.BooleanField(default=True)
 
     shop = ForeignKey(EtsyShop, on_delete=models.CASCADE)

@@ -116,8 +116,6 @@ class Job(OneModel):
     )
     company_locations = models.ManyToManyField(CompanyLocation, blank=True)
     duration = models.DurationField(default=timedelta(days=60))
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
     expires_on = models.DateTimeField(editable=False)
     is_active = models.BooleanField(default=True, editable=False)
 
@@ -140,7 +138,7 @@ class Job(OneModel):
 
     def save(self, *args, **kwargs):
         if not self.expires_on:
-            base_time = self.created_on or now()
+            base_time = self.created_at or now()
             self.expires_on = base_time + self.duration
         super().save(*args, **kwargs)
 

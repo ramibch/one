@@ -27,9 +27,9 @@ class SessionAdmin(admin.ModelAdmin):
 
 @admin.register(SearchTerm)
 class SearchTermAdmin(admin.ModelAdmin):
-    list_display = ("query", "site", "client", "created_on")
-    readonly_fields = ("query", "site", "client", "created_on")
-    list_filter = ("site", "created_on")
+    list_display = ("query", "site", "client", "created_at")
+    readonly_fields = ("query", "site", "client", "created_at")
+    list_filter = ("site", "created_at")
 
     def has_add_permission(self, request):
         return False
@@ -46,6 +46,6 @@ class ReplyMessageInline(admin.TabularInline):
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ("name", "email", "message", "client", "client__is_blocked")
-    list_filter = ("client__is_blocked", "site", "created_on")
+    list_filter = ("client__is_blocked", "site", "created_at")
     readonly_fields = tuple(field.name for field in ContactMessage._meta.fields)
     inlines = [ReplyMessageInline]
