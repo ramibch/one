@@ -78,9 +78,8 @@ class BaseSubmoduleFolder(OneModel):
 
             ModelClass = cls._meta.model
             dir_names = [p.name for p in cls.submodule_path.iterdir() if p.is_dir()]
-            objs = [ModelClass(name=dn) for dn in dir_names if not dn.startswith("_")]
             cls.objects.bulk_create(
-                objs,
+                [ModelClass(name=dn) for dn in dir_names if not dn.startswith("_")],  # type: ignore
                 update_fields=["name"],
                 unique_fields=["name"],
                 update_conflicts=True,
