@@ -12,7 +12,6 @@ from django.contrib.sessions.models import Session
 from django.core.exceptions import FieldDoesNotExist
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -23,8 +22,8 @@ from one.bot import Bot
 
 
 class OneModel(Model):
-    created_at = models.DateTimeField(auto_now_add=True, db_default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True, db_default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     @cached_property
     def admin_url(self) -> str:
