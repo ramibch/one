@@ -5,6 +5,8 @@ from django.conf import settings
 from factory.django import DjangoModelFactory
 from faker import Faker
 
+from one.choices import Topics
+
 from .models import PATH_NAMES, Link
 
 faker = Faker()
@@ -20,4 +22,4 @@ class LinkFactory(DjangoModelFactory):
     custom_title = factory.LazyAttribute(lambda _: faker.sentence())
     external_url = factory.LazyAttribute(lambda _: faker.url())
     url_path = factory.Iterator([p[0] for p in PATH_NAMES])
-    topic = factory.Iterator([t[0] for t in settings.TOPICS])
+    topic = factory.Iterator([Topics.values])

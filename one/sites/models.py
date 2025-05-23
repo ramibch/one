@@ -12,6 +12,7 @@ from django.utils.functional import cached_property
 from django.utils.timezone import timedelta
 from django.utils.translation import gettext_lazy as _
 
+from one.choices import Topics
 from one.db import ChoiceArrayField, TranslatableModel
 from one.menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 
@@ -136,7 +137,7 @@ class Site(TranslatableModel):
     requests_duration = models.DurationField(default=timedelta(days=14))
 
     topics = ChoiceArrayField(
-        models.CharField(max_length=16, choices=settings.TOPICS),
+        models.CharField(max_length=16, choices=Topics),
         default=list,
         blank=True,
     )

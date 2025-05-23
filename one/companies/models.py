@@ -10,7 +10,8 @@ from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
-from one.db import ChoiceArrayField, Genders, OneModel
+from one.choices import Genders
+from one.db import ChoiceArrayField, OneModel
 
 
 class JobApplicationMethods(models.TextChoices):

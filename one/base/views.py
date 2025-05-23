@@ -17,6 +17,7 @@ from django.views.generic.edit import FormView
 from django_htmx.http import retarget
 
 from one.articles.models import Article
+from one.choices import Topics
 from one.dgt.models import DgtTest
 from one.faqs.models import FAQ
 from one.landing.models import LandingPage
@@ -79,9 +80,9 @@ class SlugPageView(View):
             except model_class.DoesNotExist:
                 pass
 
-        if slug in settings.TOPICS_DICT:
+        if slug in Topics.values:
             context = {
-                "page_title": settings.TOPICS_DICT[slug],
+                "page_title": Topics(slug).label,
                 "related_articles": Article.objects.filter(main_topic__name=slug),
                 "related_products": Product.objects.filter(topics=[slug]),
                 "related_landing_pages": LandingPage.objects.filter(

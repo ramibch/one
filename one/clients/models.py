@@ -2,7 +2,6 @@ import operator
 from functools import reduce
 
 from auto_prefetch import ForeignKey
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geoip2 import GeoIP2
 from django.contrib.gis.geos import Point
@@ -12,6 +11,7 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from one.choices import Countries
 from one.db import OneModel
 
 from ..bot import Bot
@@ -66,7 +66,7 @@ class Client(OneModel):
         on_delete=models.SET_NULL,
         db_index=False,  # Set in meta
     )
-    country = models.CharField(max_length=2, choices=settings.COUNTRIES, null=True)
+    country = models.CharField(max_length=2, choices=Countries, null=True)
     ip_address = models.GenericIPAddressField(unique=True, db_index=True)
     is_blocked = models.BooleanField(default=False)
     user_agent = models.CharField(max_length=512, null=True)

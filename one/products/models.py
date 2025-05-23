@@ -18,6 +18,7 @@ from etsyv3.models.listing_request import (
 )
 
 from one.bot import Bot
+from one.choices import Topics
 from one.db import BaseSubmoduleFolder, ChoiceArrayField, OneModel, TranslatableModel
 from one.etsy.enums import ListingType, TaxonomyID, WhenMade, WhoMade
 
@@ -48,7 +49,7 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     )
 
     topics = ChoiceArrayField(
-        models.CharField(max_length=16, choices=settings.TOPICS),
+        models.CharField(max_length=16, choices=Topics),
         default=list,
         blank=True,
     )
@@ -128,7 +129,7 @@ class EtsyShop(TranslatableModel):
     generic_listing_description = models.TextField()
 
     topics = ChoiceArrayField(
-        models.CharField(max_length=16, choices=settings.TOPICS),
+        models.CharField(max_length=16, choices=Topics),
         default=list,
         blank=True,
     )

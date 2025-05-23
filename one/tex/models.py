@@ -14,6 +14,7 @@ from pdf2image import convert_from_bytes
 from PIL import Image
 
 from one.bot import Bot
+from one.choices import Countries
 from one.db import OneModel, TranslatableModel
 from one.quiz.models import Lection
 
@@ -24,7 +25,7 @@ from .values import LATEX_LANGUAGES
 class YearlyHolidayCalender(TranslatableModel):
     # https://holidays.readthedocs.io/en/latest/#
     year = models.SmallIntegerField()
-    country = models.CharField(max_length=2, choices=settings.COUNTRIES)
+    country = models.CharField(max_length=2, choices=Countries)
     subdiv = models.CharField(max_length=128, null=True, blank=True)
     lang = models.CharField(max_length=2, choices=settings.LANGUAGES)
     pdf = models.FileField(null=True, blank=True, upload_to="calendars/")
