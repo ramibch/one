@@ -23,8 +23,8 @@ from one.bot import Bot
 
 
 class OneModel(Model):
-    created_at = models.DateTimeField(auto_now_add=True, db_default=timezone.now())
-    updated_at = models.DateTimeField(auto_now=True, db_default=timezone.now())
+    created_at = models.DateTimeField(auto_now_add=True, db_default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True, db_default=timezone.now)
 
     @cached_property
     def admin_url(self) -> str:
