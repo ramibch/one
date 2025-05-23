@@ -9,7 +9,7 @@ from django.utils import timezone
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from ..base.utils.telegram import Bot
+from ..bot import Bot
 from ..sites.models import Site
 from .models import Client, Path, Request
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+from one.admin import FORMFIELD_OVERRIDES_DICT
 
 from .models import Client, Path, PathRedirect, Request
 from .tasks import block_spammy_clients
@@ -9,8 +9,8 @@ from .tasks import block_spammy_clients
 @admin.register(Path)
 class PathAdmin(admin.ModelAdmin):
     search_fields = ("name",)
-    list_display = ("name", "is_spam", "created_on")
-    list_filter = ("is_spam", "created_on")
+    list_display = ("name", "is_spam", "created_at")
+    list_filter = ("is_spam", "created_at")
     actions = ["mark_as_spam", "mark_as_no_spam"]
 
     @admin.action(description="❗Mark as spam")

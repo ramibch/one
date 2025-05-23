@@ -4,7 +4,7 @@ import auto_prefetch
 import django.core.validators
 import django.db.models.deletion
 import django.db.models.manager
-import one.base.utils.db
+import one.db
 import one.products.models
 import storages.backends.s3
 from django.db import migrations, models
@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "languages",
-                    one.base.utils.db.ChoiceArrayField(
+                    one.db.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 ("en", "English"),
@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "topics",
-                    one.base.utils.db.ChoiceArrayField(
+                    one.db.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 ("django", "Django"),
@@ -180,7 +180,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "languages",
-                    one.base.utils.db.ChoiceArrayField(
+                    one.db.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 ("en", "English"),
@@ -209,7 +209,7 @@ class Migration(migrations.Migration):
                 ("generic_listing_description_pt", models.TextField(null=True)),
                 (
                     "topics",
-                    one.base.utils.db.ChoiceArrayField(
+                    one.db.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 ("django", "Django"),

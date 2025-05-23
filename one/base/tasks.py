@@ -13,10 +13,11 @@ from huey.contrib import djhuey as huey
 from huey.signals import SIGNAL_CANCELED, SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_REVOKED
 from huey_monitor.models import TaskModel
 
+from one.db import BaseSubmoduleFolder, TranslatableModel
+from one.translation import translate_text
+
+from ..bot import Bot
 from .models import SearchTerm
-from .utils.abstracts import BaseSubmoduleFolder, TranslatableModel
-from .utils.telegram import Bot
-from .utils.translation import translate_text
 
 User = get_user_model()
 

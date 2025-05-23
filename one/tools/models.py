@@ -18,7 +18,7 @@ now = timezone.now()
 
 
 class AbstractBarcode(models.Model):
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     png = models.ImageField(upload_to="barcodes", null=True)
     svg = models.ImageField(upload_to="barcodes", null=True)
     jpg = models.ImageField(upload_to="barcodes", null=True)
@@ -216,7 +216,7 @@ class QRCode(models.Model):
 
 
 class AbstractChart(models.Model):
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=32, null=True)
     png = models.ImageField(upload_to="graphs", null=True)
     pdf = models.FileField(upload_to="graphs", null=True)

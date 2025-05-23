@@ -3,7 +3,7 @@ from datetime import datetime
 from io import BytesIO
 
 import holidays
-from auto_prefetch import Model, OneToOneField
+from auto_prefetch import OneToOneField
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
@@ -13,8 +13,9 @@ from django.utils.functional import cached_property
 from pdf2image import convert_from_bytes
 from PIL import Image
 
-from one.base.utils.abstracts import TranslatableModel
-from one.base.utils.telegram import Bot
+from one.bot import Bot
+from one.choices import Countries
+from one.db import OneModel, TranslatableModel
 from one.quiz.models import Lection
 
 from .compile import render_pdf
@@ -24,15 +25,13 @@ from .values import LATEX_LANGUAGES
 class YearlyHolidayCalender(TranslatableModel):
     # https://holidays.readthedocs.io/en/latest/#
     year = models.SmallIntegerField()
-    country = models.CharField(max_length=2, choices=settings.COUNTRIES)
+    country = models.CharField(max_length=2, choices=Countries)
     subdiv = models.CharField(max_length=128, null=True, blank=True)
     lang = models.CharField(max_length=2, choices=settings.LANGUAGES)
     pdf = models.FileField(null=True, blank=True, upload_to="calendars/")
     image = models.ImageField(null=True, blank=True, upload_to="calendars/")
     image1 = models.ImageField(null=True, blank=True, upload_to="calendars/")
     image2 = models.ImageField(null=True, blank=True, upload_to="calendars/")
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
@@ -165,13 +164,11 @@ class YearlyHolidayCalender(TranslatableModel):
         return new_img
 
 
-class EnglishQuizLection(Model):
+class EnglishQuizLection(OneModel):
     lection = OneToOneField(Lection, on_delete=models.CASCADE)
     pdf = models.FileField(null=True, blank=True, upload_to="english-quiz-lections/")
     print = models.FileField(null=True, blank=True, upload_to="english-quiz-lections/")
     image = models.ImageField(null=True, blank=True, upload_to="english-quiz-lections/")
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return self.lection.get_absolute_url()
@@ -215,8 +212,3 @@ class EnglishQuizLection(Model):
         self.image = ContentFile(img_io.getvalue(), name=f"{filename}.png")
 
         self.save()
-
-
-class TexProfiledCv(Model):
-    class Meta(Model.Meta):
-        abstract = True  # TODO: remove this

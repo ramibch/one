@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT, TranslatableModelAdmin
+from one.admin import FORMFIELD_OVERRIDES_DICT, TranslatableModelAdmin
 
 from .models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
 

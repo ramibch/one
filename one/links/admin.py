@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from one.base.utils.admin import TranslatableModelAdmin
+from one.admin import TranslatableModelAdmin
 
 from .models import Link
 

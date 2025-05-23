@@ -12,7 +12,7 @@ from django.utils import timezone
 from huey import crontab
 from huey.contrib import djhuey as huey
 
-from one.base.utils.telegram import Bot
+from one.bot import Bot
 from one.companies.models import Company, Job
 
 headers = {

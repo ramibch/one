@@ -6,7 +6,7 @@ from django.utils.functional import cached_property
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
 
-from one.base.utils.abstracts import TranslatableModel
+from one.db import TranslatableModel
 
 
 class Plan(TranslatableModel):

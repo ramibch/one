@@ -1,14 +1,14 @@
 import googlemaps
-from auto_prefetch import Model
 from django.conf import settings
 from django.contrib.gis.db.models import PointField
 from django.contrib.gis.geos import Point
 from django.db import models
 
-from one.base.utils.telegram import Bot
+from one.bot import Bot
+from one.db import OneModel
 
 
-class GeoInfo(Model):
+class GeoInfo(OneModel):
     accuracy_radius = models.SmallIntegerField(null=True)
     city = models.CharField(max_length=128, null=True)
     continent_code = models.CharField(max_length=64, null=True)
@@ -27,14 +27,14 @@ class GeoInfo(Model):
     region = models.CharField(max_length=32, null=True)
     location = PointField(blank=True, null=True)
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         unique_together = ["latitude", "longitude"]
 
     def __str__(self):
         return f"{self.postal_code} {self.city}, {self.country_name}"
 
 
-class GoogleGeoInfo(Model):
+class GoogleGeoInfo(OneModel):
     address = models.TextField(unique=True)
     payload = models.JSONField(blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)

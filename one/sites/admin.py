@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from one.base.utils.admin import TranslatableModelAdmin
+from one.admin import TranslatableModelAdmin
 
 from ..articles.tasks import sync_articles
 from .models import Site

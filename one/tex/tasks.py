@@ -1,9 +1,9 @@
 import holidays
-from django.conf import settings
 from django.utils.timezone import now
 from huey import crontab
 from huey.contrib import djhuey as huey
 
+from one.choices import Countries
 from one.quiz.models import Lection
 
 from .models import EnglishQuizLection, YearlyHolidayCalender
@@ -29,7 +29,7 @@ def create_yearly_holiday_calendars():
         )
     )
 
-    for country_code, _ in settings.COUNTRIES:
+    for country_code in Countries.values:
         country_holidays = getattr(holidays, country_code, None)
         if not country_holidays:
             continue

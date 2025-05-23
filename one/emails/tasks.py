@@ -5,7 +5,7 @@ from huey import crontab
 from huey.contrib import djhuey as huey
 
 from one import settings
-from one.base.utils.telegram import Bot
+from one.bot import Bot
 
 from .models import (
     PostalMessage,

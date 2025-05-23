@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from etsyv3.util.auth import AuthHelper
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError
 
-from one.base.utils.telegram import Bot
+from one.bot import Bot
 
 from .models import App, EtsyAuth, Shop
 

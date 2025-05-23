@@ -27,13 +27,13 @@ class DgtTestAdmin(admin.ModelAdmin):
 class SessionDgtQuestionInline(admin.TabularInline):
     model = SessionDgtQuestion
     extra = 0
-    readonly_fields = ("created_on", "question", "selected_option", "is_correct")
+    readonly_fields = ("created_at", "question", "selected_option", "is_correct")
     exclude = ("session", "test")
 
 
 @admin.register(SessionDgtTest)
 class SessionDgtTestAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "test", "created_on")
-    list_filter = ("created_on", "test")
+    list_display = ("__str__", "test", "created_at")
+    list_filter = ("created_at", "test")
     inlines = (SessionDgtQuestionInline,)
-    readonly_fields = ("created_on", "test", "session")
+    readonly_fields = ("created_at", "test", "session")

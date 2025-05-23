@@ -1,7 +1,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+from one.admin import FORMFIELD_OVERRIDES_DICT
 
 from .models import Article, ArticleFile, MainTopic
 
@@ -17,9 +17,9 @@ class MainTopicAdmin(admin.ModelAdmin):
 @admin.register(Article)
 class ArticleAdmin(TranslationAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES_DICT
-    list_display = ("__str__", "featured", "created_on", "updated_on")
+    list_display = ("__str__", "featured", "created_at", "updated_at")
 
-    list_filter = ("main_topic", "folder_name", "created_on", "updated_on")
+    list_filter = ("main_topic", "folder_name", "created_at", "updated_at")
     search_fields = ("title", "folder_name", "subfolder_name", "body")
 
     actions = ["mark_as_featured", "mark_as_not_featured"]

@@ -4,7 +4,7 @@ import auto_prefetch
 import datetime
 import django.db.models.deletion
 import django.db.models.manager
-import one.base.utils.db
+import one.db
 import one.sites.models
 from django.db import migrations, models
 
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "languages",
-                    one.base.utils.db.ChoiceArrayField(
+                    one.db.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 ("en", "English"),
@@ -137,7 +137,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "topics",
-                    one.base.utils.db.ChoiceArrayField(
+                    one.db.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 ("django", "Django"),

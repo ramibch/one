@@ -1,6 +1,6 @@
 from django import template
 
-from one.base.utils.session import get_db_session_object
+from one.db import get_db_session_object
 
 from ..models import DgtTest, SessionDgtTest
 

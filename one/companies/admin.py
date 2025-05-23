@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from one.base.utils.admin import FORMFIELD_OVERRIDES_DICT
+from one.admin import FORMFIELD_OVERRIDES_DICT
 
 from .models import Company, CompanyLocation, Job, Person
 from .tasks import scrape_company_pages, scrape_job_detail_pages
@@ -33,7 +33,7 @@ class CompanyAdmin(admin.ModelAdmin):
 @admin.register(CompanyLocation)
 class CompanyLocationAdmin(admin.ModelAdmin):
     list_display = ("company", "geoinfo")
-    search_fields = ("geoinfo__address", "company__name")
+    search_fields = ("local_name",)
     autocomplete_fields = ("company", "geoinfo")
 
 
@@ -45,7 +45,7 @@ class PersonAdmin(admin.ModelAdmin):
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
     autocomplete_fields = ("company_locations", "recruiter", "company")
-    search_fields = ("title", "company__name", "recruiter__name", "extern_id")
+    search_fields = ("title", "body")
     list_display = ("__str__", "recruiter", "source_url")
     list_filter = ("language",)
     readonly_fields = ("is_active", "expires_on")

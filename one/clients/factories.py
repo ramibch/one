@@ -1,8 +1,8 @@
 import factory
-from django.conf import settings
 from factory.django import DjangoModelFactory
 from faker import Faker
 
+from one.choices import Countries
 from one.sites.factories import SiteFactory
 from one.users.factories import UserFactory
 
@@ -16,7 +16,7 @@ class ClientFactory(DjangoModelFactory):
         model = Client
 
     user = factory.SubFactory(UserFactory)
-    country = factory.Iterator(settings.COUNTRY_CODES)
+    country = factory.Iterator(Countries.values)
     site = factory.SubFactory(SiteFactory)
     ip_address = factory.LazyAttribute(
         lambda _: faker.ipv4() if faker.boolean() else faker.ipv6()

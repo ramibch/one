@@ -1,6 +1,8 @@
+import os
 from copy import copy
+from pathlib import Path
 
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
@@ -10,9 +12,12 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from one.base.utils.abstracts import TranslatableModel
-from one.base.utils.choices import Genders
-from one.base.utils.db import ChoiceArrayField
+from one.db import ChoiceArrayField, Genders, OneModel, TranslatableModel
+
+
+def upload_job_media():
+    # TODO: !!!
+    pass
 
 
 class Profile(TranslatableModel):
@@ -32,8 +37,8 @@ class Profile(TranslatableModel):
     )
 
     gender = models.CharField(max_length=64, choices=Genders, null=True, blank=True)
-    position = ForeignKey(Position, on_delete=models.SET_NULL, null=True)
-    locations = models.ManyToManyField(Location)
+    # position = ForeignKey(Position, on_delete=models.SET_NULL, null=True)
+    # locations = models.ManyToManyField(Location)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     full_name = models.GeneratedField(
@@ -84,28 +89,11 @@ class Profile(TranslatableModel):
         return self.website_label is not None and self.website_url is not None
 
     @cached_property
-    def first_name(self):
-        try:
-            return self.fullname.split(" ")[0]
-        except KeyError:
-            return ""
-
-    @cached_property
     def email_delete_url(self):
         # TODO: WEBSITE_URL ?? site url?
         return settings.WEBSITE_URL + reverse(
             "profile-delete", kwargs={"id": self.id}, query={"email": self.email}
         )
-
-    @cached_property
-    def admin_url(self):
-        # the url to the Django admin form for the model instance
-        info = (self._meta.app_label, self._meta.model_name)
-        return reverse("admin:%s_%s_change" % info, args=(self.pk,))
-
-    @cached_property
-    def full_admin_url(self):
-        return settings.WEBSITE_URL + self.admin_url
 
     @cached_property
     def cleaned_phone(self):
@@ -117,15 +105,18 @@ class Profile(TranslatableModel):
 
     @cached_property
     def local_signature_path(self) -> Path:
-        return write_local_file(self.signature.name)
+        pass
+        # return write_local_file(self.signature.name)
 
     @cached_property
     def local_docs_path(self) -> Path:
-        return write_local_file(self.docs.name)
+        pass
+        # return write_local_file(self.docs.name)
 
     @cached_property
     def local_photo_path(self) -> Path:
-        return write_local_file(self.photo.name)
+        pass
+        # return write_local_file(self.photo.name)
 
     def signature_file_exists(self):
         return bool(self.signature.name) and self.signature.storage.exists(
@@ -156,7 +147,7 @@ class Profile(TranslatableModel):
                 child.profile = profile_clone
                 child.save()
 
-    def clone_obj(self, attrs={}):
+    def clone_obj(self, attrs: dict):
         clone = copy(self)
         clone.signature = None
         clone.photo = None
@@ -199,7 +190,7 @@ class CandidateBaseChildModel(TranslatableModel):
     LANGS_ATTR = "profile__languages"
     profile = ForeignKey(Profile, on_delete=models.CASCADE)
 
-    class Meta(Model.Meta):
+    class Meta(TranslatableModel.Meta):
         abstract = True
 
 
@@ -259,7 +250,7 @@ class CvTexTemplates(models.TextChoices):
     ## TODO: add
 
 
-class CandidateCv(Model):
+class CandidateCv(OneModel):
     profile = ForeignKey(Profile, on_delete=models.CASCADE)
     tex_template = models.CharField(max_length=64, choices=CvTexTemplates)
     rendered_text = models.TextField(null=True, blank=True)
@@ -269,10 +260,10 @@ class CandidateCv(Model):
     image_time = models.FloatField(default=0)
     render_time = models.FloatField(default=0)
     auto_created = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta(Model.Meta):
-        ordering = ["-created_on"]
+    class Meta(OneModel.Meta):
+        ordering = ["-created_at"]
 
     def __str__(self) -> str:
         return f"CV ({self.profile.fullname} {self.tex})"

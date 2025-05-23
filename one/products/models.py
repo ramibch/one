@@ -1,4 +1,4 @@
-from auto_prefetch import ForeignKey, Manager, Model, OneToOneField
+from auto_prefetch import ForeignKey, Manager, OneToOneField
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.storage import storages
@@ -17,9 +17,9 @@ from etsyv3.models.listing_request import (
     CreateListingTranslationRequest,
 )
 
-from one.base.utils.abstracts import BaseSubmoduleFolder, TranslatableModel
-from one.base.utils.db import ChoiceArrayField
-from one.base.utils.telegram import Bot
+from one.bot import Bot
+from one.choices import Topics
+from one.db import BaseSubmoduleFolder, ChoiceArrayField, OneModel, TranslatableModel
 from one.etsy.enums import ListingType, TaxonomyID, WhenMade, WhoMade
 
 User = get_user_model()
@@ -49,7 +49,7 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
     )
 
     topics = ChoiceArrayField(
-        models.CharField(max_length=16, choices=settings.TOPICS),
+        models.CharField(max_length=16, choices=Topics),
         default=list,
         blank=True,
     )
@@ -65,8 +65,6 @@ class Product(TranslatableModel, BaseSubmoduleFolder, submodule="products"):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
 
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
     is_draft = models.BooleanField(default=True)
 
     objects = ProductManager()
@@ -93,7 +91,7 @@ def get_file_path(obj, filename: str):
     return f"products/{obj._meta.model_name}/{filename}"
 
 
-class ProductFile(Model):
+class ProductFile(OneModel):
     """Product file model"""
 
     product = ForeignKey(Product, on_delete=models.CASCADE)
@@ -104,7 +102,7 @@ class ProductFile(Model):
         return self.name
 
 
-class ProductImage(Model):
+class ProductImage(OneModel):
     product = ForeignKey(Product, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     file = models.FileField(upload_to=get_file_path)
@@ -131,7 +129,7 @@ class EtsyShop(TranslatableModel):
     generic_listing_description = models.TextField()
 
     topics = ChoiceArrayField(
-        models.CharField(max_length=16, choices=settings.TOPICS),
+        models.CharField(max_length=16, choices=Topics),
         default=list,
         blank=True,
     )
@@ -143,8 +141,6 @@ class EtsyShop(TranslatableModel):
         validators=[MinValueValidator(50), MaxValueValidator(300)],
     )
     etsy_payload = models.JSONField(null=True, blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
     @cached_property
     def api_client(self):
@@ -165,13 +161,11 @@ class EtsyShop(TranslatableModel):
 
 
 # TODO:
-# class Tag(Model):
+# class Tag(OneModel):
 #     name = models.CharField()
 
 
-class EtsyListing(Model):
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+class EtsyListing(OneModel):
     include_generic_description = models.BooleanField(default=True)
 
     shop = ForeignKey(EtsyShop, on_delete=models.CASCADE)

@@ -7,7 +7,7 @@ from huey.contrib import djhuey as huey
 from .models import DgtQuestion, DgtTest
 
 
-@huey.db_periodic_task(crontab(day=1))
+@huey.db_periodic_task(crontab(day="1"))
 def scrape_dgt_task_monthly():
     last_test = DgtTest.objects.last()
     start_page = 1 if last_test is None else last_test.dgt_page + 1

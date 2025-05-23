@@ -1,7 +1,7 @@
 from copy import copy
 from datetime import datetime, timedelta
 
-from auto_prefetch import ForeignKey, Model
+from auto_prefetch import ForeignKey
 from django.core.exceptions import ValidationError
 from django.core.files.storage import storages
 from django.core.mail import EmailMessage
@@ -12,12 +12,13 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from one import settings
-from one.base.utils.telegram import Bot
-from one.base.utils.tmp import TmpFile
+from one.bot import Bot
+from one.db import OneModel
 from one.sites.models import Site
+from one.tmp import TmpFile
 
 
-class Sender(Model):
+class Sender(OneModel):
     name = models.CharField(max_length=64)
     address = models.EmailField(max_length=64, unique=True)
     domain_validation = models.BooleanField(default=True)
@@ -43,7 +44,7 @@ class Sender(Model):
                 )
 
 
-class TemplateMessage(Model):
+class TemplateMessage(OneModel):
     MIN_INTERVAL = timezone.timedelta(hours=8)
     MAX_INTERVAL = timezone.timedelta(days=365)
     MAX_TIME_RANGE = timezone.timedelta(days=3 * 365)
@@ -127,7 +128,7 @@ class TemplateMessage(Model):
         return self.subject
 
 
-class TemplateAttachment(Model):
+class TemplateAttachment(OneModel):
     def get_directory(self, filename):
         return f"emails/{self.email.id}/{filename}"
 
@@ -138,7 +139,7 @@ class TemplateAttachment(Model):
         return str(self.file)
 
 
-class TemplateRecipient(Model):
+class TemplateRecipient(OneModel):
     email = ForeignKey(TemplateMessage, on_delete=models.CASCADE)
     send_times = models.PositiveSmallIntegerField(default=0, editable=False)
     sent_on = models.DateTimeField(null=True, blank=True, editable=False)
@@ -149,7 +150,7 @@ class TemplateRecipient(Model):
     draft = models.BooleanField(default=False)
     remarks = models.TextField(null=True, blank=True)
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         unique_together = ("email", "to_address")
 
     def __str__(self) -> str:
@@ -214,7 +215,7 @@ class TemplateRecipient(Model):
             self.save()
 
 
-class TemplateRecipientFile(Model):
+class TemplateRecipientFile(OneModel):
     file = models.FileField(
         upload_to="emails/recipients-files/",
         storage=storages["private"],
@@ -251,7 +252,7 @@ def please_implement_save_from_payload(model_name, payload):
     Bot.to_admin(f"Please implement {model_name}.save_from_payload\n\n{str(payload)}")
 
 
-class PostalMessage(Model):
+class PostalMessage(OneModel):
     """
     https://docs.postalserver.io/developer/webhooks#message-status-events
     """
@@ -288,7 +289,7 @@ class PostalMessage(Model):
     def url(self):
         return self.POSTAL_URL.format(self.id)
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         verbose_name = "Postal: Message"
         verbose_name_plural = "Postal: Messages"
 
@@ -332,7 +333,7 @@ class PostalMessage(Model):
         return f"[{self.id}] {self.subject}"[:40]
 
 
-class ReplyMessage(Model):
+class ReplyMessage(OneModel):
     def get_file_path(self, filename):
         return f"emails/replies/{self.id}/{filename}"
 
@@ -417,12 +418,12 @@ class ReplyMessage(Model):
         self.save()
 
 
-class PostalMessageLinkClicked(Model):
+class PostalMessageLinkClicked(OneModel):
     """
     https://docs.postalserver.io/developer/webhooks#message-click-event
     """
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         verbose_name = "Postal: MessageLinkClicked"
         verbose_name_plural = "Postal: MessageLinkClicked"
 
@@ -430,12 +431,12 @@ class PostalMessageLinkClicked(Model):
         please_implement_save_from_payload("MessageLinkClicked", payload)
 
 
-class PostalMessageLoaded(Model):
+class PostalMessageLoaded(OneModel):
     """
     https://docs.postalserver.io/developer/webhooks#message-loadedopened-event
     """
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         verbose_name = "Postal: Message Loaded"
         verbose_name_plural = "Postal: Messages Loaded"
 
@@ -443,7 +444,7 @@ class PostalMessageLoaded(Model):
         please_implement_save_from_payload("MessageLoaded", payload)
 
 
-class PostalDomainDNSError(Model):
+class PostalDomainDNSError(OneModel):
     """
     https://docs.postalserver.io/developer/webhooks#dns-error-event
     """
@@ -460,7 +461,7 @@ class PostalDomainDNSError(Model):
     return_path_status = models.CharField(max_length=128, null=True)
     return_path_error = models.CharField(max_length=256, null=True)
 
-    class Meta(Model.Meta):
+    class Meta(OneModel.Meta):
         verbose_name = "Postal: Domain DNS Error"
         verbose_name_plural = "Postal: Domain DNS Errors"
 

@@ -7,8 +7,8 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
 from one.articles.models import Article
+from one.db import TranslatableModel
 
-from ..base.utils.abstracts import TranslatableModel
 from ..faqs.models import FAQ
 
 
@@ -56,7 +56,7 @@ class ArticlesSection(_ChildModel):
     title = models.CharField(max_length=64)
     number_of_articles = models.PositiveSmallIntegerField(default=6)
     show_all_link = models.BooleanField(db_default=True)
-    show_created_on = models.BooleanField(db_default=True)
+    show_created_at = models.BooleanField(db_default=True)
     card_animation = ForeignKey(
         "base.Animation",
         on_delete=models.SET_NULL,
