@@ -26,21 +26,16 @@ def postal_webhook(request):
 
     match event:
         case "MessageSent":
-            PostalMessage().save_from_payload(payload)
+            PostalMessage.save_from_payload(payload)
 
         case "MessageDelayed":
-            obj = PostalMessage()
-            obj.delayed = True
-            obj.save_from_payload(payload)
+            PostalMessage.save_from_payload(payload, delayed=True)
 
         case "MessageHeld":
-            obj = PostalMessage()
-            obj.held = True
-            obj.save_from_payload(payload)
+            PostalMessage.save_from_payload(payload, held=True)
+
         case "MessageDeliveryFailed":
-            obj = PostalMessage()
-            obj.delivery_failed = True
-            obj.save_from_payload(payload)
+            PostalMessage.save_from_payload(payload, delivery_failed=True)
 
         case "MessageBounced":
             pass

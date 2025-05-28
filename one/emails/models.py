@@ -293,42 +293,43 @@ class PostalMessage(OneModel):
         verbose_name = "Postal: Message"
         verbose_name_plural = "Postal: Messages"
 
-    def save_from_payload(self, payload: dict):
+    @classmethod
+    def save_from_payload(
+        cls,
+        payload: dict,
+        delayed=False,
+        held=False,
+        delivery_failed=False,
+    ):
         message: dict = payload.get("message", {})
-        # ID
-        # Message attrs
-        self.id = message.get("id")
-        self.token = message.get("token")
-        self.direction = message.get("direction")
-        self.large_id = message.get("message_id")
-        self.mail_to = message.get("to")
-        self.mail_from = message.get("from")
-        self.subject = message.get("subject")
-        self.spam_status = message.get("spam_status")
-        self.tag = message.get("tag")
 
-        # Output
-        self.output = payload.get("output")
-        # Status
-        self.status = payload.get("status")
-        # Details
-        self.details = payload.get("details")
-        # Send with SSL
-        self.sent_with_ssl = payload.get("sent_with_ssl")
-        # Time
-        self.time = payload.get("time")
-        # Timestamp
-        self.timestamp = payload.get("timestamp")
+        obj = cls(
+            id=message.get("id"),
+            token=message.get("token"),
+            direction=message.get("direction"),
+            large_id=message.get("message_id"),
+            mail_to=message.get("to"),
+            mail_from=message.get("from"),
+            subject=message.get("subject"),
+            spam_status=message.get("spam_status"),
+            tag=message.get("tag"),
+            output=payload.get("output"),
+            status=payload.get("status"),
+            details=payload.get("details"),
+            sent_with_ssl=payload.get("sent_with_ssl"),
+            time=payload.get("time"),
+            timestamp=payload.get("timestamp"),
+            message_dict=message,
+            delayed=delayed,
+            held=held,
+            delivery_failed=delivery_failed,
+        )
 
-        # Own fields
-        self.message_dict = message
+        if obj.timestamp:
+            dt = datetime.fromtimestamp(int(obj.timestamp))
+            obj.received_at = timezone.make_aware(dt, timezone.get_current_timezone())
 
-        if self.timestamp:
-            dt = datetime.fromtimestamp(int(self.timestamp))
-            self.received_at = timezone.make_aware(dt, timezone.get_current_timezone())
-
-        super().save()
-        # self.save()
+        obj.save()
 
     def __str__(self):
         return f"[{self.id}] {self.subject}"[:40]
