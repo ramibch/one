@@ -80,6 +80,7 @@ class ArticlesSection(_ChildModel):
                 languages__contains=[get_language()],
                 slug__isnull=False,
             )
+            .select_related("main_topic")
             .order_by("-id")
             .distinct()
         )[: self.number_of_articles]

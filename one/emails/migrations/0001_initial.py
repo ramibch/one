@@ -324,7 +324,7 @@ class Migration(migrations.Migration):
                             location="private",
                             querystring_auth=True,
                         ),
-                        upload_to=one.emails.models.TemplateAttachment.get_directory,
+                        upload_to=one.emails.models.TemplateAttachment.get_upload_path,
                     ),
                 ),
                 (

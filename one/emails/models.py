@@ -129,11 +129,11 @@ class TemplateMessage(OneModel):
 
 
 class TemplateAttachment(OneModel):
-    def get_directory(self, filename):
+    def get_upload_path(self, filename):
         return f"emails/{self.email.id}/{filename}"
 
     email = ForeignKey(TemplateMessage, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=get_directory, storage=storages["private"])
+    file = models.FileField(upload_to=get_upload_path, storage=storages["private"])
 
     def __str__(self):
         return str(self.file)
@@ -327,7 +327,8 @@ class PostalMessage(OneModel):
             dt = datetime.fromtimestamp(int(self.timestamp))
             self.received_at = timezone.make_aware(dt, timezone.get_current_timezone())
 
-        self.save()
+        super().save()
+        # self.save()
 
     def __str__(self):
         return f"[{self.id}] {self.subject}"[:40]

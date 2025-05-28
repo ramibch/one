@@ -31,9 +31,7 @@ SECRET_KEY = env("SECRET_KEY", "some-tests-need-a-secret-key")
 
 # Enviornments
 ENV = env("ENV")
-PROD = "prod"
-DEV = "dev"
-ENVS = (DEV, PROD)
+ENVS = (DEV, PROD) = "dev", "prod"
 
 if ENV not in ENVS:
     raise ImproperlyConfigured(f"ENV '{ENV}' is not a valid enviorment.")
@@ -113,6 +111,7 @@ INSTALLED_APPS = [
     "one.emails",
     "one.etsy",
     "one.companies",
+    "one.candidates",
 ]
 
 MIDDLEWARE = [

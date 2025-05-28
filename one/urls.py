@@ -49,6 +49,7 @@ urlpatterns = [
     path(_("articles/"), include("one.articles.urls")),
     path(_("products/"), include("one.products.urls")),
     path(_("companies/"), include("one.companies.urls")),
+    path(_("candidates/"), include("one.candidates.urls")),
     path("", include("one.tex.urls")),
     path("", include("one.base.urls")),
 ]

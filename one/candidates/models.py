@@ -1,26 +1,25 @@
 import os
+import uuid
 from copy import copy
 from pathlib import Path
 
 from auto_prefetch import ForeignKey
 from django.conf import settings
+from django.contrib.gis.db.models import PolygonField
 from django.core.files.base import ContentFile
 from django.db import models
 from django.db.models import Max, Value
 from django.db.models.functions import Concat
-from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from one.db import ChoiceArrayField, Genders, OneModel, TranslatableModel
 
 
-def upload_job_media():
-    # TODO: !!!
-    pass
+class CandidateProfile(TranslatableModel):
+    def get_upload_path(self, filename):
+        return f"candiates/{self.id}/{filename}"
 
-
-class Profile(TranslatableModel):
     LANG_ATTR = "language"
     LANGS_ATTR = "languages"
     language = models.CharField(
@@ -35,7 +34,12 @@ class Profile(TranslatableModel):
         blank=True,
         db_index=True,
     )
-
+    id = models.UUIDField(
+        primary_key=True,
+        db_index=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     gender = models.CharField(max_length=64, choices=Genders, null=True, blank=True)
     # position = ForeignKey(Position, on_delete=models.SET_NULL, null=True)
     # locations = models.ManyToManyField(Location)
@@ -54,10 +58,7 @@ class Profile(TranslatableModel):
     github = models.CharField(max_length=32, null=True, blank=True)
     website_label = models.CharField(max_length=64, null=True, blank=True)
     website_url = models.URLField(max_length=128, blank=True, null=True)
-    is_rami = models.BooleanField(default=True)
-    telegram_chat_id = models.CharField(max_length=32, null=True, blank=True)
 
-    letter_body = models.TextField(help_text="use #company_name, #job_title")
     about = models.TextField(null=True, blank=True)
 
     why_me = models.CharField(
@@ -80,28 +81,13 @@ class Profile(TranslatableModel):
     language_label = models.CharField(max_length=32, default=_("Languages"))
     project_label = models.CharField(max_length=32, default=_("Projects"))
 
-    signature = models.ImageField(upload_to=upload_job_media, null=True)
-    photo = models.ImageField(upload_to=upload_job_media, null=True)
-    docs = models.FileField(upload_to=upload_job_media, null=True, blank=True)
+    signature = models.ImageField(upload_to=get_upload_path, null=True)
+    photo = models.ImageField(upload_to=get_upload_path, null=True)
+    docs = models.FileField(upload_to=get_upload_path, null=True, blank=True)
 
     @cached_property
     def has_website(self):
         return self.website_label is not None and self.website_url is not None
-
-    @cached_property
-    def email_delete_url(self):
-        # TODO: WEBSITE_URL ?? site url?
-        return settings.WEBSITE_URL + reverse(
-            "profile-delete", kwargs={"id": self.id}, query={"email": self.email}
-        )
-
-    @cached_property
-    def cleaned_phone(self):
-        return self.phone.replace(" ", "")
-
-    @cached_property
-    def cleaned_fullname(self):
-        return self.fullname.replace(" ", "")
 
     @cached_property
     def local_signature_path(self) -> Path:
@@ -152,7 +138,7 @@ class Profile(TranslatableModel):
         clone.signature = None
         clone.photo = None
         clone.docs = None
-        clone.pk = Profile.objects.aggregate(Max("id"))["id__max"] + 1
+        clone.pk = CandidateProfile.objects.aggregate(Max("id"))["id__max"] + 1
 
         for key, value in attrs.items():
             setattr(clone, key, value)
@@ -182,19 +168,23 @@ class Profile(TranslatableModel):
         self._clone_children(clone)
 
     def __str__(self) -> str:
-        return f"{self.fullname} - {self.job_title}"
+        return f"{self.full_name} - {self.job_title}"
 
 
 class CandidateBaseChildModel(TranslatableModel):
     LANG_ATTR = "profile__language"
     LANGS_ATTR = "profile__languages"
-    profile = ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = ForeignKey(CandidateProfile, on_delete=models.CASCADE)
 
     class Meta(TranslatableModel.Meta):
         abstract = True
 
 
-class Experience(CandidateBaseChildModel):
+class CandidateApplicationLocation(CandidateBaseChildModel):
+    area = PolygonField()
+
+
+class CandidateExperience(CandidateBaseChildModel):
     company_name = models.CharField(max_length=64)
     job_title = models.CharField(max_length=64)
     from_to = models.CharField(max_length=32)
@@ -228,7 +218,7 @@ class Certificate(CandidateBaseChildModel):
         return self.name
 
 
-class Project(CandidateBaseChildModel):
+class CandiateProject(CandidateBaseChildModel):
     title = models.CharField(max_length=64)
     url = models.URLField(max_length=128, null=True, blank=True)
     from_to = models.CharField(max_length=32, null=True, blank=True)
@@ -251,11 +241,14 @@ class CvTexTemplates(models.TextChoices):
 
 
 class CandidateCv(OneModel):
-    profile = ForeignKey(Profile, on_delete=models.CASCADE)
+    def get_upload_path(self, filename):
+        return f"candiates/{self.profile.id}/cvs/{filename}"
+
+    profile = ForeignKey(CandidateProfile, on_delete=models.CASCADE)
     tex_template = models.CharField(max_length=64, choices=CvTexTemplates)
     rendered_text = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to="to.be.defined")
-    pdf = models.FileField(upload_to="to.be.defined")
+    image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
+    pdf = models.FileField(upload_to=get_upload_path, null=True, blank=True)
     pdf_time = models.FloatField(default=0)
     image_time = models.FloatField(default=0)
     render_time = models.FloatField(default=0)
