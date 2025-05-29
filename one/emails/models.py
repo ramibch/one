@@ -261,6 +261,7 @@ class PostalMessage(OneModel):
         "https://postal.ramib.ch/org/ramib-ch/servers/ramib-ch/messages/{}/plain"
     )
 
+    message_id = models.PositiveBigIntegerField(null=True)
     status = models.CharField(max_length=128, null=True)
     details = models.CharField(max_length=512, null=True)
     output = models.CharField(max_length=512, null=True)
@@ -287,7 +288,7 @@ class PostalMessage(OneModel):
 
     @cached_property
     def url(self):
-        return self.POSTAL_URL.format(self.id)
+        return self.POSTAL_URL.format(self.message_id)
 
     class Meta(OneModel.Meta):
         verbose_name = "Postal: Message"
@@ -304,7 +305,7 @@ class PostalMessage(OneModel):
         message: dict = payload.get("message", {})
 
         obj = cls(
-            id=message.get("id"),
+            message_id=message.get("id"),
             token=message.get("token"),
             direction=message.get("direction"),
             large_id=message.get("message_id"),
@@ -332,7 +333,7 @@ class PostalMessage(OneModel):
         obj.save()
 
     def __str__(self):
-        return f"[{self.id}] {self.subject}"[:40]
+        return f"[{self.message_id}] {self.subject}"[:40]
 
 
 class ReplyMessage(OneModel):
