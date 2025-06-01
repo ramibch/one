@@ -1,14 +1,16 @@
 from django.contrib import admin
-from django.contrib.gis.admin import GISModelAdmin
 
-from .models import CandidateApplicationLocation, CandidateProfile
+from one.admin import GISStackedInline, OneModelAdmin
+
+from .models import CandidateJobAlert, CandidateProfile
+
+
+class AlertInline(GISStackedInline):
+    model = CandidateJobAlert
+    extra = 0
 
 
 @admin.register(CandidateProfile)
-class CandiateProfileAdmin(admin.ModelAdmin):
+class CandiateProfileAdmin(OneModelAdmin):
     list_display = ("id", "full_name", "job_title", "email", "phone")
-
-
-@admin.register(CandidateApplicationLocation)
-class CandidateApplicationLocation(GISModelAdmin):
-    pass
+    inlines = [AlertInline]

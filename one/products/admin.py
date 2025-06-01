@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from one.admin import TranslatableModelAdmin
+from one.admin import OneTranslatableModelAdmin
 
 from .models import EtsyListing, EtsyShop, Product, ProductFile, ProductImage
 from .tasks import task_generate_listings_from_products, task_upload_listings
@@ -13,7 +13,7 @@ class ProductFileAdmin(admin.ModelAdmin):
 
 
 @admin.register(Product)
-class ProductAdmin(TranslatableModelAdmin):
+class ProductAdmin(OneTranslatableModelAdmin):
     pass
     # readonly_fields = ("name",)
 
@@ -30,7 +30,7 @@ class ListingAdmin(admin.ModelAdmin):
 
 
 @admin.register(EtsyShop)
-class ShopAdmin(TranslatableModelAdmin):
+class ShopAdmin(OneTranslatableModelAdmin):
     list_display = ("__str__", "price_percentage")
     readonly_fields = ("etsy_payload",)
     actions = ["generate_listings", "get_payload", "translate_fields"]

@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from one.admin import TranslatableModelAdmin
+from one.admin import OneTranslatableModelAdmin
 
 from ..articles.tasks import sync_articles
 from .models import Site
 
 
 @admin.register(Site)
-class SiteAdmin(TranslatableModelAdmin):
+class SiteAdmin(OneTranslatableModelAdmin):
     list_display = ("domain", "brand_name", "picocss_color", "remarks")
     # readonly_fields = ("domain",)
     actions = ["sync_articles", "translate_fields"]

@@ -5,6 +5,7 @@ from pathlib import Path
 
 from auto_prefetch import ForeignKey
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import PolygonField
 from django.core.files.base import ContentFile
 from django.db import models
@@ -14,6 +15,8 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from one.db import ChoiceArrayField, Genders, OneModel, TranslatableModel
+
+User = get_user_model()
 
 
 class CandidateProfile(TranslatableModel):
@@ -40,9 +43,8 @@ class CandidateProfile(TranslatableModel):
         default=uuid.uuid4,
         editable=False,
     )
+    user = ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     gender = models.CharField(max_length=64, choices=Genders, null=True, blank=True)
-    # position = ForeignKey(Position, on_delete=models.SET_NULL, null=True)
-    # locations = models.ManyToManyField(Location)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     full_name = models.GeneratedField(
@@ -103,6 +105,13 @@ class CandidateProfile(TranslatableModel):
     def local_photo_path(self) -> Path:
         pass
         # return write_local_file(self.photo.name)
+
+    def file_exists(self, attr: str):
+        obj_attr = getattr(self, attr)
+        if not obj_attr:
+            raise ValueError(f"{attr} does not exists in {self.__class__.__name__}")
+
+        return bool(obj_attr.name) and obj_attr.storage.exists(obj_attr.name)
 
     def signature_file_exists(self):
         return bool(self.signature.name) and self.signature.storage.exists(
@@ -180,8 +189,19 @@ class CandidateBaseChildModel(TranslatableModel):
         abstract = True
 
 
-class CandidateApplicationLocation(CandidateBaseChildModel):
+class NotificationTypes(models.TextChoices):
+    DAILY = "daily", _("Daily")
+    WEEKLY = "weekly", _("Weekly")
+    NONE = "none", _("No notification")
+
+
+class CandidateJobAlert(CandidateBaseChildModel):
+    name = models.CharField(max_length=255)
+    query = models.CharField(max_length=255)
     area = PolygonField()
+    notification = models.CharField(
+        default=NotificationTypes.WEEKLY, choices=NotificationTypes
+    )
 
 
 class CandidateExperience(CandidateBaseChildModel):

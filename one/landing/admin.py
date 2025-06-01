@@ -2,7 +2,10 @@ from django.contrib import admin
 from django.db import IntegrityError
 from modeltranslation.admin import TranslationStackedInline
 
-from one.admin import FORMFIELD_OVERRIDES_DICT, TranslatableModelAdmin
+from one.admin import (
+    OneTranslatableModelAdmin,
+    OneTranslationStackedInline,
+)
 
 from .factories import (
     ArticlesSectionFactory,
@@ -32,14 +35,12 @@ class HeroSectionInline(TranslationStackedInline):
     extra = 0
 
 
-class ProblemSectionInline(TranslationStackedInline):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class ProblemSectionInline(OneTranslationStackedInline):
     model = ProblemSection
     extra = 0
 
 
-class SolutionSectionInline(TranslationStackedInline):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class SolutionSectionInline(OneTranslationStackedInline):
     model = SolutionSection
     extra = 0
 
@@ -54,14 +55,12 @@ class StepActionSectionInline(TranslationStackedInline):
     extra = 0
 
 
-class ArticlesSectionInline(TranslationStackedInline):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class ArticlesSectionInline(OneTranslationStackedInline):
     model = ArticlesSection
     extra = 0
 
 
-class FAQsSectionInline(TranslationStackedInline):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class FAQsSectionInline(OneTranslationStackedInline):
     model = FAQsSection
     extra = 0
 
@@ -72,7 +71,7 @@ class FinalCTASectionInline(TranslationStackedInline):
 
 
 @admin.register(LandingPage)
-class LandingPageAdmin(TranslatableModelAdmin):
+class LandingPageAdmin(OneTranslatableModelAdmin):
     list_display = ("__str__", "title", "site")
     inlines = (
         HeroSectionInline,
@@ -111,35 +110,35 @@ class LandingPageAdmin(TranslatableModelAdmin):
 
 
 @admin.register(HeroSection)
-class HeroSectionAdmin(TranslatableModelAdmin):
+class HeroSectionAdmin(OneTranslatableModelAdmin):
     list_display = ("landing", "landing__site", "headline", "cta_link")
     list_filter = ("landing__site",)
 
 
 @admin.register(ProblemSection)
-class ProblemSectionAdmin(TranslatableModelAdmin):
+class ProblemSectionAdmin(OneTranslatableModelAdmin):
     list_display = ("landing", "landing__site", "title", "emoji")
     list_filter = ("landing__site",)
 
 
 @admin.register(SolutionSection)
-class SolutionSectionAdmin(TranslatableModelAdmin):
+class SolutionSectionAdmin(OneTranslatableModelAdmin):
     list_display = ("landing", "landing__site", "title", "emoji")
     list_filter = ("landing__site",)
 
 
 @admin.register(BenefitItem)
-class BenefitItemAdmin(TranslatableModelAdmin):
+class BenefitItemAdmin(OneTranslatableModelAdmin):
     list_display = ("landing", "landing__site", "name_en", "emoji", "description")
     list_filter = ("landing__site",)
     list_editable = ("name_en", "emoji")
 
 
 @admin.register(ArticlesSection)
-class ArticlesSectionAdmin(TranslatableModelAdmin):
+class ArticlesSectionAdmin(OneTranslatableModelAdmin):
     pass
 
 
 @admin.register(StepActionSection)
-class StepActionSectionAdmin(TranslatableModelAdmin):
+class StepActionSectionAdmin(OneTranslatableModelAdmin):
     list_display = ("landing", "landing__site")

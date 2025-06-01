@@ -2,14 +2,13 @@ from django.contrib import admin, messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
-from one.admin import FORMFIELD_OVERRIDES_DICT
+from one.admin import OneModelAdmin
 
 from .models import App, EtsyAuth, Listing, ListingFile, ListingImage, Shop
 
 
 @admin.register(App)
-class AppAdmin(admin.ModelAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class AppAdmin(OneModelAdmin):
     list_display = ("name", "keystring", "redirect_uri", "scopes")
     actions = ["request_auth"]
 
@@ -21,7 +20,7 @@ class AppAdmin(admin.ModelAdmin):
 
 
 @admin.register(EtsyAuth)
-class EtsyAuthAdmin(admin.ModelAdmin):
+class EtsyAuthAdmin(OneModelAdmin):
     list_display = ("__str__", "etsy_user_id", "shop_id", "app", "user", "expires_at")
     readonly_fields = [f.name for f in EtsyAuth._meta.fields]
     actions = ["refresh"]
@@ -37,8 +36,7 @@ class EtsyAuthAdmin(admin.ModelAdmin):
 
 
 @admin.register(Shop)
-class ShopAdmin(admin.ModelAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class ShopAdmin(OneModelAdmin):
     list_display = ("shop_name", "etsy_auth")
 
 

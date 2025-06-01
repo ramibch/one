@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from one.admin import FORMFIELD_OVERRIDES_DICT
+from one.admin import OneModelAdmin
 
 from .models import Client, Path, PathRedirect, Request
 from .tasks import block_spammy_clients
@@ -67,7 +67,6 @@ class RequestAdmin(admin.ModelAdmin):
 
 
 @admin.register(PathRedirect)
-class LinkRedirectAdmin(admin.ModelAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class LinkRedirectAdmin(OneModelAdmin):
     list_display = ("__str__", "from_path", "to_path")
     autocomplete_fields = ("from_path", "to_path")

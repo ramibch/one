@@ -1,14 +1,13 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from one.admin import FORMFIELD_OVERRIDES_DICT
+from one.admin import OneModelAdmin
 
 from .models import Article, ArticleFile, MainTopic
 
 
 @admin.register(MainTopic)
-class MainTopicAdmin(admin.ModelAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class MainTopicAdmin(OneModelAdmin):
     list_display = ("name", "present_in_filesystem")
     # readonly_fields = ("name", "present_in_filesystem")
     list_filter = ("present_in_filesystem",)
@@ -16,7 +15,6 @@ class MainTopicAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(TranslationAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
     list_display = ("__str__", "featured", "created_at", "updated_at")
 
     list_filter = ("main_topic", "folder_name", "created_at", "updated_at")

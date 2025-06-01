@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from one.admin import FORMFIELD_OVERRIDES_DICT
+from one.admin import OneModelAdmin
 
 from .models import Company, CompanyLocation, Job, Person
 from .tasks import scrape_company_pages, scrape_job_detail_pages
@@ -13,8 +13,7 @@ class CompanyLocationInline(admin.TabularInline):
 
 
 @admin.register(Company)
-class CompanyAdmin(admin.ModelAdmin):
-    formfield_overrides = FORMFIELD_OVERRIDES_DICT
+class CompanyAdmin(OneModelAdmin):
     list_display = ("__str__", "website", "jobs_page_html_is_empty")
     search_fields = ("name", "website")
     list_filter = ("jobs_scrape_ready",)

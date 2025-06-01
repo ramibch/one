@@ -99,11 +99,9 @@ class TranslatableModel(OneModel):
             raise ValueError("LANG_ATTR not defined in model.")
 
         langs = list(
-            set(
-                self.__class__.objects.filter(pk=self.pk).values_list(
-                    self.LANG_ATTR, flat=True
-                )
-            )
+            self.__class__.objects.filter(pk=self.pk)
+            .values_list(self.LANG_ATTR, flat=True)
+            .distinct()
         )
 
         if len(langs) == 0 or settings.LANGUAGE_CODE in langs:
