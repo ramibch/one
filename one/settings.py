@@ -137,6 +137,7 @@ ROOT_URLCONF = "one.urls"
 
 TEMPLATES = [
     {
+        "NAME": "dj",
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "one" / "_templates"],
         "APP_DIRS": True,
