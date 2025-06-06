@@ -119,7 +119,7 @@ def inform_admin_about_404_issues():
         "requests_duration__max"
     )
 
-    some_time_ago = timezone.now() - dt_diff
+    some_time_ago = timezone.now() - dt_diff  # type: ignore
 
     qs = (
         Path.objects.annotate(
@@ -135,5 +135,5 @@ def inform_admin_about_404_issues():
         .order_by("-num")[0:100]
     )
     text = "Most not-found (404) paths\n\n"
-    text += "\n".join(f"{p.num} {p.name}" for p in qs)
+    text += "\n".join(f"{p.num} {p.name}" for p in qs)  # type: ignore
     Bot.to_admin(text)

@@ -13,6 +13,8 @@
   - [ ] https://github.com/jamesturk/jellyfish/issues/229
   - [ ] https://github.com/seatgeek/thefuzz/issues/90
 - [ ] Mail box for users?
+- [ ] https://driverjs.com/
+- [ ] https://swissdevjobs.ch/job_feed.xml
 
 ## GeoIP2 dbs
 

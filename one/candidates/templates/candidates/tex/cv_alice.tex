@@ -1,3 +1,9 @@
+% title = Twenty Seconds Resume/CV
+% interpreter = xelatex
+% license = MIT
+% credits = Carmine Spagnuolo (cspagnuolo@unisa.it), Vel (vel@LaTeXTemplates.com)
+
+
 \documentclass[letterpaper]{twentysecondcv-alice} % a4paper for A4
 \usepackage{graphicx}
 {% graphicspath %}
@@ -5,8 +11,8 @@
 %	 PERSONAL INFORMATION
 %----------------------------------------------------------------------------------------
 % photo
-{% if profile.has_photo and profile.photo_active %}
-  \photo{\includegraphics[width=\imagewidth]{ {{ - profile.get_photo_path() - }} } }
+{% if profile.photo_file_exists %}
+  \photo{\includegraphics[width=\imagewidth]{ {{ - profile.local_photo_path - }} } }
 {% else %}
   \photo{}
 {% endif %}

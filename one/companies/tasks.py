@@ -159,7 +159,10 @@ def scrape_job_detail_pages(qs=None):
             log += f"⚠️ Status code {response.status_code}\n{job_details}"
             continue
 
-        page_soup = BeautifulSoup(response.content.decode("utf-8"), "html.parser")
+        try:
+            page_soup = BeautifulSoup(response.content.decode("utf-8"), "html.parser")
+        except Exception as e:
+            log += f"⚠️ Unable to get response content: {e}"
 
         container_tag = job.company.job_detail_container_tag
         container_class = job.company.job_detail_container_class

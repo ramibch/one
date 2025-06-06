@@ -7,7 +7,7 @@ from one.choices import Countries
 from one.quiz.models import Lection
 
 from .models import EnglishQuizLection, YearlyHolidayCalender
-from .values import LATEX_LANGUAGES
+from .values import TEX_LANGUAGE_MAPPING
 
 # Calendars
 
@@ -39,8 +39,11 @@ def create_yearly_holiday_calendars():
 
         lang = (
             default_language
-            if default_language in LATEX_LANGUAGES
-            else next((lng for lng in country_langs if lng in LATEX_LANGUAGES), None)
+            if default_language in TEX_LANGUAGE_MAPPING
+            else next(
+                (lng for lng in country_langs if lng in TEX_LANGUAGE_MAPPING),
+                None,
+            )
         )
 
         if lang is None:

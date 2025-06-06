@@ -1,6 +1,8 @@
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-LATEX_LANGUAGES = {
+TEX_LANGUAGE_MAPPING = {
+    # key: django lan
     "en": "english",
     "de": "german",
     "es": "spanish",
@@ -19,30 +21,20 @@ LATEX_LANGUAGES = {
 }
 
 
-TIPICAL_PAPERSIZES = {
-    "a3paper": "A3 (297 mm x 420 mm)",
-    "a4paper": "A4 (210 mm x 297 mm)",
-    "a5paper": "A5 (148 mm x 210 mm)",
-    "ansibpaper": "ANSI B (11 in. x 17 in.)",
-    "letterpaper": "ANSI A (8.5 in. x 11 in.)",
-    "legalpaper": "Legal (8.5 in. x 14 in.)",
-}
+class Papersizes(models.TextChoices):
+    A3 = "a3paper", "A3 (297 mm x 420 mm)"
+    A4 = "a4paper", "A4 (210 mm x 297 mm)"
+    A5 = "a5paper", "A5 (148 mm x 210 mm)"
+    ANSI_B = "ansibpaper", "ANSI B (11 in. x 17 in.)"
+    LETTER = "letterpaper", "ANSI A (8.5 in. x 11 in.)"
+    LEGAL_PAPER = "legalpaper", "Legal (8.5 in. x 14 in.)"
 
 
-PAGE_ORIENTATIONS = {
-    "portrait": _("Portrait"),
-    "landscape": _("Landscape"),
-}
+class PageOrientations(models.TextChoices):
+    PORTRAIT = "portrait", _("Portrait")
+    LANDSCAPE = "landscape", _("Landscape")
 
 
-def suggest_margin(papersize):
-    if papersize == "a3paper":
-        return "2.5cm"
-    elif papersize == "a4paper":
-        return "2.0cm"
-    elif papersize == "a5paper":
-        return "1.5cm"
-    elif papersize in "letterpaper,legalpaper":
-        return "0.75in"
-    elif papersize == "ansibpaper":
-        return "1.00in"
+class PaperUnits(models.TextChoices):
+    MILIMITERS = "mm", _("Millimeters")
+    INCHES = "in", _("Inches")

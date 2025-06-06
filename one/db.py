@@ -14,7 +14,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.text import slugify
-from django.utils.translation import gettext_lazy as _
 
 from one.bot import Bot
 
@@ -152,7 +151,11 @@ class TranslatableModel(OneModel):
 # Functions
 
 
-def update_model_from_dict(db_obj, data_dict, save: bool = True):
+def update_model_from_dict(
+    db_obj: type[models.Model],
+    data_dict: dict,
+    save: bool = True,
+) -> type[models.Model]:
     """
     Updates a model object from a dictionary
     db_obj.<key> = value <-> dict[key, value]
@@ -224,11 +227,3 @@ class ChoiceArrayField(ArrayField):
         # care for it.
         # pylint:disable=bad-super-call
         return super(ArrayField, self).formfield(**defaults)
-
-
-# Choices
-
-
-class Genders(models.TextChoices):
-    MALE = "m", _("male")
-    FEMALE = "f", _("female")

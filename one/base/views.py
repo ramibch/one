@@ -18,6 +18,7 @@ from django_htmx.http import retarget
 
 from one.articles.models import Article
 from one.choices import Topics
+from one.db import TranslatableModel
 from one.dgt.models import DgtTest
 from one.faqs.models import FAQ
 from one.landing.models import LandingPage
@@ -74,6 +75,7 @@ class SlugPageView(View):
         }
 
         for model_class, template_name in models_templates.items():
+            assert issubclass(model_class, TranslatableModel)
             try:
                 obj = model_class.objects.get(expr)
                 return render(request, template_name, {"object": obj})

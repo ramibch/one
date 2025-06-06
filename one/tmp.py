@@ -11,7 +11,7 @@ class TmpFile:
     Write from db file/image field in tmp folder file to be used by the file system.
     """
 
-    TMP_DIR = settings.TMP_DIR
+    TMP_DIR = settings.BASE_DIR / "tmp"  # TODO: change to Path("/tmp/django-one")
 
     def __init__(self, field):
         self.field = field

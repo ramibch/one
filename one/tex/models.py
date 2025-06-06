@@ -19,7 +19,7 @@ from one.db import OneModel, TranslatableModel
 from one.quiz.models import Lection
 
 from .compile import render_pdf
-from .values import LATEX_LANGUAGES
+from .values import TEX_LANGUAGE_MAPPING
 
 
 class YearlyHolidayCalender(TranslatableModel):
@@ -112,7 +112,7 @@ class YearlyHolidayCalender(TranslatableModel):
             holiday_color = colors[color]
 
             context = {
-                "doc_language": LATEX_LANGUAGES[self.lang],
+                "doc_language": TEX_LANGUAGE_MAPPING[self.lang],
                 "title": self.title,
                 "year": self.year,
                 "footer_url": "https://ramib.ch",

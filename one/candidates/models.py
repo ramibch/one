@@ -9,19 +9,25 @@ from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import PolygonField
 from django.core.files.base import ContentFile
 from django.db import models
-from django.db.models import Max, Value
+from django.db.models import Value
 from django.db.models.functions import Concat
 from django.utils.functional import cached_property
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from one.db import ChoiceArrayField, Genders, OneModel, TranslatableModel
+from one.choices import Genders
+from one.db import ChoiceArrayField, OneModel, TranslatableModel
+from one.tex.compile import render_pdf
+from one.tex.filters import do_latex_escape
+from one.tex.values import PaperUnits
+from one.tmp import TmpFile
 
 User = get_user_model()
 
 
 class CandidateProfile(TranslatableModel):
     def get_upload_path(self, filename):
-        return f"candiates/{self.id}/{filename}"
+        return f"candidates/{self.id}/{filename}"
 
     LANG_ATTR = "language"
     LANGS_ATTR = "languages"
@@ -56,23 +62,10 @@ class CandidateProfile(TranslatableModel):
     email = models.EmailField(max_length=64)
     phone = models.CharField(max_length=32)
     location = models.CharField(max_length=32, null=True, blank=True)
-    linkedin = models.CharField(max_length=32, null=True, blank=True)
-    github = models.CharField(max_length=32, null=True, blank=True)
-    website_label = models.CharField(max_length=64, null=True, blank=True)
+    linkedin_url = models.CharField(max_length=32, null=True, blank=True)
     website_url = models.URLField(max_length=128, blank=True, null=True)
-
     about = models.TextField(null=True, blank=True)
-
-    why_me = models.CharField(
-        max_length=128, default=_("Why Should You Hire Me?"), null=True, blank=True
-    )
-
-    latex_pt = models.PositiveSmallIntegerField(default=12)
-    photo_width = models.CharField(max_length=3, default="0.7")
-    margin_left = models.CharField(max_length=5, default="25mm")
-    margin_right = models.CharField(max_length=5, default="20mm")
-    margin_top = models.CharField(max_length=5, default="20mm")
-    margin_bottom = models.CharField(max_length=5, default="20mm")
+    coverletter_body = models.TextField(null=True, blank=True)
 
     # labels
     about_label = models.CharField(max_length=32, default=_("Professional Profile"))
@@ -83,48 +76,45 @@ class CandidateProfile(TranslatableModel):
     language_label = models.CharField(max_length=32, default=_("Languages"))
     project_label = models.CharField(max_length=32, default=_("Projects"))
 
-    signature = models.ImageField(upload_to=get_upload_path, null=True)
     photo = models.ImageField(upload_to=get_upload_path, null=True)
     docs = models.FileField(upload_to=get_upload_path, null=True, blank=True)
 
-    @cached_property
-    def has_website(self):
-        return self.website_label is not None and self.website_url is not None
+    own_cv = models.FileField(upload_to=get_upload_path, null=True, blank=True)
 
-    @cached_property
-    def local_signature_path(self) -> Path:
-        pass
-        # return write_local_file(self.signature.name)
-
-    @cached_property
-    def local_docs_path(self) -> Path:
-        pass
-        # return write_local_file(self.docs.name)
+    def get_tex_value(self, field_name: str) -> str:
+        value = getattr(self, field_name)
+        if value is None:
+            return ""
+        if not isinstance(value, str):
+            raise ValueError("Not possible to get tex value of a non-str obj.")
+        return do_latex_escape(value).strip("\n")
 
     @cached_property
     def local_photo_path(self) -> Path:
-        pass
-        # return write_local_file(self.photo.name)
+        return TmpFile(self.photo).path
 
-    def file_exists(self, attr: str):
-        obj_attr = getattr(self, attr)
-        if not obj_attr:
-            raise ValueError(f"{attr} does not exists in {self.__class__.__name__}")
-
-        return bool(obj_attr.name) and obj_attr.storage.exists(obj_attr.name)
-
-    def signature_file_exists(self):
-        return bool(self.signature.name) and self.signature.storage.exists(
-            self.signature.name
-        )
-
-    def photo_file_exists(self):
+    @cached_property
+    def photo_file_exists(self) -> bool:
         return bool(self.photo.name) and self.photo.storage.exists(self.photo.name)
 
-    def docs_file_exists(self):
-        return bool(self.docs.name) and self.docs.storage.exists(self.docs.name)
+    def full_name_slug(self) -> str:
+        return slugify(self.full_name)
 
-    def _clone_children(self, profile_clone):
+    def clone_obj(self, attrs: dict):
+        clone = copy(self)
+        clone.photo = None
+        for key, value in attrs.items():
+            setattr(clone, key, value)
+        if self.photo_file_exists:
+            clone.photo.save(
+                os.path.basename(self.photo.name),
+                ContentFile(self.photo.read()),
+                save=False,
+            )
+        clone.save()
+        self._clone_children(clone)
+
+    def _clone_children(self, cloned_obj):
         related_sets = (
             "experience_set",
             "education_set",
@@ -139,48 +129,14 @@ class CandidateProfile(TranslatableModel):
                 continue
             for child in children_related.all():
                 child.pk = None
-                child.profile = profile_clone
+                child.profile = cloned_obj
                 child.save()
-
-    def clone_obj(self, attrs: dict):
-        clone = copy(self)
-        clone.signature = None
-        clone.photo = None
-        clone.docs = None
-        clone.pk = CandidateProfile.objects.aggregate(Max("id"))["id__max"] + 1
-
-        for key, value in attrs.items():
-            setattr(clone, key, value)
-
-        if self.signature_file_exists():
-            clone.signature.save(
-                os.path.basename(self.signature.name),
-                ContentFile(self.signature.read()),
-                save=False,
-            )
-
-        if self.photo_file_exists():
-            clone.photo.save(
-                os.path.basename(self.photo.name),
-                ContentFile(self.photo.read()),
-                save=False,
-            )
-        if self.docs_file_exists():
-            clone.docs.save(
-                os.path.basename(self.docs.name),
-                ContentFile(self.docs.read()),
-                save=False,
-            )
-
-        clone.save()
-
-        self._clone_children(clone)
 
     def __str__(self) -> str:
         return f"{self.full_name} - {self.job_title}"
 
 
-class CandidateBaseChildModel(TranslatableModel):
+class CandidateProfileChild(TranslatableModel):
     LANG_ATTR = "profile__language"
     LANGS_ATTR = "profile__languages"
     profile = ForeignKey(CandidateProfile, on_delete=models.CASCADE)
@@ -195,7 +151,7 @@ class NotificationTypes(models.TextChoices):
     NONE = "none", _("No notification")
 
 
-class CandidateJobAlert(CandidateBaseChildModel):
+class CandidateJobAlert(CandidateProfileChild):
     name = models.CharField(max_length=255)
     query = models.CharField(max_length=255)
     area = PolygonField()
@@ -204,7 +160,7 @@ class CandidateJobAlert(CandidateBaseChildModel):
     )
 
 
-class CandidateExperience(CandidateBaseChildModel):
+class CandidateExperience(CandidateProfileChild):
     company_name = models.CharField(max_length=64)
     job_title = models.CharField(max_length=64)
     from_to = models.CharField(max_length=32)
@@ -214,7 +170,7 @@ class CandidateExperience(CandidateBaseChildModel):
         return f"{self.job_title} - {self.company_name}"
 
 
-class Education(CandidateBaseChildModel):
+class CandidateEducation(CandidateProfileChild):
     institution_name = models.CharField(max_length=64)
     title = models.CharField(max_length=64)
     from_to = models.CharField(max_length=32)
@@ -224,21 +180,21 @@ class Education(CandidateBaseChildModel):
         return f"{self.title} - {self.institution_name}"
 
 
-class Skill(CandidateBaseChildModel):
+class CandidateSkill(CandidateProfileChild):
     name = models.CharField(max_length=64)
 
     def __str__(self):
         return self.name
 
 
-class Certificate(CandidateBaseChildModel):
+class CandidateCertificate(CandidateProfileChild):
     name = models.CharField(max_length=128)
 
     def __str__(self):
         return self.name
 
 
-class CandiateProject(CandidateBaseChildModel):
+class CandidateProject(CandidateProfileChild):
     title = models.CharField(max_length=64)
     url = models.URLField(max_length=128, null=True, blank=True)
     from_to = models.CharField(max_length=32, null=True, blank=True)
@@ -248,7 +204,7 @@ class CandiateProject(CandidateBaseChildModel):
         return self.title
 
 
-class LanguageSkill(CandidateBaseChildModel):
+class CandidateLanguageSkill(CandidateProfileChild):
     name = models.CharField(max_length=128)
 
     def __str__(self):
@@ -256,27 +212,81 @@ class LanguageSkill(CandidateBaseChildModel):
 
 
 class CvTexTemplates(models.TextChoices):
-    ALICE = "tex/cvs/alice/cv.tex", "Alice"
-    ## TODO: add
+    ALICE = "candidates/tex/cv_alice.tex", "Alice"
+    DEVELOPER = "candidates/tex/cv_developer.tex", "Developer"
+    FREEMAN = "candidates/tex/cv_freeman.tex", "Freeman"
+    KRIEGER = "candidates/tex/cv_krieger.tex", "Krieger"
+    MARISSA = "candidates/tex/cv_marissa.tex", "Marissa"
+    MODERN = "candidates/tex/cv_modern.tex", "Modern"
+    RECEIVE = "candidates/tex/cv_receive.tex", "Receive"
 
 
-class CandidateCv(OneModel):
+class TexCv(OneModel):
     def get_upload_path(self, filename):
-        return f"candiates/{self.profile.id}/cvs/{filename}"
+        return f"candidates/{self.profile.id}/cvs/{filename}"
 
+    id = models.UUIDField(
+        primary_key=True,
+        db_index=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     profile = ForeignKey(CandidateProfile, on_delete=models.CASCADE)
-    tex_template = models.CharField(max_length=64, choices=CvTexTemplates)
+    template = models.CharField(max_length=64, choices=CvTexTemplates)
     rendered_text = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
     pdf = models.FileField(upload_to=get_upload_path, null=True, blank=True)
-    pdf_time = models.FloatField(default=0)
-    image_time = models.FloatField(default=0)
-    render_time = models.FloatField(default=0)
-    auto_created = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    latex_pt = models.PositiveSmallIntegerField(default=12)
+    photo_width = models.CharField(max_length=3, default="0.7")  # Needed?
+    margin_left = models.PositiveSmallIntegerField(default=25)
+    margin_right = models.PositiveSmallIntegerField(default=20)
+    margin_top = models.PositiveSmallIntegerField(default=20)
+    margin_bottom = models.PositiveSmallIntegerField(default=20)
+    margin_unit = models.CharField(default=PaperUnits.MILIMITERS, choices=PaperUnits)
 
     class Meta(OneModel.Meta):
         ordering = ["-created_at"]
 
     def __str__(self) -> str:
-        return f"CV ({self.profile.fullname} {self.tex})"
+        return f"CV ({self.profile.full_name})"
+
+    @cached_property
+    def interpreter(self) -> str:
+        d = {
+            CvTexTemplates.ALICE.value: "xelatex",
+            CvTexTemplates.DEVELOPER.value: "xelatex",
+            CvTexTemplates.FREEMAN.value: "xelatex",
+            CvTexTemplates.KRIEGER.value: "xelatex",
+            CvTexTemplates.MARISSA.value: "pdflatex",
+            CvTexTemplates.MODERN.value: "xelatex",
+            CvTexTemplates.RECEIVE.value: "lualatex",
+        }
+        return d.get(self.template) or "xelatex"
+
+    def render_cv(self):
+        self.pdf.delete(save=False)
+        context = {"profile": self.profile}
+        cl_bytes = render_pdf(self.template, context, interpreter=self.interpreter)
+        self.pdf.save("CV.pdf", ContentFile(cl_bytes))
+
+
+class JobApplication(OneModel):
+    def get_upload_path(self, filename):
+        return f"candidates/{self.cv.profile.id}/apps/{filename}"
+
+    id = models.UUIDField(
+        primary_key=True,
+        db_index=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+    cv = ForeignKey(TexCv, on_delete=models.CASCADE)
+    job = ForeignKey("companies.Job", on_delete=models.CASCADE)
+    coverletter = models.FileField(upload_to=get_upload_path, null=True, blank=True)
+
+    def render_coverletter(self):
+        self.coverletter.delete(save=False)
+        template = "candidates/tex/coverletter.tex"
+        context = {"app": self}
+        cl_bytes = render_pdf(template, context, interpreter="pdflatex")
+        self.coverletter.save(_("Coverletter.pdf"), ContentFile(cl_bytes))

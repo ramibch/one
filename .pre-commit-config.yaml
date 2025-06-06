@@ -35,11 +35,12 @@ repos:
     hooks:
       - id: ripsecrets
 
-  - repo: https://github.com/adamchainz/djade-pre-commit
-    rev: "1.4.0"
-    hooks:
-      - id: djade
-        args: [--target-version, "5.2"]
+  # - repo: https://github.com/adamchainz/djade-pre-commit
+  #   rev: "1.4.0"
+  #   hooks:
+  #     - id: djade
+  #       args: [--target-version, "5.2"]
+  # Issues with jinja2
 
   - repo: https://github.com/adamchainz/django-upgrade
     rev: "1.24.0"

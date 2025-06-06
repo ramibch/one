@@ -497,9 +497,6 @@ CLEAR_CACHE_IN_DEV = True
 LATEX_GRAPHICSPATH = []
 
 
-# tmp dir
-TMP_DIR = BASE_DIR / "tmp"
-
 # Submodules
 SUBMODULES_PATH = BASE_DIR / "submodules"
 

@@ -12,12 +12,12 @@ from .exceptions import TexError
 def render_pdf(
     template_name: str,
     context: dict,
-    interpreter="pdflatex",
-    interpreter_opts="-interaction=batchmode -no-shell-escape",
-    run_times=1,
+    interpreter: str = "pdflatex",
+    interpreter_opts: str = "-interaction=batchmode -no-shell-escape",
+    run_times: int = 1,
 ) -> bytes:
     # rendering pdf file
-    template = get_template(template_name)
+    template = get_template(template_name, using="tex")
     rendered_text = template.render(context)
     null = "$null" if "Windows" in platform.system() else "/dev/null"
     filename = "texput.tex"
