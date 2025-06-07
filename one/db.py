@@ -16,6 +16,7 @@ from django.utils.functional import cached_property
 from django.utils.text import slugify
 
 from one.bot import Bot
+from one.tex.filters import do_latex_escape, do_linebreaks
 
 # Project models
 
@@ -34,6 +35,14 @@ class OneModel(Model):
     @cached_property
     def full_admin_url(self) -> str:
         return settings.MAIN_WEBSITE_URL + self.admin_url
+
+    def get_tex_value(self, attr_name: str) -> str:
+        value = getattr(self, attr_name)
+        if value is None:
+            return ""
+        if not isinstance(value, str):
+            raise ValueError("Not possible to get tex value of a non-str obj.")
+        return do_latex_escape(do_linebreaks(value)).strip("\n")
 
     class Meta(Model.Meta):
         abstract = True

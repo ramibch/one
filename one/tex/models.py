@@ -122,7 +122,7 @@ class YearlyHolidayCalender(TranslatableModel):
                 "holiday_color": holiday_color,
             }
 
-            pdf_bytes = render_pdf("calendars/calendar.tex", context)
+            pdf_bytes = render_pdf("calendars/calendar.tex", context)[0]
             self.pdf = ContentFile(pdf_bytes, name=f"{filename}.pdf")
             img1, img2 = convert_from_bytes(pdf_bytes)
 
@@ -194,7 +194,7 @@ class EnglishQuizLection(OneModel):
             "quiz/english_lection.tex",
             context,
             interpreter="xelatex",
-        )
+        )[0]
         self.pdf = ContentFile(pdf_bytes, name=f"{filename}.pdf")
 
         # print
@@ -202,7 +202,7 @@ class EnglishQuizLection(OneModel):
             "quiz/english_lection.tex",
             {"lection": lection},
             interpreter="xelatex",
-        )
+        )[0]
         self.print = ContentFile(print_bytes, name=f"{filename}-print.pdf")
 
         # image

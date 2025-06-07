@@ -15,7 +15,7 @@ def render_pdf(
     interpreter: str = "pdflatex",
     interpreter_opts: str = "-interaction=batchmode -no-shell-escape",
     run_times: int = 1,
-) -> bytes:
+) -> tuple[bytes, str]:
     # rendering pdf file
     template = get_template(template_name, using="tex")
     rendered_text = template.render(context)
@@ -45,4 +45,4 @@ def render_pdf(
         with open(temppath / "texput.pdf", "rb") as f:
             bytes_pdf = f.read()
 
-        return bytes_pdf
+        return bytes_pdf, rendered_text

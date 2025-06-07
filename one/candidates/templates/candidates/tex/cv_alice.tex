@@ -20,7 +20,7 @@
 \fullname{ {{- profile.get_tex_value("full_name") -}} }
 % Job title/career
 {% if profile.jobtitle_active %}
-  \jobtitle{ {{- profile.get_tex_value("jobtitle") -}} }
+  \jobtitle{ {{- profile.get_tex_value("jobtitle") - }} }
 {% else %}
   \jobtitle{}
 {% endif %}

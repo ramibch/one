@@ -20,3 +20,12 @@ def task_render_coverletters(job_apps=None):
 
     for job_app in job_apps:
         job_app.render_coverletter()
+
+
+@huey.db_periodic_task(crontab(minute="*"))
+def task_render_dossiers(job_apps=None):
+    if job_apps is None:
+        job_apps = JobApplication.objects.filter(dossier__in=["", None])
+
+    for job_app in job_apps:
+        job_app.render_dossier()

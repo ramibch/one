@@ -292,7 +292,7 @@ HUEY = {
     "name": DATABASES["default"]["NAME"],  # Use db name for huey.
     "results": True,  # Store return values of tasks.
     "store_none": False,  # If a task returns None, do not save to results.
-    "immediate": ENV == DEV,  # If DEBUG=True, run synchronously.
+    "immediate": ENV == DEV,  # run synchronously.
     "utc": True,  # Use UTC for all times internally.
     "blocking": True,  # Perform blocking pop rather than poll Redis.
     "connection": {"connection_pool": REDIS_CONNECTION_POOL},
@@ -495,6 +495,7 @@ CLEAR_CACHE_IN_DEV = True
 
 # Tex
 # TODO: check if it is posible to pass an arg. to run tex without this setting.
+
 LATEX_GRAPHICSPATH = []
 
 

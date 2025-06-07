@@ -1,3 +1,5 @@
+import os
+import time
 from datetime import timedelta
 from io import StringIO
 
@@ -14,6 +16,7 @@ from huey.signals import SIGNAL_CANCELED, SIGNAL_ERROR, SIGNAL_LOCKED, SIGNAL_RE
 from huey_monitor.models import TaskModel
 
 from one.db import BaseSubmoduleFolder, TranslatableModel
+from one.tmp import TmpFile
 from one.translation import translate_text
 
 from ..bot import Bot
@@ -187,3 +190,28 @@ def inform_to_admin_about_db_table_sizes():
         text += f"{size_pretty}\t{table_name}\n"
 
     Bot.to_admin(text)
+
+
+@huey.periodic_task(crontab(minute="*/15"))
+def purge_tmp_files():
+    """
+    Since Ubuntu purges tmp files on "/tmp" when the host restarts,
+    we need to purge old files to avoid high disk usage.
+    """
+    now = time.time()
+    tmppath = TmpFile.TMP_DIR
+    secs = TmpFile.PURGE_DAYS * 24 * 3600
+
+    if secs < 0:
+        return
+
+    paths = [fp for fp in tmppath.rglob("*.*") if now - os.path.getmtime(fp) > secs]
+    for p in paths:
+        p.unlink()
+
+        if (
+            os.listdir(p.parent) == []
+            and p.parent.is_dir()
+            and len(str(p.parent).split("/")) >= 4
+        ):
+            p.parent.rmdir()

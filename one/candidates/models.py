@@ -16,9 +16,9 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 from one.choices import Genders
+from one.companies.models import Person
 from one.db import ChoiceArrayField, OneModel, TranslatableModel
 from one.tex.compile import render_pdf
-from one.tex.filters import do_latex_escape
 from one.tex.values import PaperUnits
 from one.tmp import TmpFile
 
@@ -61,7 +61,7 @@ class CandidateProfile(TranslatableModel):
     job_title = models.CharField(max_length=64)
     email = models.EmailField(max_length=64)
     phone = models.CharField(max_length=32)
-    location = models.CharField(max_length=32, null=True, blank=True)
+    location = models.CharField(max_length=32)
     linkedin_url = models.CharField(max_length=32, null=True, blank=True)
     website_url = models.URLField(max_length=128, blank=True, null=True)
     about = models.TextField(null=True, blank=True)
@@ -80,14 +80,6 @@ class CandidateProfile(TranslatableModel):
     docs = models.FileField(upload_to=get_upload_path, null=True, blank=True)
 
     own_cv = models.FileField(upload_to=get_upload_path, null=True, blank=True)
-
-    def get_tex_value(self, field_name: str) -> str:
-        value = getattr(self, field_name)
-        if value is None:
-            return ""
-        if not isinstance(value, str):
-            raise ValueError("Not possible to get tex value of a non-str obj.")
-        return do_latex_escape(value).strip("\n")
 
     @cached_property
     def local_photo_path(self) -> Path:
@@ -283,10 +275,41 @@ class JobApplication(OneModel):
     cv = ForeignKey(TexCv, on_delete=models.CASCADE)
     job = ForeignKey("companies.Job", on_delete=models.CASCADE)
     coverletter = models.FileField(upload_to=get_upload_path, null=True, blank=True)
+    coverletter_text = models.TextField(null=True, blank=True)
+    dossier = models.FileField(upload_to=get_upload_path, null=True, blank=True)
+    dossier_text = models.TextField(null=True, blank=True)
 
     def render_coverletter(self):
         self.coverletter.delete(save=False)
         template = "candidates/tex/coverletter.tex"
-        context = {"app": self}
-        cl_bytes = render_pdf(template, context, interpreter="pdflatex")
-        self.coverletter.save(_("Coverletter.pdf"), ContentFile(cl_bytes))
+        context = {"profile": self.cv.profile, "job": self.job, "app": self}
+        cl_bytes, latex_text = render_pdf(template, context, interpreter="pdflatex")
+        self.coverletter.save(_("Coverletter.pdf"), ContentFile(cl_bytes), save=False)
+        self.coverletter_text = latex_text
+        self.save()
+
+    def render_dossier(self):
+        self.dossier.delete(save=False)
+        template = "candidates/tex/dossier.tex"
+        context = {"profile": self.cv.profile, "job": self.job, "app": self}
+        cl_bytes, latex_text = render_pdf(template, context, interpreter="pdflatex")
+        self.dossier.save(_("Dossier.pdf"), ContentFile(cl_bytes), save=False)
+        self.dossier_text = latex_text
+        self.save()
+
+    @cached_property
+    def coverletter_title(self):
+        return f"{_('Job application')}: {self.job.title}"
+
+    @cached_property
+    def coverletter_salutation(self):
+        recruiter: Person = self.job.recruiter
+        if recruiter is None:
+            return _("Dear Sir/Madam")
+        else:
+            gender = _("Mrs") if recruiter.gender == Genders.FEMALE else _("Mr")
+            return f"{_('Dear')} {gender} {recruiter.last_name}"
+
+    @cached_property
+    def coverletter_closing(self):
+        return _("Best regards")

@@ -1,74 +1,39 @@
-%----------------------------------------------------------------------------------------
-%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
-%----------------------------------------------------------------------------------------
-
-% Default font size of the document, can use values of 10pt, 11pt or 12pt, but you may need to adjust margins if reducing font size
 \documentclass[12pt]{letter}
-
-%----------------------------------------------------------------------------------------
-%	FONTS
-%----------------------------------------------------------------------------------------
-
-\usepackage[utf8]{inputenc} % Required for inputting international characters
-\usepackage[T1]{fontenc} % Output font encoding for international characters
-
-\usepackage{fouriernc} % Use the URW Schoolbook L font, similar to New Century Schoolbook
-
-%----------------------------------------------------------------------------------------
-%	MARGINS
-%----------------------------------------------------------------------------------------
-
-\usepackage{geometry} % Required for adjusting page dimensions and margins
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fouriernc}
+\usepackage{geometry}
 
 \geometry{
-	paper=a4paper, % Paper size, change to letterpaper for US letter size
-	top=2cm, % Top margin
-	bottom=2.5cm, % Bottom margin
-	left=3.25cm, % Left margin
-	right=3.25cm, % Right margin
-	%showframe, % Uncomment to show how the type block is set on the page
+	paper=a4paper,
+	top=2cm,
+	bottom=2.5cm,
+	left=3.25cm,
+	right=3.25cm,
 }
-
-%----------------------------------------------------------------------------------------
 
 \begin{document}
 
-%----------------------------------------------------------------------------------------
-%	ADDRESSEE
-%----------------------------------------------------------------------------------------
+\date{\raggedright\today}
 
-\date{\raggedright\today} % Left-aligned date of the letter, use \today for the current date
+\begin{letter}{ \underline{ {{ app.get_tex_value("coverletter_title") }} } }
 
-\begin{letter}{  \underline{ {{ job.letter_title() }} } }
-
-%----------------------------------------------------------------------------------------
-%	YOUR NAME & ADDRESS
-%----------------------------------------------------------------------------------------
-
-\begin{center}
-	\large\bfseries % Font size and styling
-	{{ profile.first_name }} {{ profile.last_name }} \\ % Your name
-	{{ profile.letter_address_0 }} \\ % Your address and phone number
-	{{ profile.letter_address_1 }} \\
-	{{ profile.letter_phone }} \\
-\end{center}
+  \begin{center}
+	  \large\bfseries
+	  {{ profile.get_tex_value("full_name") }} \\
+	  {{ profile.get_tex_value("location") }} \\
+	  {{ profile.get_tex_value("phone") }} \\
+  \end{center}
 
 \vspace{1cm} % Vertical whitespace
 
-\signature{ {{ profile.first_name }} {{ profile.last_name }} } % Your name for the signature at the bottom
+\signature{ {{ profile.get_tex_value("full_name") }} }
 
-%----------------------------------------------------------------------------------------
-%	COVER LETTER CONTENT
-%----------------------------------------------------------------------------------------
+\opening{ {{ app.coverletter_salutation }},}
 
-\opening{ {{ job.letter_salutation() }},}
+{{ profile.get_tex_value("coverletter_body") }}
 
-{{ profile.letter_body }}
-
-\closing{ {{ - profile.letter_closing - }},}
-
-
-%----------------------------------------------------------------------------------------
+\closing{ {{- app.coverletter_closing -}},}
 
 \end{letter}
 

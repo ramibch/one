@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from django.conf import settings
 from django.utils.functional import cached_property
 
 from one.bot import Bot
@@ -11,7 +10,8 @@ class TmpFile:
     Write from db file/image field in tmp folder file to be used by the file system.
     """
 
-    TMP_DIR = settings.BASE_DIR / "tmp"  # TODO: change to Path("/tmp/django-one")
+    TMP_DIR = Path("/tmp/django-one")
+    PURGE_DAYS = 30
 
     def __init__(self, field):
         self.field = field
@@ -27,10 +27,10 @@ class TmpFile:
     def file_bytes(self):
         try:
             return self.field.storage.open(self.field.name, "rb").read()
-        except FileNotFoundError:
-            model_obj = self.field.instance
-            Bot.to_admin(f"File not found for: PK={model_obj.pk} {type(model_obj)}")
-            raise
+        except FileNotFoundError as e:
+            obj = self.field.instance
+            Bot.to_admin(f"File not found for: pk={obj.pk} {type(obj)}: {e}")
+            raise e
 
     def path_exists(self):
         return self._path.is_file()
