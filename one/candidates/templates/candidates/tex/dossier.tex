@@ -1,5 +1,3 @@
-% !TeX encoding = utf8
-
 \documentclass[a4paper, {{- app.cv.latex_pt -}}pt]{report}
 \usepackage[T1]{fontenc}
 \usepackage{helvet}
@@ -11,12 +9,11 @@
 \usepackage{eso-pic}
 \usepackage{charter}
 \usepackage[ {{- tex_lang -}} ]{babel}
-%\usepackage[left=25mm, right=20mm, top=20mm, bottom=20mm]{geometry}
 \usepackage[
-  left={{- app.cv.margin_left -}}{{- app.cv.margin_unit -}},
-  right={{- app.cv.margin_right -}}{{- app.cv.margin_unit -}},
-  top={{- app.cv.margin_top -}}{{- app.cv.margin_unit -}},
-  bottom={{- app.cv.margin_bottom -}}{{- app.cv.margin_unit -}}
+  left={{- app.cv.margin_left -}} {{- app.cv.margin_unit -}},
+  right={{- app.cv.margin_right -}} {{- app.cv.margin_unit -}},
+  top={{- app.cv.margin_top -}} {{- app.cv.margin_unit -}},
+  bottom={{- app.cv.margin_bottom -}} {{- app.cv.margin_unit -}}
   ]{geometry}
 \usepackage{enumitem}
 \usepackage{titlesec}
@@ -30,81 +27,65 @@
 \titleformat{\section}{\large\bfseries\color{primarycolor}}{}{0em}{}[\titlerule]
 \titleformat{\subsection}[runin]{\bfseries\color{primarycolor}}{}{0em}{}[:]
 
-%%%%%%%%%
-
-% \addtolength{\topmargin}{-10mm}
-% \addtolength{\textheight}{25mm}
-
-% Edit the following
-
-% Personal information
-\newcommand{\profilelinkedin}{ {% if app.cv.profile.linkedin %} \href{https://linkedin.com/in/ {{- app.cv.profile.linkedin -}} }{\faLinkedinIn\enspace {{ app.cv.profile.linkedin }} } {% endif %} }
-\newcommand{\profilegithub}{ {% if app.cv.profile.github %} \href{https://github.com/ {{- app.cv.profile.github -}} }{\faGithub\enspace {{ app.cv.profile.github }} } {% endif %} }
-\newcommand{\profilewebsite}{ {% if app.cv.profile.has_website %} \href{ {{- app.cv.profile.website_url -}} }{\faLink\enspace {{ app.cv.profile.website_label }} } {% endif %} }
-\newcommand{\profileemail}{ \href{mailto: {{- app.cv.profile.email -}} }{\faEnvelope\enspace {{ app.cv.profile.email }}}  }
-\newcommand{\profilephone}{ \href{tel: {{- app.cv.profile.cleaned_phone -}} }{\faPhone\enspace {{ app.cv.profile.phone }}} }
-
 \begin{document}
 
 \begin{titlepage}
   \centering
-
   \vspace*{10mm}
-
-  % Title and subtitle are enclosed between two rules.
-  % \rule{\textwidth}{1pt}
+  \vspace{.7\baselineskip}
 
   % Title
-  \vspace{.7\baselineskip}
-  {\huge \textbf{ {{- app.cv.profile.fullname -}}  }}
+  {\huge \textbf{ {{- profile.get_tex_value("full_name") -}}  }} \\
 
   % Subtitle
   \vspace*{.5cm}
-  {\LARGE {{ app.cv.profile.job_title }}}
-
-  % \rule{\textwidth}{1pt}
-
+  {\LARGE {{ profile.get_tex_value("job_title") }} } \\
   \vspace{20mm}
-  % Report logo.
-  \includegraphics[width=0.5\textwidth]{ {{- app.cv.profile.local_photo_path -}} }
 
+  % Photo
+  \includegraphics[width=0.5\textwidth]{ {{- profile.get_tex_value("local_photo_path") -}} } \\
   \vspace{10mm}
   \large
+
+  % General info
   \begin{tabular}{l}
-    {% if app.cv.profile.location %}
-    \faMapMarker\enspace {{ app.cv.profile.location }} \\ \\
+    % Location
+    {% if profile.location %}
+      \faMapMarker\enspace {{ profile.get_tex_value("location") }} \\ \\
     {% endif %}
-    {% if app.cv.profile.has_website %}
-    \profilewebsite \\ \\
+    % Website
+    {% if profile.website_url %}
+      \href{ {{- profile.get_tex_value("website_url") -}} }{\faLink\enspace {{ profile.get_tex_value("website") }} } \\ \\
     {% endif %}
-    \profileemail \\ \\
-    \profilephone
+    % Linkedin
+    {% if profile.linkedin_url %}
+      \href{ {{- profile.get_tex_value("linkedin_url") -}} }{\faLinkedinIn\enspace {{ profile.get_tex_value("linkedin") }} } \\ \\
+    {% endif %}
+    % Email
+    {% if profile.email %}
+      \href{ {{- profile.get_tex_value("email") -}} }{\faEnvelope\enspace {{ profile.get_tex_value("email") }} } \\ \\
+    {% endif %}
+    {% if profile.phone %}
+      \href{ {{- profile.get_tex_value("phone") -}} }{\faPhone\enspace {{ profile.get_tex_value("phone") }} }
+    {% endif %}
   \end{tabular}
+
 \end{titlepage}
 
 
 % Header
 \begin{center}
-{\fontsize{28}{0}\selectfont {{ app.cv.profile.fullname }}}
-
-\profileemail \hfill
-\profilephone \hfill
-\profilelinkedin \hfill
-\profilegithub \hfill
-\profilewebsite \hfill
+  {\fontsize{24}{0}\selectfont {{ profile.get_tex_value("full_name") }} } \\
+  \vspace{5mm}
+  \today
 \end{center}
 
-\vspace{5mm}
-
-% Opening block
-\today\\
-
-\vspace{-3mm}
-{{- app.job.recruiter.name -}}\\
-{{- app.job.company.name -}}\\
-{% if app.job.company_locations.count == 1 %}
-{{ app.job.company_locations.first().address }}
-{% endif %}
+\vspace{10mm}
+{{- app.job.recruiter.get_tex_value("full_name") -}} \\
+{{- app.job.company.name -}} \\
+{%- if app.job.company_locations.count() == 1 -%}
+{{ app.job.company_locations.first().geoinfo.get_tex_value("address") }}
+{%- endif -%}
 
 \begin{center}
 \textbf{ {{- app.job.get_tex_value("title") -}} }\\
@@ -116,7 +97,7 @@
 % Body
 \vspace{-3mm}\setlength\parindent{24pt}
 
-{{ app.cv.profile.get_tex_value("coverletter_body") }}
+{{ profile.get_tex_value("coverletter_body") }}
 
 \vspace{5mm}
 
@@ -125,11 +106,8 @@
 
 \begin{flushleft}
 {{- app.coverletter_closing -}}\\
-
-{{- app.cv.profile.get_tex_value("full_name") -}}\\
-
+{{- profile.get_tex_value("full_name") -}}\\
 \vspace{3mm}
-% \vspace{-3mm}
 
 \end{flushleft}
 
@@ -137,69 +115,68 @@
 
 % \section*{\faIcon{address-card} Contact Information}
 \begin{center}
-  \textbf{\Huge {{ app.cv.profile.fullname }}} \\
+  \textbf{\Huge {{ profile.get_tex_value("full_name") }}} \\
   \vspace{2mm}
-  \faIcon{briefcase} {{ app.cv.profile.job_title|latex_escape }}
+  \faIcon{briefcase} {{ profile.get_tex_value("job_title") }}
 \end{center}
 
 \vspace{4mm}
-\begin{center}
-  \profileemail \hfill
-  \profilephone \hfill
-  \profilelinkedin \hfill
-  \profilegithub \hfill
-  \profilewebsite \hfill
-\end{center}
+% \begin{center}
+%   \email \hfill
+%   \phone \hfill
+%   \linkedin \hfill
+%   \website \hfill
+% \end{center}
 
-{% if app.cv.profile.about %}
+{% if profile.about %}
 \space
-\section*{\faIcon{user} {{ app.cv.profile.about_label }} }
-{{ app.cv.profile.about|latex_escape }}
+\section*{\faIcon{user} {{ profile.about_label }} }
+{{ profile.about|latex_escape }}
 {% endif %}
 
 
-{% if app.cv.profile.candidateexperience_set.count() > 0 %}
-\section*{\faIcon{building} {{ app.cv.profile.experience_label }} }
-{% for exp in app.cv.profile.candidateexperience_set.all() %}
+{% if profile.candidateexperience_set.count() > 0 %}
+\section*{\faIcon{building} {{ profile.experience_label }} }
+{% for exp in profile.candidateexperience_set.all() %}
 \subsection*{ {{- exp.company_name | latex_escape -}} \hfill {{ exp.from_to|latex_escape }}  }
 \textit{ {{- exp.job_title -}} } \vspace{3mm} \\
 {{ exp.description|latex_escape|linebreaks }}
 {% endfor %}
 {% endif %}
 
-{% if app.cv.profile.candidateeducation_set.count() > 0 %}
-\section*{\faIcon{graduation-cap} {{ app.cv.profile.education_label }}}
-{% for edu in app.cv.profile.candidateeducation_set.all() %}
+{% if profile.candidateeducation_set.count() > 0 %}
+\section*{\faIcon{graduation-cap} {{ profile.education_label }}}
+{% for edu in profile.candidateeducation_set.all() %}
 \subsection*{ {{- edu.institution_name | latex_escape -}} \hfill {{ edu.from_to|latex_escape }} }
 \textit{ {{- edu.title | latex_escape -}} } \vspace{3mm} \\
 {{ edu.description|latex_escape|linebreaks }}
 {% endfor %}
 {% endif %}
 
-{% if app.cv.profile.candidateskill_set.count() > 0 %}
-\section*{\faIcon{cogs} {{ app.cv.profile.skill_label }}}
+{% if profile.candidateskill_set.count() > 0 %}
+\section*{\faIcon{cogs} {{ profile.skill_label }}}
 \begin{center}
   \begin{itemize}[label=\faIcon{check}, itemsep=-3pt]
-      {% for skill in app.cv.profile.candidateskill_set.all() %}
+      {% for skill in profile.candidateskill_set.all() %}
       \item {{ skill.name|latex_escape }}
       {% endfor %}
   \end{itemize}
 \end{center}
 {% endif %}
 
-{% if app.cv.profile.candidatecertificate_set.count() > 0 %}
-\section*{\faIcon{certificate} {{ app.cv.profile.certificate_label }}}
+{% if profile.candidatecertificate_set.count() > 0 %}
+\section*{\faIcon{certificate} {{ profile.certificate_label }}}
 \begin{itemize}[label=\faIcon{certificate}]
-  {% for cert in app.cv.profile.candidatecertificate_set.all() %}
+  {% for cert in profile.candidatecertificate_set.all() %}
   \item {{ cert.name|latex_escape }}
   {% endfor %}
 \end{itemize}
 {% endif %}
 
-{% if app.cv.profile.candidatelanguageskill_set.count() > 0 %}
-\section*{\faIcon{language} {{ app.cv.profile.language_label }}}
+{% if profile.candidatelanguageskill_set.count() > 0 %}
+\section*{\faIcon{language} {{ profile.language_label }}}
 \begin{itemize}[label=\faIcon{globe}]
-  {% for lang in app.cv.profile.candidatelanguageskill_set.all() %}
+  {% for lang in profile.candidatelanguageskill_set.all() %}
   \item {{ lang.name }}
   {% endfor %}
 \end{itemize}

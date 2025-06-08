@@ -19,11 +19,7 @@
 % Your name
 \fullname{ {{- profile.get_tex_value("full_name") -}} }
 % Job title/career
-{% if profile.jobtitle_active %}
-  \jobtitle{ {{- profile.get_tex_value("jobtitle") - }} }
-{% else %}
-  \jobtitle{}
-{% endif %}
+\jobtitle{ {{- profile.get_tex_value("job_title") -}} }
 % Location
 {% if profile.location_active %}
   \location{ {{- profile.get_tex_value("location") -}} }

@@ -4,20 +4,18 @@ import re
 
 from django.template.defaultfilters import register
 
-REPLACEMENTS = dict(
-    [
-        ("&", "\\&"),
-        ("%", "\\%"),
-        ("$", "\\$"),
-        ("#", "\\#"),
-        ("_", "\\_"),
-        ("{", "\\{"),
-        ("}", "\\}"),
-        ("\\", "\\textbackslash{}"),
-        ("~", "\\textasciitilde{}"),
-        ("^", "\\textasciicircum{}"),
-    ]
-)
+REPLACEMENTS = {
+    "&": r"\&",
+    "%": r"\%",
+    "$": r"\$",
+    "#": r"\#",
+    "_": r"\_",
+    "{": r"\{",
+    "}": r"\}",
+    "\\": r"\textbackslash{}",
+    "~": r"\textasciitilde{}",
+    "^": r"\textasciicircum{}",
+}
 
 ESCAPE_PATTERN = re.compile("[{}]".format("".join(map(re.escape, REPLACEMENTS.keys()))))
 
@@ -30,7 +28,7 @@ def do_latex_escape(value: object) -> str:
     see also https://tex.stackexchange.com/questions/34580/escape-character-in-latex
     """
     value = str(value)
-    return ESCAPE_PATTERN.sub(lambda mo: REPLACEMENTS.get(mo.group()), value)
+    return ESCAPE_PATTERN.sub(lambda m: REPLACEMENTS[m.group()], value)
 
 
 def do_linebreaks(value: str) -> str:

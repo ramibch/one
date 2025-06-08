@@ -42,7 +42,7 @@ class OneModel(Model):
             return ""
         if not isinstance(value, str):
             raise ValueError("Not possible to get tex value of a non-str obj.")
-        return do_latex_escape(do_linebreaks(value)).strip("\n")
+        return do_linebreaks(do_latex_escape(value)).strip("\n")
 
     class Meta(Model.Meta):
         abstract = True

@@ -1,7 +1,7 @@
+import io
 import os
 import uuid
 from copy import copy
-from pathlib import Path
 
 from auto_prefetch import ForeignKey
 from django.conf import settings
@@ -12,8 +12,8 @@ from django.db import models
 from django.db.models import Value
 from django.db.models.functions import Concat
 from django.utils.functional import cached_property
-from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+from pdf2image import convert_from_bytes
 
 from one.choices import Genders
 from one.companies.models import Person
@@ -62,7 +62,7 @@ class CandidateProfile(TranslatableModel):
     email = models.EmailField(max_length=64)
     phone = models.CharField(max_length=32)
     location = models.CharField(max_length=32)
-    linkedin_url = models.CharField(max_length=32, null=True, blank=True)
+    linkedin_url = models.CharField(max_length=128, null=True, blank=True)
     website_url = models.URLField(max_length=128, blank=True, null=True)
     about = models.TextField(null=True, blank=True)
     coverletter_body = models.TextField(null=True, blank=True)
@@ -82,15 +82,29 @@ class CandidateProfile(TranslatableModel):
     own_cv = models.FileField(upload_to=get_upload_path, null=True, blank=True)
 
     @cached_property
-    def local_photo_path(self) -> Path:
-        return TmpFile(self.photo).path
+    def local_photo_path(self) -> str:
+        return str(TmpFile(self.photo).path)
 
     @cached_property
     def photo_file_exists(self) -> bool:
         return bool(self.photo.name) and self.photo.storage.exists(self.photo.name)
 
-    def full_name_slug(self) -> str:
-        return slugify(self.full_name)
+    @cached_property
+    def linkedin(self) -> str:
+        if self.linkedin_url is None:
+            return ""
+        return self.linkedin_url.split("/")[-1]
+
+    @cached_property
+    def website(self) -> str:
+        if not self.website_url:
+            return ""
+        url: str = self.website_url
+        url.removesuffix("/")
+        for prefix in ("https://www.", "https://", "http://www.", "http://"):
+            if url.startswith(prefix):
+                return url.removeprefix(prefix)
+        return url
 
     def clone_obj(self, attrs: dict):
         clone = copy(self)
@@ -203,7 +217,7 @@ class CandidateLanguageSkill(CandidateProfileChild):
         return self.name
 
 
-class CvTexTemplates(models.TextChoices):
+class TexCvTemplates(models.TextChoices):
     ALICE = "candidates/tex/cv_alice.tex", "Alice"
     DEVELOPER = "candidates/tex/cv_developer.tex", "Developer"
     FREEMAN = "candidates/tex/cv_freeman.tex", "Freeman"
@@ -211,6 +225,19 @@ class CvTexTemplates(models.TextChoices):
     MARISSA = "candidates/tex/cv_marissa.tex", "Marissa"
     MODERN = "candidates/tex/cv_modern.tex", "Modern"
     RECEIVE = "candidates/tex/cv_receive.tex", "Receive"
+
+    @property
+    def interpreter(self):
+        # TODO: test that every enum value returns a value
+        return {
+            self.ALICE: "xelatex",
+            self.DEVELOPER: "xelatex",
+            self.FREEMAN: "xelatex",
+            self.KRIEGER: "xelatex",
+            self.MARISSA: "pdflatex",
+            self.MODERN: "xelatex",
+            self.RECEIVE: "lualatex",
+        }[self]
 
 
 class TexCv(OneModel):
@@ -224,12 +251,11 @@ class TexCv(OneModel):
         editable=False,
     )
     profile = ForeignKey(CandidateProfile, on_delete=models.CASCADE)
-    template = models.CharField(max_length=64, choices=CvTexTemplates)
-    rendered_text = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
-    pdf = models.FileField(upload_to=get_upload_path, null=True, blank=True)
+    template = models.CharField(max_length=64, choices=TexCvTemplates)
+    cv_text = models.TextField(null=True, blank=True)
+    cv_image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
+    cv_pdf = models.FileField(upload_to=get_upload_path, null=True, blank=True)
     latex_pt = models.PositiveSmallIntegerField(default=12)
-    photo_width = models.CharField(max_length=3, default="0.7")  # Needed?
     margin_left = models.PositiveSmallIntegerField(default=25)
     margin_right = models.PositiveSmallIntegerField(default=20)
     margin_top = models.PositiveSmallIntegerField(default=20)
@@ -244,22 +270,22 @@ class TexCv(OneModel):
 
     @cached_property
     def interpreter(self) -> str:
-        d = {
-            CvTexTemplates.ALICE.value: "xelatex",
-            CvTexTemplates.DEVELOPER.value: "xelatex",
-            CvTexTemplates.FREEMAN.value: "xelatex",
-            CvTexTemplates.KRIEGER.value: "xelatex",
-            CvTexTemplates.MARISSA.value: "pdflatex",
-            CvTexTemplates.MODERN.value: "xelatex",
-            CvTexTemplates.RECEIVE.value: "lualatex",
-        }
-        return d.get(self.template) or "xelatex"
+        return TexCvTemplates(self.template).interpreter
 
     def render_cv(self):
-        self.pdf.delete(save=False)
+        self.cv_pdf.delete(save=False)
         context = {"profile": self.profile}
-        cl_bytes = render_pdf(self.template, context, interpreter=self.interpreter)
-        self.pdf.save("CV.pdf", ContentFile(cl_bytes))
+        # pdf and tex
+        pdf, text = render_pdf(self.template, context, interpreter=self.interpreter)
+        self.cv_pdf.save("CV.pdf", ContentFile(pdf), save=False)
+        self.cv_text = text
+        # image
+        img = convert_from_bytes(pdf_file=pdf, first_page=1, last_page=1, fmt="jpg")[0]
+        img_buffer = io.BytesIO()
+        img.save(img_buffer, format="JPEG")
+        img_bytes = img_buffer.getvalue()
+        self.cv_image.save("CV.jpg", ContentFile(img_bytes), save=False)
+        self.save()
 
 
 class JobApplication(OneModel):

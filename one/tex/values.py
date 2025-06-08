@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 TEX_LANGUAGE_MAPPING = {
-    # key: django lan
     "en": "english",
     "de": "german",
     "es": "spanish",
@@ -36,5 +35,6 @@ class PageOrientations(models.TextChoices):
 
 
 class PaperUnits(models.TextChoices):
+    # Only units that can be combined with integer values.
     MILIMITERS = "mm", _("Millimeters")
     INCHES = "in", _("Inches")
