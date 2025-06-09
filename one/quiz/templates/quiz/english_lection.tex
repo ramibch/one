@@ -50,16 +50,16 @@
 
 {% for q in lection.question_set.all() %}
 \item {{ q.full_text|latex_escape }}
-{% - if q.type == 5 - %}
+{%- if q.type == 5 -%}
 \begin{enumerate}[itemsep=-3.5pt, label={}]
   {% for a in q.answer_set.all() %}
     \questionOption \hspace{3mm} {{ a.name|latex_escape }}
   {% endfor %}
 \end{enumerate}
 \vspace{5mm}
-{% - else - %}
+{%- else -%}
 \vspace{10mm}
-{% - endif - %}
+{%- endif -%}
 {% endfor %}
 
 \end{enumerate}

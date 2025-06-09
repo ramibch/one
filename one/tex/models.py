@@ -88,7 +88,7 @@ class YearlyHolidayCalender(TranslatableModel):
             Bot.to_admin(f"Calendar {self.pk} country_holidays error: {e}")
             return sorted(hdays(subdiv=self.subdiv, years=self.year).items())
 
-    def render(self):
+    def render_calendar(self):
         filename = f"{self.year}-{self.country}-{self.subdiv or ''}{self.lang}"
 
         with translation.override(self.lang):
@@ -173,7 +173,7 @@ class EnglishQuizLection(OneModel):
     def get_absolute_url(self):
         return self.lection.get_absolute_url()
 
-    def render(self):
+    def render_lection(self):
         lection = self.lection
         filename = f"{lection.quiz.slug}-{lection.slug}-{lection.id}"
         color = random.choice(

@@ -72,7 +72,7 @@ def remove_old_yearly_holiday_calendars():
 @huey.db_periodic_task(crontab(minute="15"))
 def render_yearly_calendars():
     for c in YearlyHolidayCalender.objects.filter(pdf="").order_by("?")[:20]:
-        c.render()
+        c.render_calendar()
 
 
 # English Quiz Lection objects
@@ -88,4 +88,4 @@ def create_english_quiz_lection_objects():
 @huey.db_periodic_task(crontab(minute="45"))
 def render_english_quiz_lections():
     for c in EnglishQuizLection.objects.filter(pdf="").order_by("?")[:20]:
-        c.render()
+        c.render_lection()
