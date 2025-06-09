@@ -30,12 +30,12 @@
 % Define header and footer
 \pagestyle{fancy}
 \fancyhf{} % Clear default header and footer
-\fancyfoot[C]{ \href{ {{ - lection.full_url | latex_escape - }} }{check answers: englishstuff.online}  } % Set number at the right of the footer with SET Number
+\fancyfoot[C]{ \href{ {{- lection.full_url | latex_escape -}} }{check answers: englishstuff.online}  } % Set number at the right of the footer with SET Number
 \renewcommand{\headrulewidth}{0pt} % Remove header rule
 
 \begin{document}
-\pagecolor{ {{ - color or 'white' - }} !20}
-\{{ - size or 'normalsize' - }}
+\pagecolor{ {{- color or 'white' -}} !20}
+\{{- size or 'normalsize' -}}
 
 \textbf{  {{ lection.quiz.name }} | {{ lection.name }} }
 

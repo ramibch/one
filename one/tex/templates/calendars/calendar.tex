@@ -19,7 +19,7 @@
 \usetikzlibrary{calc}
 \usetikzlibrary{calendar}
 \renewcommand*\familydefault{\sfdefault}
-\def\year{ {{ - year - }} }
+\def\year{ {{- year -}} }
 
 {% raw %}
 \newcommand{\link}[1]{{ \color{blue}\href{#1}{#1 }}}
@@ -37,7 +37,7 @@
   \Large\textbf{ {{ title }} }\hfill
 }
 {% if footer_url %}
-\cfoot{\footnotesize\texttt{  \link{ {{ - footer_url - }} } }}
+\cfoot{\footnotesize\texttt{  \link{ {{- footer_url -}} } }}
 {% else %}
 \cfoot{\footnotesize\texttt{  }}
 {% endif %}
@@ -73,7 +73,7 @@
     \ifdate{Saturday}{\tikzset{every day/.style={fill={{ color }}!10}}}{}
     \ifdate{Sunday}{\tikzset{every day/.style={fill={{ color }}!20}}}{}
     {% - for date, name in holidays_part1 - %}
-    \ifdate{equals= {{ - date.strftime("%Y-%m-%d") - }} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
+    \ifdate{equals= {{- date.strftime("%Y-%m-%d") -}} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
     {% - endfor - %}
     },
  execute at begin day scope=
@@ -82,7 +82,7 @@
   }
 ];
 {% - for date, name in holidays_part1 - %}
-\termin{ {{ - date.strftime("%Y-%m-%d") - }} }{ {{ - name - }} }
+\termin{ {{- date.strftime("%Y-%m-%d") -}} }{ {{- name -}} }
 {% - endfor - %}
 \end{tikzpicture}
 \pagebreak
@@ -118,7 +118,7 @@
   \ifdate{Saturday}{\tikzset{every day/.style={fill={{ color }}!10}}}{}
   \ifdate{Sunday}{\tikzset{every day/.style={fill={{ color }}!20}}}{}
   {% - for date, name in holidays_part2 - %}
-    \ifdate{equals= {{ - date.strftime("%Y-%m-%d") - }} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
+    \ifdate{equals= {{- date.strftime("%Y-%m-%d") -}} }{\tikzset{every day/.style={fill={{ holiday_color }}!20}}}{}
   {% - endfor - %}
   },
   execute at begin day scope=
@@ -128,7 +128,7 @@
 ];
 
 {% - for date, name in holidays_part2 - %}
-\termin{ {{ - date.strftime("%Y-%m-%d") - }} }{ {{ - name - }} }
+\termin{ {{- date.strftime("%Y-%m-%d") -}} }{ {{- name -}} }
 {% - endfor - %}
 \end{tikzpicture}
 \end{center}
