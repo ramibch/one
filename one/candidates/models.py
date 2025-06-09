@@ -11,7 +11,9 @@ from django.core.files.base import ContentFile
 from django.db import models
 from django.db.models import Value
 from django.db.models.functions import Concat
+from django.urls import reverse
 from django.utils.functional import cached_property
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from pdf2image import convert_from_bytes
 
@@ -19,7 +21,7 @@ from one.choices import Genders
 from one.companies.models import Person
 from one.db import ChoiceArrayField, OneModel, TranslatableModel
 from one.tex.compile import render_pdf
-from one.tex.values import PaperUnits
+from one.tex.values import TEX_LANGUAGE_MAPPING, PaperUnits
 from one.tmp import TmpFile
 
 User = get_user_model()
@@ -81,6 +83,9 @@ class CandidateProfile(TranslatableModel):
 
     own_cv = models.FileField(upload_to=get_upload_path, null=True, blank=True)
 
+    def __str__(self) -> str:
+        return f"{self.full_name} - {self.job_title}"
+
     @cached_property
     def local_photo_path(self) -> str:
         return str(TmpFile(self.photo).path)
@@ -138,8 +143,8 @@ class CandidateProfile(TranslatableModel):
                 child.profile = cloned_obj
                 child.save()
 
-    def __str__(self) -> str:
-        return f"{self.full_name} - {self.job_title}"
+    def get_absolute_url(self):
+        return reverse("candidateprofile_detail", kwargs={"pk": self.pk})
 
 
 class CandidateProfileChild(TranslatableModel):
@@ -228,7 +233,6 @@ class TexCvTemplates(models.TextChoices):
 
     @property
     def interpreter(self):
-        # TODO: test that every enum value returns a value
         return {
             self.ALICE: "xelatex",
             self.DEVELOPER: "xelatex",
@@ -283,8 +287,7 @@ class TexCv(OneModel):
         img = convert_from_bytes(pdf_file=pdf, first_page=1, last_page=1, fmt="jpg")[0]
         img_buffer = io.BytesIO()
         img.save(img_buffer, format="JPEG")
-        img_bytes = img_buffer.getvalue()
-        self.cv_image.save("CV.jpg", ContentFile(img_bytes), save=False)
+        self.cv_image.save("CV.jpg", ContentFile(img_buffer.getvalue()), save=False)
         self.save()
 
 
@@ -317,9 +320,17 @@ class JobApplication(OneModel):
     def render_dossier(self):
         self.dossier.delete(save=False)
         template = "candidates/tex/dossier.tex"
-        context = {"profile": self.cv.profile, "job": self.job, "app": self}
+        lang = get_language()
+        tex_lang = TEX_LANGUAGE_MAPPING.get(lang)
+        context = {
+            "profile": self.cv.profile,
+            "job": self.job,
+            "app": self,
+            "tex_lang": tex_lang,
+        }
         cl_bytes, latex_text = render_pdf(template, context, interpreter="pdflatex")
-        self.dossier.save(_("Dossier.pdf"), ContentFile(cl_bytes), save=False)
+        filename = f"{_('Dossier')}_{lang}.pdf"
+        self.dossier.save(filename, ContentFile(cl_bytes), save=False)
         self.dossier_text = latex_text
         self.save()
 

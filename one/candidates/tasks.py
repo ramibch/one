@@ -14,18 +14,13 @@ def task_render_cvs(cv_objs=None):
 
 
 @huey.db_periodic_task(crontab(minute="*"))
-def task_render_coverletters(job_apps=None):
+def task_render_application_files(job_apps=None, coverletters=False, dossiers=False):
     if job_apps is None:
         job_apps = JobApplication.objects.filter(coverletter__in=["", None])
+        coverletters, dossiers = True, True
 
     for job_app in job_apps:
-        job_app.render_coverletter()
-
-
-@huey.db_periodic_task(crontab(minute="*"))
-def task_render_dossiers(job_apps=None):
-    if job_apps is None:
-        job_apps = JobApplication.objects.filter(dossier__in=["", None])
-
-    for job_app in job_apps:
-        job_app.render_dossier()
+        if coverletters:
+            job_app.render_coverletter()
+        if dossiers:
+            job_app.render_dossier()

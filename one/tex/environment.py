@@ -1,8 +1,6 @@
-from django.utils.translation import get_language
 from jinja2 import Environment
 
 from .filters import FILTERS
-from .values import TEX_LANGUAGE_MAPPING
 
 
 def environment(**options):
@@ -16,6 +14,8 @@ def environment(**options):
     )
     env = Environment(**options)
     env.filters = FILTERS
-    lang = get_language()
-    env.globals["tex_lang"] = TEX_LANGUAGE_MAPPING.get(lang) or "english"
+    # Language not working properly when passing
+    # Huey and Django worker?
+    # lang = get_language()
+    # env.globals["tex_lang"] = TEX_LANGUAGE_MAPPING.get(lang) or "english"
     return env

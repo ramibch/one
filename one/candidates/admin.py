@@ -4,7 +4,7 @@ from django.contrib import admin
 from one.admin import GISStackedInline, OneModelAdmin, OneTranslatableModelAdmin
 
 from .models import CandidateJobAlert, CandidateProfile, JobApplication, TexCv
-from .tasks import task_render_coverletters, task_render_cvs, task_render_dossiers
+from .tasks import task_render_application_files, task_render_cvs
 
 
 class AlertInline(GISStackedInline):
@@ -39,7 +39,7 @@ class JobApplicationAdmin(OneModelAdmin):
     @admin.action(description="▶️ Render Coverletters")
     def render_coverletters(modeladmin, request, queryset):
         if settings.ENV == settings.PROD:
-            task_render_coverletters(queryset)
+            task_render_application_files(queryset, coverletters=True)
         if settings.ENV == settings.DEV:
             for cv_obj in queryset:
                 cv_obj.render_coverletter()
@@ -47,7 +47,7 @@ class JobApplicationAdmin(OneModelAdmin):
     @admin.action(description="▶️ Render Dossiers")
     def render_dossiers(modeladmin, request, queryset):
         if settings.ENV == settings.PROD:
-            task_render_dossiers(queryset)
+            task_render_application_files(queryset, dossiers=True)
         if settings.ENV == settings.DEV:
             for cv_obj in queryset:
                 cv_obj.render_dossier()

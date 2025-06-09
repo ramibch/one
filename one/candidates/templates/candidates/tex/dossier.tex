@@ -121,66 +121,58 @@
 \end{center}
 
 \vspace{4mm}
-% \begin{center}
-%   \email \hfill
-%   \phone \hfill
-%   \linkedin \hfill
-%   \website \hfill
-% \end{center}
 
-{% if profile.about %}
+{%- if profile.about -%}
 \space
-\section*{\faIcon{user} {{ profile.about_label }} }
+\section*{\faIcon{user} {{ profile.get_tex_value("about_label") }} }
 {{ profile.about|latex_escape }}
-{% endif %}
+{%- endif -%}
 
-
-{% if profile.candidateexperience_set.count() > 0 %}
-\section*{\faIcon{building} {{ profile.experience_label }} }
+{%- if profile.candidateexperience_set.count() > 0 -%}
+\section*{\faIcon{building} {{ profile.get_tex_value("experience_label") }} }
 {% for exp in profile.candidateexperience_set.all() %}
 \subsection*{ {{- exp.company_name | latex_escape -}} \hfill {{ exp.from_to|latex_escape }}  }
 \textit{ {{- exp.job_title -}} } \vspace{3mm} \\
 {{ exp.description|latex_escape|linebreaks }}
 {% endfor %}
-{% endif %}
+{%- endif -%}
 
-{% if profile.candidateeducation_set.count() > 0 %}
-\section*{\faIcon{graduation-cap} {{ profile.education_label }}}
+{%- if profile.candidateeducation_set.count() > 0 -%}
+\section*{\faIcon{graduation-cap} {{ profile.get_tex_value("education_label") }}}
 {% for edu in profile.candidateeducation_set.all() %}
 \subsection*{ {{- edu.institution_name | latex_escape -}} \hfill {{ edu.from_to|latex_escape }} }
 \textit{ {{- edu.title | latex_escape -}} } \vspace{3mm} \\
 {{ edu.description|latex_escape|linebreaks }}
 {% endfor %}
-{% endif %}
+{%- endif -%}
 
-{% if profile.candidateskill_set.count() > 0 %}
-\section*{\faIcon{cogs} {{ profile.skill_label }}}
+{%- if profile.candidateskill_set.count() > 0 -%}
+\section*{\faIcon{cogs} {{ profile.get_tex_value("skill_label") }}}
 \begin{center}
   \begin{itemize}[label=\faIcon{check}, itemsep=-3pt]
       {% for skill in profile.candidateskill_set.all() %}
-      \item {{ skill.name|latex_escape }}
+      \item {{ skill.get_tex_value("name") }}
       {% endfor %}
   \end{itemize}
 \end{center}
-{% endif %}
+{%- endif -%}
 
-{% if profile.candidatecertificate_set.count() > 0 %}
-\section*{\faIcon{certificate} {{ profile.certificate_label }}}
+{%- if profile.candidatecertificate_set.count() > 0 -%}
+\section*{\faIcon{certificate} {{- profile.get_tex_value("certificate_label") -}} }
 \begin{itemize}[label=\faIcon{certificate}]
   {% for cert in profile.candidatecertificate_set.all() %}
   \item {{ cert.name|latex_escape }}
   {% endfor %}
 \end{itemize}
-{% endif %}
+{%- endif -%}
 
-{% if profile.candidatelanguageskill_set.count() > 0 %}
-\section*{\faIcon{language} {{ profile.language_label }}}
+{%- if profile.candidatelanguageskill_set.count() > 0 -%}
+\section*{\faIcon{language} {{- profile.get_tex_value("language_label") -}} }
 \begin{itemize}[label=\faIcon{globe}]
   {% for lang in profile.candidatelanguageskill_set.all() %}
   \item {{ lang.name }}
   {% endfor %}
 \end{itemize}
-{% endif %}
-
+{%- endif -%}
 
 \end{document}
