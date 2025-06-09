@@ -6,13 +6,13 @@
 - [ ] Plans (Type: TimeFixed, Subscription, NoSubscription, ... )
 - [ ] Write units tests
 - [ ] admin.py (search, filters...)
-- [ ] privacy policy page
-- [ ] terms of service page
-- [ ] impress
+- [ ] Pages
+  - [ ] privacy policy page
+  - [ ] terms of service page
+  - [ ] impress
 - [ ] match jobs & candidates:
   - [ ] https://github.com/jamesturk/jellyfish/issues/229
   - [ ] https://github.com/seatgeek/thefuzz/issues/90
-- [ ] Mail box for users?
 - [ ] https://driverjs.com/
 - [ ] https://swissdevjobs.ch/job_feed.xml
 
