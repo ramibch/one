@@ -293,7 +293,7 @@ class PostalMessage(OneModel):
     class Meta(OneModel.Meta):
         verbose_name = "Postal: Message"
         verbose_name_plural = "Postal: Messages"
-        ordering = ("received_at",)
+        ordering = ("-received_at",)
 
     @classmethod
     def save_from_payload(
