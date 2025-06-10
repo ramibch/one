@@ -82,6 +82,7 @@ class CandidateProfile(TranslatableModel):
     docs = models.FileField(upload_to=get_upload_path, null=True, blank=True)
 
     own_cv = models.FileField(upload_to=get_upload_path, null=True, blank=True)
+    receive_job_alerts = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return f"{self.full_name} - {self.job_title}"
@@ -98,7 +99,9 @@ class CandidateProfile(TranslatableModel):
     def linkedin(self) -> str:
         if self.linkedin_url is None:
             return ""
-        return self.linkedin_url.split("/")[-1]
+        url: str = self.linkedin_url
+        index = -2 if url.endswith("/") else -1
+        return url.split("/")[index]
 
     @cached_property
     def website(self) -> str:
@@ -278,7 +281,9 @@ class TexCv(OneModel):
 
     def render_cv(self):
         self.cv_pdf.delete(save=False)
-        context = {"profile": self.profile}
+        lang = get_language()
+        tex_lang = TEX_LANGUAGE_MAPPING.get(lang)
+        context = {"profile": self.profile, "tex_lang": tex_lang}
         # pdf and tex
         pdf, text = render_pdf(self.template, context, interpreter=self.interpreter)
         self.cv_pdf.save("CV.pdf", ContentFile(pdf), save=False)
