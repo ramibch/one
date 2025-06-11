@@ -66,7 +66,7 @@ def scrape_company_pages(qs=None):
         if c.jobs_page_html == response_body_text:
             continue
 
-        c.jobs_page_html = response_body_text
+        c.jobs_page_html = response_body_text.replace("\x00", "")
         c.save()
 
         page_soup = BeautifulSoup(response_body_text, "html.parser")
