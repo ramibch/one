@@ -25,6 +25,10 @@ headers = {
 validate_url = URLValidator()
 
 
+def remove_null_bytes(s):
+    return s.replace("\x00", "") if s else s
+
+
 @huey.db_periodic_task(crontab(hour="3", minute="12"))
 def update_job_status():
     now = timezone.now()
@@ -57,13 +61,15 @@ def scrape_company_pages(qs=None):
             log += f"⚠️ Status {response.status_code} \n{company_details}"
             continue
 
-        if c.jobs_page_html == response.text:
+        response_body_text = response.content.decode("utf-8")
+
+        if c.jobs_page_html == response_body_text:
             continue
 
-        c.jobs_page_html = response.text
+        c.jobs_page_html = response_body_text
         c.save()
 
-        page_soup = BeautifulSoup(response.content.decode("utf-8"), "html.parser")
+        page_soup = BeautifulSoup(response_body_text, "html.parser")
 
         if c.jobs_container_id and c.jobs_container_class:
             soup = page_soup.find(
