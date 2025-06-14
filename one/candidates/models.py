@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import PolygonField
 from django.core.files.base import ContentFile
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Value
 from django.db.models.functions import Concat
@@ -172,6 +173,12 @@ class CandidateJobAlert(CandidateProfileChild):
     notification = models.CharField(
         default=NotificationTypes.WEEKLY, choices=NotificationTypes
     )
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
+        default=list,
+        blank=True,
+        db_index=True,
+    )
 
 
 class CandidateExperience(CandidateProfileChild):
@@ -196,6 +203,9 @@ class CandidateEducation(CandidateProfileChild):
 
 class CandidateSkill(CandidateProfileChild):
     name = models.CharField(max_length=64)
+    level = models.PositiveSmallIntegerField(
+        default=3, validators=[MaxValueValidator(100), MinValueValidator(0)]
+    )
 
     def __str__(self):
         return self.name

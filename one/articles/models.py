@@ -42,8 +42,27 @@ class Article(TranslatableModel):
     def __str__(self):
         return f"{self.folder_name}/{self.subfolder_name}"
 
+    def get_value_of(self, attr: str) -> str:
+        value = getattr(self, attr)
+        if value:
+            return value
+
+        for lang in self.languages:
+            value = getattr(self, f"{attr}_{lang}")
+            if value:
+                return value
+
     def get_absolute_url(self):
-        return reverse_lazy("slug_page", kwargs={"slug": self.slug})
+        slug = self.get_value_of("slug")
+        return reverse_lazy("slug_page", kwargs={"slug": slug})
+
+    @cached_property
+    def display_body(self):
+        return self.get_value_of("body")
+
+    @cached_property
+    def display_title(self):
+        return self.get_value_of("title")
 
     @cached_property
     def url(self):

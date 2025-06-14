@@ -3,10 +3,10 @@
 {% block content %}
   {% cache 1 article article.id %}
   <section>
-    <h1>{{ object.title }}</h1>
+    <h1>{{ object.display_title }}</h1>
   </section>
   <section id="article-body">
-    {{ object.body|markdownify }}
+    {{ object.display_body|markdownify }}
   </section>
 {% endcache %}
 {% endblock content %}

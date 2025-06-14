@@ -85,8 +85,12 @@ class SlugPageView(View):
         if slug in Topics.values:
             context = {
                 "page_title": Topics(slug).label,
-                "related_articles": Article.objects.filter(main_topic__name=slug),
-                "related_products": Product.objects.filter(topics=[slug]),
+                "related_articles": Article.objects.filter(
+                    main_topic__name=slug, slug__isnull=True
+                ),
+                "related_products": Product.objects.filter(
+                    topics=[slug], slug__isnull=True
+                ),
                 "related_landing_pages": LandingPage.objects.filter(
                     site__topics=[slug], slug__isnull=False
                 ),
