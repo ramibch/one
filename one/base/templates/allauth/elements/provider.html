@@ -1,0 +1,11 @@
+{% load static %}
+<a role="button"
+   class="outline"
+   title="{{ attrs.name }}"
+   href="{{ attrs.href }}">
+  {% with icon_path='img/social/small/'|add:attrs.name|lower|add:'.svg' %}
+    <!-- https://iconstwittersdfsdf8.com/icons/ -->
+    <img src="{% static icon_path %}" alt="{{ attrs.name }}" width="32">
+  {% endwith %}
+  {{ attrs.name }}
+</a>

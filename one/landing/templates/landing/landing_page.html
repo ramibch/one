@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load humanize i18n markdownify %}
+{% block content %}
+  <!-- Hero section -->
+  {% if object.herosection %}
+    {% with section=object.herosection %}
+      <section class="row mt-5">
+        <div class="col-md-6">
+          <h1>{{ section.headline|linebreaks }}</h1>
+          <p class="mt-3">{{ section.subheadline|linebreaks }}</p>
+          <center>
+            <a {% if section.cta_new_tab %}target="_blank"{% endif %}
+               href="{{ section.cta_link.url }}" role="button"
+               {% include "snippets/animation_attrs.html" with html_class="button my-5" animation=section.cta_animation %}>
+              {{ section.display_cta_title }}
+            </a>
+          </center>
+        </div>
+        <div class="col-md-6">
+          <img src="{{ section.image.url }}" alt="{{ section.image.alt }}" style="border-radius: 4em;">
+        </div>
+      </section>
+    {% endwith %}
+  {% endif %}
+
+  <!-- problem section -->
+  {% if object.problemsection %}
+    {% with section=object.problemsection %}
+      <br>
+      <br>
+      <hr>
+      <section class="mt-5" >
+        <div class="row">
+          <div class="col-md-3" style="text-align: center; font-size: 5em;" >{{ section.emoji }} </div>
+          <div class="col-md-9">
+            <h2>{{ section.title }} </h2>
+            <p >{{ section.description|markdownify:"simple_text" }}</p>
+          </div>
+        </div>
+      </section>
+    {% endwith %}
+  {% endif %}
+
+
+
+  <!-- solution section -->
+  {% if object.solutionsection %}
+    {% with section=object.solutionsection %}
+      <br> <br> <hr> <br>
+      <section class="mt-5" >
+        <div class="row">
+          <div class="col-md-8">
+            <h2>{{ section.title }} </h2>
+            {{ section.description|markdownify:"simple_text"|linebreaks }}
+          </div>
+          <div class="col-md-4" style="text-align: center; font-size: 5em;" >{{ section.emoji }} </div>
+        </div>
+      </section>
+    {% endwith %}
+  {% endif %}
+
+  <!-- Benefits section-->
+  {% if object.benefititem_set.all %}
+    <br> <br> <hr> <br>
+    <section>
+      <center>
+        {% if object.benefits_title %}
+          <h2>{{ object.benefits_title }}</h2>
+        {% endif %}
+        <div class="row mt-5">
+          {% for b in object.benefititem_set.all %}
+            <div class="col-md-3">
+              <span  style="font-size: 3em;">{{ b.emoji }}</span>
+              <h3 class="mt-3">{{ b.name }}</h3>
+              <p style="text-align: left;">{{ b.description }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </center>
+    </section>
+  {% endif %}
+
+  <!-- stepaction section -->
+  {% if object.stepactionsection %}
+    {% with section=object.stepactionsection %}
+      <br> <br> <hr> <br>
+      <section class="mt-5" >
+        <div class="row">
+          <div class="col-md-7">
+            <h2>{{ section.title }} </h2>
+            {{ section.description|markdownify:"text_and_headings"|linebreaks }}
+          </div>
+          <div class="col-md-5" style="text-align: center; font-size: 10em;" > 🎯 </div>
+        </div>
+      </section>
+    {% endwith %}
+  {% endif %}
+
+  <!-- articles section -->
+  {% if object.articlessection and object.articlessection.articles_available %}
+    {% with section=object.articlessection %}
+      <br> <br> <hr> <br>
+      <section>
+        <h2>
+          {% if section.emoji %}{{ section.emoji }}{% endif %}
+          {{ section.title }}
+          {% if section.show_all_link %}
+            <span style="float: right;"> <a href="{% url 'article_list' %}">{% translate "All" %}</a> </span>
+          {% endif %}
+        </h2>
+        <div class="row mt-5">
+        {% for article in section.articles %}
+          <div class="col-md-4">
+            <article {% if section.card_animation %} {% include "snippets/animation_attrs.html" with animation=section.card_animation %} {% endif %}>
+              <h3>
+                <a href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a>
+              </h3>
+              {% if article.description %}{{ article.description }}{% endif %}
+              {% if section.show_created_on %}
+                <footer>{{ article.created_on|naturaltime }}</footer>
+              {% endif %}
+            </article>
+          </div>
+        {% endfor %}
+        </div>
+      </section>
+    {% endwith %}
+  {% endif %}
+
+  <!-- FAQs Section -->
+  {% if object.faqssection %}
+    {% with section=object.faqssection %}
+      <br> <br> <hr> <br>
+      <section class="mt-5" >
+        <center>
+          <h2>{{ section.title }} </h2>
+        </center>
+        <div class="col-md-6 offset-md-3 mt-5">
+          {% for faq in section.faqs %}
+          <article>
+            <details x-data="{ isExpanded: false }">
+              <summary  x-on:click="isExpanded = !isExpanded"><strong>  {{ faq.question }}</strong></summary>
+              <p x-cloak x-show="isExpanded" > {{ faq.answer|markdownify:"simple_text"|linebreaks }} </p>
+            </details>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+    {% endwith %}
+  {% endif %}
+
+  <!-- Final CTA -->
+  {% if object.finalctasection %}
+    {% with section=object.finalctasection %}
+      <br> <br> <hr> <br>
+      <section class="mt-5" >
+        <div class="col-md-6 offset-md-3 mt-5">
+          <center>
+            <h2>{{ section.title }} </h2>
+            <p> {{ section.description|markdownify:"simple_text"|linebreaks }} </p>
+            <a {% if section.cta_new_tab %}target="_blank"{% endif %}
+               href="{{ section.cta_link.url }}" role="button"
+               {% include "snippets/animation_attrs.html" with html_class="button my-5" animation=section.cta_animation %}>
+                 {{ section.display_cta_title }}
+            </a>
+          </center>
+        </div>
+      </section>
+    {% endwith %}
+  {% endif %}
+
+{% endblock content %}

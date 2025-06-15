@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% translate "Contact" %}{% endblock %}
+
+{% block content %}
+  <center>
+    <h1>{% translate "Contact" %}</h1>
+  </center>
+
+  <form>
+    <div id="errors"></div>
+    {{ form }}
+    <button hx-post="{% url 'contact' %}"  hx-target="closest form"  hx-target-error="#errors">{% translate "Send" %}</button>
+  </form>
+
+{% endblock content %}

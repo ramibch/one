@@ -3,7 +3,6 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse_lazy
-from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from one.db import BaseSubmoduleFolder, ChoiceArrayField, OneModel, TranslatableModel
@@ -24,6 +23,9 @@ class MainTopic(BaseSubmoduleFolder, submodule="articles"):
 class Article(TranslatableModel):
     """Article model"""
 
+    LANGS_ATTR = "languages"
+    # LANG_ATTR = "language"
+
     languages = ChoiceArrayField(
         models.CharField(max_length=8, choices=settings.LANGUAGES),
         default=list,
@@ -42,35 +44,33 @@ class Article(TranslatableModel):
     def __str__(self):
         return f"{self.folder_name}/{self.subfolder_name}"
 
-    def get_value_of(self, attr: str) -> str:
-        value = getattr(self, attr)
-        if value:
-            return value
-
-        for lang in self.languages:
-            value = getattr(self, f"{attr}_{lang}")
-            if value:
-                return value
-
     def get_absolute_url(self):
-        slug = self.get_value_of("slug")
+        slug = self.slug or self.get_fallback_value("slug")
         return reverse_lazy("slug_page", kwargs={"slug": slug})
 
-    @cached_property
-    def display_body(self):
-        return self.get_value_of("body")
+    @property
+    def fallback_body(self):
+        return self.get_fallback_value("body")
 
-    @cached_property
+    @property
+    def fallback_title(self):
+        return self.get_fallback_value("title")
+
+    @property
     def display_title(self):
-        return self.get_value_of("title")
+        return self.title or self.fallback_title
 
-    @cached_property
+    @property
+    def display_body(self):
+        return self.body or self.fallback_body
+
+    @property
     def url(self):
         return self.get_absolute_url()
 
-    @cached_property
+    @property
     def has_equations(self):
-        return "$$" in self.body
+        return "$$" in self.display_body
 
 
 def get_article_file_path(obj, filename: str):

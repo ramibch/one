@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load cache markdownify static %}
+{% block content %}
+  {% cache 1 article article.id %}
+    <section><h1>{{ object.display_title }}</h1></section>
+    <section id="article-body">{{ object.display_body|markdownify }}</section>
+  {% endcache %}
+{% endblock content %}
+
+{% if object.has_equations %}
+  {% block extra_js %}
+    <!-- https://blog.qualys.com/vulnerabilities-threat-research/2024/06/28/polyfill-io-supply-chain-attack -->
+    <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.js?features=es6"></script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [['$','$'], ['\\(','\\)']],
+          processEscapes: true},
+          jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"],
+          extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js","AssistiveMML.js", "[Contrib]/a11y/accessibility-menu.js"],
+          TeX: {
+            extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
+            equationNumbers: {
+              autoNumber: "AMS"
+            }
+          }
+        });
+    </script>
+  {% endblock extra_js %}
+{% endif %}

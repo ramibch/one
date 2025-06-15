@@ -2,6 +2,7 @@ import subprocess
 from copy import copy
 from itertools import chain
 from statistics import mode
+from typing import Any
 
 from auto_prefetch import Model
 from django import forms
@@ -152,6 +153,18 @@ class TranslatableModel(OneModel):
                     setattr(self, f"slug_{lang}", slugify(value))
 
         super().save(*args, **kwargs)
+
+    def get_fallback_value(self, attr: str) -> Any | None:
+        if self.LANG_ATTR:
+            value = getattr(self, f"{attr}_{self.get_default_language()}")
+            if value:
+                return value
+
+        if self.LANGS_ATTR:
+            for lang in self.get_languages():
+                value = getattr(self, f"{attr}_{lang}")
+                if value:
+                    return value
 
     class Meta(Model.Meta):
         abstract = True

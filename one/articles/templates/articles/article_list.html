@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head_title %} {% translate "Articles" %}{% endblock %}
+
+{% block content %}
+<center>
+  <h1>{% translate "Articles" %}</h1>
+</center>
+
+<ul class="my-5">
+  {% for obj in object_list %}
+  <li>
+    <a href="{{ obj.url }}" title="{{ obj.display_title }}">{{ obj.display_title }}</a>
+    <span style="float: right;">{{ obj.created_on }}</span>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock content %}

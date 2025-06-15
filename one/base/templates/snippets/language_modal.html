@@ -1,0 +1,23 @@
+{% load i18n %}
+<dialog x-bind:open="openLanguageModal">
+  <article>
+    <header>
+      <button aria-label="Close"
+              rel="prev"
+              x-on:click="openLanguageModal = false"></button>
+      <h2>🌐 {% translate "Change language" %}</h2>
+    </header>
+    <form action="{% url 'set_language' %}" method="post">
+      {% csrf_token %}
+      {% if redirect_to %}<input name="next" type="hidden" value="{{ redirect_to }}">{% endif %}
+      {% get_current_language as current_language %}
+      {% get_language_info_list for request.site.languages as languages %}
+      <select name="language">
+        {% for language in languages %}
+          <option value="{{ language.code }}" {% if language.code == current_language %}selected{% endif %}>{{ language.name_local|title }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="col-7">{% translate "Save" %}</button>
+    </form>
+  </article>
+</dialog>
