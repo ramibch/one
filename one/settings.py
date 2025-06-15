@@ -101,7 +101,7 @@ INSTALLED_APPS = [
     "one.users",
     "one.plans",
     "one.tools",
-    "one.links",
+    # "one.links",
     "one.faqs",
     "one.sites",
     "one.products",

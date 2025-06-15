@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("base", "0002_initial"),
-        ("links", "0001_initial"),
+        # ("links", "0001_initial"),
         ("sites", "0001_initial"),
     ]
 

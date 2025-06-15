@@ -20,7 +20,7 @@ class ShowTypes(models.TextChoices):
 
 class NavbarLink(OneModel):
     sites = models.ManyToManyField("sites.Site")
-    link = ForeignKey("links.Link", on_delete=models.CASCADE)
+    link = ForeignKey("base.Link", on_delete=models.CASCADE)
     emoji = models.CharField(max_length=8, null=True, blank=True)
     show_as_emoji = models.BooleanField(default=False)
     order = models.PositiveSmallIntegerField(
@@ -96,7 +96,7 @@ class FooterItem(TranslatableModel):
 
 class FooterLink(OneModel):
     sites = models.ManyToManyField("sites.Site")
-    link = ForeignKey("links.Link", on_delete=models.CASCADE)
+    link = ForeignKey("base.Link", on_delete=models.CASCADE)
     footer_item = ForeignKey(
         "menus.FooterItem",
         on_delete=models.SET_NULL,

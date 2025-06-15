@@ -2,9 +2,17 @@ from django.contrib import admin
 from django.contrib.sessions.models import Session
 from django.db.migrations.recorder import MigrationRecorder
 
+from one.admin import OneTranslatableModelAdmin
 from one.emails.models import ReplyMessage
 
-from .models import Animation, ContactMessage, SearchTerm
+from .models import Animation, ContactMessage, Link, SearchTerm
+
+
+@admin.register(Link)
+class LinkAdmin(OneTranslatableModelAdmin):
+    list_display = ("__str__", "url_path", "topic", "external_url")
+    list_editable = ("url_path", "topic", "external_url")
+    search_fields = ("topic", "url_path", "external_url")
 
 
 @admin.register(Animation)

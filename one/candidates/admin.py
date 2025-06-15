@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import admin
 
 from one.admin import GISStackedInline, OneModelAdmin, OneTranslatableModelAdmin
@@ -24,11 +23,7 @@ class TexCvAdmin(OneModelAdmin):
 
     @admin.action(description="▶️ Render CVs")
     def render_cvs(modeladmin, request, queryset):
-        if settings.ENV == settings.PROD:
-            task_render_cvs(queryset)
-        if settings.ENV == settings.DEV:
-            for cv_obj in queryset:
-                cv_obj.render_cv()
+        task_render_cvs(queryset)
 
 
 @admin.register(JobApplication)
@@ -38,16 +33,8 @@ class JobApplicationAdmin(OneModelAdmin):
 
     @admin.action(description="▶️ Render Coverletters")
     def render_coverletters(modeladmin, request, queryset):
-        if settings.ENV == settings.PROD:
-            task_render_application_files(queryset, coverletters=True)
-        if settings.ENV == settings.DEV:
-            for cv_obj in queryset:
-                cv_obj.render_coverletter()
+        task_render_application_files(queryset, coverletters=True)
 
     @admin.action(description="▶️ Render Dossiers")
     def render_dossiers(modeladmin, request, queryset):
-        if settings.ENV == settings.PROD:
-            task_render_application_files(queryset, dossiers=True)
-        if settings.ENV == settings.DEV:
-            for cv_obj in queryset:
-                cv_obj.render_dossier()
+        task_render_application_files(queryset, dossiers=True)

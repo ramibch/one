@@ -94,7 +94,7 @@ class HeroSection(_ChildModel):
     headline = models.TextField(max_length=256)
     subheadline = models.TextField(max_length=256)
     image = models.ImageField(upload_to="homepages/hero/")
-    cta_link = ForeignKey("links.Link", on_delete=models.CASCADE, related_name="+")
+    cta_link = ForeignKey("base.Link", on_delete=models.CASCADE, related_name="+")
     cta_title = models.CharField(max_length=64, null=True, blank=True)
     cta_new_tab = models.BooleanField(default=False)
     cta_animation = ForeignKey(
@@ -173,7 +173,7 @@ class FAQsSection(_ChildModel):
 class FinalCTASection(_ChildModel):
     title = models.TextField(max_length=256)
     description = models.TextField()
-    cta_link = ForeignKey("links.Link", on_delete=models.CASCADE, related_name="+")
+    cta_link = ForeignKey("base.Link", on_delete=models.CASCADE, related_name="+")
     cta_title = models.CharField(max_length=64, null=True, blank=True)
     cta_new_tab = models.BooleanField(default=False)
 

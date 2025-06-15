@@ -20,7 +20,7 @@ from one.tmp import TmpFile
 from one.translation import translate_text
 
 from ..bot import Bot
-from .models import SearchTerm
+from .models import Link, SearchTerm
 
 User = get_user_model()
 
@@ -215,3 +215,22 @@ def purge_tmp_files():
             and len(str(p.parent).split("/")) >= 4
         ):
             p.parent.rmdir()
+
+
+@huey.db_periodic_task(crontab(hour="3", minute="1"))
+def sync_django_links():
+    Link.objects.sync_django_paths()
+
+
+@huey.db_periodic_task(crontab(hour="8", minute="3"))
+def check_empty_links():
+    qs = Link.objects.filter(
+        url_path__isnull=True,
+        external_url__isnull=True,
+        topic__isnull=True,
+        landing__isnull=True,
+        product__isnull=True,
+    )
+
+    if qs.count() > 0:
+        Bot.to_admin("⚠️ There are empty links in the application!")

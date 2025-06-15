@@ -2,7 +2,7 @@ import factory
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from one.links.factories import LinkFactory
+from one.base.factories import LinkFactory
 from one.sites.factories import SiteFactory
 
 from .models import (
