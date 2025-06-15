@@ -10,42 +10,38 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("base", "0001_initial"),
+        ("base", "0002_initial"),
         ("clients", "0001_initial"),
-        ("landing", "0001_initial"),
+        ("products", "0001_initial"),
         ("sites", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="contactmessage",
-            name="client",
+            model_name="link",
+            name="product",
             field=auto_prefetch.ForeignKey(
                 blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="products.product",
+            ),
+        ),
+        migrations.AddField(
+            model_name="searchterm",
+            name="client",
+            field=auto_prefetch.ForeignKey(
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
                 to="clients.client",
             ),
         ),
         migrations.AddField(
-            model_name="contactmessage",
+            model_name="searchterm",
             name="site",
             field=auto_prefetch.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.SET_NULL,
-                to="sites.site",
-            ),
-        ),
-        migrations.AddField(
-            model_name="link",
-            name="landing",
-            field=auto_prefetch.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.SET_NULL,
-                related_name="+",
-                to="landing.landingpage",
+                null=True, on_delete=django.db.models.deletion.SET_NULL, to="sites.site"
             ),
         ),
     ]
