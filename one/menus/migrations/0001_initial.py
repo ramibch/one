@@ -121,7 +121,7 @@ class Migration(migrations.Migration):
                 (
                     "link",
                     auto_prefetch.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="links.link"
+                        on_delete=django.db.models.deletion.CASCADE, to="base.link"
                     ),
                 ),
                 ("sites", models.ManyToManyField(to="sites.site")),
@@ -177,7 +177,7 @@ class Migration(migrations.Migration):
                 (
                     "link",
                     auto_prefetch.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="links.link"
+                        on_delete=django.db.models.deletion.CASCADE, to="base.link"
                     ),
                 ),
                 ("sites", models.ManyToManyField(to="sites.site")),

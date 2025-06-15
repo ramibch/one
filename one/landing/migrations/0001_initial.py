@@ -141,7 +141,7 @@ class Migration(migrations.Migration):
                     auto_prefetch.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="+",
-                        to="links.link",
+                        to="base.link",
                     ),
                 ),
                 (
@@ -224,7 +224,7 @@ class Migration(migrations.Migration):
                     auto_prefetch.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="+",
-                        to="links.link",
+                        to="base.link",
                     ),
                 ),
                 (
