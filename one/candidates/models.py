@@ -150,6 +150,10 @@ class CandidateProfile(TranslatableModel):
     def get_absolute_url(self):
         return reverse("candidateprofile_detail", kwargs={"pk": self.pk})
 
+    @cached_property
+    def url(self):
+        return self.get_absolute_url()
+
 
 class CandidateProfileChild(TranslatableModel):
     LANG_ATTR = "profile__language"

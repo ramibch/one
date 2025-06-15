@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load humanize i18n %}
+
+{% block head_title %}{% translate "Profiles" %}{% endblock %}
+
+{% block content %}
+
+<center>
+  <h1>
+    {% translate "Profiles" %}
+  </h1>
+
+
+
+
+<div class="row">
+  {% for obj in object_list %}
+    <div class="col-md-4">
+      <article>
+        <header>
+          <a href="{{ obj.url }}"> {{ obj.full_name }}</a>
+        </header>
+        {% if obj.job_title %} 💼 {{ obj.job_title }} {% endif %}
+        <br>
+        <small> {{ obj.updated_at|naturaltime }} </small>
+      </article>
+    </div>
+  {% endfor %}
+</div>
+
+</center>
+
+{% endblock content %}
