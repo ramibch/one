@@ -84,6 +84,7 @@ class CandidateProfile(TranslatableModel):
 
     own_cv = models.FileField(upload_to=get_upload_path, null=True, blank=True)
     receive_job_alerts = models.BooleanField(default=True)
+    is_public = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"{self.full_name} - {self.job_title}"

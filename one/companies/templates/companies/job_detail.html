@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load cache markdownify static %}
+{% load cache i18n markdownify static %}
 
 {% block content %}
 
@@ -8,6 +8,35 @@
 </center>
 
   {{ job.body|markdownify }}
+
+  {% if request.user.is_authenticated %}
+
+    <button onClick="window.jobapply_modal.showModal()">{% translate "Apply" %}</button>
+    <dialog id="jobapply_modal">
+    <article>
+      <header>
+        <button aria-label="Close" rel="prev" onClick="window.jobapply_modal.close()"></button>
+        <h2>{% translate "Apply to:" %} {{ job.title }}</h2>
+      </header>
+      {% if apply_form %}
+        <form action="{% url 'job_apply' %}" method="post">
+          {{ apply_form }}
+          <button type="submit" class="col-7">{% translate "Save" %}</button>
+        </form>
+      {% else %}
+        <a href="{% url 'candidateprofile_create' %}">{% translate "Create profile" %}</a>
+      {% endif %}
+    </article>
+  </dialog>
+
+  {% endif %}
+
+  <!-- Job apply -->
+
+
+
+
+
 
 
 {% endblock content %}
