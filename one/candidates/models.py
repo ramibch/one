@@ -155,6 +155,10 @@ class CandidateProfile(TranslatableModel):
     def url(self):
         return self.get_absolute_url()
 
+    @cached_property
+    def edit_url(self):
+        return reverse("candidateprofile_edit", kwargs={"pk": self.pk})
+
 
 class CandidateProfileChild(TranslatableModel):
     LANG_ATTR = "profile__language"

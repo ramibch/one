@@ -3,8 +3,10 @@ from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.views.generic import FormView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
 from one.candidates.forms import CandidateProfileForm, JobApplicationForm
@@ -29,6 +31,19 @@ class ProfileView(LoginRequiredMixin, DetailView):
     def get_queryset(self) -> QuerySet:
         qs = super().get_queryset()
         return qs.filter(user_id=self.request.user.id)
+
+
+class ProfileEditView(LoginRequiredMixin, UpdateView):
+    model = CandidateProfile
+    form_class = CandidateProfileForm
+    template_name = "candidates/profile_edit.html"
+
+    def get_object(self) -> type[CandidateProfile]:
+        return get_object_or_404(
+            self.model,
+            pk=self.kwargs["pk"],
+            user=self.request.user,
+        )
 
 
 class ProfileCreateView(LoginRequiredMixin, FormView):

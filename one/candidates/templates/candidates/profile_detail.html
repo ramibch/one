@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block head_title %}
 {{ object.full_name }} - {{ object.job_title }}
@@ -6,10 +7,13 @@
 
 {% block content %}
 <center>
-  <h1> {{ object.full_name }} - {{ object.job_title }}  </h1>
+  <h1> {{ object.full_name }} - {{ object.job_title }}    </h1>
+  {% if object.user == request.user %}
+    <small> <a href="{{ object.edit_url }}">📝 {% translate "Edit" %}</a></small>
+  {% endif %}
 </center>
 
-
+{{ object.edit_url }}
 
 
 {% endblock content %}
