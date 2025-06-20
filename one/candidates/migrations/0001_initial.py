@@ -625,7 +625,7 @@ class Migration(migrations.Migration):
                     "photo",
                     models.ImageField(
                         null=True,
-                        upload_to=one.candidates.models.CandidateProfile.get_upload_path,
+                        upload_to=one.candidates.models.Candidate.get_upload_path,
                     ),
                 ),
                 (
@@ -633,7 +633,7 @@ class Migration(migrations.Migration):
                     models.FileField(
                         blank=True,
                         null=True,
-                        upload_to=one.candidates.models.CandidateProfile.get_upload_path,
+                        upload_to=one.candidates.models.Candidate.get_upload_path,
                     ),
                 ),
                 (
@@ -641,7 +641,7 @@ class Migration(migrations.Migration):
                     models.FileField(
                         blank=True,
                         null=True,
-                        upload_to=one.candidates.models.CandidateProfile.get_upload_path,
+                        upload_to=one.candidates.models.Candidate.get_upload_path,
                     ),
                 ),
                 ("receive_job_alerts", models.BooleanField(default=True)),

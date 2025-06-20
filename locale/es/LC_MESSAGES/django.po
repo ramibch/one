@@ -9,62 +9,61 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-26 21:48+0100\n"
-"PO-Revision-Date: 2025-03-26 21:42+0100\n"
-"Last-Translator:   <>\n"
+"PO-Revision-Date: 2025-06-20 14:45+0200\n"
+"Last-Translator:   <ramiboutas@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
-"X-Translated-Using: django-rosetta 0.10.1\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"X-Translated-Using: django-rosetta 0.10.2\n"
 
 #: one/_templates/allauth/layouts/base.html:18
 msgid "Messages:"
-msgstr ""
+msgstr "Mensajes:"
 
 #: one/_templates/allauth/layouts/base.html:25
 msgid "Menu:"
-msgstr ""
+msgstr "Menú:"
 
 #: one/_templates/allauth/layouts/base.html:31
 #: one/_templates/users/dashboard.html:8
 msgid "Change Email"
-msgstr ""
+msgstr "Cambiar correo electrónico"
 
 #: one/_templates/allauth/layouts/base.html:37
 #: one/_templates/users/dashboard.html:14
 msgid "Change Password"
-msgstr ""
+msgstr "Cambiar contraseña"
 
 #: one/_templates/allauth/layouts/base.html:43
 #: one/_templates/users/dashboard.html:20
 msgid "Account Connections"
-msgstr ""
+msgstr "Conexiones de cuentas"
 
 #: one/_templates/allauth/layouts/base.html:49
 #: one/_templates/users/dashboard.html:26
 msgid "Two-Factor Authentication"
-msgstr ""
+msgstr "Autenticación de dos factores"
 
 #: one/_templates/allauth/layouts/base.html:55
 #: one/_templates/users/dashboard.html:33
 msgid "Sessions"
-msgstr ""
+msgstr "Sesiones"
 
 #: one/_templates/allauth/layouts/base.html:61
 #: one/_templates/users/dashboard.html:39
 msgid "Sign Out"
-msgstr ""
+msgstr "Cerrar sesión"
 
 #: one/_templates/allauth/layouts/base.html:68 one/links/models.py:19
 msgid "Sign In"
-msgstr ""
+msgstr "Iniciar sesión"
 
 #: one/_templates/allauth/layouts/base.html:74 one/links/models.py:20
 msgid "Sign Up"
-msgstr ""
+msgstr "Registrarse"
 
 #: one/_templates/emails/verify_email.txt:4
 #, python-format
@@ -72,15 +71,13 @@ msgid ""
 "\n"
 "Hello %(user_display)s\n"
 "\n"
-"Thank you for registering on my site. Please, consider to confirm your email "
-"address, just do this:\n"
+"Thank you for registering on my site. Please, consider to confirm your email address, just do this:\n"
 "\n"
 "1. Simply visit this page: https://%(host)s%(email_url_path)s\n"
 "\n"
 "2. Click on Resend Verification\n"
 "\n"
-"3. Go to your email inbox and confirm your email address by clicking on the "
-"link.\n"
+"3. Go to your email inbox and confirm your email address by clicking on the link.\n"
 "\n"
 "Thank you very much.\n"
 msgstr ""
@@ -201,7 +198,8 @@ msgstr ""
 msgid "Holidays"
 msgstr ""
 
-#: one/_templates/tex/yearlyholidaycalender_detail.html:19 one/etsy/enums.py:25
+#: one/_templates/tex/yearlyholidaycalender_detail.html:19
+#: one/etsy/enums.py:25
 msgid "Download"
 msgstr ""
 
@@ -1553,8 +1551,8 @@ msgstr ""
 
 #: one/etsy/models.py:256
 msgid ""
-"It represents  instructions for the buyer to enter the personalization. Will "
-"only change if is_personalizable is 'true'."
+"It represents  instructions for the buyer to enter the personalization. Will"
+" only change if is_personalizable is 'true'."
 msgstr ""
 
 #: one/etsy/models.py:264

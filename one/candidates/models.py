@@ -28,7 +28,7 @@ from one.tmp import TmpFile
 User = get_user_model()
 
 
-class CandidateProfile(TranslatableModel):
+class Candidate(TranslatableModel):
     def get_upload_path(self, filename):
         return f"candidates/{self.id}/{filename}"
 
@@ -53,7 +53,6 @@ class CandidateProfile(TranslatableModel):
         editable=False,
     )
     user = ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    gender = models.CharField(max_length=64, choices=Genders, null=True, blank=True)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     full_name = models.GeneratedField(
@@ -145,11 +144,11 @@ class CandidateProfile(TranslatableModel):
                 continue
             for child in children_related.all():
                 child.pk = None
-                child.profile = cloned_obj
+                child.candidate = cloned_obj
                 child.save()
 
     def get_absolute_url(self):
-        return reverse("candidateprofile_detail", kwargs={"pk": self.pk})
+        return reverse("candidate_detail", kwargs={"pk": self.pk})
 
     @cached_property
     def url(self):
@@ -157,13 +156,17 @@ class CandidateProfile(TranslatableModel):
 
     @cached_property
     def edit_url(self):
-        return reverse("candidateprofile_edit", kwargs={"pk": self.pk})
+        return reverse("candidate_edit", kwargs={"pk": self.pk})
+
+    @cached_property
+    def edit_skills_url(self):
+        return reverse("candidateskills_edit", kwargs={"pk": self.pk})
 
 
 class CandidateProfileChild(TranslatableModel):
-    LANG_ATTR = "profile__language"
-    LANGS_ATTR = "profile__languages"
-    profile = ForeignKey(CandidateProfile, on_delete=models.CASCADE)
+    LANG_ATTR = "candidate__language"
+    LANGS_ATTR = "candidate__languages"
+    candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
 
     class Meta(TranslatableModel.Meta):
         abstract = True
@@ -268,7 +271,7 @@ class TexCvTemplates(models.TextChoices):
 
 class TexCv(OneModel):
     def get_upload_path(self, filename):
-        return f"candidates/{self.profile.id}/cvs/{filename}"
+        return f"candidates/{self.candidate.id}/cvs/{filename}"
 
     id = models.UUIDField(
         primary_key=True,
@@ -276,7 +279,7 @@ class TexCv(OneModel):
         default=uuid.uuid4,
         editable=False,
     )
-    profile = ForeignKey(CandidateProfile, on_delete=models.CASCADE)
+    candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
     template = models.CharField(max_length=64, choices=TexCvTemplates)
     cv_text = models.TextField(null=True, blank=True)
     cv_image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
@@ -292,7 +295,7 @@ class TexCv(OneModel):
         ordering = ["-created_at"]
 
     def __str__(self) -> str:
-        return f"CV ({self.profile.full_name})"
+        return f"CV ({self.candidate.full_name})"
 
     @cached_property
     def interpreter(self) -> str:
@@ -302,7 +305,7 @@ class TexCv(OneModel):
         self.cv_pdf.delete(save=False)
         lang = get_language()
         tex_lang = TEX_LANGUAGE_MAPPING.get(lang)
-        context = {"profile": self.profile, "tex_lang": tex_lang}
+        context = {"profile": self.candidate, "tex_lang": tex_lang}
         # pdf and tex
         pdf, text = render_pdf(self.template, context, interpreter=self.interpreter)
         self.cv_pdf.save("CV.pdf", ContentFile(pdf), save=False)
@@ -317,7 +320,7 @@ class TexCv(OneModel):
 
 class JobApplication(OneModel):
     def get_upload_path(self, filename):
-        return f"candidates/{self.cv.profile.id}/apps/{filename}"
+        return f"candidates/{self.cv.candidate.id}/apps/{filename}"
 
     id = models.UUIDField(
         primary_key=True,
@@ -335,7 +338,7 @@ class JobApplication(OneModel):
     def render_coverletter(self):
         self.coverletter.delete(save=False)
         template = "candidates/tex/coverletter.tex"
-        context = {"profile": self.cv.profile, "job": self.job, "app": self}
+        context = {"profile": self.cv.candidate, "job": self.job, "app": self}
         cl_bytes, latex_text = render_pdf(template, context, interpreter="pdflatex")
         self.coverletter.save(_("Coverletter.pdf"), ContentFile(cl_bytes), save=False)
         self.coverletter_text = latex_text
@@ -347,7 +350,7 @@ class JobApplication(OneModel):
         lang = get_language()
         tex_lang = TEX_LANGUAGE_MAPPING.get(lang)
         context = {
-            "profile": self.cv.profile,
+            "profile": self.cv.candidate,
             "job": self.job,
             "app": self,
             "tex_lang": tex_lang,

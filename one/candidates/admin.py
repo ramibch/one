@@ -1,20 +1,41 @@
 from django.contrib import admin
 
-from one.admin import GISStackedInline, OneModelAdmin, OneTranslatableModelAdmin
+from one.admin import (
+    GISStackedInline,
+    OneModelAdmin,
+    OneTranslatableModelAdmin,
+    OneTranslationStackedInline,
+)
 
-from .models import CandidateJobAlert, CandidateProfile, JobApplication, TexCv
+from .models import (
+    Candidate,
+    CandidateJobAlert,
+    CandidateSkill,
+    JobApplication,
+    TexCv,
+)
 from .tasks import task_render_application_files, task_render_cvs
 
 
 class AlertInline(GISStackedInline):
     model = CandidateJobAlert
-    extra = 0
+    extra = 1
 
 
-@admin.register(CandidateProfile)
+class SkillInline(OneTranslationStackedInline):
+    model = CandidateSkill
+    extra = 1
+
+
+@admin.register(Candidate)
 class CandiateProfileAdmin(OneTranslatableModelAdmin):
     list_display = ("id", "full_name", "job_title", "email", "phone")
-    inlines = [AlertInline]
+    inlines = [AlertInline, SkillInline]
+
+
+@admin.register(CandidateSkill)
+class CandidateSkillAdmin(OneTranslatableModelAdmin):
+    list_display = ("name", "level")
 
 
 @admin.register(TexCv)

@@ -1,19 +1,23 @@
 from django.urls import path
 
 from .views import (
+    CandidateCreateView,
+    CandidateEditView,
+    CandidateListView,
+    CandidateView,
     JobApplicationView,
-    ProfileCreateView,
-    ProfileEditView,
-    ProfileListView,
-    ProfileView,
-    PubProfileView,
+    PubCandidateView,
+    SkillEditHxView,
 )
 
 urlpatterns = [
-    path("<uuid:pk>", ProfileView.as_view(), name="candidateprofile_detail"),
-    path("<uuid:pk>/📝", ProfileEditView.as_view(), name="candidateprofile_edit"),
-    path("<uuid:pk>/pub", PubProfileView.as_view(), name="pub_candidateprofile_detail"),
-    path("new", ProfileCreateView.as_view(), name="candidateprofile_create"),
-    path("", ProfileListView.as_view(), name="candidateprofile_list"),
+    path("new", CandidateCreateView.as_view(), name="candidate_create"),
+    path("<uuid:pk>", CandidateView.as_view(), name="candidate_detail"),
+    path("<uuid:pk>/📝", CandidateEditView.as_view(), name="candidate_edit"),
+    path("<uuid:pk>/hx/skills", SkillEditHxView.as_view(), name="candidateskills_edit"),
+    path("<uuid:pk>/pub", PubCandidateView.as_view(), name="pub_candidate_detail"),
+    # Profiles
+    path("", CandidateListView.as_view(), name="candidate_list"),
+    # Apps
     path("job-apply", JobApplicationView.as_view(), name="job_apply"),
 ]

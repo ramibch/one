@@ -1,16 +1,16 @@
 from modeltranslation.translator import TranslationOptions, register
 
 from .models import (
+    Candidate,
     CandidateCertificate,
     CandidateEducation,
     CandidateExperience,
-    CandidateProfile,
     CandidateProject,
     CandidateSkill,
 )
 
 
-@register(CandidateProfile)
+@register(Candidate)
 class CandidateProfileOptions(TranslationOptions):
     fields = (
         "job_title",

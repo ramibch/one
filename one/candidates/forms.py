@@ -1,6 +1,6 @@
 from django import forms
 
-from one.candidates.models import CandidateProfile, JobApplication
+from one.candidates.models import Candidate, CandidateSkill, JobApplication
 
 
 class JobApplicationForm(forms.ModelForm):
@@ -9,7 +9,23 @@ class JobApplicationForm(forms.ModelForm):
         fields = ("cv", "job")
 
 
-class CandidateProfileForm(forms.ModelForm):
+class CandidateForm(forms.ModelForm):
     class Meta:
-        model = CandidateProfile
-        fields = ("first_name", "last_name")
+        model = Candidate
+        fields = (
+            "photo",
+            "job_title",
+            "first_name",
+            "last_name",
+            "email",
+            "phone",
+            "location",
+            "linkedin_url",
+            "website_url",
+        )
+
+
+class SkillForm(forms.ModelForm):
+    class Meta:
+        model = CandidateSkill
+        fields = ("name", "level")
