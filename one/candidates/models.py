@@ -8,11 +8,10 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import PolygonField
 from django.core.files.base import ContentFile
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Value
 from django.db.models.functions import Concat
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
@@ -159,14 +158,23 @@ class Candidate(TranslatableModel):
         return reverse("candidate_edit", kwargs={"pk": self.pk})
 
     @cached_property
-    def edit_skills_url(self):
-        return reverse("candidateskills_edit", kwargs={"pk": self.pk})
+    def hx_create_skill_url(self):
+        return reverse("candidateskill_create", kwargs={"candidate_pk": self.pk})
 
 
 class CandidateProfileChild(TranslatableModel):
     LANG_ATTR = "candidate__language"
     LANGS_ATTR = "candidate__languages"
     candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
+    id = models.UUIDField(
+        primary_key=True,
+        db_index=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+
+    def get_url_kwargs(self) -> dict:
+        return {"candidate_pk": self.candidate.pk, "pk": self.pk}
 
     class Meta(TranslatableModel.Meta):
         abstract = True
@@ -176,6 +184,14 @@ class NotificationTypes(models.TextChoices):
     DAILY = "daily", _("Daily")
     WEEKLY = "weekly", _("Weekly")
     NONE = "none", _("No notification")
+
+
+class CompetenceLevel(models.IntegerChoices):
+    BEGINNER = 1, _("Beginner")
+    LEARNER = 2, _("Learner")
+    COMPETENT = 3, _("Competent")
+    PROFICIENT = 4, _("Proficient")
+    EXPERT = 5, _("Expert")
 
 
 class CandidateJobAlert(CandidateProfileChild):
@@ -215,9 +231,15 @@ class CandidateEducation(CandidateProfileChild):
 
 class CandidateSkill(CandidateProfileChild):
     name = models.CharField(max_length=64)
-    level = models.PositiveSmallIntegerField(
-        default=3, validators=[MaxValueValidator(100), MinValueValidator(0)]
-    )
+    level = models.IntegerField(choices=CompetenceLevel)
+
+    @cached_property
+    def hx_edit_url(self):
+        return reverse_lazy("candidateskill_edit", kwargs=self.get_url_kwargs())
+
+    @cached_property
+    def hx_delete_url(self):
+        return reverse_lazy("candidateskill_delete", kwargs=self.get_url_kwargs())
 
     def __str__(self):
         return self.name

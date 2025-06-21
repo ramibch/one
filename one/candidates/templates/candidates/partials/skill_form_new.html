@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<form
+  hx-post="{{ candidate.hx_create_skill_url }}" hx-trigger="submit"
+  hx-swap="outerHTML"
+  hx-target="#skills_edit"
+  id="skill_form_new"
+>
+<center>
+  <small>🔨 <i>{% translate "Add a new skill" %}</i></small>
+</center>
+  <fieldset role="group">
+    {{ skill_new_form }}
+    <button type="submit" class="outline"> <i class="bi bi-plus-circle-fill"></i> </button>
+  </fieldset>
+</form>

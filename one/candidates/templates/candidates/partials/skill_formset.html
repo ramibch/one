@@ -1,5 +1,0 @@
-{% load i18n %}
-<form hx-post="{{ profile.edit_skills_url }}" hx-swap="outerHTML" hx-trigger="submit">
-  {{ skill_formset }}
-  <button type="submit">{% translate "Save" %}</button>
-</form>

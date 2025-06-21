@@ -1,0 +1,24 @@
+{% load i18n %}
+<form
+  hx-post="{{ skill_edit_form.instance.hx_edit_url }}" hx-trigger="change" id="form_skill_{{ skill_edit_form.instance.id }}"
+  hx-swap="outerHTML"
+  hx-target="closest form"
+>
+  <fieldset role="group" >
+    {{ skill_edit_form }}
+    <div x-show="showmove | showdelete">
+      <button x-show="showmove" class="outline"> <i class="bi bi-arrows-move"></i></button>
+      <button x-show="showdelete"
+          title="{% translate "Delete" %}"
+          x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
+          x-bind:class="hover? '' : 'outline'"
+          hx-delete="{{ skill_edit_form.instance.hx_delete_url }}"
+          hx-target="closest form"
+          hx-trigger="click"
+          hx-swap="delete"
+          >
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
+  </fieldset>
+</form>

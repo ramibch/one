@@ -1,0 +1,26 @@
+<section id="skills_edit" x-data="{showmove : false, showdelete : false }">
+  <h2>
+    {{ candidate.skill_label }}
+    <button x-on:click="showmove = !showmove;" x-bind:class="showmove? '' : 'outline'">
+      <i class="bi bi-arrows-move"></i>
+    </button>
+    <button x-on:click="showdelete = !showdelete;" x-bind:class="showdelete? '' : 'outline'">
+      <i class="bi bi-trash" ></i>
+    </button>
+  </h2>
+  <div id="skill_edit_list">
+    {% for skill_edit_form in skill_edit_forms %}
+      {% include "candidates/partials/skill_form_edit.html" %}
+    {% endfor %}
+  </div>
+  <div x-data="{shownew: false }"  >
+    <center>
+      <button x-on:click="shownew = !shownew;" x-bind:class="shownew? '' : 'outline'">
+        <i class="bi bi-plus-lg"></i>
+      </button>
+    </center>
+    <div x-show="shownew" class="mt-3">
+      {% include "candidates/partials/skill_form_new.html" %}
+    </div>
+  </div>
+</section>

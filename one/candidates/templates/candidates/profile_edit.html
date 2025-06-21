@@ -8,16 +8,12 @@
 
 <div class="row">
 
-  <div class="col-md-3">
+  <div class="col-md-4">
     {% include "candidates/partials/profile_form.html" %}
   </div>
 
-  <div class="col-md-9">
-    <h2>{{ profile.skill_label }}</h2>
-    {% include "candidates/partials/skill_formset.html" %}
-
-
-
+  <div class="col-md-8">
+    {% include "candidates/partials/skills_edit.html" %}
   </div>
 
 </div>

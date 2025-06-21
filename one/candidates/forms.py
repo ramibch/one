@@ -28,4 +28,6 @@ class CandidateForm(forms.ModelForm):
 class SkillForm(forms.ModelForm):
     class Meta:
         model = CandidateSkill
-        fields = ("name", "level")
+        fields = ("name", "level")  # "candidate"
+        labels = {"name": "", "level": ""}
+        # widgets = {"candidate": forms.HiddenInput()}
