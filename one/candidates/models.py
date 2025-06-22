@@ -161,11 +161,16 @@ class Candidate(TranslatableModel):
     def hx_create_skill_url(self):
         return reverse("candidateskill_create", kwargs={"candidate_pk": self.pk})
 
+    @cached_property
+    def hx_skill_order_url(self):
+        return reverse("candidateskill_order", kwargs={"candidate_pk": self.pk})
+
 
 class CandidateProfileChild(TranslatableModel):
     LANG_ATTR = "candidate__language"
     LANGS_ATTR = "candidate__languages"
     candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
+    order = models.PositiveSmallIntegerField(default=0)
     id = models.UUIDField(
         primary_key=True,
         db_index=True,
@@ -178,6 +183,7 @@ class CandidateProfileChild(TranslatableModel):
 
     class Meta(TranslatableModel.Meta):
         abstract = True
+        ordering = ("order",)
 
 
 class NotificationTypes(models.TextChoices):

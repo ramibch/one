@@ -8,7 +8,12 @@
       <i class="bi bi-trash" ></i>
     </button>
   </h2>
-  <div id="skill_edit_list">
+  <div id="skill_edit_list" class="sortable"
+    hx-post="{{ candidate.hx_skill_order_url }}"
+    hx-swap="none"
+    hx-trigger="end delay:200ms"
+    hx-include="#skill_edit_list .sortable-item input[name='order']"
+    >
     {% for skill_edit_form in skill_edit_forms %}
       {% include "candidates/partials/skill_form_edit.html" %}
     {% endfor %}

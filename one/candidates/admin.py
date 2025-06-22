@@ -35,7 +35,7 @@ class CandiateProfileAdmin(OneTranslatableModelAdmin):
 
 @admin.register(CandidateSkill)
 class CandidateSkillAdmin(OneTranslatableModelAdmin):
-    list_display = ("name", "level")
+    list_display = ("name", "level", "order")
 
 
 @admin.register(TexCv)

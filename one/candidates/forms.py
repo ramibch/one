@@ -1,6 +1,11 @@
 from django import forms
 
-from one.candidates.models import Candidate, CandidateSkill, JobApplication
+from one.candidates.models import (
+    Candidate,
+    CandidateEducation,
+    CandidateSkill,
+    JobApplication,
+)
 
 
 class JobApplicationForm(forms.ModelForm):
@@ -28,6 +33,13 @@ class CandidateForm(forms.ModelForm):
 class SkillForm(forms.ModelForm):
     class Meta:
         model = CandidateSkill
-        fields = ("name", "level")  # "candidate"
+        fields = ("name", "level")
         labels = {"name": "", "level": ""}
         # widgets = {"candidate": forms.HiddenInput()}
+
+
+class EducationForm(forms.ModelForm):
+    class Meta:
+        model = CandidateEducation
+        fields = ("institution_name", "title", "from_to", "description")
+        labels = {"name": "", "level": ""}

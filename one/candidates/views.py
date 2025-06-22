@@ -2,16 +2,24 @@ from http import HTTPStatus
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Max
 from django.db.models.query import QuerySet
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, render
-from django.views.generic import FormView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.generic import FormView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django_htmx.http import retarget
 
-from one.candidates.forms import CandidateForm, JobApplicationForm, SkillForm
+from one.candidates.forms import (
+    CandidateForm,
+    EducationForm,
+    JobApplicationForm,
+    SkillForm,
+)
 from one.candidates.models import Candidate, CandidateSkill, JobApplication
 
 
@@ -49,6 +57,7 @@ class CandidateView(LoginRequiredMixin, DetailView):
         return qs.filter(user_id=self.request.user.id)
 
 
+@method_decorator(never_cache, name="dispatch")
 class CandidateEditView(LoginRequiredMixin, UpdateView):
     model = Candidate
     form_class = CandidateForm
@@ -63,17 +72,25 @@ class CandidateEditView(LoginRequiredMixin, UpdateView):
             user=self.request.user,
         )
 
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        print("##################### get")
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        print("##################### get_context_data")
         context = super().get_context_data(**kwargs)
 
         # Skills
-        qs_skills = self.object.candidateskill_set.all()
-        skill_forms = []
-        for skill in qs_skills:
-            skill_forms.append(SkillForm(instance=skill))
-
-        context["skill_edit_forms"] = skill_forms
+        skill_qs = self.object.candidateskill_set.all()
+        print("########### skill_qs")
+        print(skill_qs)
+        context["skill_edit_forms"] = [SkillForm(instance=skill) for skill in skill_qs]
         context["skill_new_form"] = SkillForm()
+        # Education objects
+        edu_qs = self.object.candidateeducation_set.all()
+        context["education_edit_forms"] = [EducationForm(instance=e) for e in edu_qs]
+        context["education_new_form"] = EducationForm()
+
         return context
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
@@ -101,6 +118,8 @@ class SkillCreateHxView(LoginRequiredMixin, CreateView):
         if form.is_valid():
             skill = form.save(commit=False)
             skill.candidate = candidate
+            order = candidate.candidateskill_set.aggregate(Max("order"))["order__max"]
+            skill.order = order + 1
             skill.save()
             self.object = skill
             context = context | self.get_context_data(kwargs=kwargs)
@@ -120,12 +139,18 @@ class SkillEditHxView(LoginRequiredMixin, UpdateView):
     model = CandidateSkill
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        form = self.form_class(request.POST)  # type: ignore
         candidate = get_object_or_404(
             Candidate,
             pk=self.kwargs["candidate_pk"],
             user=self.request.user,
         )
+        skill = get_object_or_404(
+            CandidateSkill,
+            pk=self.kwargs["pk"],
+            candidate=candidate,
+        )
+
+        form = self.form_class(request.POST, instance=skill)  # type: ignore
         context = {"candidate": candidate, "skill_edit_form": form}
         if form.is_valid():
             skill = form.save(commit=False)
@@ -150,4 +175,29 @@ class SkillDeleteHxView(LoginRequiredMixin, DeleteView):
     def delete(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.object = self.get_object()
         self.object.delete()
+        return HttpResponse(status=HTTPStatus.OK)
+
+
+class SkillOrderHxView(LoginRequiredMixin, TemplateView):
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        candidate = get_object_or_404(
+            Candidate,
+            pk=self.kwargs["candidate_pk"],
+            user=self.request.user,
+        )
+        ids = request.POST.getlist("order")
+        ids = [id_.strip() for id_ in request.POST.getlist("order") if id_.strip()]
+        if not ids:
+            return HttpResponseBadRequest("No skill IDs provided.")
+        skills = CandidateSkill.objects.filter(candidate=candidate, id__in=ids)
+        skill_map = {str(skill.id): skill for skill in skills}
+
+        updated = []
+        for order, skill_id in enumerate(ids, start=1):
+            skill = skill_map.get(skill_id)
+            if skill and skill.order != order:
+                skill.order = order
+                updated.append(skill)
+
+        CandidateSkill.objects.bulk_update(updated, ["order"])
         return HttpResponse(status=HTTPStatus.OK)

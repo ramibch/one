@@ -10,6 +10,7 @@ from .views import (
     SkillCreateHxView,
     SkillDeleteHxView,
     SkillEditHxView,
+    SkillOrderHxView,
 )
 
 urlpatterns = [
@@ -50,6 +51,11 @@ urlpatterns = [
         "skill/<uuid:candidate_pk>/create",
         SkillCreateHxView.as_view(),
         name="candidateskill_create",
+    ),
+    path(
+        "skill/<uuid:candidate_pk>/order",
+        SkillOrderHxView.as_view(),
+        name="candidateskill_order",
     ),
     path(
         "skill/<uuid:candidate_pk>/<uuid:pk>/delete",

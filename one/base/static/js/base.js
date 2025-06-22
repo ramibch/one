@@ -1,18 +1,33 @@
 // sortable elements
-
-htmx.onLoad(function (content) {
-  var sortables = content.querySelectorAll(".sortable");
-  for (var i = 0; i < sortables.length; i++) {
-    var sortable = sortables[i];
-    new Sortable(sortable, {
+document.addEventListener('htmx:load', function () {
+  const sortableEl = document.querySelector('.sortable');
+  if (sortableEl) {
+    new Sortable(sortableEl, {
       handle: '.handle',
       animation: 150,
       ghostClass: 'blue-background-class',
+      // onEnd: function () {
+      //   const ids = Array.from(sortableEl.children)
+      //     .map(el => el.dataset.id)
+      //     .filter(Boolean); // removes empty, null, or undefined
+
+      //   document.getElementById('order-input').value = ids.join(',');
+      //   htmx.trigger(sortableEl, 'end');  // HTMX will include `order` in the POST
+      // }
+      onEnd: function () {
+        const sortableItems = Array.from(sortableEl.children);
+        sortableItems.forEach((el, index) => {
+          const input = el.querySelector('input[name="order"]');
+          if (input) {
+            el.parentNode.appendChild(el); // move element in DOM
+          }
+        });
+
+        htmx.trigger(sortableEl, 'end');
+      }
     });
   }
-})
-
-
+});
 
 // check if the image element is in the DOM
 function pollImageToCrop(data) {
