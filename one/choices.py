@@ -1,4 +1,6 @@
-from django.db.models import TextChoices
+"""Common used db choices"""
+
+from django.db.models import IntegerChoices, TextChoices
 from django.utils.translation import gettext_lazy as _
 
 
@@ -23,6 +25,27 @@ class Topics(TextChoices):
     ENGLISH = "english", _("English")
     ELECTRONICS = "electronics", _("Electronics")
     CALENDAR = "calendar", _("Calendars")
+
+
+class NotificationFrequency(TextChoices):
+    DAILY = "daily", _("Daily")
+    WEEKLY = "weekly", _("Weekly")
+    MONTHLY = "monthly", _("Monthly")
+    NONE = "none", _("No notification")
+
+
+class CompetenceLevel(IntegerChoices):
+    BEGINNER = 1, _("Beginner")
+    LEARNER = 2, _("Learner")
+    COMPETENT = 3, _("Competent")
+    PROFICIENT = 4, _("Proficient")
+    EXPERT = 5, _("Expert")
+
+
+class SkillType(TextChoices):
+    HARD = "hard", _("Hard skill")
+    SOFT = "soft", _("Soft skill")
+    LANGUAGE = "lang", _("Language skill")
 
 
 class Countries(TextChoices):

@@ -1,0 +1,17 @@
+{% load i18n %}
+<form
+  hx-post="{{ candidate.hx_create_skill_url }}"
+  hx-trigger="submit"
+  hx-swap="beforeend"
+  hx-target="#skill_edit_list"
+  hx-on::after-request="if(event.detail.successful) this.reset()"
+  id="skill_new_form"
+>
+<center>
+  <small><i class="bi bi-tools"></i> <i>{% translate "Add a new skill" %}</i></small>
+</center>
+  <fieldset role="group">
+    {{ skill_new_form }}
+    <button type="submit" class="outline"> <i class="bi bi-plus-circle-fill"></i> </button>
+  </fieldset>
+</form>

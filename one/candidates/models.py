@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import PolygonField
 from django.core.files.base import ContentFile
 from django.db import models
-from django.db.models import Value
+from django.db.models import Max, Value
 from django.db.models.functions import Concat
 from django.urls import reverse, reverse_lazy
 from django.utils.functional import cached_property
@@ -17,7 +17,7 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from pdf2image import convert_from_bytes
 
-from one.choices import Genders
+from one.choices import CompetenceLevel, Genders, NotificationFrequency, SkillType
 from one.companies.models import Person
 from one.db import ChoiceArrayField, OneModel, TranslatableModel
 from one.tex.compile import render_pdf
@@ -70,12 +70,9 @@ class Candidate(TranslatableModel):
 
     # labels
     about_label = models.CharField(max_length=32, default=_("Professional Profile"))
-    experience_label = models.CharField(max_length=32, default=_("Work Experience"))
+    skill_label = models.CharField(max_length=32, default=_("Skills"))
     education_label = models.CharField(max_length=32, default=_("Education"))
-    skill_label = models.CharField(max_length=32, default=_("Technical Skills"))
-    certificate_label = models.CharField(max_length=32, default=_("Certifications"))
-    language_label = models.CharField(max_length=32, default=_("Languages"))
-    project_label = models.CharField(max_length=32, default=_("Projects"))
+    experience_label = models.CharField(max_length=32, default=_("Work Experience"))
 
     photo = models.ImageField(upload_to=get_upload_path, null=True)
     docs = models.FileField(upload_to=get_upload_path, null=True, blank=True)
@@ -165,12 +162,28 @@ class Candidate(TranslatableModel):
     def hx_skill_order_url(self):
         return reverse("candidateskill_order", kwargs={"candidate_pk": self.pk})
 
+    @cached_property
+    def hx_create_education_url(self):
+        return reverse("candidateeducation_create", kwargs={"candidate_pk": self.pk})
 
-class CandidateProfileChild(TranslatableModel):
+    @cached_property
+    def hx_education_order_url(self):
+        return reverse("candidateeducation_order", kwargs={"candidate_pk": self.pk})
+
+    @cached_property
+    def hx_create_experience_url(self):
+        return reverse("candidateexperience_create", kwargs={"candidate_pk": self.pk})
+
+    @cached_property
+    def hx_experience_order_url(self):
+        return reverse("candidateexperience_order", kwargs={"candidate_pk": self.pk})
+
+
+class CandidateChild(TranslatableModel):
     LANG_ATTR = "candidate__language"
     LANGS_ATTR = "candidate__languages"
     candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
-    order = models.PositiveSmallIntegerField(default=0)
+    order = models.PositiveSmallIntegerField(null=True)
     id = models.UUIDField(
         primary_key=True,
         db_index=True,
@@ -181,63 +194,22 @@ class CandidateProfileChild(TranslatableModel):
     def get_url_kwargs(self) -> dict:
         return {"candidate_pk": self.candidate.pk, "pk": self.pk}
 
+    def save(self, *args, **kwargs):
+        if not self.order:
+            qs = type(self).objects.filter(candidate=self.candidate)
+            max_order = qs.aggregate(Max("order"))["order__max"]
+            self.order = max_order + 1 if max_order else 0
+        return super().save(*args, **kwargs)
+
     class Meta(TranslatableModel.Meta):
         abstract = True
         ordering = ("order",)
 
 
-class NotificationTypes(models.TextChoices):
-    DAILY = "daily", _("Daily")
-    WEEKLY = "weekly", _("Weekly")
-    NONE = "none", _("No notification")
-
-
-class CompetenceLevel(models.IntegerChoices):
-    BEGINNER = 1, _("Beginner")
-    LEARNER = 2, _("Learner")
-    COMPETENT = 3, _("Competent")
-    PROFICIENT = 4, _("Proficient")
-    EXPERT = 5, _("Expert")
-
-
-class CandidateJobAlert(CandidateProfileChild):
-    name = models.CharField(max_length=255)
-    query = models.CharField(max_length=255)
-    area = PolygonField()
-    notification = models.CharField(
-        default=NotificationTypes.WEEKLY, choices=NotificationTypes
-    )
-    languages = ChoiceArrayField(
-        models.CharField(max_length=8, choices=settings.LANGUAGES),
-        default=list,
-        blank=True,
-        db_index=True,
-    )
-
-
-class CandidateExperience(CandidateProfileChild):
-    company_name = models.CharField(max_length=64)
-    job_title = models.CharField(max_length=64)
-    from_to = models.CharField(max_length=32)
-    description = models.TextField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.job_title} - {self.company_name}"
-
-
-class CandidateEducation(CandidateProfileChild):
-    institution_name = models.CharField(max_length=64)
-    title = models.CharField(max_length=64)
-    from_to = models.CharField(max_length=32)
-    description = models.TextField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.title} - {self.institution_name}"
-
-
-class CandidateSkill(CandidateProfileChild):
+class CandidateSkill(CandidateChild):
     name = models.CharField(max_length=64)
     level = models.IntegerField(choices=CompetenceLevel)
+    skill_type = models.CharField(max_length=32, null=True, choices=SkillType)
 
     @cached_property
     def hx_edit_url(self):
@@ -251,28 +223,58 @@ class CandidateSkill(CandidateProfileChild):
         return self.name
 
 
-class CandidateCertificate(CandidateProfileChild):
-    name = models.CharField(max_length=128)
-
-    def __str__(self):
-        return self.name
-
-
-class CandidateProject(CandidateProfileChild):
+class CandidateEducation(CandidateChild):
+    institution = models.CharField(max_length=64)
     title = models.CharField(max_length=64)
-    url = models.URLField(max_length=128, null=True, blank=True)
-    from_to = models.CharField(max_length=32, null=True, blank=True)
-    description = models.CharField(max_length=128, null=True, blank=True)
+    from_to = models.CharField(max_length=32)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True, blank=True)
+    studying_now = models.BooleanField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+
+    @cached_property
+    def hx_edit_url(self):
+        return reverse_lazy("candidateeducation_edit", kwargs=self.get_url_kwargs())
+
+    @cached_property
+    def hx_delete_url(self):
+        return reverse_lazy("candidateeducation_delete", kwargs=self.get_url_kwargs())
 
     def __str__(self):
-        return self.title
+        return f"{self.title} - {self.institution}"
 
 
-class CandidateLanguageSkill(CandidateProfileChild):
-    name = models.CharField(max_length=128)
+class CandidateExperience(CandidateChild):
+    company_name = models.CharField(max_length=64)
+    job_title = models.CharField(max_length=64)
+    from_to = models.CharField(max_length=32)
+    description = models.TextField(null=True, blank=True)
+
+    @cached_property
+    def hx_edit_url(self):
+        return reverse_lazy("candidateexperience_edit", kwargs=self.get_url_kwargs())
+
+    @cached_property
+    def hx_delete_url(self):
+        return reverse_lazy("candidateexperience_delete", kwargs=self.get_url_kwargs())
 
     def __str__(self):
-        return self.name
+        return f"{self.job_title} - {self.company_name}"
+
+
+class CandidateJobAlert(CandidateChild):
+    name = models.CharField(max_length=255)
+    query = models.CharField(max_length=255)
+    area = PolygonField()
+    notification = models.CharField(
+        default=NotificationFrequency.WEEKLY, choices=NotificationFrequency
+    )
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
+        default=list,
+        blank=True,
+        db_index=True,
+    )
 
 
 class TexCvTemplates(models.TextChoices):
@@ -405,3 +407,12 @@ class JobApplication(OneModel):
     @cached_property
     def coverletter_closing(self):
         return _("Best regards")
+
+
+def get_candidate_child_model(model_name):
+    """23.06.2025 not planned to be used (but just in case)"""
+    d = {m._meta.model_name: m for m in CandidateChild.__subclasses__()}
+    if model_name not in d:
+        raise ValueError(f"'{model_name}' is not recognised as a candidate child model")
+
+    return d[model_name]

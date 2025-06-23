@@ -33,13 +33,23 @@ class CandidateForm(forms.ModelForm):
 class SkillForm(forms.ModelForm):
     class Meta:
         model = CandidateSkill
-        fields = ("name", "level")
-        labels = {"name": "", "level": ""}
-        # widgets = {"candidate": forms.HiddenInput()}
+        fields = ("name", "skill_type", "level")
+        labels = {"name": "", "level": "", "skill_type": ""}
 
 
 class EducationForm(forms.ModelForm):
     class Meta:
         model = CandidateEducation
-        fields = ("institution_name", "title", "from_to", "description")
-        labels = {"name": "", "level": ""}
+        fields = (
+            "title",
+            "institution",
+            "start_date",
+            "end_date",
+            "studying_now",
+            "description",
+        )
+        widgets = {
+            "start_date": forms.DateInput(attrs=dict(type="date")),
+            "end_date": forms.DateInput(attrs={"type": "date", "x-model": "endDate"}),
+            "studying_now": forms.NullBooleanSelect(attrs={"x-model": "studyingNow"}),
+        }

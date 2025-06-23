@@ -1,7 +1,6 @@
 {% load i18n %}
 <form
-  id="form_skill_{{ skill_edit_form.instance.id }}"
-  class="sortable-item"
+  class="sortable-item "
   data-id="{{ skill_edit_form.instance.id }}"
   onsubmit="event.preventDefault();"
   hx-post="{{ skill_edit_form.instance.hx_edit_url }}"
@@ -10,16 +9,21 @@
   hx-target="closest form"
 >
   <fieldset role="group" >
-    {{ skill_edit_form.instance.order }}
     {{ skill_edit_form }}
-
-    <div x-show="showmove | showdelete">
-      <button x-show="showmove" class="outline handle"> <i class="bi bi-arrows-move"></i></button>
-      <button x-show="showdelete"
-          title="{% translate "Delete" %}"
+    <div x-show="showSkillSort | showSkillDelete">
+      <button x-show="showSkillSort" style="border:none;"
+          x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
+          x-bind:class="hover? 'handle' : 'outline handle'"
+          >
+        <i class="bi bi-list"></i>
+      </button>
+      <button x-show="showSkillDelete"
+          style="border:none;"
+          title="{% translate 'Delete' %}"
           x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
           x-bind:class="hover? '' : 'outline'"
           hx-delete="{{ skill_edit_form.instance.hx_delete_url }}"
+          hx-confirm="{% translate 'Are you sure to delete this skill?' %}"
           hx-target="closest form"
           hx-trigger="click"
           hx-swap="delete"

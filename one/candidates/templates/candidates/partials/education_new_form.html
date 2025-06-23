@@ -1,0 +1,31 @@
+{% load i18n %}
+<form
+  hx-post="{{ candidate.hx_create_education_url }}"
+  hx-trigger="submit"
+  hx-swap="beforeend"
+  hx-target="#education_edit_list"
+  hx-on::after-request="if(event.detail.successful) this.reset()"
+  id="education_new_form"
+>
+<center>
+  <small><i class="bi bi-mortarboard"></i> <i>{% translate "Add a new education item" %}</i></small>
+</center>
+  <fieldset class="grid" x-data="{ endDate: '', studyingNow : 'unknown' }">
+    <label>
+      <small>{{ education_new_form.start_date.label_tag }}</small>
+      {{ education_new_form.start_date }}
+    </label>
+    <label x-show="studyingNow !== 'true' ">
+      <small>{{ education_new_form.end_date.label_tag }}</small>
+      {{ education_new_form.end_date }}
+    </label>
+
+    <label x-show="endDate === ''">
+      <small>{{ education_new_form.studying_now.label_tag }}</small>
+      {{ education_new_form.studying_now }}
+    </label>
+  </fieldset>
+  <small>{{ education_new_form.description.label_tag }}</small>
+  {{ education_new_form.description }}
+  <button type="submit" class="outline"> <i class="bi bi-plus-circle-fill"></i> </button>
+</form>

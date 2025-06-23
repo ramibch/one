@@ -5,6 +5,14 @@ from .views import (
     CandidateEditView,
     CandidateListView,
     CandidateView,
+    EducationCreateHxView,
+    EducationDeleteHxView,
+    EducationEditHxView,
+    EducationOrderHxView,
+    ExperienceCreateHxView,
+    ExperienceDeleteHxView,
+    ExperienceEditHxView,
+    ExperienceOrderHxView,
     JobApplicationView,
     PubCandidateView,
     SkillCreateHxView,
@@ -66,5 +74,47 @@ urlpatterns = [
         "skill/<uuid:candidate_pk>/<uuid:pk>/edit",
         SkillEditHxView.as_view(),
         name="candidateskill_edit",
+    ),
+    # Education
+    path(
+        "education/<uuid:candidate_pk>/create",
+        EducationCreateHxView.as_view(),
+        name="candidateeducation_create",
+    ),
+    path(
+        "education/<uuid:candidate_pk>/order",
+        EducationOrderHxView.as_view(),
+        name="candidateeducation_order",
+    ),
+    path(
+        "education/<uuid:candidate_pk>/<uuid:pk>/delete",
+        EducationDeleteHxView.as_view(),
+        name="candidateeducation_delete",
+    ),
+    path(
+        "education/<uuid:candidate_pk>/<uuid:pk>/edit",
+        EducationEditHxView.as_view(),
+        name="candidateeducation_edit",
+    ),
+    # Experience
+    path(
+        "experience/<uuid:candidate_pk>/create",
+        ExperienceCreateHxView.as_view(),
+        name="candidateexperience_create",
+    ),
+    path(
+        "experience/<uuid:candidate_pk>/order",
+        ExperienceOrderHxView.as_view(),
+        name="candidateexperience_order",
+    ),
+    path(
+        "experience/<uuid:candidate_pk>/<uuid:pk>/delete",
+        ExperienceDeleteHxView.as_view(),
+        name="candidateexperience_delete",
+    ),
+    path(
+        "experience/<uuid:candidate_pk>/<uuid:pk>/edit",
+        ExperienceEditHxView.as_view(),
+        name="candidateexperience_edit",
     ),
 ]

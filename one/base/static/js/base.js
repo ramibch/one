@@ -5,15 +5,6 @@ document.addEventListener('htmx:load', function () {
     new Sortable(sortableEl, {
       handle: '.handle',
       animation: 150,
-      ghostClass: 'blue-background-class',
-      // onEnd: function () {
-      //   const ids = Array.from(sortableEl.children)
-      //     .map(el => el.dataset.id)
-      //     .filter(Boolean); // removes empty, null, or undefined
-
-      //   document.getElementById('order-input').value = ids.join(',');
-      //   htmx.trigger(sortableEl, 'end');  // HTMX will include `order` in the POST
-      // }
       onEnd: function () {
         const sortableItems = Array.from(sortableEl.children);
         sortableItems.forEach((el, index) => {
@@ -22,7 +13,6 @@ document.addEventListener('htmx:load', function () {
             el.parentNode.appendChild(el); // move element in DOM
           }
         });
-
         htmx.trigger(sortableEl, 'end');
       }
     });

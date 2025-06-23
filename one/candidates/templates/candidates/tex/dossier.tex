@@ -140,7 +140,7 @@
 {%- if profile.candidateeducation_set.count() > 0 -%}
 \section*{\faIcon{graduation-cap} {{ profile.get_tex_value("education_label") }}}
 {% for edu in profile.candidateeducation_set.all() %}
-\subsection*{ {{- edu.institution_name | latex_escape -}} \hfill {{ edu.from_to|latex_escape }} }
+\subsection*{ {{- edu.institution | latex_escape -}} \hfill {{ edu.from_to|latex_escape }} }
 \textit{ {{- edu.title | latex_escape -}} } \vspace{3mm} \\
 {{ edu.description|latex_escape|linebreaks }}
 {% endfor %}
