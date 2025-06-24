@@ -9,7 +9,6 @@
   hx-target="closest form"
 >
   <fieldset role="group" >
-    {{ skill_edit_form }}
     <div x-show="showSkillSort | showSkillDelete">
       <button x-show="showSkillSort" style="border:none;"
           x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
@@ -31,6 +30,7 @@
         <i class="bi bi-trash"></i>
       </button>
     </div>
+    {{ skill_edit_form }}
   </fieldset>
   <input type="hidden" name="order" value="{{ skill_edit_form.instance.id }}">
 </form>

@@ -1,36 +1,37 @@
 {% load i18n %}
 <form
-  class="sortable-item "
+  class="sortable-item row mb-3"
   data-id="{{ education_edit_form.instance.id }}"
   onsubmit="event.preventDefault();"
   hx-post="{{ education_edit_form.instance.hx_edit_url }}"
   hx-trigger="change"
-  hx-swap="outerHTML"
-  hx-target="closest form"
+  hx-swap="none"
 >
-  <fieldset >
-    {{ education_edit_form }}
-    <div x-show="showEduSort | showEduDelete">
-      <button x-show="showEduSort" style="border:none;"
-          x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
-          x-bind:class="hover? 'handle' : 'outline handle'"
-          >
-        <i class="bi bi-list"></i>
-      </button>
-      <button x-show="showEduDelete"
-          style="border:none;"
-          title="{% translate 'Delete' %}"
-          x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
-          x-bind:class="hover? '' : 'outline'"
-          hx-delete="{{ education_edit_form.instance.hx_delete_url }}"
-          hx-confirm="{% translate 'Are you sure to delete this skill?' %}"
-          hx-target="closest form"
-          hx-trigger="click"
-          hx-swap="delete"
-          >
-        <i class="bi bi-trash"></i>
-      </button>
-    </div>
-  </fieldset>
+  <div x-show="showEduSort | showEduDelete" x-bind:class="showEduSort | showEduDelete? 'col-2' : '' ">
+    <button x-show="showEduSort" style="border:none;"
+        x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
+        x-bind:class="hover? 'handle' : 'outline handle'"
+        >
+      <i class="bi bi-list"></i>
+    </button>
+    <button x-show="showEduDelete"
+        style="border:none;"
+        title="{% translate 'Delete' %}"
+        x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
+        x-bind:class="hover? '' : 'outline'"
+        hx-delete="{{ education_edit_form.instance.hx_delete_url }}"
+        hx-confirm="{% translate 'Are you sure to delete this education item?' %}"
+        hx-target="closest form"
+        hx-trigger="click"
+        hx-swap="delete"
+        >
+      <i class="bi bi-trash"></i>
+    </button>
+  </div>
+
+  <div x-bind:class="showEduSort | showEduDelete? 'col-10' : '' ">
+    {% include "candidates/partials/education_form_content.html" with education_form=education_edit_form %}
+  </div>
+
   <input type="hidden" name="order" value="{{ education_edit_form.instance.id }}">
 </form>

@@ -75,38 +75,37 @@ class CandidateView(LoginRequiredMixin, DetailView):
 
 
 @method_decorator(never_cache, name="dispatch")
-class CandidateEditView(LoginRequiredMixin, UpdateView):
+class CandidateEditView(LoginRequiredMixin, TemplateView):
     model = Candidate
     form_class = CandidateForm
-    context_object_name = "candidate"
     template_name = "candidates/profile_edit.html"
-    hx_template_name = "candidates/partials/profile_form.html"
-
-    def get_object(self) -> type[Candidate]:
-        return get_candidate_or_404(self, url_key="pk")
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        return super().get(request, *args, **kwargs)
+        candidate = get_candidate_or_404(self, url_key="pk")
+        skill_qs = candidate.candidateskill_set.all()
+        edu_qs = candidate.candidateeducation_set.all()
+        context = {
+            "candidate": candidate,
+            "candidate_form": CandidateForm(instance=candidate),
+            "skill_edit_forms": [SkillForm(instance=sk) for sk in skill_qs],
+            "skill_new_form": SkillForm(),
+            "education_edit_forms": [EducationForm(instance=e) for e in edu_qs],
+            "education_new_form": EducationForm(),
+        }
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        # Skills
-        skill_qs = self.object.candidateskill_set.all()
-        context["skill_edit_forms"] = [SkillForm(instance=sk) for sk in skill_qs]
-        context["skill_new_form"] = SkillForm()
-        # Education objects
-        edu_qs = self.object.candidateeducation_set.all()
-        context["education_edit_forms"] = [EducationForm(instance=e) for e in edu_qs]
-        context["education_new_form"] = EducationForm()
+        context = context | super().get_context_data(**kwargs)
+        return render(request, self.template_name, context)
 
-        return context
+
+class ProfileEditHxView(LoginRequiredMixin, UpdateView):
+    model = Candidate
+    form_class = CandidateForm
+    template_name = "candidates/partials/profile_form.html"
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if request.htmx:
-            self.object = self.get_object()
-            context = self.get_context_data(**kwargs)
-            return render(request, self.hx_template_name, context)
-        return super().post(request, *args, **kwargs)
+        self.object = self.get_object()
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
 
 
 class SkillCreateHxView(LoginRequiredMixin, CreateView):
@@ -192,6 +191,7 @@ class SkillOrderHxView(LoginRequiredMixin, TemplateView):
         return HttpResponse(status=HTTPStatus.OK)
 
 
+@method_decorator(never_cache, name="dispatch")
 class EducationCreateHxView(LoginRequiredMixin, CreateView):
     template_name = "candidates/partials/education_edit_form.html"
     nok_template_name = "candidates/partials/education_new_form.html"
@@ -234,7 +234,7 @@ class EducationDeleteHxView(LoginRequiredMixin, DeleteView):
 
 
 class EducationEditHxView(LoginRequiredMixin, UpdateView):
-    template_name = "candidates/partials/skill_edit_form.html"
+    template_name = "candidates/partials/education_edit_form.html"
     form_class = EducationForm
     model = CandidateEducation
 
@@ -246,12 +246,14 @@ class EducationEditHxView(LoginRequiredMixin, UpdateView):
             candidate=candidate,
         )
         form = self.form_class(request.POST, instance=self.object)
-        context = {"candidate": candidate, "skill_edit_form": form}
+        context = {"candidate": candidate}
         if form.is_valid():
             update_object = form.save(commit=False)
             update_object.candidate = candidate
             update_object.save()
             context = context | self.get_context_data(kwargs=kwargs)
+            form = self.form_class(request.POST, instance=update_object)
+        context["education_edit_form"] = form
         return render(request, self.template_name, context)
 
 

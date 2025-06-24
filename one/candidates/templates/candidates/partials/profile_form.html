@@ -1,8 +1,8 @@
 {% load i18n %}
 <form hx-post="" hx-swap="outerHTML" hx-trigger="submit">
-  {% if object.photo.url %}
-    <img src="{{ object.photo.url }}" alt="">
+  {% if candidate.photo.url %}
+    <img src="{{ candidate.photo.url }}" alt="">
   {% endif %}
-  {{ form }}
+  {{ candidate_form }}
   <button type="submit">{% translate "Save" %}</button>
 </form>

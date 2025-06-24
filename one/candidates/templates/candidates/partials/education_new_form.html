@@ -10,22 +10,6 @@
 <center>
   <small><i class="bi bi-mortarboard"></i> <i>{% translate "Add a new education item" %}</i></small>
 </center>
-  <fieldset class="grid" x-data="{ endDate: '', studyingNow : 'unknown' }">
-    <label>
-      <small>{{ education_new_form.start_date.label_tag }}</small>
-      {{ education_new_form.start_date }}
-    </label>
-    <label x-show="studyingNow !== 'true' ">
-      <small>{{ education_new_form.end_date.label_tag }}</small>
-      {{ education_new_form.end_date }}
-    </label>
-
-    <label x-show="endDate === ''">
-      <small>{{ education_new_form.studying_now.label_tag }}</small>
-      {{ education_new_form.studying_now }}
-    </label>
-  </fieldset>
-  <small>{{ education_new_form.description.label_tag }}</small>
-  {{ education_new_form.description }}
+  {% include "candidates/partials/education_form_content.html" with education_form=education_new_form is_new_form=True %}
   <button type="submit" class="outline"> <i class="bi bi-plus-circle-fill"></i> </button>
 </form>

@@ -226,11 +226,18 @@ class CandidateSkill(CandidateChild):
 class CandidateEducation(CandidateChild):
     institution = models.CharField(max_length=64)
     title = models.CharField(max_length=64)
-    from_to = models.CharField(max_length=32)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True, blank=True)
-    studying_now = models.BooleanField(null=True, blank=True)
+    studying_now = models.BooleanField(default=False)
     description = models.TextField(null=True, blank=True)
+
+    @property
+    def js_end_date(self):
+        return "" if self.end_date is None else self.end_date.strftime("'%Y-%m-%d'")
+
+    @cached_property
+    def js_studying_now(self):
+        return "true" if self.studying_now else "false"
 
     @cached_property
     def hx_edit_url(self):

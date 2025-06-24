@@ -1,23 +1,24 @@
-// sortable elements
 document.addEventListener('htmx:load', function () {
-  const sortableEl = document.querySelector('.sortable');
-  if (sortableEl) {
+  const sortableEls = document.querySelectorAll('.sortable');
+
+  sortableEls.forEach((sortableEl) => {
     new Sortable(sortableEl, {
       handle: '.handle',
       animation: 150,
       onEnd: function () {
         const sortableItems = Array.from(sortableEl.children);
-        sortableItems.forEach((el, index) => {
+        sortableItems.forEach((el) => {
           const input = el.querySelector('input[name="order"]');
           if (input) {
-            el.parentNode.appendChild(el); // move element in DOM
+            sortableEl.appendChild(el); // ensure proper DOM order
           }
         });
         htmx.trigger(sortableEl, 'end');
       }
     });
-  }
+  });
 });
+
 
 // check if the image element is in the DOM
 function pollImageToCrop(data) {
@@ -26,7 +27,7 @@ function pollImageToCrop(data) {
 
   if (element) {
     // Once the image element showed in the DOM, we can start the cropper event
-    startCropperEvent(element);
+    startCropper(element);
   } else {
     setTimeout(pollImageToCrop, 200); // try again in 200 milliseconds
   }
@@ -34,7 +35,7 @@ function pollImageToCrop(data) {
 }
 
 
-function startCropperEvent(element) {
+function startCropper(element) {
 
   const cropper = new Cropper(element, {
     viewMode: 3,
@@ -45,9 +46,14 @@ function startCropperEvent(element) {
     autoCropArea: 0.9,
     movable: false,
     scalable: true,
-    data: getInitData(),
+    data: getCropInitData(),
     crop(event) {
-      setImageCropProperties(event.detail.x, event.detail.y, event.detail.width, event.detail.height);
+      setImageCropProperties(
+        event.detail.x,
+        event.detail.y,
+        event.detail.width,
+        event.detail.height,
+      );
     },
   });
 }
@@ -62,8 +68,7 @@ function setImageCropProperties(x, y, width, height) {
 }
 
 
-function getInitData() {
-
+function getCropInitData() {
   const data = {
     x: parseInt(document.getElementById("id_crop_x").value),
     y: parseInt(document.getElementById("id_crop_y").value),
@@ -72,5 +77,4 @@ function getInitData() {
   };
   console.log(data);
   return data;
-
 }

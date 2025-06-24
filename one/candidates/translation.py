@@ -29,7 +29,7 @@ class CandidateSkillOptions(TranslationOptions):
 
 @register(CandidateEducation)
 class CandidateEducationOptions(TranslationOptions):
-    fields = ("title", "from_to", "description")
+    fields = ("title", "description")
 
 
 @register(CandidateExperience)

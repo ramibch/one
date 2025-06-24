@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.safestring import mark_safe
 
 from one.candidates.models import (
     Candidate,
@@ -51,5 +52,14 @@ class EducationForm(forms.ModelForm):
         widgets = {
             "start_date": forms.DateInput(attrs=dict(type="date")),
             "end_date": forms.DateInput(attrs={"type": "date", "x-model": "endDate"}),
-            "studying_now": forms.NullBooleanSelect(attrs={"x-model": "studyingNow"}),
+            "studying_now": forms.CheckboxInput(attrs={"x-model": "studyingNow"}),
+            "description": forms.Textarea(
+                attrs={
+                    "x-data": mark_safe(
+                        "{ resize: () => { $el.style.height = '8px'; $el.style.height = $el.scrollHeight + 'px' } }"  # noqa: E501
+                    ),
+                    "x-init": "resize()",
+                    "x-on:input": "resize()",
+                }
+            ),
         }
