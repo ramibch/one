@@ -286,14 +286,14 @@ Third-party settings
 """
 
 # huey
-
+HUEY_IMMEDIATE = env.bool("HUEY_IMMEDIATE")
 
 HUEY = {
     "huey_class": "huey.RedisHuey",  # Huey implementation to use.
     "name": DATABASES["default"]["NAME"],  # Use db name for huey.
     "results": True,  # Store return values of tasks.
     "store_none": False,  # If a task returns None, do not save to results.
-    "immediate": ENV == DEV,  # run synchronously.
+    "immediate": HUEY_IMMEDIATE,  # run synchronously.
     "utc": True,  # Use UTC for all times internally.
     "blocking": True,  # Perform blocking pop rather than poll Redis.
     "connection": {"connection_pool": REDIS_CONNECTION_POOL},

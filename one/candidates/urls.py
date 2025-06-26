@@ -2,7 +2,9 @@ from django.urls import path
 
 from .views import (
     CandidateCreateView,
+    CandidateEditHxView,
     CandidateEditView,
+    CandidateLabelsEditView,
     CandidateListView,
     CandidateView,
     EducationCreateHxView,
@@ -38,6 +40,11 @@ urlpatterns = [
         name="candidate_edit",
     ),
     path(
+        "<uuid:pk>/info-edit",
+        CandidateEditHxView.as_view(),
+        name="candidateinfo_edit",
+    ),
+    path(
         "<uuid:pk>/pub",
         PubCandidateView.as_view(),
         name="pub_candidate_detail",
@@ -48,7 +55,12 @@ urlpatterns = [
         CandidateListView.as_view(),
         name="candidate_list",
     ),
-    # Apps
+    path(
+        "labels/<uuid:candidate_pk>/edit",
+        CandidateLabelsEditView.as_view(),
+        name="candidate_labels",
+    ),
+    # Job apply
     path(
         "job-apply",
         JobApplicationView.as_view(),

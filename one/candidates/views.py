@@ -8,7 +8,7 @@ from django.http import (
     HttpResponse,
     HttpResponseBadRequest,
 )
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic import FormView, TemplateView
@@ -19,6 +19,7 @@ from django_htmx.http import reswap, retarget
 
 from one.candidates.forms import (
     CandidateForm,
+    CandidateLabelsForm,
     EducationForm,
     JobApplicationForm,
     SkillForm,
@@ -50,24 +51,24 @@ class JobApplicationView(FormView):
 
 class CandidateListView(ListView):
     model = Candidate
-    template_name = "candidates/profile_list.html"
+    template_name = "candidates/candidate_list.html"
 
 
 class CandidateCreateView(LoginRequiredMixin, FormView):
     model = Candidate
     form_class = CandidateForm
-    template_name = "candidates/profile_create.html"
+    template_name = "candidates/candidate_create.html"
 
 
 class PubCandidateView(DetailView):
     model = Candidate
-    template_name = "candidates/profile_detail.html"
+    template_name = "candidates/candidate_detail.html"
     queryset = Candidate.objects.filter(is_public=True)
 
 
 class CandidateView(LoginRequiredMixin, DetailView):
     model = Candidate
-    template_name = "candidates/profile_detail.html"
+    template_name = "candidates/candidate_detail.html"
 
     def get_queryset(self) -> QuerySet:
         qs = super().get_queryset()
@@ -78,7 +79,7 @@ class CandidateView(LoginRequiredMixin, DetailView):
 class CandidateEditView(LoginRequiredMixin, TemplateView):
     model = Candidate
     form_class = CandidateForm
-    template_name = "candidates/profile_edit.html"
+    template_name = "candidates/candidate_edit.html"
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         candidate = get_candidate_or_404(self, url_key="pk")
@@ -87,6 +88,7 @@ class CandidateEditView(LoginRequiredMixin, TemplateView):
         context = {
             "candidate": candidate,
             "candidate_form": CandidateForm(instance=candidate),
+            "candidate_labels_form": CandidateLabelsForm(instance=candidate),
             "skill_edit_forms": [SkillForm(instance=sk) for sk in skill_qs],
             "skill_new_form": SkillForm(),
             "education_edit_forms": [EducationForm(instance=e) for e in edu_qs],
@@ -97,15 +99,32 @@ class CandidateEditView(LoginRequiredMixin, TemplateView):
         return render(request, self.template_name, context)
 
 
-class ProfileEditHxView(LoginRequiredMixin, UpdateView):
+class CandidateEditHxView(LoginRequiredMixin, UpdateView):
     model = Candidate
     form_class = CandidateForm
-    template_name = "candidates/partials/profile_form.html"
+    context_object_name = "candidate"
+    template_name = "candidates/partials/candidate_form.html"
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.object = self.get_object()
-        context = self.get_context_data(**kwargs)
+        form = self.form_class(request.POST, files=request.FILES, instance=self.object)
+        if form.is_valid():
+            form.save()
+        context = {"candidate_form": form} | self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
+
+
+class CandidateLabelsEditView(LoginRequiredMixin, UpdateView):
+    model = Candidate
+    form_class = CandidateLabelsForm
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        candidate = get_candidate_or_404(self)
+        form = self.form_class(request.POST, instance=candidate)
+        if form.is_valid():
+            form.save()
+
+        return redirect(candidate.edit_url)
 
 
 class SkillCreateHxView(LoginRequiredMixin, CreateView):

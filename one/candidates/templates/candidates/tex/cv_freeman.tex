@@ -55,11 +55,11 @@
 \parbox[][0.11\textheight][c]{\linewidth}{ % Box to hold your name and CV title; change the fixed height as needed to match the colored box to the right
 	\centering % Horizontally center text
 
-	{\sffamily\Huge {{ profile.get_tex_value("fullname") }} } % Your name
+	{\sffamily\Huge {{ profile.get_tex_value("full_name") }} } % Your name
 
 	\medskip % Vertical whitespace
 
-	{\cursivefont\Huge\textcolor{headings}{  {{- profile.get_tex_value("jobtitle") -}} }}
+	{\cursivefont\Huge\textcolor{headings}{  {{- profile.get_tex_value("job_title") -}} }}
 
 	\vfill % Push content to the top of the box
 }

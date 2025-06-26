@@ -40,11 +40,11 @@
 	\vspace{-\baselineskip} % Required for vertically aligning minipages
 
 	% fullname
-	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {{- profile.get_tex_value("fullname") -}} }}}}
+	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {{- profile.get_tex_value("full_name") -}} }}}}
 	\vspace{6pt}
 	% job title
 	{% if profile.jobtitle_active %}
-	{\huge {{ profile.get_tex_value("jobtitle") }} }
+	{\huge {{ profile.get_tex_value("job_title") }} }
 	{% endif %}
 \end{minipage}
 \begin{minipage}[t]{0.33\textwidth} % 27.5% of the page width for the first row of icons

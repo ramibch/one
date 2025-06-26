@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% translate "Edit" %}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+  <div class="col-md-4">
+    {% include "candidates/partials/candidate_form.html" %}
+  </div>
+
+  <div class="col-md-8" x-data="{openLabelsModal : false }">
+    <!-- skills -->
+    {% include "candidates/partials/skills_edit.html" %}
+
+    <!-- Education -->
+    {% include "candidates/partials/education_edit.html" %}
+
+    <dialog x-bind:open="openLabelsModal">
+      <article>
+        <header>
+          <button aria-label="Close" rel="prev" x-on:click="openLabelsModal = false"></button>
+          <h2><i class="bi bi-pencil-square"></i> {% translate "Labels" %}</h2>
+        </header>
+        <form action="{{ candidate.labels_edit_url }}" method="post">
+          {% csrf_token %}
+          {{ candidate_labels_form }}
+          <button type="submit">{% translate "Save" %}</button>
+        </form>
+      </article>
+    </dialog>
+
+
+  </div>
+</div>
+
+{% endblock content %}

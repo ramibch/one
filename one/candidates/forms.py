@@ -31,6 +31,12 @@ class CandidateForm(forms.ModelForm):
         )
 
 
+class CandidateLabelsForm(forms.ModelForm):
+    class Meta:
+        model = Candidate
+        fields = ("about_label", "skill_label", "education_label", "experience_label")
+
+
 class SkillForm(forms.ModelForm):
     class Meta:
         model = CandidateSkill

@@ -80,9 +80,9 @@
 
 
 \begin{document}
-\name{ {{- profile.get_tex_value("fullname") -}} }
+\name{ {{- profile.get_tex_value("full_name") -}} }
 {% if profile.jobtitle_active %}
-\tagline{ {{- profile.get_tex_value("jobtitle") -}} }
+\tagline{ {{- profile.get_tex_value("job_title") -}} }
 {% else %}
 \tagline{}
 {% endif %}

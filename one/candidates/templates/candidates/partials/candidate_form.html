@@ -1,8 +1,7 @@
 {% load i18n %}
-<form hx-post="" hx-swap="outerHTML" hx-trigger="submit">
+<form hx-encoding="multipart/form-data" hx-post="{{ candidate.hx_edit_url }}" hx-swap="outerHTML" hx-trigger="change">
   {% if candidate.photo.url %}
     <img src="{{ candidate.photo.url }}" alt="">
   {% endif %}
   {{ candidate_form }}
-  <button type="submit">{% translate "Save" %}</button>
 </form>

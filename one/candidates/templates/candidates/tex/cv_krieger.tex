@@ -39,9 +39,9 @@ fontsize=10pt
 % set document
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-\name{ {{- profile.get_tex_value("fullname") -}} }
+\name{ {{- profile.get_tex_value("full_name") -}} }
 {% if profile.jobtitle_active %}
-  \jobtitle{ {{- profile.get_tex_value("jobtitle") -}} }
+  \jobtitle{ {{- profile.get_tex_value("job_title") -}} }
 {% else %}
   \jobtitle{}
 {% endif %}

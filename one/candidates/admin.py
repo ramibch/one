@@ -9,12 +9,18 @@ from one.admin import (
 
 from .models import (
     Candidate,
+    CandidateEducation,
+    CandidateExperience,
     CandidateJobAlert,
     CandidateSkill,
     JobApplication,
     TexCv,
 )
-from .tasks import task_render_application_files, task_render_cvs
+from .tasks import (
+    task_create_texcvs_and_render,
+    task_render_application_files,
+    task_render_cvs,
+)
 
 
 class AlertInline(GISStackedInline):
@@ -27,15 +33,40 @@ class SkillInline(OneTranslationStackedInline):
     extra = 1
 
 
+class EducationInline(OneTranslationStackedInline):
+    model = CandidateEducation
+    extra = 1
+
+
+class ExperienceInline(OneTranslationStackedInline):
+    model = CandidateExperience
+    extra = 1
+
+
 @admin.register(Candidate)
-class CandiateProfileAdmin(OneTranslatableModelAdmin):
+class CandiateAdmin(OneTranslatableModelAdmin):
     list_display = ("id", "full_name", "job_title", "email", "phone")
-    inlines = [AlertInline, SkillInline]
+    inlines = [SkillInline, EducationInline, ExperienceInline, AlertInline]
+    actions = ["render_cvs"]
+
+    @admin.action(description="▶️ Render CVs")
+    def render_cvs(modeladmin, request, queryset):
+        task_create_texcvs_and_render(queryset)
 
 
 @admin.register(CandidateSkill)
-class CandidateSkillAdmin(OneTranslatableModelAdmin):
+class SkillAdmin(OneTranslatableModelAdmin):
     list_display = ("name", "level", "order")
+
+
+@admin.register(CandidateEducation)
+class EducationAdmin(OneTranslatableModelAdmin):
+    list_display = ("title", "institution", "start_date", "end_date")
+
+
+@admin.register(CandidateExperience)
+class ExperienceAdmin(OneTranslatableModelAdmin):
+    list_display = ("job_title", "company_name", "start_date", "end_date")
 
 
 @admin.register(TexCv)

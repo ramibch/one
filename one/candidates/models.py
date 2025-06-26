@@ -12,6 +12,7 @@ from django.db import models
 from django.db.models import Max, Value
 from django.db.models.functions import Concat
 from django.urls import reverse, reverse_lazy
+from django.utils.formats import date_format
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
@@ -69,7 +70,7 @@ class Candidate(TranslatableModel):
     coverletter_body = models.TextField(null=True, blank=True)
 
     # labels
-    about_label = models.CharField(max_length=32, default=_("Professional Profile"))
+    about_label = models.CharField(max_length=32, default=_("About me"))
     skill_label = models.CharField(max_length=32, default=_("Skills"))
     education_label = models.CharField(max_length=32, default=_("Education"))
     experience_label = models.CharField(max_length=32, default=_("Work Experience"))
@@ -155,6 +156,14 @@ class Candidate(TranslatableModel):
         return reverse("candidate_edit", kwargs={"pk": self.pk})
 
     @cached_property
+    def hx_edit_url(self):
+        return reverse("candidateinfo_edit", kwargs={"pk": self.pk})
+
+    @cached_property
+    def labels_edit_url(self):
+        return reverse("candidate_labels", kwargs={"candidate_pk": self.pk})
+
+    @cached_property
     def hx_create_skill_url(self):
         return reverse("candidateskill_create", kwargs={"candidate_pk": self.pk})
 
@@ -233,9 +242,16 @@ class CandidateEducation(CandidateChild):
 
     @property
     def js_end_date(self):
-        return "" if self.end_date is None else self.end_date.strftime("'%Y-%m-%d'")
+        # format = formats.get_format("SHORT_DATE_FORMAT", lang=get_language())
+        # return "''" if self.end_date is None else
+        # self.end_date.strftime(f"'{format}'")
+        if self.end_date is None:
+            return "''"
+        return (
+            f"'{date_format(self.end_date, format='SHORT_DATE_FORMAT', use_l10n=True)}'"
+        )
 
-    @cached_property
+    @property
     def js_studying_now(self):
         return "true" if self.studying_now else "false"
 
@@ -254,7 +270,9 @@ class CandidateEducation(CandidateChild):
 class CandidateExperience(CandidateChild):
     company_name = models.CharField(max_length=64)
     job_title = models.CharField(max_length=64)
-    from_to = models.CharField(max_length=32)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True, blank=True)
+    here_now = models.BooleanField(default=False)
     description = models.TextField(null=True, blank=True)
 
     @cached_property

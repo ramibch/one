@@ -34,4 +34,4 @@ class CandidateEducationOptions(TranslationOptions):
 
 @register(CandidateExperience)
 class CandidateExperienceOptions(TranslationOptions):
-    fields = ("job_title", "from_to", "description")
+    fields = ("job_title", "description")

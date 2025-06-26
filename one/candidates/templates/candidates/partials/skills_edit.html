@@ -1,7 +1,7 @@
 {% load i18n %}
 <section id="skills_edit" x-data="{showSkillSort : $persist(false), showSkillDelete : $persist(false) }">
   <h2>
-    {{ candidate.skill_label }}
+    <i class="bi bi-pencil-square" x-on:click="openLabelsModal=true" style="cursor: pointer;"></i> {{ candidate.skill_label }}
     <button x-on:click="showSkillSort = !showSkillSort;" x-bind:class="showSkillSort? '' : 'outline'" style="border:none;"
             x-bind:title="showSkillSort? '{% translate "Hide sorting buttons" %}' : '{% translate "Show sorting buttons" %}' ">
       <i class="bi bi-list"></i>

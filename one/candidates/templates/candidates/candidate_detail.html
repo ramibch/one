@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load humanize i18n %}
+
+{% block head_title %}
+{{ object.full_name }} - {{ object.job_title }}
+{% endblock head_title %}
+
+{% block content %}
+<center>
+  <h1> {{ object.full_name }} - {{ object.job_title }}    </h1>
+  {% if object.user == request.user %}
+    <small> <a href="{{ object.edit_url }}">📝 {% translate "Edit" %}</a></small>
+  {% endif %}
+</center>
+
+
+<section id="candidate_cvs">
+  <h2> {% translate "My CVs" %}</h2>
+  <div class="row mt-5">
+  {% for cv in object.texcv_set.all %}
+    <div class="col-md-4">
+      <article {% if section.card_animation %} {% include "snippets/animation_attrs.html" with animation=section.card_animation %} {% endif %}>
+        <h3>
+          {{ cv.get_template_display }}
+        </h3>
+        <img src="{{ cv.cv_image.url }}" alt="">
+        <footer>
+          <center>
+            <a target="_blank" role="button" href="{{ cv.cv_pdf.url }}">{% translate "Download" %}</a>
+            <br>
+            <small><i>{% translate "Updated" %}  {{ cv.updated_at|naturaltime }}</i></small>
+          </center>
+        </footer>
+
+      </article>
+    </div>
+  {% endfor %}
+  </div>
+</section>
+{% endblock content %}

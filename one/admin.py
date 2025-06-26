@@ -34,7 +34,6 @@ class OneTabularInline(admin.TabularInline):
 
 class OneTranslatableModelAdmin(TranslationAdmin):
     formfield_overrides = FORMFIELD_OVERRIDES
-    actions = ["translate_fields"]
 
     @admin.action(description="🈂️ Translate fields from default language")
     def translate_fields(modeladmin, request, queryset):
@@ -49,6 +48,15 @@ class OneTranslatableModelAdmin(TranslationAdmin):
 
         field_names = translator.get_options_for_model(Model).get_field_names()
         translate_modeltranslation_objects(queryset, field_names)
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        actions["translate_fields"] = (
+            self.translate_fields,
+            "translate_fields",
+            self.translate_fields.short_description,
+        )
+        return actions
 
 
 class OneTranslationStackedInline(TranslationTabularInline):
