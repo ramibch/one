@@ -1,0 +1,37 @@
+{% load i18n %}
+<form
+  class="sortable-item row mb-3"
+  data-id="{{ experience_edit_form.instance.id }}"
+  onsubmit="event.preventDefault();"
+  hx-post="{{ experience_edit_form.instance.hx_edit_url }}"
+  hx-trigger="change"
+  hx-swap="none"
+>
+  <div x-show="showExpSort | showExpDelete" x-bind:class="showExpSort | showExpDelete? 'col-2' : '' ">
+    <button x-show="showExpSort" style="border:none;"
+        x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
+        x-bind:class="hover? 'handle' : 'outline handle'"
+        >
+      <i class="bi bi-list"></i>
+    </button>
+    <button x-show="showExpDelete"
+        style="border:none;"
+        title="{% translate 'Delete' %}"
+        x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
+        x-bind:class="hover? '' : 'outline'"
+        hx-delete="{{ experience_edit_form.instance.hx_delete_url }}"
+        hx-confirm="{% translate 'Are you sure to delete this education item?' %}"
+        hx-target="closest form"
+        hx-trigger="click"
+        hx-swap="delete"
+        >
+      <i class="bi bi-trash"></i>
+    </button>
+  </div>
+
+  <div x-bind:class="showExpSort | showExpDelete? 'col-10' : '' ">
+    {% include "candidates/partials/experience_form_content.html" with experience_form=experience_edit_form %}
+  </div>
+
+  <input type="hidden" name="order" value="{{ experience_edit_form.instance.id }}">
+</form>

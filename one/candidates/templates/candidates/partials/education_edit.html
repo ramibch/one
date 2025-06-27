@@ -1,7 +1,7 @@
 {% load i18n %}
 <section id="education_edit" x-data="{showEduSort : $persist(false), showEduDelete : $persist(false) }" >
   <h2>
-    <i class="bi bi-pencil-square" x-on:click="openLabelsModal=true" style="cursor: pointer;"></i> {{ candidate.education_label }}
+     {% translate "Education" %}
     <button x-on:click="showEduSort = !showEduSort;" x-bind:class="showEduSort? '' : 'outline'" style="border:none;"
             x-bind:title="showEduSort? '{% translate "Hide sorting buttons" %}' : '{% translate "Show sorting buttons" %}' ">
       <i class="bi bi-list"></i>

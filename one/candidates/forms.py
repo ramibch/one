@@ -4,6 +4,7 @@ from django.utils.safestring import mark_safe
 from one.candidates.models import (
     Candidate,
     CandidateEducation,
+    CandidateExperience,
     CandidateSkill,
     JobApplication,
 )
@@ -28,13 +29,8 @@ class CandidateForm(forms.ModelForm):
             "location",
             "linkedin_url",
             "website_url",
+            "about",
         )
-
-
-class CandidateLabelsForm(forms.ModelForm):
-    class Meta:
-        model = Candidate
-        fields = ("about_label", "skill_label", "education_label", "experience_label")
 
 
 class SkillForm(forms.ModelForm):
@@ -56,9 +52,34 @@ class EducationForm(forms.ModelForm):
             "description",
         )
         widgets = {
-            "start_date": forms.DateInput(attrs=dict(type="date")),
-            "end_date": forms.DateInput(attrs={"type": "date", "x-model": "endDate"}),
+            "end_date": forms.TextInput(attrs={"type": "text", "x-model": "endDate"}),
             "studying_now": forms.CheckboxInput(attrs={"x-model": "studyingNow"}),
+            "description": forms.Textarea(
+                attrs={
+                    "x-data": mark_safe(
+                        "{ resize: () => { $el.style.height = '8px'; $el.style.height = $el.scrollHeight + 'px' } }"  # noqa: E501
+                    ),
+                    "x-init": "resize()",
+                    "x-on:input": "resize()",
+                }
+            ),
+        }
+
+
+class ExperienceForm(forms.ModelForm):
+    class Meta:
+        model = CandidateExperience
+        fields = (
+            "job_title",
+            "company_name",
+            "start_date",
+            "end_date",
+            "here_now",
+            "description",
+        )
+        widgets = {
+            "end_date": forms.TextInput(attrs={"type": "text", "x-model": "endDate"}),
+            "here_now": forms.CheckboxInput(attrs={"x-model": "hereNow"}),
             "description": forms.Textarea(
                 attrs={
                     "x-data": mark_safe(

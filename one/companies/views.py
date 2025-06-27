@@ -17,7 +17,7 @@ class JobDetailView(DetailView):
         data = {"job": self.get_object()}
         ApplyForm.base_fields["cv"] = forms.ModelChoiceField(
             queryset=TexCv.objects.filter(
-                profile__user_id=self.request.user.id,
+                candidate__user_id=self.request.user.id,
             )
         )
         form = ApplyForm(initial=data)

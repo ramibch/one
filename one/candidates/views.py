@@ -8,7 +8,7 @@ from django.http import (
     HttpResponse,
     HttpResponseBadRequest,
 )
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic import FormView, TemplateView
@@ -19,14 +19,15 @@ from django_htmx.http import reswap, retarget
 
 from one.candidates.forms import (
     CandidateForm,
-    CandidateLabelsForm,
     EducationForm,
+    ExperienceForm,
     JobApplicationForm,
     SkillForm,
 )
 from one.candidates.models import (
     Candidate,
     CandidateEducation,
+    CandidateExperience,
     CandidateSkill,
     JobApplication,
 )
@@ -66,13 +67,12 @@ class PubCandidateView(DetailView):
     queryset = Candidate.objects.filter(is_public=True)
 
 
-class CandidateView(LoginRequiredMixin, DetailView):
+class CandidateDetailView(LoginRequiredMixin, DetailView):
     model = Candidate
     template_name = "candidates/candidate_detail.html"
 
     def get_queryset(self) -> QuerySet:
-        qs = super().get_queryset()
-        return qs.filter(user_id=self.request.user.id)
+        return self.model.objects.filter(user_id=self.request.user.id)
 
 
 @method_decorator(never_cache, name="dispatch")
@@ -85,20 +85,23 @@ class CandidateEditView(LoginRequiredMixin, TemplateView):
         candidate = get_candidate_or_404(self, url_key="pk")
         skill_qs = candidate.candidateskill_set.all()
         edu_qs = candidate.candidateeducation_set.all()
+        exp_qs = candidate.candidateexperience_set.all()
         context = {
             "candidate": candidate,
             "candidate_form": CandidateForm(instance=candidate),
-            "candidate_labels_form": CandidateLabelsForm(instance=candidate),
             "skill_edit_forms": [SkillForm(instance=sk) for sk in skill_qs],
             "skill_new_form": SkillForm(),
-            "education_edit_forms": [EducationForm(instance=e) for e in edu_qs],
+            "education_edit_forms": [EducationForm(instance=edu) for edu in edu_qs],
             "education_new_form": EducationForm(),
+            "experience_edit_forms": [ExperienceForm(instance=exp) for exp in exp_qs],
+            "experience_new_form": ExperienceForm(),
         }
 
         context = context | super().get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
 
+@method_decorator(never_cache, name="dispatch")
 class CandidateEditHxView(LoginRequiredMixin, UpdateView):
     model = Candidate
     form_class = CandidateForm
@@ -114,19 +117,7 @@ class CandidateEditHxView(LoginRequiredMixin, UpdateView):
         return render(request, self.template_name, context)
 
 
-class CandidateLabelsEditView(LoginRequiredMixin, UpdateView):
-    model = Candidate
-    form_class = CandidateLabelsForm
-
-    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        candidate = get_candidate_or_404(self)
-        form = self.form_class(request.POST, instance=candidate)
-        if form.is_valid():
-            form.save()
-
-        return redirect(candidate.edit_url)
-
-
+@method_decorator(never_cache, name="dispatch")
 class SkillCreateHxView(LoginRequiredMixin, CreateView):
     template_name = "candidates/partials/skill_edit_form.html"
     nok_template_name = "candidates/partials/skill_new_form.html"
@@ -151,6 +142,7 @@ class SkillCreateHxView(LoginRequiredMixin, CreateView):
             return retarget(response, "#skill_new_form")
 
 
+@method_decorator(never_cache, name="dispatch")
 class SkillEditHxView(LoginRequiredMixin, UpdateView):
     template_name = "candidates/partials/skill_edit_form.html"
     form_class = SkillForm
@@ -173,6 +165,7 @@ class SkillEditHxView(LoginRequiredMixin, UpdateView):
         return render(request, self.template_name, context)
 
 
+@method_decorator(never_cache, name="dispatch")
 class SkillDeleteHxView(LoginRequiredMixin, DeleteView):
     model = CandidateSkill
 
@@ -190,6 +183,7 @@ class SkillDeleteHxView(LoginRequiredMixin, DeleteView):
         return HttpResponse(status=HTTPStatus.OK)
 
 
+@method_decorator(never_cache, name="dispatch")
 class SkillOrderHxView(LoginRequiredMixin, TemplateView):
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         candidate = get_candidate_or_404(self)
@@ -235,6 +229,7 @@ class EducationCreateHxView(LoginRequiredMixin, CreateView):
             return retarget(response, "#education_new_form")
 
 
+@method_decorator(never_cache, name="dispatch")
 class EducationDeleteHxView(LoginRequiredMixin, DeleteView):
     model = CandidateEducation
 
@@ -252,6 +247,7 @@ class EducationDeleteHxView(LoginRequiredMixin, DeleteView):
         return HttpResponse(status=HTTPStatus.OK)
 
 
+@method_decorator(never_cache, name="dispatch")
 class EducationEditHxView(LoginRequiredMixin, UpdateView):
     template_name = "candidates/partials/education_edit_form.html"
     form_class = EducationForm
@@ -276,6 +272,7 @@ class EducationEditHxView(LoginRequiredMixin, UpdateView):
         return render(request, self.template_name, context)
 
 
+@method_decorator(never_cache, name="dispatch")
 class EducationOrderHxView(LoginRequiredMixin, TemplateView):
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         candidate = get_candidate_or_404(self)
@@ -296,7 +293,90 @@ class EducationOrderHxView(LoginRequiredMixin, TemplateView):
         return HttpResponse(status=HTTPStatus.OK)
 
 
-ExperienceCreateHxView = SkillCreateHxView
-ExperienceDeleteHxView = SkillDeleteHxView
-ExperienceEditHxView = SkillEditHxView
-ExperienceOrderHxView = SkillOrderHxView
+@method_decorator(never_cache, name="dispatch")
+class ExperienceCreateHxView(LoginRequiredMixin, CreateView):
+    template_name = "candidates/partials/experience_edit_form.html"
+    nok_template_name = "candidates/partials/experience_new_form.html"
+    model = CandidateExperience
+    form_class = ExperienceForm
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        form = self.form_class(request.POST)
+        candidate = get_candidate_or_404(self)
+        context = {"candidate": candidate}
+        if form.is_valid():
+            self.object = form.save(commit=False)
+            self.object.candidate = candidate
+            self.object.save()
+            context = context | self.get_context_data(kwargs=kwargs)
+            context["experience_edit_form"] = self.form_class(instance=self.object)
+            return render(request, self.template_name, context)
+        else:
+            context["experience_new_form"] = form
+            response = render(request, self.nok_template_name, context)
+            response = reswap(response, "outerHTML")
+            return retarget(response, "#experience_new_form")
+
+
+@method_decorator(never_cache, name="dispatch")
+class ExperienceDeleteHxView(LoginRequiredMixin, DeleteView):
+    model = CandidateExperience
+
+    def get_object(self) -> Any:
+        return get_object_or_404(
+            self.model,
+            candidate__pk=self.kwargs["candidate_pk"],
+            candidate__user=self.request.user,
+            pk=self.kwargs["pk"],
+        )
+
+    def delete(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponse(status=HTTPStatus.OK)
+
+
+@method_decorator(never_cache, name="dispatch")
+class ExperienceEditHxView(LoginRequiredMixin, UpdateView):
+    template_name = "candidates/partials/experience_edit_form.html"
+    form_class = ExperienceForm
+    model = CandidateExperience
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        candidate = get_candidate_or_404(self)
+        self.object = get_object_or_404(
+            self.model,
+            pk=self.kwargs["pk"],
+            candidate=candidate,
+        )
+        form = self.form_class(request.POST, instance=self.object)
+        context = {"candidate": candidate}
+        if form.is_valid():
+            update_object = form.save(commit=False)
+            update_object.candidate = candidate
+            update_object.save()
+            context = context | self.get_context_data(kwargs=kwargs)
+            form = self.form_class(request.POST, instance=update_object)
+        context["experience_edit_form"] = form
+        return render(request, self.template_name, context)
+
+
+@method_decorator(never_cache, name="dispatch")
+class ExperienceOrderHxView(LoginRequiredMixin, TemplateView):
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        candidate = get_candidate_or_404(self)
+        ids = [id_.strip() for id_ in request.POST.getlist("order") if id_.strip()]
+        if not ids:
+            return HttpResponseBadRequest("No skill IDs provided.")
+        edu_qs = CandidateExperience.objects.filter(candidate=candidate, id__in=ids)
+        edu_map = {str(edu_obj.id): edu_obj for edu_obj in edu_qs}
+
+        updated = []
+        for order, edu_id in enumerate(ids, start=1):
+            edu_obj = edu_map.get(edu_id)
+            if edu_obj and edu_obj.order != order:
+                edu_obj.order = order
+                updated.append(edu_obj)
+
+        CandidateExperience.objects.bulk_update(updated, ["order"])
+        return HttpResponse(status=HTTPStatus.OK)

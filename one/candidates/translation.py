@@ -9,17 +9,8 @@ from .models import (
 
 
 @register(Candidate)
-class CandidateProfileOptions(TranslationOptions):
-    fields = (
-        "job_title",
-        "location",
-        "about",
-        "coverletter_body",
-        "about_label",
-        "experience_label",
-        "education_label",
-        "skill_label",
-    )
+class CandidateOptions(TranslationOptions):
+    fields = ("job_title", "location", "about", "coverletter_body")
 
 
 @register(CandidateSkill)

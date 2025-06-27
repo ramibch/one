@@ -20,6 +20,7 @@
       </header>
       {% if apply_form %}
         <form action="{% url 'job_apply' %}" method="post">
+          {% csrf_token %}
           {{ apply_form }}
           <button type="submit" class="col-7">{% translate "Save" %}</button>
         </form>

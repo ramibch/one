@@ -12,7 +12,6 @@ from django.db import models
 from django.db.models import Max, Value
 from django.db.models.functions import Concat
 from django.urls import reverse, reverse_lazy
-from django.utils.formats import date_format
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
@@ -64,16 +63,24 @@ class Candidate(TranslatableModel):
     email = models.EmailField(max_length=64)
     phone = models.CharField(max_length=32)
     location = models.CharField(max_length=32)
-    linkedin_url = models.CharField(max_length=128, null=True, blank=True)
-    website_url = models.URLField(max_length=128, blank=True, null=True)
-    about = models.TextField(null=True, blank=True)
+    linkedin_url = models.CharField(
+        verbose_name=_("linkedin URL"),
+        max_length=128,
+        null=True,
+        blank=True,
+    )
+    website_url = models.URLField(
+        verbose_name=_("website URL"),
+        max_length=128,
+        blank=True,
+        null=True,
+    )
+    about = models.TextField(
+        verbose_name=_("about me"),
+        null=True,
+        blank=True,
+    )
     coverletter_body = models.TextField(null=True, blank=True)
-
-    # labels
-    about_label = models.CharField(max_length=32, default=_("About me"))
-    skill_label = models.CharField(max_length=32, default=_("Skills"))
-    education_label = models.CharField(max_length=32, default=_("Education"))
-    experience_label = models.CharField(max_length=32, default=_("Work Experience"))
 
     photo = models.ImageField(upload_to=get_upload_path, null=True)
     docs = models.FileField(upload_to=get_upload_path, null=True, blank=True)
@@ -160,10 +167,6 @@ class Candidate(TranslatableModel):
         return reverse("candidateinfo_edit", kwargs={"pk": self.pk})
 
     @cached_property
-    def labels_edit_url(self):
-        return reverse("candidate_labels", kwargs={"candidate_pk": self.pk})
-
-    @cached_property
     def hx_create_skill_url(self):
         return reverse("candidateskill_create", kwargs={"candidate_pk": self.pk})
 
@@ -235,24 +238,17 @@ class CandidateSkill(CandidateChild):
 class CandidateEducation(CandidateChild):
     institution = models.CharField(max_length=64)
     title = models.CharField(max_length=64)
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True, blank=True)
+    start_date = models.CharField(max_length=64)
+    end_date = models.CharField(max_length=64, null=True, blank=True)
     studying_now = models.BooleanField(default=False)
     description = models.TextField(null=True, blank=True)
 
     @property
-    def js_end_date(self):
-        # format = formats.get_format("SHORT_DATE_FORMAT", lang=get_language())
-        # return "''" if self.end_date is None else
-        # self.end_date.strftime(f"'{format}'")
-        if self.end_date is None:
-            return "''"
-        return (
-            f"'{date_format(self.end_date, format='SHORT_DATE_FORMAT', use_l10n=True)}'"
-        )
+    def x_data_end_date(self):
+        return "''" if self.end_date is None else f"'{self.end_date}'"
 
     @property
-    def js_studying_now(self):
+    def x_data_studying_now(self):
         return "true" if self.studying_now else "false"
 
     @cached_property
@@ -270,10 +266,18 @@ class CandidateEducation(CandidateChild):
 class CandidateExperience(CandidateChild):
     company_name = models.CharField(max_length=64)
     job_title = models.CharField(max_length=64)
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True, blank=True)
+    start_date = models.CharField(max_length=64)
+    end_date = models.CharField(max_length=64, null=True, blank=True)
     here_now = models.BooleanField(default=False)
     description = models.TextField(null=True, blank=True)
+
+    @property
+    def x_data_end_date(self):
+        return "''" if self.end_date is None else f"'{self.end_date}'"
+
+    @property
+    def x_data_here_now(self):
+        return "true" if self.here_now else "false"
 
     @cached_property
     def hx_edit_url(self):

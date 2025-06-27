@@ -2,11 +2,10 @@ from django.urls import path
 
 from .views import (
     CandidateCreateView,
+    CandidateDetailView,
     CandidateEditHxView,
     CandidateEditView,
-    CandidateLabelsEditView,
     CandidateListView,
-    CandidateView,
     EducationCreateHxView,
     EducationDeleteHxView,
     EducationEditHxView,
@@ -31,7 +30,7 @@ urlpatterns = [
     ),
     path(
         "<uuid:pk>",
-        CandidateView.as_view(),
+        CandidateDetailView.as_view(),
         name="candidate_detail",
     ),
     path(
@@ -54,11 +53,6 @@ urlpatterns = [
         "",
         CandidateListView.as_view(),
         name="candidate_list",
-    ),
-    path(
-        "labels/<uuid:candidate_pk>/edit",
-        CandidateLabelsEditView.as_view(),
-        name="candidate_labels",
     ),
     # Job apply
     path(
