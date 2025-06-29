@@ -1,3 +1,4 @@
+from django.utils import translation
 from jinja2 import Environment
 
 from .filters import FILTERS
@@ -9,7 +10,10 @@ def environment(**options):
     options.update(
         {
             "autoescape": None,
-            "extensions": ["one.tex.extensions.GraphicspathExtension"],
+            "extensions": [
+                "jinja2.ext.i18n",
+                "one.tex.extensions.GraphicspathExtension",
+            ],
         }
     )
     env = Environment(**options)
@@ -18,4 +22,5 @@ def environment(**options):
     # Huey and Django worker?
     # lang = get_language()
     # env.globals["tex_lang"] = TEX_LANGUAGE_MAPPING.get(lang) or "english"
+    env.install_gettext_translations(translation)
     return env

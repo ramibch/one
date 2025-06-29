@@ -330,7 +330,7 @@ class TexCvTemplates(models.TextChoices):
 
 class TexCv(OneModel):
     def get_upload_path(self, filename):
-        return f"candidates/{self.candidate.id}/cvs/{filename}"
+        return f"candidates/{self.candidate.id}/cv_{self.id}/{filename}"
 
     id = models.UUIDField(
         primary_key=True,

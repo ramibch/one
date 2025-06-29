@@ -67,8 +67,8 @@
 %----------------------------------------------------------------------------------------
 {% if profile.about_active and False %}
 % To have no About Me section, just remove all the text and leave \description{}
-\aboutmelabel{ {{- profile.get_tex_value("about_label") -}} }
-\aboutme{ {{- profile.get_tex_value("about") | linebreaks -}} }
+\aboutmelabel{ {% trans %}About{% endtrans %} }
+\aboutme{ {{- profile.get_tex_value("about") -}} }
 {% else %}
 \aboutme{}
 {% endif %}
@@ -95,7 +95,7 @@
 %	 ABOUT ME
 %----------------------------------------------------------------------------------------
 {% if profile.about_active %}
-\section{ {{- profile.get_tex_value("about_label") -}} }
+\section{ gettext("About") }
 
 \begin{twenty}
   \twentyitemshort{}{ {{- profile.get_tex_value("about") | linebreaks -}} }

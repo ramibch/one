@@ -71,6 +71,8 @@ class ExperienceAdmin(OneTranslatableModelAdmin):
 
 @admin.register(TexCv)
 class TexCvAdmin(OneModelAdmin):
+    list_display = ("__str__", "template", "cv_image", "cv_pdf")
+    list_filter = ("template",)
     actions = ["render_cvs"]
 
     @admin.action(description="▶️ Render CVs")

@@ -1,3 +1,4 @@
+from django.db.models import F, Q
 from huey import crontab
 from huey.contrib import djhuey as huey
 
@@ -20,8 +21,11 @@ def task_create_texcvs(candidates=None):
 @huey.db_periodic_task(crontab(minute="*"))
 def task_render_cvs(cv_objs=None):
     if cv_objs is None:
-        cv_objs = TexCv.objects.filter(cv_pdf__in=["", None])
-
+        cv_objs = TexCv.objects.filter(
+            Q(cv_pdf__isnull=True)
+            | Q(cv_pdf="")
+            | Q(updated_at__lt=F("candidate__updated_at"))
+        )
     for cv_obj in cv_objs:
         cv_obj.render_cv()
 

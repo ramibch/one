@@ -188,7 +188,7 @@
 
 % about
 {% if profile.about_active %}
-\cvsection{ {{- profile.get_tex_value("about_label") -}} }
+\cvsection{ gettext("About") }
 \begin{quote}
   {{- profile.get_tex_value("about") | linebreaks -}}
 \end{quote}
