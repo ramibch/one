@@ -17,11 +17,11 @@
       {% if is_new_form %} <small>{{ experience_form.start_date.label_tag }}</small> {% endif %}
       {{ experience_form.start_date }}
     </label>
-    <label x-show="hereNow !== true ">
+    <label >
       {% if is_new_form %} <small>{{ experience_form.end_date.label_tag }}  </small> {% endif %}
       {{ experience_form.end_date }}
     </label>
-    <label x-show="endDate === ''" >
+    <label>
       <center>
         <small>{{ experience_form.here_now.label_tag }}</small>
         {{ experience_form.here_now }}

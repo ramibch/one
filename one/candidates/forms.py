@@ -52,8 +52,19 @@ class EducationForm(forms.ModelForm):
             "description",
         )
         widgets = {
-            "end_date": forms.TextInput(attrs={"type": "text", "x-model": "endDate"}),
-            "studying_now": forms.CheckboxInput(attrs={"x-model": "studyingNow"}),
+            "end_date": forms.TextInput(
+                attrs={
+                    "type": "text",
+                    "x-model": "endDate",
+                    "x-bind:disabled": "studyingNow === true",
+                }
+            ),
+            "studying_now": forms.CheckboxInput(
+                attrs={
+                    "x-model": "studyingNow",
+                    "x-bind:disabled": "endDate !== ''",
+                }
+            ),
             "description": forms.Textarea(
                 attrs={
                     "x-data": mark_safe(
@@ -78,8 +89,16 @@ class ExperienceForm(forms.ModelForm):
             "description",
         )
         widgets = {
-            "end_date": forms.TextInput(attrs={"type": "text", "x-model": "endDate"}),
-            "here_now": forms.CheckboxInput(attrs={"x-model": "hereNow"}),
+            "end_date": forms.TextInput(
+                attrs={
+                    "type": "text",
+                    "x-model": "endDate",
+                    "x-bind:disabled": "hereNow === true",
+                }
+            ),
+            "here_now": forms.CheckboxInput(
+                attrs={"x-model": "hereNow", "x-bind:disabled": "endDate !== ''"}
+            ),
             "description": forms.Textarea(
                 attrs={
                     "x-data": mark_safe(
