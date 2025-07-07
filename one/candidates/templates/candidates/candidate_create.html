@@ -7,6 +7,11 @@
 {% block content %}
 
 
-TODO
+<form action="" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <button>{% translate "Create" %}</button>
+</form>
+
 
 {% endblock content %}

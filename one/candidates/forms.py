@@ -16,7 +16,21 @@ class JobApplicationForm(forms.ModelForm):
         fields = ("cv", "job")
 
 
-class CandidateForm(forms.ModelForm):
+class CandidateCreateForm(forms.ModelForm):
+    class Meta:
+        model = Candidate
+        fields = (
+            "language",
+            "job_title",
+            "first_name",
+            "last_name",
+            "email",
+            "phone",
+            "location",
+        )
+
+
+class CandidateEditForm(forms.ModelForm):
     class Meta:
         model = Candidate
         fields = (

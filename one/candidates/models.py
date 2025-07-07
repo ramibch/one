@@ -34,6 +34,7 @@ class Candidate(TranslatableModel):
     LANG_ATTR = "language"
     LANGS_ATTR = "languages"
     language = models.CharField(
+        verbose_name=_("Main language"),
         max_length=4,
         choices=settings.LANGUAGES,
         default=settings.LANGUAGE_CODE,
