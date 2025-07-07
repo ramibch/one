@@ -17,13 +17,14 @@ from django.views.generic.edit import FormView
 from django_htmx.http import retarget
 
 from one.articles.models import Article
+from one.candidates.views import CandidateListView
 from one.choices import Topics
 from one.db import TranslatableModel
-from one.dgt.models import DgtTest
+from one.dgt.views import dgt_test_index
 from one.faqs.models import FAQ
 from one.landing.models import LandingPage
 from one.products.models import Product
-from one.quiz.models import Quiz
+from one.quiz.views import quiz_list
 from one.sites.models import SiteType
 
 from .forms import ContactMessageForm
@@ -35,26 +36,33 @@ User = get_user_model()
 class HomeView(View):
     http_method_names = ["get"]
 
+    def get_landing(self, request):
+        try:
+            obj = LandingPage.objects.get(site=request.site, is_home=True)
+            return render(request, "landing/landing_page.html", {"landing": obj})
+        except LandingPage.DoesNotExist as err:
+            raise Http404 from err
+
     def get(self, request, *args, **kwargs):
-        match request.site.site_type:
-            case SiteType.STANDARD.value:
-                try:
-                    home = LandingPage.objects.get(site=request.site, is_home=True)
-                    return render(
-                        request, "landing/landing_page.html", {"object": home}
-                    )
-                except LandingPage.DoesNotExist:
-                    pass
+        site_type = request.site.site_type
 
-            case SiteType.DGT.value:
-                context = {"tests": DgtTest.objects.all()}
-                return render(request, "dgt/index.html", context)
+        # std site
+        if site_type == SiteType.STANDARD:
+            return self.get_landing(request)
 
-            case SiteType.ENGLISH.value:
-                context = {"quiz_list": Quiz.objects.all()}
-                return render(request, "quiz/quiz_list.html", context)
+        # dgt tests
+        if site_type == SiteType.DGT:
+            return dgt_test_index(request)
 
-        raise Http404
+        # english quizzes
+        if site_type == SiteType.ENGLISH:
+            return quiz_list(request)
+
+        # job apps site
+        if site_type == SiteType.JOBAPPS and request.user.is_authenticated:
+            return CandidateListView.as_view()(request)
+        else:
+            return self.get_landing(request)
 
 
 class SlugPageView(View):

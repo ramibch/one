@@ -85,6 +85,7 @@ class SiteType(models.TextChoices):
     STANDARD = "standard", _("Standard")
     DGT = "dgt", _("DGT")
     ENGLISH = "english", _("English quizzes")
+    JOBAPPS = "jobapps", _("Job applications")
 
 
 class Site(TranslatableModel):

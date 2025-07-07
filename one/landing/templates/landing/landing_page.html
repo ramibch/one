@@ -2,8 +2,8 @@
 {% load humanize i18n markdownify %}
 {% block content %}
   <!-- Hero section -->
-  {% if object.herosection %}
-    {% with section=object.herosection %}
+  {% if landing.herosection %}
+    {% with section=landing.herosection %}
       <section class="row mt-5">
         <div class="col-md-6">
           <h1>{{ section.headline|linebreaks }}</h1>
@@ -24,8 +24,8 @@
   {% endif %}
 
   <!-- problem section -->
-  {% if object.problemsection %}
-    {% with section=object.problemsection %}
+  {% if landing.problemsection %}
+    {% with section=landing.problemsection %}
       <br>
       <br>
       <hr>
@@ -44,8 +44,8 @@
 
 
   <!-- solution section -->
-  {% if object.solutionsection %}
-    {% with section=object.solutionsection %}
+  {% if landing.solutionsection %}
+    {% with section=landing.solutionsection %}
       <br> <br> <hr> <br>
       <section class="mt-5" >
         <div class="row">
@@ -60,15 +60,15 @@
   {% endif %}
 
   <!-- Benefits section-->
-  {% if object.benefititem_set.all %}
+  {% if landing.benefititem_set.all %}
     <br> <br> <hr> <br>
     <section>
       <center>
-        {% if object.benefits_title %}
-          <h2>{{ object.benefits_title }}</h2>
+        {% if landing.benefits_title %}
+          <h2>{{ landing.benefits_title }}</h2>
         {% endif %}
         <div class="row mt-5">
-          {% for b in object.benefititem_set.all %}
+          {% for b in landing.benefititem_set.all %}
             <div class="col-md-3">
               <span  style="font-size: 3em;">{{ b.emoji }}</span>
               <h3 class="mt-3">{{ b.name }}</h3>
@@ -81,8 +81,8 @@
   {% endif %}
 
   <!-- stepaction section -->
-  {% if object.stepactionsection %}
-    {% with section=object.stepactionsection %}
+  {% if landing.stepactionsection %}
+    {% with section=landing.stepactionsection %}
       <br> <br> <hr> <br>
       <section class="mt-5" >
         <div class="row">
@@ -97,8 +97,8 @@
   {% endif %}
 
   <!-- articles section -->
-  {% if object.articlessection and object.articlessection.articles_available %}
-    {% with section=object.articlessection %}
+  {% if landing.articlessection and landing.articlessection.articles_available %}
+    {% with section=landing.articlessection %}
       <br> <br> <hr> <br>
       <section>
         <h2>
@@ -128,8 +128,8 @@
   {% endif %}
 
   <!-- FAQs Section -->
-  {% if object.faqssection %}
-    {% with section=object.faqssection %}
+  {% if landing.faqssection %}
+    {% with section=landing.faqssection %}
       <br> <br> <hr> <br>
       <section class="mt-5" >
         <center>
@@ -150,8 +150,8 @@
   {% endif %}
 
   <!-- Final CTA -->
-  {% if object.finalctasection %}
-    {% with section=object.finalctasection %}
+  {% if landing.finalctasection %}
+    {% with section=landing.finalctasection %}
       <br> <br> <hr> <br>
       <section class="mt-5" >
         <div class="col-md-6 offset-md-3 mt-5">

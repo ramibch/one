@@ -105,6 +105,8 @@ PATH_NAMES = (
     ("privacy", _("Privacy Policy")),
     ("terms", _("Terms and Conditions")),
     ("impress", _("Impress")),
+    ("candidate_create", _("Create candidate profile")),
+    ("candidate_list", _("Candidate profile")),
 )
 
 

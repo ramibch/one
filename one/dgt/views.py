@@ -6,7 +6,7 @@ from one.db import get_db_session_object
 from .models import DgtQuestion, DgtTest, SessionDgtQuestion, SessionDgtTest
 
 
-def test_index(request):
+def dgt_test_index(request):
     context = {"tests": DgtTest.objects.all(), "page_title": "DGT tests anteriores"}
     return render(request, "dgt/index.html", context)
 

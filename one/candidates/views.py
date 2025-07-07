@@ -53,7 +53,7 @@ class JobApplicationView(FormView):
         return super().form_valid(form)
 
 
-class CandidateListView(ListView):
+class CandidateListView(LoginRequiredMixin, ListView):
     model = Candidate
     template_name = "candidates/candidate_list.html"
 
