@@ -25,6 +25,7 @@ class Topics(TextChoices):
     ENGLISH = "english", _("English")
     ELECTRONICS = "electronics", _("Electronics")
     CALENDAR = "calendar", _("Calendars")
+    ONE = "one", _("One project")
 
 
 class NotificationFrequency(TextChoices):
