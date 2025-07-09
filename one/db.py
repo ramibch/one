@@ -73,25 +73,22 @@ class BaseSubmoduleFolder(OneModel):
         subprocess.call(["git", "submodule", "update", "--remote"])
 
     @classmethod
-    def sync_folders(cls, fetch=True):
-        if fetch:
-            cls.fetch_submodules()
-
+    def sync_folders(cls):
         if cls == BaseSubmoduleFolder:
-            for Submodule in cls.__subclasses__():
-                Submodule.sync_folders(fetch=False)
-        else:
-            if not cls.submodule_path.is_dir():
-                raise OSError(f"{cls.submodule_path} is not a directory")
+            raise NotImplementedError
 
-            ModelClass = cls._meta.model
-            dir_names = [p.name for p in cls.submodule_path.iterdir() if p.is_dir()]
-            cls.objects.bulk_create(
-                [ModelClass(name=dn) for dn in dir_names if not dn.startswith("_")],  # type: ignore
-                update_fields=["name"],
-                unique_fields=["name"],
-                update_conflicts=True,
-            )
+        dir_paths = [
+            p
+            for p in cls.submodule_path.iterdir()
+            if p.is_dir() and not p.name.startswith("_")
+        ]
+
+        cls.objects.bulk_create(
+            [cls._meta.model(name=p.name) for p in dir_paths],  # type: ignore
+            update_fields=["name"],
+            unique_fields=["name"],
+            update_conflicts=True,
+        )
 
 
 class TranslatableModel(OneModel):

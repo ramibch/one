@@ -81,7 +81,10 @@ def run_commands_weekly():
 def sync_submodule_folders_task():
     """Syncs all submodule folders"""
 
-    BaseSubmoduleFolder.sync_folders()
+    BaseSubmoduleFolder.fetch_submodules()
+
+    for Submodule in BaseSubmoduleFolder.__subclasses__():
+        Submodule.sync_folders()
 
 
 @huey.db_task()
