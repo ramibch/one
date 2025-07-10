@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load humanize i18n %}
+{% block head_title %}{% translate "Job Applicacions" %}{% endblock %}
+
+{% block content %}
+
+{% if request.user.candidate_set.count > 0 %}
+
+  <center class="mb-5">
+    <h1>{% translate "Job Applicacions" %}</h1>
+  </center>
+
+  {% if jobapps.count < 0 %}
+
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">{% translate "Job" %}</th>
+        <th scope="col">{% translate "Profile" %}</th>
+        <th scope="col">{% translate "Recruiter" %}</th>
+        <th scope="col">{% translate "Created at" %}</th>
+        <th scope="col">{% translate "Actions" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for jobapp in jobapps %}
+      <tr>
+        <th scope="row"> {{ jobapp.job.title }} <span><a href="{{ jobapp.job.url }}"><i class="bi bi-link-45deg"></i></a></span></th>
+        <td> {{ jobapp.candidate }} <span><a href="{{ jobapp.candidate.url }}"><i class="bi bi-link-45deg"></i></a></span> </td>
+        <td> {% if jobapp.job.recruiter %} {{ jobapp.job.recruiter }} {% else %} {% translate "Unknown" %} {% endif %} </td>
+        <td> {{ jobapp.created_at }} </td>
+        <td>
+          <button style="border:none;" title="{% translate 'Delete' %}"
+          x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
+          x-bind:class="hover? '' : 'outline'"
+          hx-delete="{{ jobapp.hx_delete_url }}"
+          hx-confirm="{% translate 'Are you sure to delete this applicacion?' %}"
+          hx-target="closest td"
+          hx-trigger="click"
+          hx-swap="delete"
+          >
+        <i class="bi bi-trash"></i>
+      </button>
+
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+
+  <center>
+    <p>{% translate "You haven't applied for any jobs yet." %} <a href="{% url 'job_list' %}">{% translate "Check for jobs." %}</a></p>
+  </center>
+
+  {% endif %}
+
+
+{% else %}
+  <center>
+    <article>
+      <header>
+        <h1><a href="{% url 'candidate_create' %}"> {% translate "Create your Profile" %}</a></h1>
+      </header>
+      <a href="{% url 'candidate_create' %}">
+        <i class="bi bi-file-earmark-plus"></i>
+      </a>
+      <br>
+    </article>
+  </center>
+{% endif %}
+
+
+
+{% endblock content %}

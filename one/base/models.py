@@ -106,7 +106,10 @@ PATH_NAMES = (
     ("terms", _("Terms and Conditions")),
     ("impress", _("Impress")),
     ("candidate_create", _("Create candidate profile")),
-    ("candidate_list", _("Candidate profile")),
+    ("candidate_create_or_detail", _("Candidate profile")),
+    ("candidate_dashboard", _("Candidate dashboard")),
+    ("job_list", _("Jobs")),
+    ("company_list", _("Companies")),
 )
 
 
@@ -179,20 +182,21 @@ class Link(TranslatableModel):
         if ext_url and self.custom_title is None:
             raise ValidationError(_("Custom title is required."), code="invalid")
 
-        if ext_url and Link.objects.filter(external_url=ext_url).exists():
-            raise ValidationError(_("External url already exists."), code="invalid")
+        if self.pk is None:
+            if ext_url and Link.objects.filter(external_url=ext_url).exists():
+                raise ValidationError(_("External url already exists."), code="invalid")
 
-        if self.url_path and Link.objects.filter(url_path=self.url_path).exists():
-            raise ValidationError(_("Url path already exists."), code="invalid")
+            if self.url_path and Link.objects.filter(url_path=self.url_path).exists():
+                raise ValidationError(_("Url path already exists."), code="invalid")
 
-        if self.topic and Link.objects.filter(topic=self.topic).exists():
-            raise ValidationError(_("Topic link already exists."), code="invalid")
+            if self.topic and Link.objects.filter(topic=self.topic).exists():
+                raise ValidationError(_("Topic link already exists."), code="invalid")
 
-        if self.landing and Link.objects.filter(landing=self.landing).exists():
-            raise ValidationError(_("Landing link already exists."), code="invalid")
+            if self.landing and Link.objects.filter(landing=self.landing).exists():
+                raise ValidationError(_("Landing link already exists."), code="invalid")
 
-        if self.product and Link.objects.filter(product=self.product).exists():
-            raise ValidationError(_("Product link already exists."), code="invalid")
+            if self.product and Link.objects.filter(product=self.product).exists():
+                raise ValidationError(_("Product link already exists."), code="invalid")
 
         return super().clean()
 
@@ -231,4 +235,7 @@ class Link(TranslatableModel):
 
     @cached_property
     def title(self) -> str:
-        return self.url_and_title[1]
+        if self.custom_title:
+            return self.custom_title
+        else:
+            return self.url_and_title[1]

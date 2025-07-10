@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load cache i18n markdownify static %}
+
+{% block content %}
+
+<center>
+  <h1> {% translate "Jobs" %} </h1>
+</center>
+
+<ul>
+
+  {% for job in object_list %}
+
+  <li> <a href="{{ job.url }}"> {{ job.title }} </a> </li>
+
+  {% endfor %}
+
+</ul>
+
+
+
+
+{% endblock content %}

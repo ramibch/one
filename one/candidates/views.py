@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from typing import Any
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
 from django.http import (
@@ -9,14 +10,15 @@ from django.http import (
     HttpResponseBadRequest,
 )
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import translation
 from django.utils.decorators import method_decorator
 from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView, RedirectView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.views.generic.list import ListView
 from django_htmx.http import reswap, retarget
 
 from one.candidates.forms import (
@@ -36,7 +38,7 @@ from one.candidates.models import (
 )
 
 
-def get_private_candidate_or_404(view, url_key="candidate_pk") -> type[Candidate] | Any:
+def get_candidate_or_404(view, url_key="candidate_pk") -> type[Candidate] | Any:
     """util function to get a candidate object or 404"""
     return get_object_or_404(
         Candidate,
@@ -53,9 +55,24 @@ class JobApplicationView(FormView):
         return super().form_valid(form)
 
 
-class CandidateListView(LoginRequiredMixin, ListView):
-    model = Candidate
-    template_name = "candidates/candidate_list.html"
+class CandidateCreateOrDetailRedirectView(LoginRequiredMixin, RedirectView):
+    def get_redirect_url(self, *args: Any, **kwargs: Any) -> str | None:
+        if self.request.user.candidate_set.count() == 0:
+            return reverse("candidate_create")
+
+        return self.request.user.candidate_set.last().url
+
+
+class CandidateDashboardView(LoginRequiredMixin, TemplateView):
+    template_name = "candidates/candidate_dashboard.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        candidates = self.request.user.candidate_set.all()
+        candidate_ids = [c.id for c in candidates]
+        context["candidates"] = candidates
+        context["jobapps"] = JobApplication.objects.filter(candidate__in=candidate_ids)
+        return context
 
 
 class CandidateCreateView(LoginRequiredMixin, FormView):
@@ -64,6 +81,12 @@ class CandidateCreateView(LoginRequiredMixin, FormView):
     template_name = "candidates/candidate_create.html"
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        obj = request.user.candidate_set.last()
+
+        if obj:
+            messages.warning(request, _("You already have a profile"))
+            return redirect(obj.url)
+
         form = self.form_class(None, initial={"language": get_language()})
         context = {"form": form}
         return render(request, self.template_name, context)
@@ -104,7 +127,7 @@ class CandidateEditView(LoginRequiredMixin, TemplateView):
     template_name = "candidates/candidate_edit.html"
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        candidate = get_private_candidate_or_404(self, url_key="pk")
+        candidate = get_candidate_or_404(self, url_key="pk")
         skill_qs = candidate.candidateskill_set.all()  # type: ignore
         edu_qs = candidate.candidateeducation_set.all()  # type: ignore
         exp_qs = candidate.candidateexperience_set.all()  # type: ignore
@@ -148,7 +171,7 @@ class SkillCreateHxView(LoginRequiredMixin, CreateView):
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         form = self.form_class(request.POST)
-        candidate = get_private_candidate_or_404(self)
+        candidate = get_candidate_or_404(self)
         context = {"candidate": candidate}
         if form.is_valid():
             self.object = form.save(commit=False)
@@ -171,7 +194,7 @@ class SkillEditHxView(LoginRequiredMixin, UpdateView):
     model = CandidateSkill
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        candidate = get_private_candidate_or_404(self)
+        candidate = get_candidate_or_404(self)
         self.object = get_object_or_404(
             self.model,
             pk=self.kwargs["pk"],
@@ -208,7 +231,7 @@ class SkillDeleteHxView(LoginRequiredMixin, DeleteView):
 @method_decorator(never_cache, name="dispatch")
 class SkillOrderHxView(LoginRequiredMixin, TemplateView):
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        candidate = get_private_candidate_or_404(self)
+        candidate = get_candidate_or_404(self)
         ids = [id_.strip() for id_ in request.POST.getlist("order") if id_.strip()]
         if not ids:
             return HttpResponseBadRequest("No skill IDs provided.")
@@ -235,7 +258,7 @@ class EducationCreateHxView(LoginRequiredMixin, CreateView):
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         form = self.form_class(request.POST)
-        candidate = get_private_candidate_or_404(self)
+        candidate = get_candidate_or_404(self)
         context = {"candidate": candidate}
         if form.is_valid():
             self.object = form.save(commit=False)
@@ -276,7 +299,7 @@ class EducationEditHxView(LoginRequiredMixin, UpdateView):
     model = CandidateEducation
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        candidate = get_private_candidate_or_404(self)
+        candidate = get_candidate_or_404(self)
         self.object = get_object_or_404(
             self.model,
             pk=self.kwargs["pk"],
@@ -297,7 +320,7 @@ class EducationEditHxView(LoginRequiredMixin, UpdateView):
 @method_decorator(never_cache, name="dispatch")
 class EducationOrderHxView(LoginRequiredMixin, TemplateView):
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        candidate = get_private_candidate_or_404(self)
+        candidate = get_candidate_or_404(self)
         ids = [id_.strip() for id_ in request.POST.getlist("order") if id_.strip()]
         if not ids:
             return HttpResponseBadRequest("No skill IDs provided.")
@@ -324,7 +347,7 @@ class ExperienceCreateHxView(LoginRequiredMixin, CreateView):
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         form = self.form_class(request.POST)
-        candidate = get_private_candidate_or_404(self)
+        candidate = get_candidate_or_404(self)
         context = {"candidate": candidate}
         if form.is_valid():
             self.object = form.save(commit=False)
@@ -365,7 +388,7 @@ class ExperienceEditHxView(LoginRequiredMixin, UpdateView):
     model = CandidateExperience
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        candidate = get_private_candidate_or_404(self)
+        candidate = get_candidate_or_404(self)
         self.object = get_object_or_404(
             self.model,
             pk=self.kwargs["pk"],
@@ -386,7 +409,7 @@ class ExperienceEditHxView(LoginRequiredMixin, UpdateView):
 @method_decorator(never_cache, name="dispatch")
 class ExperienceOrderHxView(LoginRequiredMixin, TemplateView):
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        candidate = get_private_candidate_or_404(self)
+        candidate = get_candidate_or_404(self)
         ids = [id_.strip() for id_ in request.POST.getlist("order") if id_.strip()]
         if not ids:
             return HttpResponseBadRequest("No skill IDs provided.")

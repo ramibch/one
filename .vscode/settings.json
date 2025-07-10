@@ -1,16 +1,14 @@
 {
   "[python]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
       "source.organizeImports": "explicit"
-    }
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff"
   },
   "commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,target,out,build,bin,obj,vendor,venv,.venv,.ruff_cache,htmlcov}/**/*",
-  "ruff.interpreter": [
-    ".venv/bin/python"
-  ],
+  "ruff.interpreter": ["/home/rami/repos/one/.venv/bin/python"],
   "editor.formatOnSave": true,
   "ruff.configuration": "pyproject.toml",
   "python.analysis.autoImportCompletions": true,
@@ -19,9 +17,10 @@
   "python.analysis.autoFormatStrings": true,
   "[django-html]": {
     "editor.quickSuggestions": {
-        "other": true,
-        "comments": true,
-        "strings": true
+      "other": true,
+      "comments": true,
+      "strings": true
     }
-  }
+  },
+  "python.terminal.activateEnvInCurrentTerminal": true
 }

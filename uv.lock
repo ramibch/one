@@ -1351,7 +1351,7 @@ requires-dist = [
     { name = "python-barcode", extras = ["images"], specifier = ">=0.15.1" },
     { name = "qrcode", extras = ["pil"], specifier = ">=8.0" },
     { name = "redis", specifier = ">=5.2.1" },
-    { name = "ruff", specifier = ">=0.9.5" },
+    { name = "ruff", specifier = ">=0.12.2" },
     { name = "selenium", specifier = ">=4.32.0" },
     { name = "stripe", specifier = ">=11.4.1" },
     { name = "unittest-parametrize", specifier = ">=1.5.0" },

@@ -1,7 +1,7 @@
 from typing import Any
 
 from django import forms
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 
 from one.candidates.models import TexCv
 
@@ -24,6 +24,16 @@ class JobDetailView(DetailView):
         if form.fields["cv"].queryset.count() > 0:
             context["apply_form"] = form
         return context
+
+
+class JobListView(ListView):
+    model = Job
+    paginate_by = 100
+
+
+class CompanyListView(ListView):
+    model = Company
+    paginate_by = 100
 
 
 class CompanyDetailView(DetailView):

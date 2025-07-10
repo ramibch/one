@@ -1,11 +1,12 @@
 from django.urls import path
 
 from .views import (
+    CandidateCreateOrDetailRedirectView,
     CandidateCreateView,
+    CandidateDashboardView,
     CandidateDetailView,
     CandidateEditHxView,
     CandidateEditView,
-    CandidateListView,
     EducationCreateHxView,
     EducationDeleteHxView,
     EducationEditHxView,
@@ -50,9 +51,14 @@ urlpatterns = [
     ),
     # Profiles
     path(
-        "",
-        CandidateListView.as_view(),
-        name="candidate_list",
+        "dashboard",
+        CandidateDashboardView.as_view(),
+        name="candidate_dashboard",
+    ),
+    path(
+        "create-or-detail",
+        CandidateCreateOrDetailRedirectView.as_view(),
+        name="candidate_create_or_detail",
     ),
     # Job apply
     path(

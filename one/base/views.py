@@ -17,7 +17,7 @@ from django.views.generic.edit import FormView
 from django_htmx.http import retarget
 
 from one.articles.models import Article
-from one.candidates.views import CandidateListView
+from one.candidates.views import CandidateDashboardView
 from one.choices import Topics
 from one.db import TranslatableModel
 from one.dgt.views import dgt_test_index
@@ -60,7 +60,7 @@ class HomeView(View):
 
         # job apps site
         if site_type == SiteType.JOBAPPS and request.user.is_authenticated:
-            return CandidateListView.as_view()(request)
+            return CandidateDashboardView.as_view()(request)
         else:
             return self.get_landing(request)
 

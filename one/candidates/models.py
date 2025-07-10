@@ -389,6 +389,7 @@ class JobApplication(OneModel):
         editable=False,
     )
     cv = ForeignKey(TexCv, on_delete=models.CASCADE)
+    candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
     job = ForeignKey("companies.Job", on_delete=models.CASCADE)
     coverletter = models.FileField(upload_to=get_upload_path, null=True, blank=True)
     coverletter_text = models.TextField(null=True, blank=True)
