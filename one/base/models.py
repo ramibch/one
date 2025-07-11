@@ -97,6 +97,7 @@ PATH_NAMES = (
     ("contact", _("Contact")),
     ("article_list", _("Articles")),
     ("plan_list", _("Plans")),
+    ("site_list", _("Sites")),
     ("account_login", _("Sign In")),
     ("account_signup", _("Sign Up")),
     ("user_dashboard", _("Account")),

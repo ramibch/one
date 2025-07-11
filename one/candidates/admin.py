@@ -17,9 +17,10 @@ from .models import (
     TexCv,
 )
 from .tasks import (
-    task_create_texcvs_and_render,
-    task_render_application_files,
+    task_create_texcvs,
+    task_render_coverletters,
     task_render_cvs,
+    task_render_dossiers,
 )
 
 
@@ -47,11 +48,13 @@ class ExperienceInline(OneTranslationStackedInline):
 class CandiateAdmin(OneTranslatableModelAdmin):
     list_display = ("id", "full_name", "job_title", "email", "phone")
     inlines = [SkillInline, EducationInline, ExperienceInline, AlertInline]
-    actions = ["render_cvs"]
+    actions = ["create_and_render_cvs"]
 
-    @admin.action(description="▶️ Render CVs")
-    def render_cvs(modeladmin, request, queryset):
-        task_create_texcvs_and_render(queryset)
+    @admin.action(description="▶️ Create and render CVs")
+    def create_and_render_cvs(modeladmin, request, queryset):
+        task_create_texcvs(queryset)
+        ids = [c.id for c in queryset]
+        task_render_cvs(TexCv.objects.filter(candidate__id__in=ids))
 
 
 @admin.register(CandidateSkill)
@@ -87,8 +90,8 @@ class JobApplicationAdmin(OneModelAdmin):
 
     @admin.action(description="▶️ Render Coverletters")
     def render_coverletters(modeladmin, request, queryset):
-        task_render_application_files(queryset, coverletters=True)
+        task_render_coverletters(queryset)
 
     @admin.action(description="▶️ Render Dossiers")
     def render_dossiers(modeladmin, request, queryset):
-        task_render_application_files(queryset, dossiers=True)
+        task_render_dossiers(queryset)

@@ -10,7 +10,7 @@ from django.http import (
     HttpResponseBadRequest,
 )
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import translation
 from django.utils.decorators import method_decorator
 from django.utils.translation import get_language
@@ -37,6 +37,8 @@ from one.candidates.models import (
     JobApplication,
 )
 
+from .tasks import task_render_cvs
+
 
 def get_candidate_or_404(view, url_key="candidate_pk") -> type[Candidate] | Any:
     """util function to get a candidate object or 404"""
@@ -47,12 +49,15 @@ def get_candidate_or_404(view, url_key="candidate_pk") -> type[Candidate] | Any:
     )
 
 
-class JobApplicationView(FormView):
+class JobApplicationView(LoginRequiredMixin, FormView):
     model = JobApplication
     form_class = JobApplicationForm
+    success_url = reverse_lazy("home")
 
-    def form_valid(self, form: Any) -> HttpResponse:
-        return super().form_valid(form)
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        # cxt["apply_form"] =
+        # TODO:
+        return super().get(request, *args, **kwargs)
 
 
 class CandidateCreateOrDetailRedirectView(LoginRequiredMixin, RedirectView):
@@ -113,11 +118,17 @@ class PubCandidateView(DetailView):
 
 
 class CandidateDetailView(LoginRequiredMixin, DetailView):
+    context_object_name = "candidate"
     model = Candidate
     template_name = "candidates/candidate_detail.html"
 
     def get_queryset(self) -> QuerySet:
         return self.model.objects.filter(user_id=self.request.user.id)
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["cvs"] = self.object.texcv_set.exclude(cv_image="")
+        return context
 
 
 @method_decorator(never_cache, name="dispatch")
@@ -159,6 +170,8 @@ class CandidateEditHxView(LoginRequiredMixin, UpdateView):
         if form.is_valid():
             form.save()
         context = {"candidate_form": form} | self.get_context_data(**kwargs)
+
+        task_render_cvs(self.object.texcv_set.all())
         return render(request, self.template_name, context)
 
 
@@ -179,6 +192,7 @@ class SkillCreateHxView(LoginRequiredMixin, CreateView):
             self.object.save()
             context = context | self.get_context_data(kwargs=kwargs)
             context["skill_edit_form"] = self.form_class(instance=self.object)
+            task_render_cvs(self.object.texcv_set.all())
             return render(request, self.template_name, context)
         else:
             context["skill_new_form"] = form
@@ -207,6 +221,7 @@ class SkillEditHxView(LoginRequiredMixin, UpdateView):
             update_object.candidate = candidate
             update_object.save()
             context = context | self.get_context_data(kwargs=kwargs)
+            task_render_cvs(candidate.texcv_set.all())
         return render(request, self.template_name, context)
 
 

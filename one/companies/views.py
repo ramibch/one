@@ -1,6 +1,7 @@
 from typing import Any
 
 from django import forms
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, ListView
 
 from one.candidates.models import TexCv
@@ -9,7 +10,7 @@ from .forms import ApplyForm
 from .models import Company, Job
 
 
-class JobDetailView(DetailView):
+class JobDetailView(LoginRequiredMixin, DetailView):
     model = Job
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:

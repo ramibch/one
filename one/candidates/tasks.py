@@ -15,7 +15,7 @@ def task_create_texcvs(candidates=None):
         for cv_template in TexCvTemplates.values:
             cvs.append(TexCv(candidate=candidate, template=cv_template))
 
-    TexCv.objects.bulk_create(cvs)
+    TexCv.objects.bulk_create(cvs, ignore_conflicts=True)
 
 
 @huey.db_periodic_task(crontab(minute="*"))
@@ -25,26 +25,27 @@ def task_render_cvs(cv_objs=None):
             Q(cv_pdf__isnull=True)
             | Q(cv_pdf="")
             | Q(updated_at__lt=F("candidate__updated_at"))
-        )
+            | Q(updated_at__lt=F("candidate__candidateskill__updated_at"))
+            | Q(updated_at__lt=F("candidate__candidateexpericence__updated_at"))
+            | Q(updated_at__lt=F("candidate__candidateeducation__updated_at"))
+        ).distinct()
     for cv_obj in cv_objs:
         cv_obj.render_cv()
 
 
-@huey.db_task()
-def task_create_texcvs_and_render(candidates):
-    task_create_texcvs(candidates)
-    cvs = TexCv.objects.filter(candidate__id__in=[c.id for c in candidates])
-    task_render_cvs(cvs)
+@huey.db_periodic_task(crontab(minute="*"))
+def task_render_coverletters(job_apps=None):
+    if job_apps is None:
+        job_apps = JobApplication.objects.filter(coverletter__in=["", None])
+
+    for job_app in job_apps:
+        job_app.render_coverletter()
 
 
 @huey.db_periodic_task(crontab(minute="*"))
-def task_render_application_files(job_apps=None, coverletters=False, dossiers=False):
+def task_render_dossiers(job_apps=None):
     if job_apps is None:
-        job_apps = JobApplication.objects.filter(coverletter__in=["", None])
-        coverletters, dossiers = True, True
+        job_apps = JobApplication.objects.filter(dossier__in=["", None])
 
     for job_app in job_apps:
-        if coverletters:
-            job_app.render_coverletter()
-        if dossiers:
-            job_app.render_dossier()
+        job_app.render_dossier()
