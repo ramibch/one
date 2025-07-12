@@ -30,7 +30,27 @@
         <i class="bi bi-trash"></i>
       </button>
     </div>
-      {{ skill_edit_form }}
+
+    <div role="group">
+      <label>
+        {{ skill_edit_form.name }}
+        <!--
+        Implement this?
+          {% if not skill_edit_form.instance.name %}
+          <small class="mt-2">{{ skill_edit_form.instance.candidate.language }}: {{ skill_edit_form.instance.main_name }} </small>
+          {% endif %}
+        -->
+      </label>
+      <label>
+
+        {{ skill_edit_form.skill_type }}
+      </label>
+      <label>
+
+        {{ skill_edit_form.level }}
+      </label>
+    </div>
+
   </fieldset>
   <input type="hidden" name="order" value="{{ skill_edit_form.instance.id }}">
 </form>

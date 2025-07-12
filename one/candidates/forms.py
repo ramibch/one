@@ -21,6 +21,7 @@ class CandidateCreateForm(forms.ModelForm):
         model = Candidate
         fields = (
             "language",
+            # "languages",
             "job_title",
             "first_name",
             "last_name",

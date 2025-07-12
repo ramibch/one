@@ -40,33 +40,33 @@
 	\vspace{-\baselineskip} % Required for vertically aligning minipages
 
 	% fullname
-	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {{- profile.get_tex_value("full_name") -}} }}}}
+	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {{- candidate.get_tex_value("full_name") -}} }}}}
 	\vspace{6pt}
 	% job title
-	{% if profile.jobtitle_active %}
-	{\huge {{ profile.get_tex_value("job_title") }} }
+	{% if candidate.jobtitle_active %}
+	{\huge {{ candidate.get_tex_value("job_title") }} }
 	{% endif %}
 \end{minipage}
 \begin{minipage}[t]{0.33\textwidth} % 27.5% of the page width for the first row of icons
 	\vspace{-\baselineskip} % Required for vertically aligning minipages
-	{% if profile.location_active %}
-	\icon{MapMarker}{12}{ {{ profile.get_tex_value("location") }} }\newline
+	{% if candidate.location_active %}
+	\icon{MapMarker}{12}{ {{ candidate.get_tex_value("location") }} }\newline
 	{% endif %}
 
-	{% if profile.phone_active %}
-	\icon{Phone}{12}{ {{- profile.get_tex_value("phone") -}} }\newline
+	{% if candidate.phone_active %}
+	\icon{Phone}{12}{ {{- candidate.get_tex_value("phone") -}} }\newline
 	{% endif %}
 
 \end{minipage}
 \begin{minipage}[t]{0.33\textwidth} % 27.5% of the page width for the second row of icons
 	\vspace{-\baselineskip} % Required for vertically aligning minipages
 	% email
-	{% if profile.email_active %}
-	\icon{At}{12}{\href{mailto: {{- profile.get_tex_value("email") -}} }{ {{- profile.get_tex_value("email") -}} }}\newline
+	{% if candidate.email_active %}
+	\icon{At}{12}{\href{mailto: {{- candidate.get_tex_value("email") -}} }{ {{- candidate.get_tex_value("email") -}} }}\newline
 	{% endif %}
 	% website
-	{% if profile.website_active %}
-	\icon{Globe}{12}{\href{ {{- profile.get_tex_value("website") -}} }{ {{- profile.get_tex_value("website") -}} }}\newline
+	{% if candidate.website_active %}
+	\icon{Globe}{12}{\href{ {{- candidate.get_tex_value("website") -}} }{ {{- candidate.get_tex_value("website") -}} }}\newline
 	{% endif %}
 
 \end{minipage}
@@ -77,32 +77,32 @@
 %	INTRODUCTION, SKILLS AND TECHNOLOGIES
 %----------------------------------------------------------------------------------------
 
-{% if profile.about_active %}
+{% if candidate.about_active %}
 \cvsect{ gettext("About") }
 \begin{minipage}[t]{\textwidth}
 	\vspace{-\baselineskip}
 	\vspace{0.3cm}
-	{{ profile.get_tex_value("about") }}
+	{{ candidate.get_tex_value("about") }}
 \end{minipage}
 {% endif %}
 
 \vspace{0.8cm}
 
-{% if profile.skill_active and profile.skill_set.count() > 0 %}
+{% if candidate.skill_active and candidate.skill_set.count() > 0 %}
 \begin{minipage}[t]{0.5\textwidth}
 	\vspace{-\baselineskip}
-	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {{- profile.get_tex_value("skill_label") -}} }}}}
+	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {% trans %}Skills{% endtrans %} }}}}
 	\begin{barchart}{4.5}
-		{% for skill in profile.skill_set.all() %}
+		{% for skill in candidate.skill_set.all() %}
 			\baritem{ {{- skill.get_tex_value("name") -}} }{ {{- skill.level -}} }
 		{% endfor %}
 	\end{barchart}
-\end{minipage} {% endif %}{% if profile.language_active and profile.languageability_set.count() > 0 %}
+\end{minipage} {% endif %}{% if candidate.language_active and candidate.languageability_set.count() > 0 %}
 \begin{minipage}[t]{0.5\textwidth}
 	\vspace{-\baselineskip}
-	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {{- profile.get_tex_value("language_label") -}} }}}}
+	\colorbox{black}{\textcolor{white}{\textbf{\MakeUppercase{ {% trans %}Languages{% endtrans %} }}}}
 	\begin{barchart}{4.5}
-		{% for language in profile.languageability_set.all() %}
+		{% for language in candidate.languageability_set.all() %}
 			\baritem{ {{- language.get_tex_value("name") -}} }{ {{- language.level -}} }
 		{% endfor %}
 	\end{barchart}
@@ -116,9 +116,9 @@
 %----------------------------------------------------------------------------------------
 %	EXPERIENCE
 %----------------------------------------------------------------------------------------
-{% if profile.experience_active and profile.experience_set.count() > 0 %}
-\cvsect{ {{- profile.experience_label -}} }
-{% for experience in profile.experience_set.all() %}
+{% if candidate.experience_active and candidate.experience_set.count() > 0 %}
+\cvsect{ {% trans %}Skills{% endtrans %} }
+{% for experience in candidate.experience_set.all() %}
 \begin{entrylist}
 	\entry
 	{ {{ experience.get_tex_value("start_date") }} -- {{ experience.get_tex_value("end_date") }} }
@@ -134,10 +134,10 @@
 %	EDUCATION
 %----------------------------------------------------------------------------------------
 
-{% if profile.education_active and profile.education_set.count() > 0 %}
-\cvsect{ {{- profile.get_tex_value("education_label") -}} }
+{% if candidate.education_active and candidate.education_set.count() > 0 %}
+\cvsect{ {% trans %}Education{% endtrans %} }
 
-{% for education in profile.education_set.all() %}
+{% for education in candidate.education_set.all() %}
 \begin{entrylist}
 	\entry
 	{ {{ education.get_tex_value("start_date") }} -- {{ education.get_tex_value("end_date") }} }
@@ -150,9 +150,9 @@
 {% endif %}
 
 
-{% if profile.achievement_active and profile.achievement_set.count() > 0 %}
-\cvsect{ {{- profile.achievement_label -}} }
-{% for achievement in profile.achievement_set.all() %}
+{% if candidate.achievement_active and candidate.achievement_set.count() > 0 %}
+\cvsect{ {{- candidate.achievement_label -}} }
+{% for achievement in candidate.achievement_set.all() %}
 \begin{entrylist}
 	\entry
 	{ {{ achievement.get_tex_value("date") }} }
@@ -164,9 +164,9 @@
 {% endfor %}
 {% endif %}
 
-{% if profile.project_active and profile.project_set.count() > 0 %}
-\cvsect{ {{- profile.get_tex_value("project_label") -}} }
-{% for project in profile.project_set.all() %}
+{% if candidate.project_active and candidate.project_set.count() > 0 %}
+\cvsect{ {{- candidate.get_tex_value("project_label") -}} }
+{% for project in candidate.project_set.all() %}
 \begin{entrylist}
 	\entry
 	{ {{- project.get_tex_value("role") -}} }
@@ -181,9 +181,9 @@
 
 
 
-{% if profile.publication_active and profile.publication_set.count() > 0 %}
-\cvsect{ {{- profile.get_tex_value("publication_label") -}} }
-{% for publication in profile.publication_set.all() %}
+{% if candidate.publication_active and candidate.publication_set.count() > 0 %}
+\cvsect{ {{- candidate.get_tex_value("publication_label") -}} }
+{% for publication in candidate.publication_set.all() %}
 \begin{entrylist}
 	\entry
 	{ {{- publication.get_tex_value("date") -}} }

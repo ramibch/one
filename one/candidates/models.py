@@ -12,6 +12,7 @@ from django.db import models
 from django.db.models import Max, Value
 from django.db.models.functions import Concat
 from django.urls import reverse, reverse_lazy
+from django.utils import translation
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
@@ -20,7 +21,7 @@ from pdf2image import convert_from_bytes
 from one.choices import CompetenceLevel, Genders, NotificationFrequency, SkillType
 from one.companies.models import Person
 from one.db import ChoiceArrayField, OneModel, TranslatableModel
-from one.tex.compile import render_pdf
+from one.tex.compile import render_pdf_and_text
 from one.tex.values import TEX_LANGUAGE_MAPPING, PaperUnits
 from one.tmp import TmpFile
 
@@ -37,14 +38,11 @@ class Candidate(TranslatableModel):
         verbose_name=_("Main language"),
         max_length=4,
         choices=settings.LANGUAGES,
-        default=settings.LANGUAGE_CODE,
-        db_index=True,
     )
     languages = ChoiceArrayField(
         models.CharField(max_length=8, choices=settings.LANGUAGES),
         default=list,
         blank=True,
-        db_index=True,
     )
     id = models.UUIDField(
         primary_key=True,
@@ -232,6 +230,10 @@ class CandidateSkill(CandidateChild):
     def hx_delete_url(self):
         return reverse_lazy("candidateskill_delete", kwargs=self.get_url_kwargs())
 
+    @cached_property
+    def main_name(self):
+        return getattr(self, f"name_{self.candidate.language}")
+
     def __str__(self):
         return self.name
 
@@ -329,7 +331,7 @@ class TexCvTemplates(models.TextChoices):
         }[self]
 
 
-class TexCv(OneModel):
+class TexCv(TranslatableModel):
     def get_upload_path(self, filename):
         return f"candidates/{self.candidate.id}/cv_{self.id}/{filename}"
 
@@ -339,6 +341,8 @@ class TexCv(OneModel):
         default=uuid.uuid4,
         editable=False,
     )
+    LANG_ATTR = "candidate__language"
+    LANGS_ATTR = "candidate__languages"
     candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
     template = models.CharField(max_length=64, choices=TexCvTemplates)
     cv_text = models.TextField(null=True, blank=True)
@@ -362,19 +366,38 @@ class TexCv(OneModel):
         return TexCvTemplates(self.template).interpreter
 
     def render_cv(self):
-        self.cv_pdf.delete(save=False)
-        lang = get_language()
-        tex_lang = TEX_LANGUAGE_MAPPING.get(lang)
-        context = {"profile": self.candidate, "tex_lang": tex_lang}
-        # pdf and tex
-        pdf, text = render_pdf(self.template, context, interpreter=self.interpreter)
-        self.cv_pdf.save("CV.pdf", ContentFile(pdf), save=False)
-        self.cv_text = text
-        # image
-        img = convert_from_bytes(pdf_file=pdf, first_page=1, last_page=1, fmt="jpg")[0]
-        img_buffer = io.BytesIO()
-        img.save(img_buffer, format="JPEG")
-        self.cv_image.save("CV.jpg", ContentFile(img_buffer.getvalue()), save=False)
+        for lang in self.get_languages():
+            cv_pdf = getattr(self, f"cv_pdf_{lang}")
+            cv_image = getattr(self, f"cv_image_{lang}")
+
+            cv_pdf.delete(save=False)
+            cv_image.delete(save=False)
+
+            with translation.override(lang):
+                tex_lang = TEX_LANGUAGE_MAPPING.get(lang)
+                context = {"candidate": self.candidate, "tex_lang": tex_lang}
+                # pdf and text
+                pdf, text = render_pdf_and_text(
+                    self.template,
+                    context,
+                    interpreter=self.interpreter,
+                )
+                cv_pdf.save(f"CV_{lang}.pdf", ContentFile(pdf), save=False)
+
+                # text
+                setattr(self, f"cv_text_{lang}", text)
+
+                # image
+                img = convert_from_bytes(
+                    pdf_file=pdf,
+                    first_page=1,
+                    last_page=1,
+                    fmt="jpg",
+                )[0]
+                img_buffer = io.BytesIO()
+                img.save(img_buffer, format="JPEG")
+                img_bytes = img_buffer.getvalue()
+                cv_image.save(f"CV_{lang}.jpg", ContentFile(img_bytes), save=False)
         self.save()
 
 
@@ -388,7 +411,13 @@ class JobApplication(OneModel):
         default=uuid.uuid4,
         editable=False,
     )
-    cv = ForeignKey(TexCv, on_delete=models.CASCADE)
+    language = models.CharField(
+        verbose_name=_("Language"),
+        max_length=4,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
+    )
+    cv = ForeignKey(TexCv, on_delete=models.CASCADE, null=True, blank=True)
     candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
     job = ForeignKey("companies.Job", on_delete=models.CASCADE)
     coverletter = models.FileField(upload_to=get_upload_path, null=True, blank=True)
@@ -399,8 +428,14 @@ class JobApplication(OneModel):
     def render_coverletter(self):
         self.coverletter.delete(save=False)
         template = "candidates/tex/coverletter.tex"
-        context = {"profile": self.cv.candidate, "job": self.job, "app": self}
-        cl_bytes, latex_text = render_pdf(template, context, interpreter="pdflatex")
+        context = {
+            "candidate": self.cv.candidate,
+            "job": self.job,
+            "app": self,
+        }
+        cl_bytes, latex_text = render_pdf_and_text(
+            template, context, interpreter="pdflatex"
+        )
         self.coverletter.save(_("Coverletter.pdf"), ContentFile(cl_bytes), save=False)
         self.coverletter_text = latex_text
         self.save()
@@ -410,13 +445,31 @@ class JobApplication(OneModel):
         template = "candidates/tex/dossier.tex"
         lang = get_language()
         tex_lang = TEX_LANGUAGE_MAPPING.get(lang)
+        candidate = self.candidate or self.cv.candidate
+        hard_skills = CandidateSkill.objects.filter(
+            candidate=candidate,
+            skill_type=SkillType.HARD,
+        )
+        soft_skills = CandidateSkill.objects.filter(
+            candidate=candidate,
+            skill_type=SkillType.SOFT,
+        )
+        language_skills = CandidateSkill.objects.filter(
+            candidate=candidate,
+            skill_type=SkillType.LANGUAGE,
+        )
         context = {
-            "profile": self.cv.candidate,
+            "candidate": candidate,
+            "hard_skills": hard_skills,
+            "soft_skills": soft_skills,
+            "language_skills": language_skills,
             "job": self.job,
             "app": self,
             "tex_lang": tex_lang,
         }
-        cl_bytes, latex_text = render_pdf(template, context, interpreter="pdflatex")
+        cl_bytes, latex_text = render_pdf_and_text(
+            template, context, interpreter="pdflatex"
+        )
         filename = f"{_('Dossier')}_{lang}.pdf"
         self.dossier.save(filename, ContentFile(cl_bytes), save=False)
         self.dossier_text = latex_text
@@ -438,12 +491,3 @@ class JobApplication(OneModel):
     @cached_property
     def coverletter_closing(self):
         return _("Best regards")
-
-
-def get_candidate_child_model(model_name):
-    """23.06.2025 not planned to be used (but just in case)"""
-    d = {m._meta.model_name: m for m in CandidateChild.__subclasses__()}
-    if model_name not in d:
-        raise ValueError(f"'{model_name}' is not recognised as a candidate child model")
-
-    return d[model_name]

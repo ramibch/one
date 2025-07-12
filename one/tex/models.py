@@ -18,7 +18,7 @@ from one.choices import Countries
 from one.db import OneModel, TranslatableModel
 from one.quiz.models import Lection
 
-from .compile import render_pdf
+from .compile import render_pdf_and_text
 from .values import TEX_LANGUAGE_MAPPING
 
 
@@ -122,7 +122,7 @@ class YearlyHolidayCalender(TranslatableModel):
                 "holiday_color": holiday_color,
             }
 
-            pdf_bytes = render_pdf("calendars/calendar.tex", context)[0]
+            pdf_bytes = render_pdf_and_text("calendars/calendar.tex", context)[0]
             self.pdf = ContentFile(pdf_bytes, name=f"{filename}.pdf")
             img1, img2 = convert_from_bytes(pdf_bytes)
 
@@ -190,7 +190,7 @@ class EnglishQuizLection(OneModel):
         )
         context = {"lection": lection, "color": color, "size": "LARGE"}
         # pdf
-        pdf_bytes = render_pdf(
+        pdf_bytes = render_pdf_and_text(
             "quiz/english_lection.tex",
             context,
             interpreter="xelatex",
@@ -198,7 +198,7 @@ class EnglishQuizLection(OneModel):
         self.pdf = ContentFile(pdf_bytes, name=f"{filename}.pdf")
 
         # print
-        print_bytes = render_pdf(
+        print_bytes = render_pdf_and_text(
             "quiz/english_lection.tex",
             {"lection": lection},
             interpreter="xelatex",

@@ -37,8 +37,6 @@ from one.candidates.models import (
     JobApplication,
 )
 
-from .tasks import task_render_cvs
-
 
 def get_candidate_or_404(view, url_key="candidate_pk") -> type[Candidate] | Any:
     """util function to get a candidate object or 404"""
@@ -171,7 +169,6 @@ class CandidateEditHxView(LoginRequiredMixin, UpdateView):
             form.save()
         context = {"candidate_form": form} | self.get_context_data(**kwargs)
 
-        task_render_cvs(self.object.texcv_set.all())
         return render(request, self.template_name, context)
 
 
@@ -192,7 +189,6 @@ class SkillCreateHxView(LoginRequiredMixin, CreateView):
             self.object.save()
             context = context | self.get_context_data(kwargs=kwargs)
             context["skill_edit_form"] = self.form_class(instance=self.object)
-            task_render_cvs(self.object.texcv_set.all())
             return render(request, self.template_name, context)
         else:
             context["skill_new_form"] = form
@@ -221,7 +217,6 @@ class SkillEditHxView(LoginRequiredMixin, UpdateView):
             update_object.candidate = candidate
             update_object.save()
             context = context | self.get_context_data(kwargs=kwargs)
-            task_render_cvs(candidate.texcv_set.all())
         return render(request, self.template_name, context)
 
 

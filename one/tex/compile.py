@@ -9,7 +9,7 @@ from django.template.loader import get_template
 from .exceptions import TexError
 
 
-def render_pdf(
+def render_pdf_and_text(
     template_name: str,
     context: dict,
     interpreter: str = "pdflatex",

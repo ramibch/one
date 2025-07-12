@@ -20,18 +20,18 @@
 
   \begin{center}
 	  \large\bfseries
-	  {{ profile.get_tex_value("full_name") }} \\
-	  {{ profile.get_tex_value("location") }} \\
-	  {{ profile.get_tex_value("phone") }} \\
+	  {{ candidate.get_tex_value("full_name") }} \\
+	  {{ candidate.get_tex_value("location") }} \\
+	  {{ candidate.get_tex_value("phone") }} \\
   \end{center}
 
 \vspace{1cm} % Vertical whitespace
 
-\signature{ {{ profile.get_tex_value("full_name") }} }
+\signature{ {{ candidate.get_tex_value("full_name") }} }
 
 \opening{ {{ app.coverletter_salutation }},}
 
-{{ profile.get_tex_value("coverletter_body") }}
+{{ candidate.get_tex_value("coverletter_body") }}
 
 \closing{ {{- app.coverletter_closing -}},}
 

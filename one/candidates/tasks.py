@@ -12,8 +12,10 @@ def task_create_texcvs(candidates=None):
 
     cvs = []
     for candidate in candidates:
-        for cv_template in TexCvTemplates.values:
-            cvs.append(TexCv(candidate=candidate, template=cv_template))
+        cvs.append(TexCv(candidate=candidate, template=TexCvTemplates.ALICE))
+        # for cv_template in TexCvTemplates.values:
+        # TODO: implement all cv templates (first tex files)
+        # cvs.append(TexCv(candidate=candidate, template=cv_template))
 
     TexCv.objects.bulk_create(cvs, ignore_conflicts=True)
 
@@ -26,7 +28,7 @@ def task_render_cvs(cv_objs=None):
             | Q(cv_pdf="")
             | Q(updated_at__lt=F("candidate__updated_at"))
             | Q(updated_at__lt=F("candidate__candidateskill__updated_at"))
-            | Q(updated_at__lt=F("candidate__candidateexpericence__updated_at"))
+            | Q(updated_at__lt=F("candidate__candidateexperience__updated_at"))
             | Q(updated_at__lt=F("candidate__candidateeducation__updated_at"))
         ).distinct()
     for cv_obj in cv_objs:

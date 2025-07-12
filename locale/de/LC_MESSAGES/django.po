@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-26 21:48+0100\n"
+"POT-Creation-Date: 2025-07-12 23:04+0200\n"
 "PO-Revision-Date: 2025-03-26 21:43+0100\n"
 "Last-Translator:   <>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,53 +19,1612 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.10.1\n"
 
-#: one/_templates/allauth/layouts/base.html:18
-msgid "Messages:"
+#: one/articles/apps.py:8 one/articles/templates/articles/article_list.html:4
+#: one/articles/templates/articles/article_list.html:8 one/base/models.py:98
+msgid "Articles"
+msgstr ""
+
+#: one/articles/models.py:96
+msgid "Comment"
+msgstr "Kommentar"
+
+#: one/base/apps.py:8
+msgid "Base"
+msgstr ""
+
+#: one/base/middleware/ip.py:23 one/base/views.py:196
+msgid "Request blocked"
+msgstr "Anfrage blockiert"
+
+#: one/base/models.py:47
+#, fuzzy
+#| msgid "Suriname"
+msgid "Your name"
+msgstr "Surinam"
+
+#: one/base/models.py:48
+msgid "Email address"
+msgstr ""
+
+#: one/base/models.py:49
+#, fuzzy
+#| msgid "Messages:"
+msgid "Message"
 msgstr "Nachrichten:"
 
-#: one/_templates/allauth/layouts/base.html:25
-msgid "Menu:"
-msgstr "Menü:"
+#: one/base/models.py:94 one/base/templates/error.html:7
+msgid "Home"
+msgstr "Startseite"
 
-#: one/_templates/allauth/layouts/base.html:31
-#: one/_templates/users/dashboard.html:8
-msgid "Change Email"
-msgstr "E-Mail ändern"
+#: one/base/models.py:95 one/base/templates/error.html:10 one/base/views.py:133
+msgid "Search"
+msgstr "Suche"
 
-#: one/_templates/allauth/layouts/base.html:37
-#: one/_templates/users/dashboard.html:14
-msgid "Change Password"
-msgstr "Passwort ändern"
+#: one/base/models.py:96
+msgid "Sitemap"
+msgstr ""
 
-#: one/_templates/allauth/layouts/base.html:43
-#: one/_templates/users/dashboard.html:20
-msgid "Account Connections"
-msgstr "Kontoverbindungen"
+#: one/base/models.py:97 one/base/templates/base/contact.html:4
+#: one/base/templates/base/contact.html:8
+msgid "Contact"
+msgstr ""
 
-#: one/_templates/allauth/layouts/base.html:49
-#: one/_templates/users/dashboard.html:26
-msgid "Two-Factor Authentication"
-msgstr "Zwei-Faktoren-Authentifizierung"
+#: one/base/models.py:99 one/plans/apps.py:8
+msgid "Plans"
+msgstr "Plans"
 
-#: one/_templates/allauth/layouts/base.html:55
-#: one/_templates/users/dashboard.html:33
-msgid "Sessions"
-msgstr "Sitzungen"
+#: one/base/models.py:100
+msgid "Sites"
+msgstr ""
 
-#: one/_templates/allauth/layouts/base.html:61
-#: one/_templates/users/dashboard.html:39
-msgid "Sign Out"
-msgstr "Abmelden"
-
-#: one/_templates/allauth/layouts/base.html:68 one/links/models.py:19
+#: one/base/models.py:101 one/base/templates/allauth/layouts/base.html:68
 msgid "Sign In"
 msgstr "Anmelden"
 
-#: one/_templates/allauth/layouts/base.html:74 one/links/models.py:20
+#: one/base/models.py:102 one/base/templates/allauth/layouts/base.html:74
 msgid "Sign Up"
 msgstr "Registrieren"
 
-#: one/_templates/emails/verify_email.txt:4
+#: one/base/models.py:103
+msgid "Account"
+msgstr ""
+
+#: one/base/models.py:104
+msgid "FAQs"
+msgstr "FAQs"
+
+#: one/base/models.py:105
+msgid "English Quizzes"
+msgstr ""
+
+#: one/base/models.py:106
+msgid "Privacy Policy"
+msgstr ""
+
+#: one/base/models.py:107 one/tools/templates/tools/tool_invoice.html:17
+msgid "Terms and Conditions"
+msgstr ""
+
+#: one/base/models.py:108 one/base/templates/base/impress.html:4
+#: one/base/templates/base/impress.html:8
+msgid "Impress"
+msgstr ""
+
+#: one/base/models.py:109
+msgid "Create candidate profile"
+msgstr ""
+
+#: one/base/models.py:110
+msgid "Candidate profile"
+msgstr ""
+
+#: one/base/models.py:111
+msgid "Candidate dashboard"
+msgstr ""
+
+#: one/base/models.py:112 one/companies/templates/companies/job_list.html:7
+msgid "Jobs"
+msgstr ""
+
+#: one/base/models.py:113
+#, fuzzy
+#| msgid "Spanish"
+msgid "Companies"
+msgstr "Spanisch"
+
+#: one/base/models.py:181
+msgid "One link must be entered."
+msgstr ""
+
+#: one/base/models.py:184
+msgid "Custom title is required."
+msgstr ""
+
+#: one/base/models.py:188
+msgid "External url already exists."
+msgstr ""
+
+#: one/base/models.py:191
+msgid "Url path already exists."
+msgstr ""
+
+#: one/base/models.py:194
+msgid "Topic link already exists."
+msgstr ""
+
+#: one/base/models.py:197
+msgid "Landing link already exists."
+msgstr ""
+
+#: one/base/models.py:200
+msgid "Product link already exists."
+msgstr ""
+
+#: one/base/templates/allauth/layouts/base.html:18
+msgid "Messages:"
+msgstr "Nachrichten:"
+
+#: one/base/templates/allauth/layouts/base.html:25
+msgid "Menu:"
+msgstr "Menü:"
+
+#: one/base/templates/allauth/layouts/base.html:31
+#: one/users/templates/users/dashboard.html:8
+msgid "Change Email"
+msgstr "E-Mail ändern"
+
+#: one/base/templates/allauth/layouts/base.html:37
+#: one/users/templates/users/dashboard.html:14
+msgid "Change Password"
+msgstr "Passwort ändern"
+
+#: one/base/templates/allauth/layouts/base.html:43
+#: one/users/templates/users/dashboard.html:20
+msgid "Account Connections"
+msgstr "Kontoverbindungen"
+
+#: one/base/templates/allauth/layouts/base.html:49
+#: one/users/templates/users/dashboard.html:26
+msgid "Two-Factor Authentication"
+msgstr "Zwei-Faktoren-Authentifizierung"
+
+#: one/base/templates/allauth/layouts/base.html:55
+#: one/users/templates/users/dashboard.html:33
+msgid "Sessions"
+msgstr "Sitzungen"
+
+#: one/base/templates/allauth/layouts/base.html:61
+#: one/users/templates/users/dashboard.html:39
+msgid "Sign Out"
+msgstr "Abmelden"
+
+#: one/base/templates/base/contact.html:14
+msgid "Send"
+msgstr "Senden"
+
+#: one/base/templates/base/privacy.html:4
+#: one/base/templates/base/privacy.html:8
+msgid "Privacy policy"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:10
+msgid "The Site and Service"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:13
+msgid ""
+"The current site informs you, as user or visitor of it, of its policies "
+"regarding the collection, use and disclosure of Personal Information it may "
+"receive from you."
+msgstr ""
+
+#: one/base/templates/base/privacy.html:16
+msgid ""
+"The gathered Information may be only for providing and improving the Site. "
+"By using the Site, you agree to the collection and use of information in "
+"accordance with this policy."
+msgstr ""
+
+#: one/base/templates/base/privacy.html:19
+msgid "Data Responsable"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:21
+msgid "Legal Name"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:22
+msgid "Address"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:23
+#: one/base/templates/base/privacy.html:46
+msgid "E-mail"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:25
+msgid "Information Collection and Use"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:27
+msgid ""
+"While using our Site, you may have to provide us with certain personally "
+"identifiable information that can be used to contact you if you get in touch "
+"with us. Personally identifiable information may include but is not limited "
+"to your name and email address (Personal Information)."
+msgstr ""
+
+#: one/base/templates/base/privacy.html:29
+msgid "Cookies"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:30
+msgid ""
+"Cookies are files with a small amount of data, which may include an "
+"anonymous unique identifier. Cookies are sent to your browser from a website "
+"and stored on your computer's hard drive."
+msgstr ""
+
+#: one/base/templates/base/privacy.html:32
+msgid ""
+"This site uses these cookies to collect information. You can adjust your "
+"browser to refuse all cookies or to indicate when a cookie is being sent. "
+"However, if you do not accept cookies, you may not be able to use some "
+"portions of the Site."
+msgstr ""
+
+#: one/base/templates/base/privacy.html:35
+msgid "Security"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:36
+#, python-format
+msgid ""
+"The security of your Personal Information is important to us, but remember "
+"that no method of transmission over the Internet, or method of electronic "
+"storage, is 100%% secure. While we follow the recommended and standard "
+"development guides for Web Development to protect your Personal Information, "
+"we cannot guarantee its absolute security. The Site is developed with Django "
+"(Python Web Framework), check out its security features:"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:37
+msgid "Changes To This Privacy Policy"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:39
+msgid ""
+"This site may update this Privacy Policy from time to time. We will notify "
+"you of any changes by posting the new Privacy Policy on this current page. "
+"You are advised to review this Privacy Policy periodically for changes."
+msgstr ""
+
+#: one/base/templates/base/privacy.html:41
+msgid "Contact Us"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:42
+msgid "If you have any questions about this Privacy Policy, please contact me:"
+msgstr ""
+
+#: one/base/templates/base/privacy.html:45
+msgid "Contact form"
+msgstr ""
+
+#: one/base/templates/base/topic.html:26
+msgid "Do you want more content like this?"
+msgstr ""
+
+#: one/base/templates/base/topic.html:28
+msgid "Send me an Email then!"
+msgstr ""
+
+#: one/base/templates/search/hx_results.html:2
+msgid "Total items found"
+msgstr "Insgesamt gefundene Artikel"
+
+#: one/base/templates/snippets/language_modal.html:8
+msgid "Change language"
+msgstr "Sprache ändern"
+
+#: one/base/templates/snippets/language_modal.html:20
+#: one/candidates/templates/candidates/candidate_edit.html:35
+#: one/companies/templates/companies/job_detail.html:25
+msgid "Save"
+msgstr "Speichern"
+
+#: one/base/templates/snippets/messages.html:11
+msgid "Error"
+msgstr "Fehler"
+
+#: one/base/templates/snippets/messages.html:13
+msgid "Warning"
+msgstr "Warnung"
+
+#: one/base/templates/snippets/messages.html:15
+msgid "Infomation"
+msgstr "Informationen"
+
+#: one/base/templates/snippets/messages.html:19
+msgid "OK"
+msgstr "OK"
+
+#: one/base/urls.py:28
+msgid "search"
+msgstr "suche"
+
+#: one/base/urls.py:31
+msgid "contact"
+msgstr ""
+
+#: one/base/views.py:168
+msgid "Thank you for your message. I will reply as soon as I can."
+msgstr ""
+
+#: one/base/views.py:191
+#, fuzzy
+#| msgid "Total items found"
+msgid "Not found"
+msgstr "Insgesamt gefundene Artikel"
+
+#: one/base/views.py:201
+#, fuzzy
+#| msgid "Internal Server Error"
+msgid "Server Error"
+msgstr "Interner Serverfehler"
+
+#: one/candidates/models.py:38
+#, fuzzy
+#| msgid "Change language"
+msgid "Main language"
+msgstr "Sprache ändern"
+
+#: one/candidates/models.py:66
+msgid "linkedin URL"
+msgstr ""
+
+#: one/candidates/models.py:72
+msgid "website URL"
+msgstr ""
+
+#: one/candidates/models.py:78
+msgid "about me"
+msgstr ""
+
+#: one/candidates/models.py:415
+#, fuzzy
+#| msgid "Change language"
+msgid "Language"
+msgstr "Sprache ändern"
+
+#: one/candidates/models.py:439
+msgid "Coverletter.pdf"
+msgstr ""
+
+#: one/candidates/models.py:486
+msgid "Dear Sir/Madam"
+msgstr ""
+
+#: one/candidates/models.py:488
+msgid "Mrs"
+msgstr ""
+
+#: one/candidates/models.py:488
+msgid "Mr"
+msgstr ""
+
+#: one/candidates/models.py:493
+msgid "Best regards"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_create.html:5
+msgid "New Profile"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_create.html:13
+msgid "Create"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:3
+#: one/candidates/templates/candidates/candidate_dashboard.html:10
+msgid "Job Applicacions"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:18
+msgid "Job"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:19
+msgid "Dossier"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:20
+msgid "Recruiter"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:21
+msgid "Created at"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:22
+msgid "Actions"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:30
+msgid "Unknown"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:33
+#: one/candidates/templates/candidates/partials/education_edit_form.html:19
+#: one/candidates/templates/candidates/partials/experience_edit_form.html:19
+#: one/candidates/templates/candidates/partials/skill_edit_form.html:21
+msgid "Delete"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:37
+msgid "Are you sure to delete this applicacion?"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:53
+msgid "You haven't applied for any jobs yet."
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:53
+msgid "Check for jobs."
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_dashboard.html:63
+msgid "Create your Profile"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_detail.html:12
+#: one/candidates/templates/candidates/candidate_edit.html:5
+msgid "Edit"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_detail.html:18
+msgid "My CVs"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_detail.html:29
+#: one/etsy/enums.py:25
+#: one/tex/templates/tex/yearlyholidaycalender_detail.html:19
+msgid "Download"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_detail.html:31
+msgid "Updated"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_edit.html:31
+msgid "Example modal"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_stafflist.html:5
+#: one/candidates/templates/candidates/candidate_stafflist.html:10
+#: one/plans/templates/plans/plan_list.html:34
+msgid "Profiles"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/education_edit.html:4
+msgid "Education"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/education_edit.html:6
+#: one/candidates/templates/candidates/partials/experience_edit.html:6
+#: one/candidates/templates/candidates/partials/skills_edit.html:6
+msgid "Hide sorting buttons"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/education_edit.html:6
+#: one/candidates/templates/candidates/partials/experience_edit.html:6
+#: one/candidates/templates/candidates/partials/skills_edit.html:6
+msgid "Show sorting buttons"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/education_edit.html:11
+#: one/candidates/templates/candidates/partials/experience_edit.html:11
+#: one/candidates/templates/candidates/partials/skills_edit.html:11
+msgid "Hide deleting buttons"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/education_edit.html:11
+#: one/candidates/templates/candidates/partials/experience_edit.html:11
+#: one/candidates/templates/candidates/partials/skills_edit.html:11
+msgid "Show deleting buttons"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/education_edit.html:28
+#: one/candidates/templates/candidates/partials/education_new_form.html:11
+msgid "Add a new education item"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/education_edit_form.html:23
+#: one/candidates/templates/candidates/partials/experience_edit_form.html:23
+msgid "Are you sure to delete this education item?"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/experience_edit.html:4
+msgid "Experience"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/experience_edit.html:28
+#: one/candidates/templates/candidates/partials/experience_new_form.html:11
+msgid "Add a new work experience"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/skill_edit_form.html:25
+msgid "Are you sure to delete this skill?"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/skill_new_form.html:11
+#: one/candidates/templates/candidates/partials/skills_edit.html:28
+msgid "Add a new skill"
+msgstr ""
+
+#: one/candidates/templates/candidates/partials/skills_edit.html:4
+msgid "Skills"
+msgstr ""
+
+#: one/candidates/urls.py:29
+msgid "new"
+msgstr ""
+
+#: one/candidates/urls.py:39
+msgid "edit"
+msgstr ""
+
+#: one/candidates/urls.py:55
+msgid "dashboard"
+msgstr ""
+
+#: one/candidates/urls.py:66
+msgid "apply"
+msgstr ""
+
+#: one/candidates/views.py:90
+msgid "You already have a profile"
+msgstr ""
+
+#: one/choices.py:8
+msgid "male"
+msgstr ""
+
+#: one/choices.py:9
+msgid "female"
+msgstr ""
+
+#: one/choices.py:23
+msgid "Maths"
+msgstr ""
+
+#: one/choices.py:24
+msgid "Mechanics"
+msgstr ""
+
+#: one/choices.py:25 one/settings.py:222
+msgid "English"
+msgstr "Englisch"
+
+#: one/choices.py:26
+msgid "Electronics"
+msgstr ""
+
+#: one/choices.py:27
+msgid "Calendars"
+msgstr ""
+
+#: one/choices.py:28
+msgid "One project"
+msgstr ""
+
+#: one/choices.py:32
+msgid "Daily"
+msgstr ""
+
+#: one/choices.py:33
+msgid "Weekly"
+msgstr ""
+
+#: one/choices.py:34
+msgid "Monthly"
+msgstr ""
+
+#: one/choices.py:35
+msgid "No notification"
+msgstr ""
+
+#: one/choices.py:39
+msgid "Beginner"
+msgstr ""
+
+#: one/choices.py:40
+msgid "Learner"
+msgstr ""
+
+#: one/choices.py:41
+msgid "Competent"
+msgstr ""
+
+#: one/choices.py:42
+msgid "Proficient"
+msgstr ""
+
+#: one/choices.py:43
+msgid "Expert"
+msgstr ""
+
+#: one/choices.py:47
+msgid "Hard skill"
+msgstr ""
+
+#: one/choices.py:48
+msgid "Soft skill"
+msgstr ""
+
+#: one/choices.py:49
+msgid "Language skill"
+msgstr ""
+
+#: one/choices.py:53
+msgid "Afghanistan"
+msgstr "Afghanistan"
+
+#: one/choices.py:54
+msgid "Albania"
+msgstr "Albanien"
+
+#: one/choices.py:55
+msgid "Algeria"
+msgstr "Algerien"
+
+#: one/choices.py:56
+msgid "American Samoa"
+msgstr "Amerikanisch-Samoa"
+
+#: one/choices.py:57
+msgid "Andorra"
+msgstr "Andorra"
+
+#: one/choices.py:58
+msgid "Angola"
+msgstr "Angola"
+
+#: one/choices.py:59
+msgid "Anguilla"
+msgstr "Anguilla"
+
+#: one/choices.py:60
+msgid "Antarctica"
+msgstr "Antarktis"
+
+#: one/choices.py:61
+msgid "Antigua and Barbuda"
+msgstr "Antigua und Barbuda"
+
+#: one/choices.py:62
+msgid "Argentina"
+msgstr "Argentinien"
+
+#: one/choices.py:63
+msgid "Armenia"
+msgstr "Armenien"
+
+#: one/choices.py:64
+msgid "Aruba"
+msgstr "Aruba"
+
+#: one/choices.py:65
+msgid "Australia"
+msgstr "Australien"
+
+#: one/choices.py:66
+msgid "Austria"
+msgstr "Österreich"
+
+#: one/choices.py:67
+msgid "Azerbaijan"
+msgstr "Aserbaidschan"
+
+#: one/choices.py:68
+msgid "Bahamas"
+msgstr "Bahamas"
+
+#: one/choices.py:69
+msgid "Bahrain"
+msgstr "Bahrain"
+
+#: one/choices.py:70
+msgid "Bangladesh"
+msgstr "Bangladesch"
+
+#: one/choices.py:71
+msgid "Barbados"
+msgstr "Barbados"
+
+#: one/choices.py:72
+msgid "Belarus"
+msgstr "Weißrussland"
+
+#: one/choices.py:73
+msgid "Belgium"
+msgstr "Belgien"
+
+#: one/choices.py:74
+msgid "Belize"
+msgstr "Belize"
+
+#: one/choices.py:75
+msgid "Benin"
+msgstr "Benin"
+
+#: one/choices.py:76
+msgid "Bermuda"
+msgstr "Bermuda"
+
+#: one/choices.py:77
+msgid "Bhutan"
+msgstr "Bhutan"
+
+#: one/choices.py:78
+msgid "Bolivia"
+msgstr "Bolivien"
+
+#: one/choices.py:79
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnien und Herzegowina"
+
+#: one/choices.py:80
+msgid "Botswana"
+msgstr "Botswana"
+
+#: one/choices.py:81
+msgid "Brazil"
+msgstr "Brasilien"
+
+#: one/choices.py:82
+msgid "British Indian Ocean Territory"
+msgstr "Britisches Territorium im Indischen Ozean"
+
+#: one/choices.py:83
+msgid "Brunei Darussalam"
+msgstr "Brunei Darussalam"
+
+#: one/choices.py:84
+msgid "Bulgaria"
+msgstr "Bulgarien"
+
+#: one/choices.py:85
+msgid "Burkina Faso"
+msgstr "Burkina Faso"
+
+#: one/choices.py:86
+msgid "Burundi"
+msgstr "Burundi"
+
+#: one/choices.py:87
+msgid "Cabo Verde"
+msgstr "Kap Verde"
+
+#: one/choices.py:88
+msgid "Cambodia"
+msgstr "Kambodscha"
+
+#: one/choices.py:89
+msgid "Cameroon"
+msgstr "Kamerun"
+
+#: one/choices.py:90
+msgid "Canada"
+msgstr "Kanada"
+
+#: one/choices.py:91
+msgid "Cayman Islands"
+msgstr "Kaimaninseln"
+
+#: one/choices.py:92
+msgid "Central African Republic"
+msgstr "Zentralafrikanische Republik"
+
+#: one/choices.py:93
+msgid "Chad"
+msgstr "Chad"
+
+#: one/choices.py:94
+msgid "Chile"
+msgstr "Chile"
+
+#: one/choices.py:95
+msgid "China"
+msgstr "China"
+
+#: one/choices.py:96
+msgid "Christmas Island"
+msgstr "Weihnachtsinsel"
+
+#: one/choices.py:97
+msgid "Cocos (Keeling) Islands"
+msgstr "Cocos (Keeling) Inseln"
+
+#: one/choices.py:98
+msgid "Colombia"
+msgstr "Kolumbien"
+
+#: one/choices.py:99
+msgid "Comoros"
+msgstr "Komoren"
+
+#: one/choices.py:100
+msgid "Congo"
+msgstr "Kongo"
+
+#: one/choices.py:101
+msgid "Congo, Democratic Republic of the"
+msgstr "Kongo, Demokratische Republik"
+
+#: one/choices.py:102
+msgid "Cook Islands"
+msgstr "Cookinseln"
+
+#: one/choices.py:103
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+#: one/choices.py:104
+msgid "Croatia"
+msgstr "Kroatien"
+
+#: one/choices.py:105
+msgid "Cuba"
+msgstr "Kuba"
+
+#: one/choices.py:106
+msgid "Cyprus"
+msgstr "Zypern"
+
+#: one/choices.py:107
+msgid "Czech Republic"
+msgstr "Tschechische Republik"
+
+#: one/choices.py:108
+msgid "Denmark"
+msgstr "Dänemark"
+
+#: one/choices.py:109
+msgid "Djibouti"
+msgstr "Dschibuti"
+
+#: one/choices.py:110
+msgid "Dominica"
+msgstr "Dominica"
+
+#: one/choices.py:111
+msgid "Dominican Republic"
+msgstr "Dominikanische Republik"
+
+#: one/choices.py:112
+msgid "Ecuador"
+msgstr "Ecuador"
+
+#: one/choices.py:113
+msgid "Egypt"
+msgstr "Ägypten"
+
+#: one/choices.py:114
+msgid "El Salvador"
+msgstr "El Salvador"
+
+#: one/choices.py:115
+msgid "Equatorial Guinea"
+msgstr "Äquatorialguinea"
+
+#: one/choices.py:116
+msgid "Eritrea"
+msgstr "Eritrea"
+
+#: one/choices.py:117
+msgid "Estonia"
+msgstr "Estland"
+
+#: one/choices.py:118
+msgid "Eswatini"
+msgstr "Eswatini"
+
+#: one/choices.py:119
+msgid "Ethiopia"
+msgstr "Äthiopien"
+
+#: one/choices.py:120
+msgid "Fiji"
+msgstr "Fidschi"
+
+#: one/choices.py:121
+msgid "Finland"
+msgstr "Finnland"
+
+#: one/choices.py:122
+msgid "France"
+msgstr "Frankreich"
+
+#: one/choices.py:123
+msgid "French Guiana"
+msgstr "Französisch-Guayana"
+
+#: one/choices.py:124
+msgid "French Polynesia"
+msgstr "Französisch-Polynesien"
+
+#: one/choices.py:125
+msgid "French Southern Territories"
+msgstr "Französische Süd-Territorien"
+
+#: one/choices.py:126
+msgid "Gabon"
+msgstr "Gabun"
+
+#: one/choices.py:127
+msgid "Gambia"
+msgstr "Gambia"
+
+#: one/choices.py:128
+msgid "Georgia"
+msgstr "Georgien"
+
+#: one/choices.py:129
+msgid "Germany"
+msgstr "Deutschland"
+
+#: one/choices.py:130
+msgid "Ghana"
+msgstr "Ghana"
+
+#: one/choices.py:131
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#: one/choices.py:132
+msgid "Greece"
+msgstr "Griechenland"
+
+#: one/choices.py:133
+msgid "Greenland"
+msgstr "Grönland"
+
+#: one/choices.py:134
+msgid "Grenada"
+msgstr "Grenada"
+
+#: one/choices.py:135
+msgid "Guadeloupe"
+msgstr "Guadeloupe"
+
+#: one/choices.py:136
+msgid "Guam"
+msgstr "Guam"
+
+#: one/choices.py:137
+msgid "Guatemala"
+msgstr "Guatemala"
+
+#: one/choices.py:138
+msgid "Guernsey"
+msgstr "Guernsey"
+
+#: one/choices.py:139
+msgid "Guinea"
+msgstr "Guinea"
+
+#: one/choices.py:140
+msgid "Guinea-Bissau"
+msgstr "Guinea-Bissau"
+
+#: one/choices.py:141
+msgid "Guyana"
+msgstr "Guyana"
+
+#: one/choices.py:142
+msgid "Haiti"
+msgstr "Haiti"
+
+#: one/choices.py:143
+msgid "Heard Island and McDonald Islands"
+msgstr "Heard-Insel und McDonald-Inseln"
+
+#: one/choices.py:144
+msgid "Holy See"
+msgstr "Heiliger Stuhl"
+
+#: one/choices.py:145
+msgid "Honduras"
+msgstr "Honduras"
+
+#: one/choices.py:146
+msgid "Hong Kong"
+msgstr "Hongkong"
+
+#: one/choices.py:147
+msgid "Hungary"
+msgstr "Ungarn"
+
+#: one/choices.py:148
+msgid "Iceland"
+msgstr "Island"
+
+#: one/choices.py:149
+msgid "India"
+msgstr "Indien"
+
+#: one/choices.py:150
+msgid "Indonesia"
+msgstr "Indonesien"
+
+#: one/choices.py:151
+msgid "Iran"
+msgstr "Iran"
+
+#: one/choices.py:152
+msgid "Iraq"
+msgstr "Irak"
+
+#: one/choices.py:153
+msgid "Ireland"
+msgstr "Irland"
+
+#: one/choices.py:154
+msgid "Isle of Man"
+msgstr "Isle of Man"
+
+#: one/choices.py:155
+msgid "Israel"
+msgstr "Israel"
+
+#: one/choices.py:156
+msgid "Italy"
+msgstr "Italien"
+
+#: one/choices.py:157
+msgid "Jamaica"
+msgstr "Jamaika"
+
+#: one/choices.py:158
+msgid "Japan"
+msgstr "Japan"
+
+#: one/choices.py:159
+msgid "Jersey"
+msgstr "Jersey"
+
+#: one/choices.py:160
+msgid "Jordan"
+msgstr "Jordanien"
+
+#: one/choices.py:161
+msgid "Kazakhstan"
+msgstr "Kasachstan"
+
+#: one/choices.py:162
+msgid "Kenya"
+msgstr "Kenia"
+
+#: one/choices.py:163
+msgid "Kiribati"
+msgstr "Kiribati"
+
+#: one/choices.py:164
+msgid "Korea (North)"
+msgstr "Korea (Nord)"
+
+#: one/choices.py:165
+msgid "Korea (South)"
+msgstr "Korea (Süd)"
+
+#: one/choices.py:166
+msgid "Kuwait"
+msgstr "Kuwait"
+
+#: one/choices.py:167
+msgid "Kyrgyzstan"
+msgstr "Kirgisistan"
+
+#: one/choices.py:168
+msgid "Lao People's Democratic Republic"
+msgstr "Demokratische Volksrepublik Laos"
+
+#: one/choices.py:169
+msgid "Latvia"
+msgstr "Lettland"
+
+#: one/choices.py:170
+msgid "Lebanon"
+msgstr "Libanon"
+
+#: one/choices.py:171
+msgid "Lesotho"
+msgstr "Lesotho"
+
+#: one/choices.py:172
+msgid "Liberia"
+msgstr "Liberia"
+
+#: one/choices.py:173
+msgid "Libya"
+msgstr "Libyen"
+
+#: one/choices.py:174
+msgid "Liechtenstein"
+msgstr "Liechtenstein"
+
+#: one/choices.py:175
+msgid "Lithuania"
+msgstr "Litauen"
+
+#: one/choices.py:176
+msgid "Luxembourg"
+msgstr "Luxemburg"
+
+#: one/choices.py:177
+msgid "Macao"
+msgstr "Macao"
+
+#: one/choices.py:178
+msgid "Madagascar"
+msgstr "Madagaskar"
+
+#: one/choices.py:179
+msgid "Malawi"
+msgstr "Malawi"
+
+#: one/choices.py:180
+msgid "Malaysia"
+msgstr "Malaysia"
+
+#: one/choices.py:181
+msgid "Maldives"
+msgstr "Malediven"
+
+#: one/choices.py:182
+msgid "Mali"
+msgstr "Mali"
+
+#: one/choices.py:183
+msgid "Malta"
+msgstr "Malta"
+
+#: one/choices.py:184
+msgid "Marshall Islands"
+msgstr "Marshallinseln"
+
+#: one/choices.py:185
+msgid "Martinique"
+msgstr "Martinique"
+
+#: one/choices.py:186
+msgid "Mauritania"
+msgstr "Mauretanien"
+
+#: one/choices.py:187
+msgid "Mauritius"
+msgstr "Mauritius"
+
+#: one/choices.py:188
+msgid "Mayotte"
+msgstr "Mayotte"
+
+#: one/choices.py:189
+msgid "Mexico"
+msgstr "Mexiko"
+
+#: one/choices.py:190
+msgid "Micronesia"
+msgstr "Mikronesien"
+
+#: one/choices.py:191
+msgid "Moldova"
+msgstr "Moldawien"
+
+#: one/choices.py:192
+msgid "Monaco"
+msgstr "Monaco"
+
+#: one/choices.py:193
+msgid "Mongolia"
+msgstr "Mongolei"
+
+#: one/choices.py:194
+msgid "Montenegro"
+msgstr "Montenegro"
+
+#: one/choices.py:195
+msgid "Montserrat"
+msgstr "Montserrat"
+
+#: one/choices.py:196
+msgid "Morocco"
+msgstr "Marokko"
+
+#: one/choices.py:197
+msgid "Mozambique"
+msgstr "Mosambik"
+
+#: one/choices.py:198
+msgid "Myanmar"
+msgstr "Myanmar"
+
+#: one/choices.py:199
+msgid "Namibia"
+msgstr "Namibia"
+
+#: one/choices.py:200
+msgid "Nauru"
+msgstr "Nauru"
+
+#: one/choices.py:201
+msgid "Nepal"
+msgstr "Nepal"
+
+#: one/choices.py:202
+msgid "Netherlands"
+msgstr "Niederlande"
+
+#: one/choices.py:203
+msgid "New Caledonia"
+msgstr "Neukaledonien"
+
+#: one/choices.py:204
+msgid "New Zealand"
+msgstr "Neuseeland"
+
+#: one/choices.py:205
+msgid "Nicaragua"
+msgstr "Nicaragua"
+
+#: one/choices.py:206
+msgid "Niger"
+msgstr "Niger"
+
+#: one/choices.py:207
+msgid "Nigeria"
+msgstr "Nigeria"
+
+#: one/choices.py:208
+msgid "Niue"
+msgstr "Niue"
+
+#: one/choices.py:209
+msgid "Norfolk Island"
+msgstr "Norfolkinsel"
+
+#: one/choices.py:210
+msgid "North Macedonia"
+msgstr "Nordmazedonien"
+
+#: one/choices.py:211
+msgid "Northern Mariana Islands"
+msgstr "Nördliche Marianen"
+
+#: one/choices.py:212
+msgid "Norway"
+msgstr "Norwegen"
+
+#: one/choices.py:213
+msgid "Oman"
+msgstr "Oman"
+
+#: one/choices.py:214
+msgid "Pakistan"
+msgstr "Pakistan"
+
+#: one/choices.py:215
+msgid "Palau"
+msgstr "Palau"
+
+#: one/choices.py:216
+msgid "Palestine, State of"
+msgstr "Palästina, Staat"
+
+#: one/choices.py:217
+msgid "Panama"
+msgstr "Panama"
+
+#: one/choices.py:218
+msgid "Papua New Guinea"
+msgstr "Papua-Neuguinea"
+
+#: one/choices.py:219
+msgid "Paraguay"
+msgstr "Paraguay"
+
+#: one/choices.py:220
+msgid "Peru"
+msgstr "Peru"
+
+#: one/choices.py:221
+msgid "Philippines"
+msgstr "Philippinen"
+
+#: one/choices.py:222
+msgid "Pitcairn"
+msgstr "Pitcairn"
+
+#: one/choices.py:223
+msgid "Poland"
+msgstr "Polen"
+
+#: one/choices.py:224
+msgid "Portugal"
+msgstr "Portugal"
+
+#: one/choices.py:225
+msgid "Puerto Rico"
+msgstr "Puerto Rico"
+
+#: one/choices.py:226
+msgid "Qatar"
+msgstr "Katar"
+
+#: one/choices.py:227
+msgid "Réunion"
+msgstr "Réunion"
+
+#: one/choices.py:228
+msgid "Romania"
+msgstr "Rumänien"
+
+#: one/choices.py:229
+msgid "Russian Federation"
+msgstr "Russische Föderation"
+
+#: one/choices.py:230
+msgid "Rwanda"
+msgstr "Ruanda"
+
+#: one/choices.py:231
+msgid "Saudi Arabia"
+msgstr "Saudi-Arabien"
+
+#: one/choices.py:232
+msgid "Senegal"
+msgstr "Senegal"
+
+#: one/choices.py:233
+msgid "Serbia"
+msgstr "Serbien"
+
+#: one/choices.py:234
+msgid "Seychelles"
+msgstr "Seychellen"
+
+#: one/choices.py:235
+msgid "Sierra Leone"
+msgstr "Sierra Leone"
+
+#: one/choices.py:236
+msgid "Singapore"
+msgstr "Singapur"
+
+#: one/choices.py:237
+msgid "Slovakia"
+msgstr "Slowakei"
+
+#: one/choices.py:238
+msgid "Slovenia"
+msgstr "Slowenien"
+
+#: one/choices.py:239
+msgid "Solomon Islands"
+msgstr "Salomoninseln"
+
+#: one/choices.py:240
+msgid "Somalia"
+msgstr "Somalia"
+
+#: one/choices.py:241
+msgid "South Africa"
+msgstr "Südafrika"
+
+#: one/choices.py:242
+msgid "Spain"
+msgstr "Spanien"
+
+#: one/choices.py:243
+msgid "Sri Lanka"
+msgstr "Sri Lanka"
+
+#: one/choices.py:244
+msgid "Sudan"
+msgstr "Sudan"
+
+#: one/choices.py:245
+msgid "Sweden"
+msgstr "Schweden"
+
+#: one/choices.py:246
+msgid "Switzerland"
+msgstr "Switzerland"
+
+#: one/choices.py:247
+msgid "Syria"
+msgstr ""
+
+#: one/choices.py:248
+msgid "Taiwan"
+msgstr "Taiwan"
+
+#: one/choices.py:249
+msgid "Tanzania"
+msgstr "Tansania"
+
+#: one/choices.py:250
+msgid "Thailand"
+msgstr "Thailand"
+
+#: one/choices.py:251
+msgid "Timor-Leste"
+msgstr "Osttimor"
+
+#: one/choices.py:252
+msgid "Tunisia"
+msgstr "Tunesien"
+
+#: one/choices.py:253
+msgid "Turkey"
+msgstr "Türkei"
+
+#: one/choices.py:254
+msgid "Uganda"
+msgstr "Uganda"
+
+#: one/choices.py:255
+msgid "Ukraine"
+msgstr "Ukraine"
+
+#: one/choices.py:256
+msgid "United Arab Emirates"
+msgstr "Vereinigte Arabische Emirate"
+
+#: one/choices.py:257
+msgid "United Kingdom"
+msgstr "Vereinigtes Königreich"
+
+#: one/choices.py:258
+msgid "United States of America"
+msgstr "Vereinigte Staaten von Amerika"
+
+#: one/choices.py:259
+msgid "Uruguay"
+msgstr "Uruguay"
+
+#: one/choices.py:260
+msgid "Uzbekistan"
+msgstr "Usbekistan"
+
+#: one/choices.py:261
+msgid "Venezuela"
+msgstr "Venezuela"
+
+#: one/choices.py:262
+msgid "Vietnam"
+msgstr "Vietnam"
+
+#: one/choices.py:263
+msgid "Zambia"
+msgstr "Sambia"
+
+#: one/choices.py:264
+msgid "Zimbabwe"
+msgstr "Simbabwe"
+
+#: one/clients/apps.py:8
+msgid "Clients (HTTP)"
+msgstr ""
+
+#: one/clients/models.py:155
+msgid "time"
+msgstr ""
+
+#: one/companies/apps.py:8 one/companies/models.py:50
+#, fuzzy
+#| msgid "Spanish"
+msgid "companies"
+msgstr "Spanisch"
+
+#: one/companies/models.py:18
+msgid "Email"
+msgstr ""
+
+#: one/companies/models.py:19
+msgid "Own website"
+msgstr ""
+
+#: one/companies/models.py:20
+msgid "External service"
+msgstr ""
+
+#: one/companies/models.py:49
+msgid "company"
+msgstr ""
+
+#: one/companies/templates/companies/job_detail.html:14
+msgid "Apply"
+msgstr ""
+
+#: one/companies/templates/companies/job_detail.html:19
+msgid "Apply to:"
+msgstr ""
+
+#: one/companies/templates/companies/job_detail.html:28
+msgid "Create profile"
+msgstr ""
+
+#: one/companies/urls.py:7
+msgid "job"
+msgstr ""
+
+#: one/companies/urls.py:8
+msgid "jobs"
+msgstr ""
+
+#: one/companies/urls.py:9
+msgid "list"
+msgstr ""
+
+#: one/emails/admin.py:62
+msgid "Generate recipients from file"
+msgstr ""
+
+#: one/emails/admin.py:65
+msgid "{qs.count()} files processed"
+msgstr ""
+
+#: one/emails/apps.py:8
+msgid "Emails"
+msgstr ""
+
+#: one/emails/models.py:39
+msgid "No valid domain"
+msgstr ""
+
+#: one/emails/models.py:43
+msgid "Domain does not match any sites."
+msgstr ""
+
+#: one/emails/models.py:60
+msgid "Email message will be send periodically."
+msgstr ""
+
+#: one/emails/models.py:65 one/emails/models.py:70 one/emails/models.py:75
+msgid "Set when email message is periodic."
+msgstr ""
+
+#: one/emails/models.py:84
+msgid "Tag '#' not recognised."
+msgstr ""
+
+#: one/emails/models.py:88
+msgid "Interval must be set."
+msgstr ""
+
+#: one/emails/models.py:91
+msgid "Start time must be set."
+msgstr ""
+
+#: one/emails/models.py:94
+msgid "Stop time must be set."
+msgstr ""
+
+#: one/emails/models.py:97
+msgid "Interval too low."
+msgstr ""
+
+#: one/emails/models.py:100
+msgid "Interval too big."
+msgstr ""
+
+#: one/emails/models.py:103
+msgid "Time range too big."
+msgstr ""
+
+#: one/emails/templates/emails/verify_email.txt:4
 #, python-format
 msgid ""
 "\n"
@@ -84,1337 +1643,7 @@ msgid ""
 "Thank you very much.\n"
 msgstr ""
 
-#: one/_templates/error.html:7 one/links/models.py:14
-msgid "Home"
-msgstr "Startseite"
-
-#: one/_templates/error.html:10 one/base/views.py:80 one/links/models.py:15
-msgid "Search"
-msgstr "Suche"
-
-#: one/_templates/etsy/after_callback.html:6
-msgid "You are now logged in with Etsy"
-msgstr ""
-
-#: one/_templates/home/home.html:34
-msgid "All"
-msgstr "Alle"
-
-#: one/_templates/home/userhome.html:4
-msgid "Hello"
-msgstr ""
-
-#: one/_templates/modals/language.html:8
-msgid "Change language"
-msgstr "Sprache ändern"
-
-#: one/_templates/modals/language.html:21
-msgid "Save"
-msgstr "Speichern"
-
-#: one/_templates/plans/detail.html:4
-msgid "Plan"
-msgstr ""
-
-#: one/_templates/plans/detail.html:15
-msgid "Your selected plan"
-msgstr ""
-
-#: one/_templates/plans/detail.html:34
-msgid "Checkout"
-msgstr ""
-
-#: one/_templates/plans/detail.html:40
-msgid "Back to all plans"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:4 one/_templates/plans/plan_list.html:8
-msgid "Pricing"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:10
-msgid "Choose the right plan for you"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:24
-msgid "Buy plan"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:30
-msgid "Months"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:34
-msgid "Profiles"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:39
-msgid "Technical support"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:45
-msgid "Translate your profile"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:51
-msgid "We create a profile for you"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:57
-msgid "Premium templates"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:66
-msgid "Frequently asked questions"
-msgstr ""
-
-#: one/_templates/plans/plan_list.html:87
-msgid "Do you have a different question? Contact us."
-msgstr ""
-
-#: one/_templates/products/product_detail.html:14
-msgid "Check out"
-msgstr ""
-
-#: one/_templates/search/hx_results.html:2
-msgid "Total items found"
-msgstr "Insgesamt gefundene Artikel"
-
-#: one/_templates/snippets/messages.html:11
-msgid "Error"
-msgstr "Fehler"
-
-#: one/_templates/snippets/messages.html:13
-msgid "Warning"
-msgstr "Warnung"
-
-#: one/_templates/snippets/messages.html:15
-msgid "Infomation"
-msgstr "Informationen"
-
-#: one/_templates/snippets/messages.html:19
-msgid "OK"
-msgstr "OK"
-
-#: one/_templates/tex/yearlyholidaycalender_detail.html:9
-msgid "Holidays"
-msgstr ""
-
-#: one/_templates/tex/yearlyholidaycalender_detail.html:19 one/etsy/enums.py:25
-msgid "Download"
-msgstr ""
-
-#: one/_templates/tex/yearlyholidaycalender_detail.html:24
-msgid "Related calendars"
-msgstr ""
-
-#: one/_templates/tools/partials/no_data_storage.txt:2
-msgid "The data you are entering here is not being stored in my server."
-msgstr ""
-
-#: one/_templates/tools/partials/related_tools.html:3
-msgid "Related tools"
-msgstr ""
-
-#: one/_templates/tools/partials/related_tools.html:11
-msgid "No related tools found."
-msgstr ""
-
-#: one/_templates/tools/partials/related_tools.html:11
-msgid "All the tools."
-msgstr ""
-
-#: one/_templates/tools/results/barcode.html:6
-#: one/_templates/tools/results/chart.html:6
-#: one/_templates/tools/results/qrcode.html:6
-msgid "Downloads"
-msgstr ""
-
-#: one/_templates/tools/results/dj_secret_key.html:4
-#: one/_templates/tools/tool_md5.html:46
-msgid "Copied!"
-msgstr ""
-
-#: one/_templates/tools/tool_detail.html:25
-msgid "The result will be displayed here"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:9
-msgid "Invoice"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:11
-msgid "Client"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:12
-msgid "Ship to"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:13
-msgid "Invoice No."
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:14
-msgid "Date"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:14
-msgid "Order No."
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:15
-msgid "Article"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:15
-msgid "Quantity"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:16
-msgid "Price, €"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:16
-#: one/_templates/tools/tool_invoice.html:22
-msgid "Total, €"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:17
-msgid "Terms and Conditions"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:18
-msgid "Subtotal, €"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:19
-#, python-format
-msgid "VAT, %%"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:20
-#, python-format
-msgid "Discount, %%"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:21
-msgid "Subtotal - Discount, €"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:103
-msgid "New Article"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:104
-msgid "Only up to 10 items allowed"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:137
-msgid "Download invoice"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:146
-msgid "Settings"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:149
-msgid "Number of decimals for price fields"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:154
-msgid "Shipping address"
-msgstr ""
-
-#: one/_templates/tools/tool_invoice.html:160
-msgid "Discount"
-msgstr ""
-
-#: one/_templates/tools/tool_md5.html:15
-msgid "Input data"
-msgstr ""
-
-#: one/_templates/tools/tool_md5.html:17
-msgid "String input"
-msgstr ""
-
-#: one/_templates/tools/tool_md5.html:22
-msgid "Your string input"
-msgstr ""
-
-#: one/_templates/tools/tool_md5.html:24
-msgid "Secret key (salt)"
-msgstr ""
-
-#: one/_templates/tools/tool_md5.html:29
-msgid "Your arbitrary secret key"
-msgstr ""
-
-#: one/_templates/tools/tool_md5.html:32
-msgid "Remove salt"
-msgstr ""
-
-#: one/_templates/tools/tool_md5.html:32
-msgid "Add salt"
-msgstr ""
-
-#: one/_templates/tools/tool_md5.html:41
-msgid "Results"
-msgstr ""
-
-#: one/_templates/tools/tool_md5.html:46
-msgid "Copy"
-msgstr ""
-
-#: one/articles/models.py:78
-msgid "Comment"
-msgstr "Kommentar"
-
-#: one/base/__init__.py:6 one/settings.py:223
-msgid "Afghanistan"
-msgstr "Afghanistan"
-
-#: one/base/__init__.py:7 one/settings.py:224
-msgid "Albania"
-msgstr "Albanien"
-
-#: one/base/__init__.py:8 one/settings.py:225
-msgid "Algeria"
-msgstr "Algerien"
-
-#: one/base/__init__.py:9 one/settings.py:226
-msgid "American Samoa"
-msgstr "Amerikanisch-Samoa"
-
-#: one/base/__init__.py:10 one/settings.py:227
-msgid "Andorra"
-msgstr "Andorra"
-
-#: one/base/__init__.py:11 one/settings.py:228
-msgid "Angola"
-msgstr "Angola"
-
-#: one/base/__init__.py:12 one/settings.py:229
-msgid "Anguilla"
-msgstr "Anguilla"
-
-#: one/base/__init__.py:13 one/settings.py:230
-msgid "Antarctica"
-msgstr "Antarktis"
-
-#: one/base/__init__.py:14 one/settings.py:231
-msgid "Antigua and Barbuda"
-msgstr "Antigua und Barbuda"
-
-#: one/base/__init__.py:15 one/settings.py:232
-msgid "Argentina"
-msgstr "Argentinien"
-
-#: one/base/__init__.py:16 one/settings.py:233
-msgid "Armenia"
-msgstr "Armenien"
-
-#: one/base/__init__.py:17 one/settings.py:234
-msgid "Aruba"
-msgstr "Aruba"
-
-#: one/base/__init__.py:18 one/settings.py:235
-msgid "Australia"
-msgstr "Australien"
-
-#: one/base/__init__.py:19 one/settings.py:236
-msgid "Austria"
-msgstr "Österreich"
-
-#: one/base/__init__.py:20 one/settings.py:237
-msgid "Azerbaijan"
-msgstr "Aserbaidschan"
-
-#: one/base/__init__.py:21 one/settings.py:238
-msgid "Bahamas"
-msgstr "Bahamas"
-
-#: one/base/__init__.py:22 one/settings.py:239
-msgid "Bahrain"
-msgstr "Bahrain"
-
-#: one/base/__init__.py:23 one/settings.py:240
-msgid "Bangladesh"
-msgstr "Bangladesch"
-
-#: one/base/__init__.py:24 one/settings.py:241
-msgid "Barbados"
-msgstr "Barbados"
-
-#: one/base/__init__.py:25 one/settings.py:242
-msgid "Belarus"
-msgstr "Weißrussland"
-
-#: one/base/__init__.py:26 one/settings.py:243
-msgid "Belgium"
-msgstr "Belgien"
-
-#: one/base/__init__.py:27 one/settings.py:244
-msgid "Belize"
-msgstr "Belize"
-
-#: one/base/__init__.py:28 one/settings.py:245
-msgid "Benin"
-msgstr "Benin"
-
-#: one/base/__init__.py:29 one/settings.py:246
-msgid "Bermuda"
-msgstr "Bermuda"
-
-#: one/base/__init__.py:30 one/settings.py:247
-msgid "Bhutan"
-msgstr "Bhutan"
-
-#: one/base/__init__.py:31 one/settings.py:248
-msgid "Bolivia"
-msgstr "Bolivien"
-
-#: one/base/__init__.py:32 one/settings.py:249
-msgid "Bosnia and Herzegovina"
-msgstr "Bosnien und Herzegowina"
-
-#: one/base/__init__.py:33 one/settings.py:250
-msgid "Botswana"
-msgstr "Botswana"
-
-#: one/base/__init__.py:34 one/settings.py:251
-msgid "Brazil"
-msgstr "Brasilien"
-
-#: one/base/__init__.py:35 one/settings.py:252
-msgid "British Indian Ocean Territory"
-msgstr "Britisches Territorium im Indischen Ozean"
-
-#: one/base/__init__.py:36 one/settings.py:253
-msgid "Brunei Darussalam"
-msgstr "Brunei Darussalam"
-
-#: one/base/__init__.py:37 one/settings.py:254
-msgid "Bulgaria"
-msgstr "Bulgarien"
-
-#: one/base/__init__.py:38 one/settings.py:255
-msgid "Burkina Faso"
-msgstr "Burkina Faso"
-
-#: one/base/__init__.py:39 one/settings.py:256
-msgid "Burundi"
-msgstr "Burundi"
-
-#: one/base/__init__.py:40 one/settings.py:257
-msgid "Cabo Verde"
-msgstr "Kap Verde"
-
-#: one/base/__init__.py:41 one/settings.py:258
-msgid "Cambodia"
-msgstr "Kambodscha"
-
-#: one/base/__init__.py:42 one/settings.py:259
-msgid "Cameroon"
-msgstr "Kamerun"
-
-#: one/base/__init__.py:43 one/settings.py:260
-msgid "Canada"
-msgstr "Kanada"
-
-#: one/base/__init__.py:44 one/settings.py:261
-msgid "Cayman Islands"
-msgstr "Kaimaninseln"
-
-#: one/base/__init__.py:45 one/settings.py:262
-msgid "Central African Republic"
-msgstr "Zentralafrikanische Republik"
-
-#: one/base/__init__.py:46 one/settings.py:263
-msgid "Chad"
-msgstr "Chad"
-
-#: one/base/__init__.py:47 one/settings.py:264
-msgid "Chile"
-msgstr "Chile"
-
-#: one/base/__init__.py:48 one/settings.py:265
-msgid "China"
-msgstr "China"
-
-#: one/base/__init__.py:49 one/settings.py:266
-msgid "Christmas Island"
-msgstr "Weihnachtsinsel"
-
-#: one/base/__init__.py:50 one/settings.py:267
-msgid "Cocos (Keeling) Islands"
-msgstr "Cocos (Keeling) Inseln"
-
-#: one/base/__init__.py:51 one/settings.py:268
-msgid "Colombia"
-msgstr "Kolumbien"
-
-#: one/base/__init__.py:52 one/settings.py:269
-msgid "Comoros"
-msgstr "Komoren"
-
-#: one/base/__init__.py:53 one/settings.py:270
-msgid "Congo"
-msgstr "Kongo"
-
-#: one/base/__init__.py:54 one/settings.py:271
-msgid "Congo, Democratic Republic of the"
-msgstr "Kongo, Demokratische Republik"
-
-#: one/base/__init__.py:55 one/settings.py:272
-msgid "Cook Islands"
-msgstr "Cookinseln"
-
-#: one/base/__init__.py:56 one/settings.py:273
-msgid "Costa Rica"
-msgstr "Costa Rica"
-
-#: one/base/__init__.py:57 one/settings.py:274
-msgid "Croatia"
-msgstr "Kroatien"
-
-#: one/base/__init__.py:58 one/settings.py:275
-msgid "Cuba"
-msgstr "Kuba"
-
-#: one/base/__init__.py:59 one/settings.py:276
-msgid "Cyprus"
-msgstr "Zypern"
-
-#: one/base/__init__.py:60 one/settings.py:277
-msgid "Czech Republic"
-msgstr "Tschechische Republik"
-
-#: one/base/__init__.py:61 one/settings.py:278
-msgid "Denmark"
-msgstr "Dänemark"
-
-#: one/base/__init__.py:62 one/settings.py:279
-msgid "Djibouti"
-msgstr "Dschibuti"
-
-#: one/base/__init__.py:63 one/settings.py:280
-msgid "Dominica"
-msgstr "Dominica"
-
-#: one/base/__init__.py:64 one/settings.py:281
-msgid "Dominican Republic"
-msgstr "Dominikanische Republik"
-
-#: one/base/__init__.py:65 one/settings.py:282
-msgid "Ecuador"
-msgstr "Ecuador"
-
-#: one/base/__init__.py:66 one/settings.py:283
-msgid "Egypt"
-msgstr "Ägypten"
-
-#: one/base/__init__.py:67 one/settings.py:284
-msgid "El Salvador"
-msgstr "El Salvador"
-
-#: one/base/__init__.py:68 one/settings.py:285
-msgid "Equatorial Guinea"
-msgstr "Äquatorialguinea"
-
-#: one/base/__init__.py:69 one/settings.py:286
-msgid "Eritrea"
-msgstr "Eritrea"
-
-#: one/base/__init__.py:70 one/settings.py:287
-msgid "Estonia"
-msgstr "Estland"
-
-#: one/base/__init__.py:71 one/settings.py:288
-msgid "Eswatini"
-msgstr "Eswatini"
-
-#: one/base/__init__.py:72 one/settings.py:289
-msgid "Ethiopia"
-msgstr "Äthiopien"
-
-#: one/base/__init__.py:73 one/settings.py:290
-msgid "Fiji"
-msgstr "Fidschi"
-
-#: one/base/__init__.py:74 one/settings.py:291
-msgid "Finland"
-msgstr "Finnland"
-
-#: one/base/__init__.py:75 one/settings.py:292
-msgid "France"
-msgstr "Frankreich"
-
-#: one/base/__init__.py:76 one/settings.py:293
-msgid "French Guiana"
-msgstr "Französisch-Guayana"
-
-#: one/base/__init__.py:77 one/settings.py:294
-msgid "French Polynesia"
-msgstr "Französisch-Polynesien"
-
-#: one/base/__init__.py:78 one/settings.py:295
-msgid "French Southern Territories"
-msgstr "Französische Süd-Territorien"
-
-#: one/base/__init__.py:79 one/settings.py:296
-msgid "Gabon"
-msgstr "Gabun"
-
-#: one/base/__init__.py:80 one/settings.py:297
-msgid "Gambia"
-msgstr "Gambia"
-
-#: one/base/__init__.py:81 one/settings.py:298
-msgid "Georgia"
-msgstr "Georgien"
-
-#: one/base/__init__.py:82 one/settings.py:299
-msgid "Germany"
-msgstr "Deutschland"
-
-#: one/base/__init__.py:83 one/settings.py:300
-msgid "Ghana"
-msgstr "Ghana"
-
-#: one/base/__init__.py:84 one/settings.py:301
-msgid "Gibraltar"
-msgstr "Gibraltar"
-
-#: one/base/__init__.py:85 one/settings.py:302
-msgid "Greece"
-msgstr "Griechenland"
-
-#: one/base/__init__.py:86 one/settings.py:303
-msgid "Greenland"
-msgstr "Grönland"
-
-#: one/base/__init__.py:87 one/settings.py:304
-msgid "Grenada"
-msgstr "Grenada"
-
-#: one/base/__init__.py:88 one/settings.py:305
-msgid "Guadeloupe"
-msgstr "Guadeloupe"
-
-#: one/base/__init__.py:89 one/settings.py:306
-msgid "Guam"
-msgstr "Guam"
-
-#: one/base/__init__.py:90 one/settings.py:307
-msgid "Guatemala"
-msgstr "Guatemala"
-
-#: one/base/__init__.py:91 one/settings.py:308
-msgid "Guernsey"
-msgstr "Guernsey"
-
-#: one/base/__init__.py:92 one/settings.py:309
-msgid "Guinea"
-msgstr "Guinea"
-
-#: one/base/__init__.py:93 one/settings.py:310
-msgid "Guinea-Bissau"
-msgstr "Guinea-Bissau"
-
-#: one/base/__init__.py:94 one/settings.py:311
-msgid "Guyana"
-msgstr "Guyana"
-
-#: one/base/__init__.py:95 one/settings.py:312
-msgid "Haiti"
-msgstr "Haiti"
-
-#: one/base/__init__.py:96 one/settings.py:313
-msgid "Heard Island and McDonald Islands"
-msgstr "Heard-Insel und McDonald-Inseln"
-
-#: one/base/__init__.py:97 one/settings.py:314
-msgid "Holy See"
-msgstr "Heiliger Stuhl"
-
-#: one/base/__init__.py:98 one/settings.py:315
-msgid "Honduras"
-msgstr "Honduras"
-
-#: one/base/__init__.py:99 one/settings.py:316
-msgid "Hong Kong"
-msgstr "Hongkong"
-
-#: one/base/__init__.py:100 one/settings.py:317
-msgid "Hungary"
-msgstr "Ungarn"
-
-#: one/base/__init__.py:101 one/settings.py:318
-msgid "Iceland"
-msgstr "Island"
-
-#: one/base/__init__.py:102 one/settings.py:319
-msgid "India"
-msgstr "Indien"
-
-#: one/base/__init__.py:103 one/settings.py:320
-msgid "Indonesia"
-msgstr "Indonesien"
-
-#: one/base/__init__.py:104 one/settings.py:321
-msgid "Iran"
-msgstr "Iran"
-
-#: one/base/__init__.py:105 one/settings.py:322
-msgid "Iraq"
-msgstr "Irak"
-
-#: one/base/__init__.py:106 one/settings.py:323
-msgid "Ireland"
-msgstr "Irland"
-
-#: one/base/__init__.py:107 one/settings.py:324
-msgid "Isle of Man"
-msgstr "Isle of Man"
-
-#: one/base/__init__.py:108 one/settings.py:325
-msgid "Israel"
-msgstr "Israel"
-
-#: one/base/__init__.py:109 one/settings.py:326
-msgid "Italy"
-msgstr "Italien"
-
-#: one/base/__init__.py:110 one/settings.py:327
-msgid "Jamaica"
-msgstr "Jamaika"
-
-#: one/base/__init__.py:111 one/settings.py:328
-msgid "Japan"
-msgstr "Japan"
-
-#: one/base/__init__.py:112 one/settings.py:329
-msgid "Jersey"
-msgstr "Jersey"
-
-#: one/base/__init__.py:113 one/settings.py:330
-msgid "Jordan"
-msgstr "Jordanien"
-
-#: one/base/__init__.py:114 one/settings.py:331
-msgid "Kazakhstan"
-msgstr "Kasachstan"
-
-#: one/base/__init__.py:115 one/settings.py:332
-msgid "Kenya"
-msgstr "Kenia"
-
-#: one/base/__init__.py:116 one/settings.py:333
-msgid "Kiribati"
-msgstr "Kiribati"
-
-#: one/base/__init__.py:117 one/settings.py:334
-msgid "Korea (North)"
-msgstr "Korea (Nord)"
-
-#: one/base/__init__.py:118 one/settings.py:335
-msgid "Korea (South)"
-msgstr "Korea (Süd)"
-
-#: one/base/__init__.py:119 one/settings.py:336
-msgid "Kuwait"
-msgstr "Kuwait"
-
-#: one/base/__init__.py:120 one/settings.py:337
-msgid "Kyrgyzstan"
-msgstr "Kirgisistan"
-
-#: one/base/__init__.py:121 one/settings.py:338
-msgid "Lao People's Democratic Republic"
-msgstr "Demokratische Volksrepublik Laos"
-
-#: one/base/__init__.py:122 one/settings.py:339
-msgid "Latvia"
-msgstr "Lettland"
-
-#: one/base/__init__.py:123 one/settings.py:340
-msgid "Lebanon"
-msgstr "Libanon"
-
-#: one/base/__init__.py:124 one/settings.py:341
-msgid "Lesotho"
-msgstr "Lesotho"
-
-#: one/base/__init__.py:125 one/settings.py:342
-msgid "Liberia"
-msgstr "Liberia"
-
-#: one/base/__init__.py:126 one/settings.py:343
-msgid "Libya"
-msgstr "Libyen"
-
-#: one/base/__init__.py:127 one/settings.py:344
-msgid "Liechtenstein"
-msgstr "Liechtenstein"
-
-#: one/base/__init__.py:128 one/settings.py:345
-msgid "Lithuania"
-msgstr "Litauen"
-
-#: one/base/__init__.py:129 one/settings.py:346
-msgid "Luxembourg"
-msgstr "Luxemburg"
-
-#: one/base/__init__.py:130 one/settings.py:347
-msgid "Macao"
-msgstr "Macao"
-
-#: one/base/__init__.py:131 one/settings.py:348
-msgid "Madagascar"
-msgstr "Madagaskar"
-
-#: one/base/__init__.py:132 one/settings.py:349
-msgid "Malawi"
-msgstr "Malawi"
-
-#: one/base/__init__.py:133 one/settings.py:350
-msgid "Malaysia"
-msgstr "Malaysia"
-
-#: one/base/__init__.py:134 one/settings.py:351
-msgid "Maldives"
-msgstr "Malediven"
-
-#: one/base/__init__.py:135 one/settings.py:352
-msgid "Mali"
-msgstr "Mali"
-
-#: one/base/__init__.py:136 one/settings.py:353
-msgid "Malta"
-msgstr "Malta"
-
-#: one/base/__init__.py:137 one/settings.py:354
-msgid "Marshall Islands"
-msgstr "Marshallinseln"
-
-#: one/base/__init__.py:138 one/settings.py:355
-msgid "Martinique"
-msgstr "Martinique"
-
-#: one/base/__init__.py:139 one/settings.py:356
-msgid "Mauritania"
-msgstr "Mauretanien"
-
-#: one/base/__init__.py:140 one/settings.py:357
-msgid "Mauritius"
-msgstr "Mauritius"
-
-#: one/base/__init__.py:141 one/settings.py:358
-msgid "Mayotte"
-msgstr "Mayotte"
-
-#: one/base/__init__.py:142 one/settings.py:359
-msgid "Mexico"
-msgstr "Mexiko"
-
-#: one/base/__init__.py:143 one/settings.py:360
-msgid "Micronesia"
-msgstr "Mikronesien"
-
-#: one/base/__init__.py:144 one/settings.py:361
-msgid "Moldova"
-msgstr "Moldawien"
-
-#: one/base/__init__.py:145 one/settings.py:362
-msgid "Monaco"
-msgstr "Monaco"
-
-#: one/base/__init__.py:146 one/settings.py:363
-msgid "Mongolia"
-msgstr "Mongolei"
-
-#: one/base/__init__.py:147 one/settings.py:364
-msgid "Montenegro"
-msgstr "Montenegro"
-
-#: one/base/__init__.py:148 one/settings.py:365
-msgid "Montserrat"
-msgstr "Montserrat"
-
-#: one/base/__init__.py:149 one/settings.py:366
-msgid "Morocco"
-msgstr "Marokko"
-
-#: one/base/__init__.py:150 one/settings.py:367
-msgid "Mozambique"
-msgstr "Mosambik"
-
-#: one/base/__init__.py:151 one/settings.py:368
-msgid "Myanmar"
-msgstr "Myanmar"
-
-#: one/base/__init__.py:152 one/settings.py:369
-msgid "Namibia"
-msgstr "Namibia"
-
-#: one/base/__init__.py:153 one/settings.py:370
-msgid "Nauru"
-msgstr "Nauru"
-
-#: one/base/__init__.py:154 one/settings.py:371
-msgid "Nepal"
-msgstr "Nepal"
-
-#: one/base/__init__.py:155 one/settings.py:372
-msgid "Netherlands"
-msgstr "Niederlande"
-
-#: one/base/__init__.py:156 one/settings.py:373
-msgid "New Caledonia"
-msgstr "Neukaledonien"
-
-#: one/base/__init__.py:157 one/settings.py:374
-msgid "New Zealand"
-msgstr "Neuseeland"
-
-#: one/base/__init__.py:158 one/settings.py:375
-msgid "Nicaragua"
-msgstr "Nicaragua"
-
-#: one/base/__init__.py:159 one/settings.py:376
-msgid "Niger"
-msgstr "Niger"
-
-#: one/base/__init__.py:160 one/settings.py:377
-msgid "Nigeria"
-msgstr "Nigeria"
-
-#: one/base/__init__.py:161 one/settings.py:378
-msgid "Niue"
-msgstr "Niue"
-
-#: one/base/__init__.py:162 one/settings.py:379
-msgid "Norfolk Island"
-msgstr "Norfolkinsel"
-
-#: one/base/__init__.py:163 one/settings.py:380
-msgid "North Macedonia"
-msgstr "Nordmazedonien"
-
-#: one/base/__init__.py:164 one/settings.py:381
-msgid "Northern Mariana Islands"
-msgstr "Nördliche Marianen"
-
-#: one/base/__init__.py:165 one/settings.py:382
-msgid "Norway"
-msgstr "Norwegen"
-
-#: one/base/__init__.py:166 one/settings.py:383
-msgid "Oman"
-msgstr "Oman"
-
-#: one/base/__init__.py:167 one/settings.py:384
-msgid "Pakistan"
-msgstr "Pakistan"
-
-#: one/base/__init__.py:168 one/settings.py:385
-msgid "Palau"
-msgstr "Palau"
-
-#: one/base/__init__.py:169 one/settings.py:386
-msgid "Palestine, State of"
-msgstr "Palästina, Staat"
-
-#: one/base/__init__.py:170 one/settings.py:387
-msgid "Panama"
-msgstr "Panama"
-
-#: one/base/__init__.py:171 one/settings.py:388
-msgid "Papua New Guinea"
-msgstr "Papua-Neuguinea"
-
-#: one/base/__init__.py:172 one/settings.py:389
-msgid "Paraguay"
-msgstr "Paraguay"
-
-#: one/base/__init__.py:173 one/settings.py:390
-msgid "Peru"
-msgstr "Peru"
-
-#: one/base/__init__.py:174 one/settings.py:391
-msgid "Philippines"
-msgstr "Philippinen"
-
-#: one/base/__init__.py:175 one/settings.py:392
-msgid "Pitcairn"
-msgstr "Pitcairn"
-
-#: one/base/__init__.py:176 one/settings.py:393
-msgid "Poland"
-msgstr "Polen"
-
-#: one/base/__init__.py:177 one/settings.py:394
-msgid "Portugal"
-msgstr "Portugal"
-
-#: one/base/__init__.py:178 one/settings.py:395
-msgid "Puerto Rico"
-msgstr "Puerto Rico"
-
-#: one/base/__init__.py:179 one/settings.py:396
-msgid "Qatar"
-msgstr "Katar"
-
-#: one/base/__init__.py:180 one/settings.py:397
-msgid "Réunion"
-msgstr "Réunion"
-
-#: one/base/__init__.py:181 one/settings.py:398
-msgid "Romania"
-msgstr "Rumänien"
-
-#: one/base/__init__.py:182 one/settings.py:399
-msgid "Russian Federation"
-msgstr "Russische Föderation"
-
-#: one/base/__init__.py:183 one/settings.py:400
-msgid "Rwanda"
-msgstr "Ruanda"
-
-#: one/base/__init__.py:184
-msgid "Saint Barthélemy"
-msgstr "Saint Barthélemy"
-
-#: one/base/__init__.py:185
-msgid "Saint Helena"
-msgstr "Sankt Helena"
-
-#: one/base/__init__.py:186
-msgid "Saint Kitts and Nevis"
-msgstr "St. Kitts und Nevis"
-
-#: one/base/__init__.py:187
-msgid "Saint Lucia"
-msgstr "St. Lucia"
-
-#: one/base/__init__.py:188
-msgid "Saint Martin"
-msgstr "Saint Martin"
-
-#: one/base/__init__.py:189
-msgid "Saint Pierre and Miquelon"
-msgstr "St. Pierre und Miquelon"
-
-#: one/base/__init__.py:190
-msgid "Saint Vincent and the Grenadines"
-msgstr "St. Vincent und die Grenadinen"
-
-#: one/base/__init__.py:191
-msgid "Samoa"
-msgstr "Samoa"
-
-#: one/base/__init__.py:192
-msgid "San Marino"
-msgstr "San Marino"
-
-#: one/base/__init__.py:193
-msgid "Sao Tome and Principe"
-msgstr "Sao Tome und Principe"
-
-#: one/base/__init__.py:194 one/settings.py:401
-msgid "Saudi Arabia"
-msgstr "Saudi-Arabien"
-
-#: one/base/__init__.py:195 one/settings.py:402
-msgid "Senegal"
-msgstr "Senegal"
-
-#: one/base/__init__.py:196 one/settings.py:403
-msgid "Serbia"
-msgstr "Serbien"
-
-#: one/base/__init__.py:197 one/settings.py:404
-msgid "Seychelles"
-msgstr "Seychellen"
-
-#: one/base/__init__.py:198 one/settings.py:405
-msgid "Sierra Leone"
-msgstr "Sierra Leone"
-
-#: one/base/__init__.py:199 one/settings.py:406
-msgid "Singapore"
-msgstr "Singapur"
-
-#: one/base/__init__.py:200
-msgid "Sint Maarten"
-msgstr "Sankt Martin"
-
-#: one/base/__init__.py:201 one/settings.py:407
-msgid "Slovakia"
-msgstr "Slowakei"
-
-#: one/base/__init__.py:202 one/settings.py:408
-msgid "Slovenia"
-msgstr "Slowenien"
-
-#: one/base/__init__.py:203 one/settings.py:409
-msgid "Solomon Islands"
-msgstr "Salomoninseln"
-
-#: one/base/__init__.py:204 one/settings.py:410
-msgid "Somalia"
-msgstr "Somalia"
-
-#: one/base/__init__.py:205 one/settings.py:411
-msgid "South Africa"
-msgstr "Südafrika"
-
-#: one/base/__init__.py:206
-msgid "South Georgia and the South Sandwich Islands"
-msgstr "Südgeorgien und die Südlichen Sandwichinseln"
-
-#: one/base/__init__.py:207
-msgid "South Sudan"
-msgstr "Südsudan"
-
-#: one/base/__init__.py:208 one/settings.py:412
-msgid "Spain"
-msgstr "Spanien"
-
-#: one/base/__init__.py:209 one/settings.py:413
-msgid "Sri Lanka"
-msgstr "Sri Lanka"
-
-#: one/base/__init__.py:210 one/settings.py:414
-msgid "Sudan"
-msgstr "Sudan"
-
-#: one/base/__init__.py:211
-msgid "Suriname"
-msgstr "Surinam"
-
-#: one/base/__init__.py:212
-msgid "Svalbard and Jan Mayen"
-msgstr "Svalbard und Jan Mayen"
-
-#: one/base/__init__.py:213 one/settings.py:415
-msgid "Sweden"
-msgstr "Schweden"
-
-#: one/base/__init__.py:214 one/settings.py:416
-msgid "Switzerland"
-msgstr "Switzerland"
-
-#: one/base/__init__.py:215
-msgid "Syrian Arab Republic"
-msgstr "Arabische Republik Syrien"
-
-#: one/base/__init__.py:216 one/settings.py:418
-msgid "Taiwan"
-msgstr "Taiwan"
-
-#: one/base/__init__.py:217
-msgid "Tajikistan"
-msgstr "Tadschikistan"
-
-#: one/base/__init__.py:218 one/settings.py:419
-msgid "Tanzania"
-msgstr "Tansania"
-
-#: one/base/__init__.py:219 one/settings.py:420
-msgid "Thailand"
-msgstr "Thailand"
-
-#: one/base/__init__.py:220 one/settings.py:421
-msgid "Timor-Leste"
-msgstr "Osttimor"
-
-#: one/base/__init__.py:221
-msgid "Togo"
-msgstr "Togo"
-
-#: one/base/__init__.py:222
-msgid "Tokelau"
-msgstr "Tokelau"
-
-#: one/base/__init__.py:223
-msgid "Tonga"
-msgstr "Tonga"
-
-#: one/base/__init__.py:224
-msgid "Trinidad and Tobago"
-msgstr "Trinidad und Tobago"
-
-#: one/base/__init__.py:225 one/settings.py:422
-msgid "Tunisia"
-msgstr "Tunesien"
-
-#: one/base/__init__.py:226 one/settings.py:423
-msgid "Turkey"
-msgstr "Türkei"
-
-#: one/base/__init__.py:227
-msgid "Turkmenistan"
-msgstr "Turkmenistan"
-
-#: one/base/__init__.py:228
-msgid "Turks and Caicos Islands"
-msgstr "Turks- und Caicosinseln"
-
-#: one/base/__init__.py:229
-msgid "Tuvalu"
-msgstr "Tuvalu"
-
-#: one/base/__init__.py:230 one/settings.py:424
-msgid "Uganda"
-msgstr "Uganda"
-
-#: one/base/__init__.py:231 one/settings.py:425
-msgid "Ukraine"
-msgstr "Ukraine"
-
-#: one/base/__init__.py:232 one/settings.py:426
-msgid "United Arab Emirates"
-msgstr "Vereinigte Arabische Emirate"
-
-#: one/base/__init__.py:233 one/settings.py:427
-msgid "United Kingdom"
-msgstr "Vereinigtes Königreich"
-
-#: one/base/__init__.py:234 one/settings.py:428
-msgid "United States of America"
-msgstr "Vereinigte Staaten von Amerika"
-
-#: one/base/__init__.py:235
-msgid "United States Minor Outlying Islands"
-msgstr "Vereinigte Staaten Minor Outlying Islands"
-
-#: one/base/__init__.py:236 one/settings.py:429
-msgid "Uruguay"
-msgstr "Uruguay"
-
-#: one/base/__init__.py:237 one/settings.py:430
-msgid "Uzbekistan"
-msgstr "Usbekistan"
-
-#: one/base/__init__.py:238
-msgid "Vanuatu"
-msgstr "Vanuatu"
-
-#: one/base/__init__.py:239 one/settings.py:431
-msgid "Venezuela"
-msgstr "Venezuela"
-
-#: one/base/__init__.py:240
-msgid "Viet Nam"
-msgstr "Vietnam"
-
-#: one/base/__init__.py:241
-msgid "Virgin Islands (British)"
-msgstr "Jungferninseln (Britisch)"
-
-#: one/base/__init__.py:242
-msgid "Virgin Islands (U.S.)"
-msgstr "Jungferninseln (U.S.)"
-
-#: one/base/__init__.py:243
-msgid "Wallis and Futuna"
-msgstr "Wallis und Futuna"
-
-#: one/base/__init__.py:244
-msgid "Western Sahara"
-msgstr "Westsahara"
-
-#: one/base/__init__.py:245
-msgid "Yemen"
-msgstr "Jemen"
-
-#: one/base/__init__.py:246 one/settings.py:433
-msgid "Zambia"
-msgstr "Sambia"
-
-#: one/base/__init__.py:247 one/settings.py:434
-msgid "Zimbabwe"
-msgstr "Simbabwe"
-
-#: one/base/middleware/ip.py:21
-msgid "Request blocked"
-msgstr "Anfrage blockiert"
-
-#: one/base/urls.py:33
-msgid "search"
-msgstr "suche"
-
-#: one/base/urls.py:36
-msgid "translate-this-url"
-msgstr "uebersetze-diese-url"
-
-#: one/base/views.py:47
-msgid "Page not found"
-msgstr ""
-
-#: one/base/views.py:56
-msgid "Internal Server Error"
-msgstr "Interner Serverfehler"
-
-#: one/clients/models.py:101
-msgid "time"
-msgstr ""
-
-#: one/clients/models.py:120
-msgid "For logged users"
-msgstr ""
-
-#: one/clients/models.py:121
-msgid "For anonymous users"
-msgstr ""
-
-#: one/clients/models.py:122
-msgid "Always"
-msgstr ""
-
-#: one/emails/models.py:34
-msgid "Domain does not match any sites."
-msgstr ""
-
-#: one/emails/models.py:50
-msgid "Email message will be send periodically."
-msgstr ""
-
-#: one/emails/models.py:55 one/emails/models.py:60 one/emails/models.py:65
-msgid "Set when email message is periodic."
-msgstr ""
-
-#: one/emails/models.py:74
-msgid "Tag '#' not recognised."
-msgstr ""
-
-#: one/emails/models.py:78
-msgid "Interval must be set."
-msgstr ""
-
-#: one/emails/models.py:81
-msgid "Start time must be set."
-msgstr ""
-
-#: one/emails/models.py:84
-msgid "Stop time must be set."
-msgstr ""
-
-#: one/emails/models.py:87
-msgid "Interval too low."
-msgstr ""
-
-#: one/emails/models.py:90
-msgid "Interval too big."
-msgstr ""
-
-#: one/emails/models.py:93
-msgid "Time range too big."
-msgstr ""
-
-#: one/etsy/admin.py:20
+#: one/etsy/admin.py:19
 msgid "Select just one object"
 msgstr ""
 
@@ -1584,88 +1813,64 @@ msgid ""
 "heading. Requires 'who_made' and 'when_made'."
 msgstr ""
 
-#: one/faqs/models.py:8 one/links/models.py:18
-msgid "Plans"
-msgstr "Plans"
-
-#: one/faqs/models.py:9
-msgid "Products"
+#: one/etsy/templates/etsy/after_callback.html:6
+msgid "You are now logged in with Etsy"
 msgstr ""
 
-#: one/faqs/models.py:10
-msgid "Informative"
-msgstr "Informativ"
-
-#: one/faqs/models.py:11
-msgid "Accounts"
-msgstr "Konten"
-
-#: one/faqs/models.py:12
-msgid "Legal concerns"
+#: one/landing/models.py:29
+msgid "Home already exists"
 msgstr ""
 
-#: one/home/models.py:43
+#: one/landing/models.py:69
 msgid "Articles Section"
 msgstr ""
 
-#: one/home/models.py:44
+#: one/landing/models.py:70
 msgid "Articles Sections"
 msgstr ""
 
-#: one/home/models.py:110
+#: one/landing/models.py:119
+msgid "Reflect here the problem of the user. Use bullet list"
+msgstr ""
+
+#: one/landing/models.py:130
+msgid "Introduce our product/service as the solution."
+msgstr ""
+
+#: one/landing/models.py:155
 msgid "FAQs Section"
 msgstr ""
 
-#: one/home/models.py:111
+#: one/landing/models.py:156
 msgid "FAQs Sections"
 msgstr ""
 
-#: one/links/models.py:16
-msgid "Sitemap"
-msgstr ""
+#: one/landing/templates/landing/landing_page.html:108
+msgid "All"
+msgstr "Alle"
 
-#: one/links/models.py:17
-msgid "Articles"
-msgstr ""
-
-#: one/links/models.py:21
-msgid "Account"
-msgstr ""
-
-#: one/links/models.py:22
-msgid "FAQs"
-msgstr "FAQs"
-
-#: one/links/models.py:23
-msgid "English Quizzes"
-msgstr ""
-
-#: one/links/models.py:86
-msgid "Enter a custom title if an external url is entered."
-msgstr ""
-
-#: one/links/models.py:91
-msgid "One link must be entered."
-msgstr ""
-
-#: one/menus/models.py:14
+#: one/menus/models.py:15
 msgid "For logged user"
 msgstr ""
 
-#: one/menus/models.py:15
+#: one/menus/models.py:16
 msgid "For anonymous user"
 msgstr ""
 
-#: one/menus/models.py:16
+#: one/menus/models.py:17
 msgid "Show always"
 msgstr ""
 
-#: one/menus/models.py:17
+#: one/menus/models.py:18
 msgid "Never show"
 msgstr ""
 
-#: one/menus/models.py:59
+#: one/menus/models.py:57
 msgid "Insert an emoji if you want to show it as emoji."
+msgstr ""
+
+#: one/payments/apps.py:8
+msgid "Payments"
 msgstr ""
 
 #: one/payments/signals.py:10
@@ -1685,80 +1890,151 @@ msgstr ""
 msgid "Welcome"
 msgstr ""
 
-#: one/products/feeds.py:13
+#: one/pins/feeds.py:13
 msgid "List of products"
 msgstr ""
 
-#: one/products/feeds.py:15
+#: one/pins/feeds.py:15
 msgid "Last products published in my sites"
 msgstr ""
 
-#: one/products/feeds.py:48
+#: one/pins/feeds.py:47
 msgid "List of Etsy listings"
 msgstr ""
 
-#: one/products/feeds.py:50
+#: one/pins/feeds.py:49
 msgid "Last products published in my sites as Etsy listings"
 msgstr ""
 
-#: one/products/models.py:60
-msgid "Discount in percentage"
-msgstr ""
-
-#: one/products/models.py:61
-msgid "It is applied to the country with the lowest GDP per capita."
-msgstr ""
-
-#: one/products/models.py:132
-msgid "Price percentace"
-msgstr ""
-
-#: one/products/models.py:133
-msgid "Percent to apply to Etsy listing price."
-msgstr ""
-
-#: one/settings.py:206
-msgid "English"
-msgstr "Englisch"
-
-#: one/settings.py:207
-msgid "German"
-msgstr "Deutsch"
-
-#: one/settings.py:208
-msgid "Spanish"
-msgstr "Spanisch"
-
-#: one/settings.py:209
-msgid "French"
-msgstr "Französisch"
-
-#: one/settings.py:210
-msgid "Italian"
-msgstr "Italienisch"
-
-#: one/settings.py:211
-msgid "Dutch"
-msgstr "Niederländisch"
-
-#: one/settings.py:212
-msgid "Portuguese"
-msgstr "Portugiesisch"
-
-#: one/settings.py:417
-msgid "Syria"
-msgstr ""
-
-#: one/settings.py:432
-msgid "Vietnam"
-msgstr "Vietnam"
-
-#: one/tex/feeds.py:13
+#: one/pins/feeds.py:112
 msgid "List of calendars"
 msgstr ""
 
-#: one/tex/feeds.py:15
+#: one/pins/feeds.py:114
 msgid "Last calendars published in my sites"
+msgstr ""
+
+#: one/pins/feeds.py:148 one/quiz/apps.py:10
+#, fuzzy
+#| msgid "English"
+msgid "English quizzes"
+msgstr "Englisch"
+
+#: one/pins/feeds.py:150
+msgid "Last English quizzes published in my site"
+msgstr ""
+
+#: one/plans/templates/plans/detail.html:4
+msgid "Plan"
+msgstr ""
+
+#: one/plans/templates/plans/detail.html:15
+msgid "Your selected plan"
+msgstr ""
+
+#: one/plans/templates/plans/detail.html:34
+msgid "Checkout"
+msgstr ""
+
+#: one/plans/templates/plans/detail.html:40
+msgid "Back to all plans"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:4
+#: one/plans/templates/plans/plan_list.html:8
+msgid "Pricing"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:10
+msgid "Choose the right plan for you"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:24
+msgid "Buy plan"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:30
+msgid "Months"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:39
+msgid "Technical support"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:45
+msgid "Translate your profile"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:51
+msgid "We create a profile for you"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:57
+msgid "Premium templates"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:66
+msgid "Frequently asked questions"
+msgstr ""
+
+#: one/plans/templates/plans/plan_list.html:87
+msgid "Do you have a different question? Contact us."
+msgstr ""
+
+#: one/products/apps.py:8
+msgid "Products"
+msgstr ""
+
+#: one/products/models.py:63
+msgid "Discount in percentage"
+msgstr ""
+
+#: one/products/models.py:64
+msgid "It is applied to the country with the lowest GDP per capita."
+msgstr ""
+
+#: one/products/models.py:139
+msgid "Price percentace"
+msgstr ""
+
+#: one/products/models.py:140
+msgid "Percent to apply to Etsy listing price."
+msgstr ""
+
+#: one/products/templates/products/product_detail.html:14
+msgid "Check out"
+msgstr ""
+
+#: one/settings.py:223
+msgid "German"
+msgstr "Deutsch"
+
+#: one/settings.py:224
+msgid "Spanish"
+msgstr "Spanisch"
+
+#: one/settings.py:225
+msgid "French"
+msgstr "Französisch"
+
+#: one/settings.py:226
+msgid "Italian"
+msgstr "Italienisch"
+
+#: one/settings.py:227
+msgid "Dutch"
+msgstr "Niederländisch"
+
+#: one/settings.py:228
+msgid "Portuguese"
+msgstr "Portugiesisch"
+
+#: one/tex/templates/tex/yearlyholidaycalender_detail.html:9
+msgid "Holidays"
+msgstr ""
+
+#: one/tex/templates/tex/yearlyholidaycalender_detail.html:24
+msgid "Related calendars"
 msgstr ""
 
 #: one/tex/values.py:33
@@ -1767,6 +2043,18 @@ msgstr ""
 
 #: one/tex/values.py:34
 msgid "Landscape"
+msgstr ""
+
+#: one/tex/values.py:39
+msgid "Millimeters"
+msgstr ""
+
+#: one/tex/values.py:40
+msgid "Inches"
+msgstr ""
+
+#: one/tools/apps.py:8
+msgid "Tools"
 msgstr ""
 
 #: one/tools/models.py:253
@@ -1791,6 +2079,160 @@ msgstr ""
 
 #: one/tools/models.py:299
 msgid "Data in format: X Y"
+msgstr ""
+
+#: one/tools/templates/tools/partials/no_data_storage.txt:2
+msgid "The data you are entering here is not being stored in my server."
+msgstr ""
+
+#: one/tools/templates/tools/partials/related_tools.html:3
+msgid "Related tools"
+msgstr ""
+
+#: one/tools/templates/tools/partials/related_tools.html:11
+msgid "No related tools found."
+msgstr ""
+
+#: one/tools/templates/tools/partials/related_tools.html:11
+msgid "All the tools."
+msgstr ""
+
+#: one/tools/templates/tools/results/barcode.html:6
+#: one/tools/templates/tools/results/chart.html:6
+#: one/tools/templates/tools/results/qrcode.html:6
+msgid "Downloads"
+msgstr ""
+
+#: one/tools/templates/tools/results/dj_secret_key.html:4
+#: one/tools/templates/tools/tool_md5.html:46
+msgid "Copied!"
+msgstr ""
+
+#: one/tools/templates/tools/tool_detail.html:25
+msgid "The result will be displayed here"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:9
+msgid "Invoice"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:11
+msgid "Client"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:12
+msgid "Ship to"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:13
+msgid "Invoice No."
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:14
+msgid "Date"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:14
+msgid "Order No."
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:15
+msgid "Article"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:15
+msgid "Quantity"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:16
+msgid "Price, €"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:16
+#: one/tools/templates/tools/tool_invoice.html:22
+msgid "Total, €"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:18
+msgid "Subtotal, €"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:19
+#, python-format
+msgid "VAT, %%"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:20
+#, python-format
+msgid "Discount, %%"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:21
+msgid "Subtotal - Discount, €"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:103
+msgid "New Article"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:104
+msgid "Only up to 10 items allowed"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:137
+msgid "Download invoice"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:146
+msgid "Settings"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:149
+msgid "Number of decimals for price fields"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:154
+msgid "Shipping address"
+msgstr ""
+
+#: one/tools/templates/tools/tool_invoice.html:160
+msgid "Discount"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:15
+msgid "Input data"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:17
+msgid "String input"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:22
+msgid "Your string input"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:24
+msgid "Secret key (salt)"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:29
+msgid "Your arbitrary secret key"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:32
+msgid "Remove salt"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:32
+msgid "Add salt"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:41
+msgid "Results"
+msgstr ""
+
+#: one/tools/templates/tools/tool_md5.html:46
+msgid "Copy"
 msgstr ""
 
 #: one/tools/tools.py:14
@@ -1916,6 +2358,34 @@ msgstr ""
 msgid "Django Secret Key Generator"
 msgstr ""
 
+#: one/urls.py:48
+#, fuzzy
+#| msgid "Plans"
+msgid "plans/"
+msgstr "Plans"
+
+#: one/urls.py:49
+#, fuzzy
+#| msgid "Lastest articles"
+msgid "articles/"
+msgstr "Neueste Artikel"
+
+#: one/urls.py:50
+msgid "products/"
+msgstr ""
+
+#: one/urls.py:51
+msgid "companies/"
+msgstr ""
+
+#: one/urls.py:52
+msgid "candidates/"
+msgstr ""
+
+#: one/users/apps.py:8
+msgid "Users"
+msgstr ""
+
 #: one/users/tasks.py:28
 msgid "Verify your email"
 msgstr ""
@@ -1935,6 +2405,108 @@ msgstr ""
 #: one/users/views.py:40
 msgid "You are not allowed to delete someone else's account."
 msgstr ""
+
+#~ msgid "Saint Barthélemy"
+#~ msgstr "Saint Barthélemy"
+
+#~ msgid "Saint Helena"
+#~ msgstr "Sankt Helena"
+
+#~ msgid "Saint Kitts and Nevis"
+#~ msgstr "St. Kitts und Nevis"
+
+#~ msgid "Saint Lucia"
+#~ msgstr "St. Lucia"
+
+#~ msgid "Saint Martin"
+#~ msgstr "Saint Martin"
+
+#~ msgid "Saint Pierre and Miquelon"
+#~ msgstr "St. Pierre und Miquelon"
+
+#~ msgid "Saint Vincent and the Grenadines"
+#~ msgstr "St. Vincent und die Grenadinen"
+
+#~ msgid "Samoa"
+#~ msgstr "Samoa"
+
+#~ msgid "San Marino"
+#~ msgstr "San Marino"
+
+#~ msgid "Sao Tome and Principe"
+#~ msgstr "Sao Tome und Principe"
+
+#~ msgid "Sint Maarten"
+#~ msgstr "Sankt Martin"
+
+#~ msgid "South Georgia and the South Sandwich Islands"
+#~ msgstr "Südgeorgien und die Südlichen Sandwichinseln"
+
+#~ msgid "South Sudan"
+#~ msgstr "Südsudan"
+
+#~ msgid "Svalbard and Jan Mayen"
+#~ msgstr "Svalbard und Jan Mayen"
+
+#~ msgid "Syrian Arab Republic"
+#~ msgstr "Arabische Republik Syrien"
+
+#~ msgid "Tajikistan"
+#~ msgstr "Tadschikistan"
+
+#~ msgid "Togo"
+#~ msgstr "Togo"
+
+#~ msgid "Tokelau"
+#~ msgstr "Tokelau"
+
+#~ msgid "Tonga"
+#~ msgstr "Tonga"
+
+#~ msgid "Trinidad and Tobago"
+#~ msgstr "Trinidad und Tobago"
+
+#~ msgid "Turkmenistan"
+#~ msgstr "Turkmenistan"
+
+#~ msgid "Turks and Caicos Islands"
+#~ msgstr "Turks- und Caicosinseln"
+
+#~ msgid "Tuvalu"
+#~ msgstr "Tuvalu"
+
+#~ msgid "United States Minor Outlying Islands"
+#~ msgstr "Vereinigte Staaten Minor Outlying Islands"
+
+#~ msgid "Vanuatu"
+#~ msgstr "Vanuatu"
+
+#~ msgid "Viet Nam"
+#~ msgstr "Vietnam"
+
+#~ msgid "Virgin Islands (British)"
+#~ msgstr "Jungferninseln (Britisch)"
+
+#~ msgid "Virgin Islands (U.S.)"
+#~ msgstr "Jungferninseln (U.S.)"
+
+#~ msgid "Wallis and Futuna"
+#~ msgstr "Wallis und Futuna"
+
+#~ msgid "Western Sahara"
+#~ msgstr "Westsahara"
+
+#~ msgid "Yemen"
+#~ msgstr "Jemen"
+
+#~ msgid "translate-this-url"
+#~ msgstr "uebersetze-diese-url"
+
+#~ msgid "Informative"
+#~ msgstr "Informativ"
+
+#~ msgid "Accounts"
+#~ msgstr "Konten"
 
 #~ msgid "Greek"
 #~ msgstr "Griechisch"
@@ -1962,12 +2534,6 @@ msgstr ""
 
 #~ msgid "Write something"
 #~ msgstr "Schreib etwas"
-
-#~ msgid "Send"
-#~ msgstr "Senden"
-
-#~ msgid "Lastest articles"
-#~ msgstr "Neueste Artikel"
 
 #~ msgid "Chat"
 #~ msgstr "Chat"

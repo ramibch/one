@@ -10,13 +10,13 @@
     <h1>{% translate "Job Applicacions" %}</h1>
   </center>
 
-  {% if jobapps.count < 0 %}
+  {% if jobapps.count > 0 %}
 
   <table>
     <thead>
       <tr>
         <th scope="col">{% translate "Job" %}</th>
-        <th scope="col">{% translate "Profile" %}</th>
+        <th scope="col">{% translate "Dossier" %}</th>
         <th scope="col">{% translate "Recruiter" %}</th>
         <th scope="col">{% translate "Created at" %}</th>
         <th scope="col">{% translate "Actions" %}</th>
@@ -26,7 +26,7 @@
       {% for jobapp in jobapps %}
       <tr>
         <th scope="row"> {{ jobapp.job.title }} <span><a href="{{ jobapp.job.url }}"><i class="bi bi-link-45deg"></i></a></span></th>
-        <td> {{ jobapp.candidate }} <span><a href="{{ jobapp.candidate.url }}"><i class="bi bi-link-45deg"></i></a></span> </td>
+        <td> {% if jobapp.dossier %} {{ jobapp.dossier }} <span><a target="_blank" href="{{ jobapp.dossier.url }}"><i class="bi bi-link-45deg"></i></a></span> {% endif %}</td>
         <td> {% if jobapp.job.recruiter %} {{ jobapp.job.recruiter }} {% else %} {% translate "Unknown" %} {% endif %} </td>
         <td> {{ jobapp.created_at }} </td>
         <td>

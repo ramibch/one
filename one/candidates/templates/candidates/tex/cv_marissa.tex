@@ -80,26 +80,26 @@
 
 
 \begin{document}
-\name{ {{- profile.get_tex_value("full_name") -}} }
-{% if profile.jobtitle_active %}
-\tagline{ {{- profile.get_tex_value("job_title") -}} }
+\name{ {{- candidate.get_tex_value("full_name") -}} }
+{% if candidate.jobtitle_active %}
+\tagline{ {{- candidate.get_tex_value("job_title") -}} }
 {% else %}
 \tagline{}
 {% endif %}
 
 %% You can add multiple photos on the left (\photoL) or right (\photoR)
 
-{% if profile.has_photo and profile.photo_active %}
-\photoR{2.5cm}{ {{- profile.get_photo_path() -}} }
+{% if candidate.has_photo and candidate.photo_active %}
+\photoR{2.5cm}{ {{- candidate.get_photo_path() -}} }
 {% endif %}
 
 \personalinfo{
   % You can add your own with \printinfo{symbol}{detail}
 
-  {% if profile.email_active %} \email{ {{- profile.get_tex_value("email") -}} } {% endif %}
-  {% if profile.phone_active %} \phone{ {{- profile.get_tex_value("phone") -}} } {% endif %}
-  {% if profile.location_active %} \location{ {{- profile.get_tex_value("location") -}} } {% endif %}
-  {% if profile.website_active %} \homepage{ {{- profile.get_tex_value("website") -}} } {% endif %}
+  {% if candidate.email_active %} \email{ {{- candidate.get_tex_value("email") -}} } {% endif %}
+  {% if candidate.phone_active %} \phone{ {{- candidate.get_tex_value("phone") -}} } {% endif %}
+  {% if candidate.location_active %} \location{ {{- candidate.get_tex_value("location") -}} } {% endif %}
+  {% if candidate.website_active %} \homepage{ {{- candidate.get_tex_value("website") -}} } {% endif %}
 
   % \mailaddress{}
   % \twitter{@marissamayer}
@@ -139,9 +139,9 @@
 \begin{paracol}{2}
 
 % Experience
-{% if profile.experience_active and profile.experience_set.count() > 0 %}
-\cvsection{ {{- profile.get_tex_value("experience_label") -}} }
-{% for experience in profile.experience_set.all() %}
+{% if candidate.experience_active and candidate.experience_set.count() > 0 %}
+\cvsection{ {% trans %}Experience{% endtrans %} }
+{% for experience in candidate.experience_set.all() %}
   \cvevent{ {{- experience.get_tex_value("title") -}} }{ {{- experience.get_tex_value("company") -}} }{ {{ experience.get_tex_value("start_date") }} -- {{ experience.get_tex_value("end_date") }} }{}
   {{- experience.get_tex_value("description") | linebreaks -}} \\
   \divider
@@ -149,9 +149,9 @@
 {% endif %}
 
 % Education
-{% if profile.education_active and profile.education_set.count() > 0 %}
-\cvsection{ {{- profile.get_tex_value("education_label") -}} }
-{% for education in profile.education_set.all() %}
+{% if candidate.education_active and candidate.education_set.count() > 0 %}
+\cvsection{ {% trans %}Education{% endtrans %} }
+{% for education in candidate.education_set.all() %}
   \cvevent{ {{- education.get_tex_value("title") -}} }{ {{- education.get_tex_value("institution") -}} }{ {{ education.get_tex_value("start_date") }} -- {{ education.get_tex_value("end_date") }} }{}
   {{- education.get_tex_value("description") | linebreaks -}} \\
   \divider
@@ -159,9 +159,9 @@
 {% endif %}
 
 % Projects
-{% if profile.project_active and profile.project_set.count() > 0 %}
-\cvsection{ {{- profile.get_tex_value("project_label") -}} }
-  {% for project in profile.project_set.all() %}
+{% if candidate.project_active and candidate.project_set.count() > 0 %}
+\cvsection{ {{- candidate.get_tex_value("project_label") -}} }
+  {% for project in candidate.project_set.all() %}
   \cvevent{ {{- project.get_tex_value("title") -}}  }{ {{- project.get_tex_value("organization") -}} }{}{}
   {{- project.get_tex_value("role") -}}\\
   \divider
@@ -169,9 +169,9 @@
 {% endif %}
 
 % Publications
-{% if profile.publication_active and profile.publication_set.count() > 0 %}
-\cvsection{ {{- profile.get_tex_value("publication_label") -}} }
-  {% for publication in profile.publication_set.all() %}
+{% if candidate.publication_active and candidate.publication_set.count() > 0 %}
+\cvsection{ {{- candidate.get_tex_value("publication_label") -}} }
+  {% for publication in candidate.publication_set.all() %}
   \cvevent{ {{- publication.get_tex_value("title") -}} }{ {{- publication.get_tex_value("publisher") -}} }{ {{- publication.get_tex_value("date") -}} }{}
   {{- publication.get_tex_value("authors") -}} \\
   \divider
@@ -187,35 +187,35 @@
 \switchcolumn
 
 % about
-{% if profile.about_active %}
+{% if candidate.about_active %}
 \cvsection{ gettext("About") }
 \begin{quote}
-  {{- profile.get_tex_value("about") | linebreaks -}}
+  {{- candidate.get_tex_value("about") | linebreaks -}}
 \end{quote}
 {% endif %}
 
 
 % achievements
-{% if profile.achievement_active and profile.achievement_set.count() > 0 %}
-\cvsection{ {{- profile.get_tex_value("achievement_label") -}} }
-{% for achievement in profile.achievement_set.all() %}
+{% if candidate.achievement_active and candidate.achievement_set.count() > 0 %}
+\cvsection{ {{- candidate.get_tex_value("achievement_label") -}} }
+{% for achievement in candidate.achievement_set.all() %}
   \cvachievement{\faTrophy}{ {{- achievement.get_tex_value("date") -}} }{ {{- achievement.get_tex_value("title") -}} }
   \divider
 {% endfor %}
 {% endif %}
 
 % Skills
-{% if profile.skill_active %}
-\cvsection{ {{- profile.get_tex_value("skill_label") -}} }
-{% for skill in profile.skill_set.all() %}
+{% if candidate.skill_active %}
+\cvsection{ {% trans %}Skills{% endtrans %} }
+{% for skill in candidate.skill_set.all() %}
   \cvskill{ {{- skill.get_tex_value("name") -}} }{ {{- skill.level_base_5_float -}} }
 {% endfor %}
 {% endif %}
 
 % Languages
-{% if profile.language_active and profile.languageability_set.count() > 0 %}
-\cvsection{ {{- profile.get_tex_value("language_label") -}} }
-{% for language in profile.languageability_set.all() %}
+{% if candidate.language_active and candidate.languageability_set.count() > 0 %}
+\cvsection{ {% trans %}Languages{% endtrans %} }
+{% for language in candidate.languageability_set.all() %}
   \cvskill{ {{- language.get_tex_value("name") -}} }{ {{- language.level_base_5_float -}} }
 {% endfor %}
 {% endif %}
