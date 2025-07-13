@@ -13,7 +13,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import translation
 from django.utils.decorators import method_decorator
-from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
 from django.views.generic import FormView, RedirectView, TemplateView
@@ -97,11 +96,9 @@ class CandidateCreateView(LoginRequiredMixin, FormView):
         context = {"form": form}
         if form.is_valid():
             obj = form.save(commit=False)
+            translation.activate(obj.language)
             obj.user = request.user
             obj.save()
-            if obj.language != get_language():
-                translation.activate(obj.language)
-
             return redirect(obj.edit_url)
 
         return render(request, self.template_name, context)
