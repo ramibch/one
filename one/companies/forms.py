@@ -6,5 +6,8 @@ from one.candidates.models import JobApplication
 class ApplyForm(forms.ModelForm):
     class Meta:
         model = JobApplication
-        fields = ("cv", "job")
-        widgets = {"job": forms.HiddenInput()}
+        fields = ("job", "candidate")
+        widgets = {
+            "job": forms.HiddenInput(),
+            "candidate": forms.HiddenInput(),
+        }

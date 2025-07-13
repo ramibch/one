@@ -417,11 +417,13 @@ class JobApplication(OneModel):
         choices=settings.LANGUAGES,
         default=settings.LANGUAGE_CODE,
     )
-    cv = ForeignKey(TexCv, on_delete=models.CASCADE, null=True, blank=True)
-    candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
     job = ForeignKey("companies.Job", on_delete=models.CASCADE)
+    candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
+    # Application option 1: cv + coverletter (complex, to be defined)
+    cv = ForeignKey(TexCv, on_delete=models.CASCADE, null=True, blank=True)
     coverletter = models.FileField(upload_to=get_upload_path, null=True, blank=True)
     coverletter_text = models.TextField(null=True, blank=True)
+    # Application option 2: dossier (easier to implement)
     dossier = models.FileField(upload_to=get_upload_path, null=True, blank=True)
     dossier_text = models.TextField(null=True, blank=True)
 

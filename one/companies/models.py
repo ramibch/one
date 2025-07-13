@@ -157,3 +157,7 @@ class Job(OneModel):
     @cached_property
     def apply_url(self):
         return reverse("candidate_job_apply", kwargs={"job_pk": self.pk})
+
+    @cached_property
+    def hx_apply_url(self):
+        return reverse("job_apply", kwargs={"pk": self.pk})

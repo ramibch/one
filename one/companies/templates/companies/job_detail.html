@@ -3,39 +3,17 @@
 
 {% block content %}
 
-<center>
-  <h1>{{ job.title }} </h1>
-</center>
+<div class="row">
+  <div class="col-md-9">
+    <center><h1>{{ job.title }} </h1>  </center>
+    {{ job.body|markdownify }}
+  </div>
 
-  {{ job.body|markdownify }}
+  <div class="col-md-3">
+    <h2>{% translate "Apply now!" %}</h2>
+    <div hx-get="{{ job.hx_apply_url }}" hx-trigger="load"></div>
+  </div>
 
-  {% if request.user.is_authenticated %}
-
-    <button onClick="window.jobapply_modal.showModal()">{% translate "Apply" %}</button>
-    <dialog id="jobapply_modal">
-    <article>
-      <header>
-        <button aria-label="Close" rel="prev" onClick="window.jobapply_modal.close()"></button>
-        <h2>{% translate "Apply to:" %} {{ job.title }}</h2>
-      </header>
-      {% if apply_form %}
-        <form action="{% url 'job_apply' %}" method="post">
-          {% csrf_token %}
-          {{ apply_form }}
-          <button type="submit" class="col-7">{% translate "Save" %}</button>
-        </form>
-      {% else %}
-        <a href="{% url 'candidate_create' %}">{% translate "Create profile" %}</a>
-      {% endif %}
-    </article>
-  </dialog>
-
-  {% endif %}
-
-  <!-- Job apply -->
-
-
-
-
+</div>
 
 {% endblock content %}
