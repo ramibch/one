@@ -33,8 +33,9 @@ def check_question(request, id):
 
     next_or_done = "next" if question.has_next else "done"
     if not question.has_next:
+        users_params = {"user": request.user} if request.user.is_authenticated else {}
         session_test = SessionDgtTest.objects.create(
-            session=db_session, test=question.test
+            session=db_session, test=question.test, **users_params
         )
         session_questions = SessionDgtQuestion.objects.filter(
             test=question.test,

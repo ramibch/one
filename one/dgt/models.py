@@ -1,6 +1,7 @@
 from urllib.request import urlopen
 
 import auto_prefetch
+from django.contrib.auth import get_user_model
 from django.contrib.sessions.models import Session
 from django.core.files.base import ContentFile
 from django.db import models
@@ -9,6 +10,8 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 
 from one.bot import Bot
+
+User = get_user_model()
 
 
 class DgtTest(models.Model):
@@ -102,6 +105,9 @@ class DgtQuestion(auto_prefetch.Model):
 
 class SessionDgtTest(auto_prefetch.Model):
     session = auto_prefetch.ForeignKey(Session, on_delete=models.CASCADE)
+    user = auto_prefetch.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True
+    )
     test = auto_prefetch.ForeignKey(DgtTest, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(default=timezone.now)
 

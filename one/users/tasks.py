@@ -3,18 +3,16 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils import timezone, translation
 from django.utils.translation import gettext_lazy as _
-from huey import crontab
 from huey.contrib import djhuey as huey
 
-from .models import User
 
-
-@huey.db_periodic_task(crontab(minute="1"))
-def task_ask_users_to_verify_email():
+@huey.db_task()
+def task_ask_users_to_verify_email(users):
     """
     Ask users to verify their corresponding email addresses
     """
-    users = User.objects.filter(
+
+    users = users.filter(
         email__in=EmailAddress.objects.filter(verified=False).values_list("email"),
         asked_to_verify_email=False,
         language__isnull=False,
