@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-12 23:04+0200\n"
+"POT-Creation-Date: 2025-07-13 21:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr ""
 msgid "Base"
 msgstr ""
 
-#: one/base/middleware/ip.py:23 one/base/views.py:196
+#: one/base/middleware/ip.py:23 one/base/views.py:205
 msgid "Request blocked"
 msgstr ""
 
@@ -231,7 +231,7 @@ msgid "Address"
 msgstr ""
 
 #: one/base/templates/base/privacy.html:23
-#: one/base/templates/base/privacy.html:46
+#: one/base/templates/base/privacy.html:46 one/candidates/models.py:64
 msgid "E-mail"
 msgstr ""
 
@@ -322,7 +322,6 @@ msgstr ""
 
 #: one/base/templates/snippets/language_modal.html:20
 #: one/candidates/templates/candidates/candidate_edit.html:35
-#: one/companies/templates/companies/job_detail.html:25
 msgid "Save"
 msgstr ""
 
@@ -350,15 +349,15 @@ msgstr ""
 msgid "contact"
 msgstr ""
 
-#: one/base/views.py:168
+#: one/base/views.py:177
 msgid "Thank you for your message. I will reply as soon as I can."
 msgstr ""
 
-#: one/base/views.py:191
+#: one/base/views.py:200
 msgid "Not found"
 msgstr ""
 
-#: one/base/views.py:201
+#: one/base/views.py:210
 msgid "Server Error"
 msgstr ""
 
@@ -366,39 +365,165 @@ msgstr ""
 msgid "Main language"
 msgstr ""
 
+#: one/candidates/models.py:44 one/candidates/models.py:368
+msgid "Languages"
+msgstr ""
+
+#: one/candidates/models.py:55
+msgid "First name"
+msgstr ""
+
+#: one/candidates/models.py:56
+msgid "Last name"
+msgstr ""
+
+#: one/candidates/models.py:60
+msgid "Full name"
+msgstr ""
+
+#: one/candidates/models.py:63
+msgid "Job title"
+msgstr ""
+
+#: one/candidates/models.py:65
+msgid "Phone number"
+msgstr ""
+
 #: one/candidates/models.py:66
-msgid "linkedin URL"
+msgid "Location"
 msgstr ""
 
-#: one/candidates/models.py:72
-msgid "website URL"
+#: one/candidates/models.py:68
+msgid "LinkedIn URL"
 msgstr ""
 
-#: one/candidates/models.py:78
-msgid "about me"
+#: one/candidates/models.py:74
+msgid "Website URL"
 msgstr ""
 
-#: one/candidates/models.py:415
+#: one/candidates/models.py:80
+msgid "About me"
+msgstr ""
+
+#: one/candidates/models.py:87
+msgid "Body of cover letter"
+msgstr ""
+
+#: one/candidates/models.py:93
+msgid "Photo"
+msgstr ""
+
+#: one/candidates/models.py:228 one/candidates/models.py:354
+msgid "Name"
+msgstr ""
+
+#: one/candidates/models.py:229
+msgid "Level"
+msgstr ""
+
+#: one/candidates/models.py:234
+msgid "Skill type"
+msgstr ""
+
+#: one/candidates/models.py:256
+msgid "Institution"
+msgstr ""
+
+#: one/candidates/models.py:260
+msgid "Title"
+msgstr ""
+
+#: one/candidates/models.py:264 one/candidates/models.py:313
+msgid "Start date"
+msgstr ""
+
+#: one/candidates/models.py:270 one/candidates/models.py:319
+msgid "End date"
+msgstr ""
+
+#: one/candidates/models.py:274
+msgid "Studying this now"
+msgstr ""
+
+#: one/candidates/models.py:279 one/candidates/models.py:328
+msgid "Description"
+msgstr ""
+
+#: one/candidates/models.py:305
+msgid "Company name"
+msgstr ""
+
+#: one/candidates/models.py:309
+msgid "Role"
+msgstr ""
+
+#: one/candidates/models.py:323
+msgid "Working here now"
+msgstr ""
+
+#: one/candidates/models.py:358
+msgid "Term"
+msgstr ""
+
+#: one/candidates/models.py:360
+msgid "Area"
+msgstr ""
+
+#: one/candidates/models.py:364
+msgid "Notification type"
+msgstr ""
+
+#: one/candidates/models.py:478
 msgid "Language"
 msgstr ""
 
-#: one/candidates/models.py:439
+#: one/candidates/models.py:486
+#: one/candidates/templates/candidates/candidate_dashboard.html:15
+msgid "Job"
+msgstr ""
+
+#: one/candidates/models.py:491
+msgid "Candidate"
+msgstr ""
+
+#: one/candidates/models.py:499
+msgid "Curriculum Vitae"
+msgstr ""
+
+#: one/candidates/models.py:505
+msgid "Cover letter"
+msgstr ""
+
+#: one/candidates/models.py:510
+msgid "LaTeX text of Cover letter"
+msgstr ""
+
+#: one/candidates/models.py:517
+#: one/candidates/templates/candidates/candidate_dashboard.html:16
+msgid "Dossier"
+msgstr ""
+
+#: one/candidates/models.py:522
+msgid "LaTeX text of Dossier"
+msgstr ""
+
+#: one/candidates/models.py:536
 msgid "Coverletter.pdf"
 msgstr ""
 
-#: one/candidates/models.py:486
+#: one/candidates/models.py:583
 msgid "Dear Sir/Madam"
 msgstr ""
 
-#: one/candidates/models.py:488
+#: one/candidates/models.py:585
 msgid "Mrs"
 msgstr ""
 
-#: one/candidates/models.py:488
+#: one/candidates/models.py:585
 msgid "Mr"
 msgstr ""
 
-#: one/candidates/models.py:493
+#: one/candidates/models.py:590
 msgid "Best regards"
 msgstr ""
 
@@ -411,54 +536,46 @@ msgid "Create"
 msgstr ""
 
 #: one/candidates/templates/candidates/candidate_dashboard.html:3
-#: one/candidates/templates/candidates/candidate_dashboard.html:10
+#: one/candidates/templates/candidates/candidate_dashboard.html:9
 msgid "Job Applicacions"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:18
-msgid "Job"
-msgstr ""
-
-#: one/candidates/templates/candidates/candidate_dashboard.html:19
-msgid "Dossier"
-msgstr ""
-
-#: one/candidates/templates/candidates/candidate_dashboard.html:20
+#: one/candidates/templates/candidates/candidate_dashboard.html:17
 msgid "Recruiter"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:21
+#: one/candidates/templates/candidates/candidate_dashboard.html:18
 msgid "Created at"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:22
+#: one/candidates/templates/candidates/candidate_dashboard.html:19
 msgid "Actions"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:30
+#: one/candidates/templates/candidates/candidate_dashboard.html:27
 msgid "Unknown"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:33
+#: one/candidates/templates/candidates/candidate_dashboard.html:30
 #: one/candidates/templates/candidates/partials/education_edit_form.html:19
 #: one/candidates/templates/candidates/partials/experience_edit_form.html:19
 #: one/candidates/templates/candidates/partials/skill_edit_form.html:21
 msgid "Delete"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:37
+#: one/candidates/templates/candidates/candidate_dashboard.html:34
 msgid "Are you sure to delete this applicacion?"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:53
+#: one/candidates/templates/candidates/candidate_dashboard.html:49
 msgid "You haven't applied for any jobs yet."
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:53
+#: one/candidates/templates/candidates/candidate_dashboard.html:49
 msgid "Check for jobs."
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:63
+#: one/candidates/templates/candidates/candidate_dashboard.html:58
 msgid "Create your Profile"
 msgstr ""
 
@@ -567,7 +684,7 @@ msgstr ""
 msgid "apply"
 msgstr ""
 
-#: one/candidates/views.py:90
+#: one/candidates/views.py:89
 msgid "You already have a profile"
 msgstr ""
 
@@ -1527,27 +1644,31 @@ msgstr ""
 msgid "company"
 msgstr ""
 
-#: one/companies/templates/companies/job_detail.html:14
+#: one/companies/templates/companies/partials/job_applied.html:3
+msgid "You have applied to this job."
+msgstr ""
+
+#: one/companies/templates/companies/partials/job_apply.html:3
+msgid "Apply now!"
+msgstr ""
+
+#: one/companies/templates/companies/partials/job_apply.html:11
 msgid "Apply"
 msgstr ""
 
-#: one/companies/templates/companies/job_detail.html:19
-msgid "Apply to:"
+#: one/companies/templates/companies/partials/job_apply.html:16
+msgid "Create a profile"
 msgstr ""
 
-#: one/companies/templates/companies/job_detail.html:28
-msgid "Create profile"
-msgstr ""
-
-#: one/companies/urls.py:7
+#: one/companies/urls.py:13
 msgid "job"
 msgstr ""
 
-#: one/companies/urls.py:8
+#: one/companies/urls.py:14
 msgid "jobs"
 msgstr ""
 
-#: one/companies/urls.py:9
+#: one/companies/urls.py:15
 msgid "list"
 msgstr ""
 
@@ -2363,7 +2484,7 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: one/users/tasks.py:28
+#: one/users/tasks.py:26
 msgid "Verify your email"
 msgstr ""
 

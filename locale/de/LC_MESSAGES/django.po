@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-12 23:04+0200\n"
+"POT-Creation-Date: 2025-07-13 21:25+0200\n"
 "PO-Revision-Date: 2025-07-13 20:27+0200\n"
 "Last-Translator: Rami Boutassghount <ramiboutas@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,12 +32,11 @@ msgstr "Kommentar"
 msgid "Base"
 msgstr "Base"
 
-#: one/base/middleware/ip.py:23 one/base/views.py:196
+#: one/base/middleware/ip.py:23 one/base/views.py:205
 msgid "Request blocked"
 msgstr "Anfrage blockiert"
 
 #: one/base/models.py:47
-#| msgid "Suriname"
 msgid "Your name"
 msgstr "Dein Name"
 
@@ -55,8 +54,7 @@ msgstr "Nachrichten:"
 msgid "Home"
 msgstr "Startseite"
 
-#: one/base/models.py:95 one/base/templates/error.html:10
-#: one/base/views.py:133
+#: one/base/models.py:95 one/base/templates/error.html:10 one/base/views.py:133
 msgid "Search"
 msgstr "Suche"
 
@@ -127,7 +125,6 @@ msgid "Jobs"
 msgstr "Jobs"
 
 #: one/base/models.py:113
-#| msgid "Spanish"
 msgid "Companies"
 msgstr "Unternehmen"
 
@@ -237,7 +234,7 @@ msgid "Address"
 msgstr ""
 
 #: one/base/templates/base/privacy.html:23
-#: one/base/templates/base/privacy.html:46
+#: one/base/templates/base/privacy.html:46 one/candidates/models.py:64
 msgid "E-mail"
 msgstr ""
 
@@ -248,9 +245,9 @@ msgstr "Sammlung und Verwendung von Informationen"
 #: one/base/templates/base/privacy.html:27
 msgid ""
 "While using our Site, you may have to provide us with certain personally "
-"identifiable information that can be used to contact you if you get in touch"
-" with us. Personally identifiable information may include but is not limited"
-" to your name and email address (Personal Information)."
+"identifiable information that can be used to contact you if you get in touch "
+"with us. Personally identifiable information may include but is not limited "
+"to your name and email address (Personal Information)."
 msgstr ""
 "Bei der Nutzung unserer Website müssen Sie uns unter Umständen bestimmte "
 "personenbezogene Daten zur Verfügung stellen, die zur Kontaktaufnahme mit "
@@ -265,8 +262,8 @@ msgstr "Cookies"
 #: one/base/templates/base/privacy.html:30
 msgid ""
 "Cookies are files with a small amount of data, which may include an "
-"anonymous unique identifier. Cookies are sent to your browser from a website"
-" and stored on your computer's hard drive."
+"anonymous unique identifier. Cookies are sent to your browser from a website "
+"and stored on your computer's hard drive."
 msgstr ""
 "Cookies sind Dateien mit einer kleinen Menge von Daten, die eine anonyme "
 "eindeutige Kennung enthalten können. Cookies werden von einer Website an "
@@ -295,16 +292,16 @@ msgid ""
 "The security of your Personal Information is important to us, but remember "
 "that no method of transmission over the Internet, or method of electronic "
 "storage, is 100%% secure. While we follow the recommended and standard "
-"development guides for Web Development to protect your Personal Information,"
-" we cannot guarantee its absolute security. The Site is developed with "
-"Django (Python Web Framework), check out its security features:"
+"development guides for Web Development to protect your Personal Information, "
+"we cannot guarantee its absolute security. The Site is developed with Django "
+"(Python Web Framework), check out its security features:"
 msgstr ""
 "Die Sicherheit Ihrer persönlichen Daten ist uns wichtig, aber denken Sie "
 "daran, dass keine Methode der Übertragung über das Internet oder der "
 "elektronischen Speicherung zu 100 % sicher ist. Obwohl wir die empfohlenen "
 "und standardmäßigen Entwicklungsleitfäden für die Webentwicklung befolgen, "
-"um Ihre persönlichen Daten zu schützen, können wir deren absolute Sicherheit"
-" nicht garantieren. Die Website wurde mit Django (Python Web Framework) "
+"um Ihre persönlichen Daten zu schützen, können wir deren absolute Sicherheit "
+"nicht garantieren. Die Website wurde mit Django (Python Web Framework) "
 "entwickelt, sehen Sie sich seine Sicherheitsfunktionen an:"
 
 #: one/base/templates/base/privacy.html:37
@@ -328,11 +325,10 @@ msgid "Contact Us"
 msgstr "Kontakt"
 
 #: one/base/templates/base/privacy.html:42
-msgid ""
-"If you have any questions about this Privacy Policy, please contact me:"
+msgid "If you have any questions about this Privacy Policy, please contact me:"
 msgstr ""
-"Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben, wenden Sie sich bitte"
-" an mich:"
+"Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben, wenden Sie sich bitte "
+"an mich:"
 
 #: one/base/templates/base/privacy.html:45
 msgid "Contact form"
@@ -356,7 +352,6 @@ msgstr "Sprache ändern"
 
 #: one/base/templates/snippets/language_modal.html:20
 #: one/candidates/templates/candidates/candidate_edit.html:35
-#: one/companies/templates/companies/job_detail.html:25
 msgid "Save"
 msgstr "Speichern"
 
@@ -384,62 +379,205 @@ msgstr "suche"
 msgid "contact"
 msgstr "kontakt"
 
-#: one/base/views.py:168
+#: one/base/views.py:177
 msgid "Thank you for your message. I will reply as soon as I can."
 msgstr ""
 "Ich danke Ihnen für Ihre Nachricht. Ich werde so schnell wie möglich "
 "antworten."
 
-#: one/base/views.py:191
-#| msgid "Total items found"
+#: one/base/views.py:200
 msgid "Not found"
 msgstr "Nicht gefunden"
 
-#: one/base/views.py:201
-#| msgid "Internal Server Error"
+#: one/base/views.py:210
 msgid "Server Error"
 msgstr "Server-Fehler"
 
 #: one/candidates/models.py:38
-#| msgid "Change language"
 msgid "Main language"
 msgstr "Hauptsprache"
 
+#: one/candidates/models.py:44 one/candidates/models.py:368
+#, fuzzy
+#| msgid "Change language"
+msgid "Languages"
+msgstr "Sprache ändern"
+
+#: one/candidates/models.py:55
+#, fuzzy
+#| msgid "Your name"
+msgid "First name"
+msgstr "Dein Name"
+
+#: one/candidates/models.py:56
+msgid "Last name"
+msgstr ""
+
+#: one/candidates/models.py:60
+#, fuzzy
+#| msgid "Your name"
+msgid "Full name"
+msgstr "Dein Name"
+
+#: one/candidates/models.py:63
+msgid "Job title"
+msgstr ""
+
+#: one/candidates/models.py:65
+msgid "Phone number"
+msgstr ""
+
 #: one/candidates/models.py:66
-msgid "linkedin URL"
+#, fuzzy
+#| msgid "Infomation"
+msgid "Location"
+msgstr "Informationen"
+
+#: one/candidates/models.py:68
+#, fuzzy
+#| msgid "linkedin URL"
+msgid "LinkedIn URL"
 msgstr "linkedin URL"
 
-#: one/candidates/models.py:72
-msgid "website URL"
+#: one/candidates/models.py:74
+#, fuzzy
+#| msgid "website URL"
+msgid "Website URL"
 msgstr "Website-URL"
 
-#: one/candidates/models.py:78
-msgid "about me"
+#: one/candidates/models.py:80
+#, fuzzy
+#| msgid "about me"
+msgid "About me"
 msgstr "über mich"
 
-#: one/candidates/models.py:415
+#: one/candidates/models.py:87
+msgid "Body of cover letter"
+msgstr ""
+
+#: one/candidates/models.py:93
+msgid "Photo"
+msgstr ""
+
+#: one/candidates/models.py:228 one/candidates/models.py:354
+msgid "Name"
+msgstr ""
+
+#: one/candidates/models.py:229
+msgid "Level"
+msgstr ""
+
+#: one/candidates/models.py:234
+msgid "Skill type"
+msgstr ""
+
+#: one/candidates/models.py:256
+msgid "Institution"
+msgstr ""
+
+#: one/candidates/models.py:260
+msgid "Title"
+msgstr ""
+
+#: one/candidates/models.py:264 one/candidates/models.py:313
+msgid "Start date"
+msgstr ""
+
+#: one/candidates/models.py:270 one/candidates/models.py:319
+msgid "End date"
+msgstr ""
+
+#: one/candidates/models.py:274
+msgid "Studying this now"
+msgstr ""
+
+#: one/candidates/models.py:279 one/candidates/models.py:328
+msgid "Description"
+msgstr ""
+
+#: one/candidates/models.py:305
+#, fuzzy
+#| msgid "Companies"
+msgid "Company name"
+msgstr "Unternehmen"
+
+#: one/candidates/models.py:309
+msgid "Role"
+msgstr ""
+
+#: one/candidates/models.py:323
+msgid "Working here now"
+msgstr ""
+
+#: one/candidates/models.py:358
+msgid "Term"
+msgstr ""
+
+#: one/candidates/models.py:360
+msgid "Area"
+msgstr ""
+
+#: one/candidates/models.py:364
+msgid "Notification type"
+msgstr ""
+
+#: one/candidates/models.py:478
 #, fuzzy
 #| msgid "Change language"
 msgid "Language"
 msgstr "Sprache ändern"
 
-#: one/candidates/models.py:439
+#: one/candidates/models.py:486
+#: one/candidates/templates/candidates/candidate_dashboard.html:15
+msgid "Job"
+msgstr "Job"
+
+#: one/candidates/models.py:491
+#, fuzzy
+#| msgid "Candidate profile"
+msgid "Candidate"
+msgstr "Bewerbersprofil"
+
+#: one/candidates/models.py:499
+msgid "Curriculum Vitae"
+msgstr ""
+
+#: one/candidates/models.py:505
+#, fuzzy
+#| msgid "Coverletter.pdf"
+msgid "Cover letter"
+msgstr "Anschreiben.pdf"
+
+#: one/candidates/models.py:510
+msgid "LaTeX text of Cover letter"
+msgstr ""
+
+#: one/candidates/models.py:517
+#: one/candidates/templates/candidates/candidate_dashboard.html:16
+msgid "Dossier"
+msgstr "Dossier"
+
+#: one/candidates/models.py:522
+msgid "LaTeX text of Dossier"
+msgstr ""
+
+#: one/candidates/models.py:536
 msgid "Coverletter.pdf"
 msgstr "Anschreiben.pdf"
 
-#: one/candidates/models.py:486
+#: one/candidates/models.py:583
 msgid "Dear Sir/Madam"
 msgstr "Sehr geehrte Herren/Frauen"
 
-#: one/candidates/models.py:488
+#: one/candidates/models.py:585
 msgid "Mrs"
 msgstr "Frau"
 
-#: one/candidates/models.py:488
+#: one/candidates/models.py:585
 msgid "Mr"
 msgstr "Herr"
 
-#: one/candidates/models.py:493
+#: one/candidates/models.py:590
 msgid "Best regards"
 msgstr "Mit freundlichen Grüssen"
 
@@ -452,54 +590,46 @@ msgid "Create"
 msgstr "Erstellen"
 
 #: one/candidates/templates/candidates/candidate_dashboard.html:3
-#: one/candidates/templates/candidates/candidate_dashboard.html:10
+#: one/candidates/templates/candidates/candidate_dashboard.html:9
 msgid "Job Applicacions"
 msgstr "Bewerbungen"
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:18
-msgid "Job"
-msgstr "Job"
-
-#: one/candidates/templates/candidates/candidate_dashboard.html:19
-msgid "Dossier"
-msgstr "Dossier"
-
-#: one/candidates/templates/candidates/candidate_dashboard.html:20
+#: one/candidates/templates/candidates/candidate_dashboard.html:17
 msgid "Recruiter"
 msgstr "Anwerber"
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:21
+#: one/candidates/templates/candidates/candidate_dashboard.html:18
 msgid "Created at"
 msgstr "Erstellt am"
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:22
+#: one/candidates/templates/candidates/candidate_dashboard.html:19
 msgid "Actions"
 msgstr "Aktionen"
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:30
+#: one/candidates/templates/candidates/candidate_dashboard.html:27
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:33
+#: one/candidates/templates/candidates/candidate_dashboard.html:30
 #: one/candidates/templates/candidates/partials/education_edit_form.html:19
 #: one/candidates/templates/candidates/partials/experience_edit_form.html:19
 #: one/candidates/templates/candidates/partials/skill_edit_form.html:21
 msgid "Delete"
 msgstr "Löschen"
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:37
+#: one/candidates/templates/candidates/candidate_dashboard.html:34
 msgid "Are you sure to delete this applicacion?"
 msgstr "Bist du sicher, dass du diese Anwendung löschen willst?"
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:53
+#: one/candidates/templates/candidates/candidate_dashboard.html:49
 msgid "You haven't applied for any jobs yet."
 msgstr "Du hast dich noch nicht auf eine Stelle beworben."
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:53
+#: one/candidates/templates/candidates/candidate_dashboard.html:49
 msgid "Check for jobs."
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_dashboard.html:63
+#: one/candidates/templates/candidates/candidate_dashboard.html:58
 msgid "Create your Profile"
 msgstr ""
 
@@ -608,7 +738,7 @@ msgstr ""
 msgid "apply"
 msgstr ""
 
-#: one/candidates/views.py:90
+#: one/candidates/views.py:89
 msgid "You already have a profile"
 msgstr ""
 
@@ -1570,27 +1700,35 @@ msgstr ""
 msgid "company"
 msgstr ""
 
-#: one/companies/templates/companies/job_detail.html:14
+#: one/companies/templates/companies/partials/job_applied.html:3
+#, fuzzy
+#| msgid "You haven't applied for any jobs yet."
+msgid "You have applied to this job."
+msgstr "Du hast dich noch nicht auf eine Stelle beworben."
+
+#: one/companies/templates/companies/partials/job_apply.html:3
+msgid "Apply now!"
+msgstr ""
+
+#: one/companies/templates/companies/partials/job_apply.html:11
 msgid "Apply"
 msgstr ""
 
-#: one/companies/templates/companies/job_detail.html:19
-msgid "Apply to:"
-msgstr ""
+#: one/companies/templates/companies/partials/job_apply.html:16
+#, fuzzy
+#| msgid "Create candidate profile"
+msgid "Create a profile"
+msgstr "Bewerberprofil erstellen"
 
-#: one/companies/templates/companies/job_detail.html:28
-msgid "Create profile"
-msgstr ""
-
-#: one/companies/urls.py:7
+#: one/companies/urls.py:13
 msgid "job"
 msgstr ""
 
-#: one/companies/urls.py:8
+#: one/companies/urls.py:14
 msgid "jobs"
 msgstr ""
 
-#: one/companies/urls.py:9
+#: one/companies/urls.py:15
 msgid "list"
 msgstr ""
 
@@ -1656,13 +1794,15 @@ msgid ""
 "\n"
 "Hello %(user_display)s\n"
 "\n"
-"Thank you for registering on my site. Please, consider to confirm your email address, just do this:\n"
+"Thank you for registering on my site. Please, consider to confirm your email "
+"address, just do this:\n"
 "\n"
 "1. Simply visit this page: https://%(host)s%(email_url_path)s\n"
 "\n"
 "2. Click on Resend Verification\n"
 "\n"
-"3. Go to your email inbox and confirm your email address by clicking on the link.\n"
+"3. Go to your email inbox and confirm your email address by clicking on the "
+"link.\n"
 "\n"
 "Thank you very much.\n"
 msgstr ""
@@ -1805,8 +1945,8 @@ msgstr ""
 
 #: one/etsy/models.py:256
 msgid ""
-"It represents  instructions for the buyer to enter the personalization. Will"
-" only change if is_personalizable is 'true'."
+"It represents  instructions for the buyer to enter the personalization. Will "
+"only change if is_personalizable is 'true'."
 msgstr ""
 
 #: one/etsy/models.py:264
@@ -2410,7 +2550,7 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: one/users/tasks.py:28
+#: one/users/tasks.py:26
 msgid "Verify your email"
 msgstr ""
 
