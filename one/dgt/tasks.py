@@ -32,7 +32,7 @@ def scrape_dgt_task_monthly():
             img_src = soup_img["src"]
             title = soup_q.find("h4", class_="tit_not").text
             soup_corr = soup_q.find("div", class_="content_respuesta")
-            correct_option = soup_corr.find("span", class_="opcion").text
+            correct_option = soup_corr.find("span", class_="opcion").text.lower()
             if len(list(soup_corr)) > 3:
                 explanation = list(soup_corr)[4].text
             soup_ops = soup_q.find("ul")
