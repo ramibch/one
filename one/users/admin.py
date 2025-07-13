@@ -16,7 +16,6 @@ class UserAdmin(OneModelAdmin):
         "language",
         "country_code",
     )
-    list_select_related = ["content_type", "sites", "groups", "user_permissions"]
     actions = ["ask_to_verify_email"]
 
     @admin.action(description="📧 Ask to verify Email")
