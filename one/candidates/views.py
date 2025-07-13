@@ -60,10 +60,10 @@ class JobApplicationView(LoginRequiredMixin, FormView):
 
 class CandidateCreateOrDetailRedirectView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args: Any, **kwargs: Any) -> str | None:
-        if self.request.user.candidate_set.count() == 0:
+        candidate = getattr(self.request.user, "candidate", None)
+        if candidate is None:
             return reverse("candidate_create")
-
-        return self.request.user.candidate_set.last().url
+        return candidate.url
 
 
 class CandidateDashboardView(LoginRequiredMixin, TemplateView):
@@ -71,10 +71,10 @@ class CandidateDashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        candidates = self.request.user.candidate_set.all()
-        candidate_ids = [c.id for c in candidates]
-        context["candidates"] = candidates
-        context["jobapps"] = JobApplication.objects.filter(candidate__in=candidate_ids)
+        candidate = getattr(self.request.user, "candidate", None)
+        if candidate:
+            context["candidate"] = candidate
+            context["jobapps"] = JobApplication.objects.filter(candidate=candidate)
         return context
 
 
@@ -84,11 +84,10 @@ class CandidateCreateView(LoginRequiredMixin, FormView):
     template_name = "candidates/candidate_create.html"
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        obj = request.user.candidate_set.last()
-
-        if obj:
+        candidate = getattr(self.request.user, "candidate", None)
+        if candidate:
             messages.warning(request, _("You already have a profile"))
-            return redirect(obj.url)
+            return redirect(candidate.url)
 
         form = self.form_class(None, initial={"language": get_language()})
         context = {"form": form}

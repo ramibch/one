@@ -1,17 +1,19 @@
 {% load i18n job_tags %}
-
-
-{% if candidate %}
-  {% has_candidate_applied candidate job as has_applied %}
-
-  {% if has_applied %}
-    {% include "companies/partials/job_applied.html" %}
+<center>
+  <h2>{% translate "Apply now!" %}</h2>
+  {% if candidate %}
+    {% has_candidate_applied candidate job as has_applied %}
+    {% if has_applied %}
+      {% include "companies/partials/job_applied.html" %}
+    {% else %}
+      <form hx-post="{{ job.hx_apply_url }}">
+        {{ apply_form }}
+        <button type="submit" class="col-7">{% translate "Apply" %}</button>
+      </form>
+    {% endif %}
   {% else %}
-    <form hx-post="{{ job.hx_apply_url }}">
-      {{ apply_form }}
-      <button type="submit" class="col-7">{% translate "Apply" %}</button>
-    </form>
+    <div class="mt-4">
+      <a type="button" href="{% url 'candidate_create' %}">{% translate "Create a profile" %}</a>
+    </div>
   {% endif %}
-{% else %}
-  <a href="{% url 'candidate_create' %}">{% translate "Create a profile" %}</a>
-{% endif %}
+</center>

@@ -33,7 +33,7 @@ class JobApplicationHxView(LoginRequiredMixin, FormView):
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         job = get_object_or_404(Job, pk=self.kwargs["pk"])
-        candidate = request.user.candidate_set.last()
+        candidate = getattr(request.user, "candidate", None)
         form = self.form_class(None, initial={"job": job, "candidate": candidate})
         context = {"apply_form": form, "job": job, "candidate": candidate}
         return render(request, self.template_name, context)
@@ -45,7 +45,7 @@ class JobApplicationHxView(LoginRequiredMixin, FormView):
             return render(request, self.ok_template_name)
 
         job = get_object_or_404(Job, pk=self.kwargs["pk"])
-        candidate = request.user.candidate_set.last()
+        candidate = getattr(request.user, "candidate", None)
         context = {"apply_form": form, "job": job, "candidate": candidate}
         return render(request, self.template_name, context)
 

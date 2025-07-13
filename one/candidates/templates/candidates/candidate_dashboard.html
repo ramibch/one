@@ -4,14 +4,11 @@
 
 {% block content %}
 
-{% if request.user.candidate_set.count > 0 %}
-
+{% if candidate %}
   <center class="mb-5">
     <h1>{% translate "Job Applicacions" %}</h1>
   </center>
-
   {% if jobapps.count > 0 %}
-
   <table>
     <thead>
       <tr>
@@ -48,11 +45,9 @@
     </tbody>
   </table>
   {% else %}
-
   <center>
     <p>{% translate "You haven't applied for any jobs yet." %} <a href="{% url 'job_list' %}">{% translate "Check for jobs." %}</a></p>
   </center>
-
   {% endif %}
 
 

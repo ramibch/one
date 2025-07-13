@@ -3,7 +3,7 @@ import os
 import uuid
 from copy import copy
 
-from auto_prefetch import ForeignKey
+from auto_prefetch import ForeignKey, OneToOneField
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import PolygonField
@@ -50,7 +50,7 @@ class Candidate(TranslatableModel):
         default=uuid.uuid4,
         editable=False,
     )
-    user = ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     full_name = models.GeneratedField(
