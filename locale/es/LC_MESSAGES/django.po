@@ -9,15 +9,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-12 23:04+0200\n"
-"PO-Revision-Date: 2025-07-12 23:02+0200\n"
-"Last-Translator:   <ramiboutas@hotmail.com>\n"
+"PO-Revision-Date: 2025-07-13 20:08+0200\n"
+"Last-Translator: Rami Boutassghount <ramiboutas@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 "X-Translated-Using: django-rosetta 0.10.2\n"
 
 #: one/articles/apps.py:8 one/articles/templates/articles/article_list.html:4
@@ -53,7 +52,8 @@ msgstr "Mensaje"
 msgid "Home"
 msgstr "Inicio"
 
-#: one/base/models.py:95 one/base/templates/error.html:10 one/base/views.py:133
+#: one/base/models.py:95 one/base/templates/error.html:10
+#: one/base/views.py:133
 msgid "Search"
 msgstr "Buscar"
 
@@ -64,7 +64,7 @@ msgstr "Mapa del sitio"
 #: one/base/models.py:97 one/base/templates/base/contact.html:4
 #: one/base/templates/base/contact.html:8
 msgid "Contact"
-msgstr "Contact"
+msgstr "Contacto"
 
 #: one/base/models.py:99 one/plans/apps.py:8
 msgid "Plans"
@@ -250,15 +250,15 @@ msgstr "Recogida y uso de la información"
 #: one/base/templates/base/privacy.html:27
 msgid ""
 "While using our Site, you may have to provide us with certain personally "
-"identifiable information that can be used to contact you if you get in touch "
-"with us. Personally identifiable information may include but is not limited "
-"to your name and email address (Personal Information)."
+"identifiable information that can be used to contact you if you get in touch"
+" with us. Personally identifiable information may include but is not limited"
+" to your name and email address (Personal Information)."
 msgstr ""
 "Al utilizar nuestro Sitio, es posible que tenga que proporcionarnos cierta "
-"información de identificación personal que puede utilizarse para ponernos en "
-"contacto con usted si se pone en contacto con nosotros. La información de "
-"identificación personal puede incluir, entre otros, su nombre y dirección de "
-"correo electrónico (Información Personal)."
+"información de identificación personal que puede utilizarse para ponernos en"
+" contacto con usted si se pone en contacto con nosotros. La información de "
+"identificación personal puede incluir, entre otros, su nombre y dirección de"
+" correo electrónico (Información Personal)."
 
 #: one/base/templates/base/privacy.html:29
 msgid "Cookies"
@@ -267,12 +267,12 @@ msgstr "Cookies"
 #: one/base/templates/base/privacy.html:30
 msgid ""
 "Cookies are files with a small amount of data, which may include an "
-"anonymous unique identifier. Cookies are sent to your browser from a website "
-"and stored on your computer's hard drive."
+"anonymous unique identifier. Cookies are sent to your browser from a website"
+" and stored on your computer's hard drive."
 msgstr ""
 "Las cookies son archivos con una pequeña cantidad de datos, que pueden "
-"incluir un identificador único anónimo. Las cookies se envían a su navegador "
-"desde un sitio web y se almacenan en el disco duro de su ordenador."
+"incluir un identificador único anónimo. Las cookies se envían a su navegador"
+" desde un sitio web y se almacenan en el disco duro de su ordenador."
 
 #: one/base/templates/base/privacy.html:32
 msgid ""
@@ -282,8 +282,8 @@ msgid ""
 "portions of the Site."
 msgstr ""
 "Este sitio utiliza estas cookies para recopilar información. Puede ajustar "
-"su navegador para que rechace todas las cookies o para que le indique cuándo "
-"se envía una cookie. Sin embargo, si no acepta las cookies, es posible que "
+"su navegador para que rechace todas las cookies o para que le indique cuándo"
+" se envía una cookie. Sin embargo, si no acepta las cookies, es posible que "
 "no pueda utilizar algunas partes del sitio."
 
 #: one/base/templates/base/privacy.html:35
@@ -296,9 +296,9 @@ msgid ""
 "The security of your Personal Information is important to us, but remember "
 "that no method of transmission over the Internet, or method of electronic "
 "storage, is 100%% secure. While we follow the recommended and standard "
-"development guides for Web Development to protect your Personal Information, "
-"we cannot guarantee its absolute security. The Site is developed with Django "
-"(Python Web Framework), check out its security features:"
+"development guides for Web Development to protect your Personal Information,"
+" we cannot guarantee its absolute security. The Site is developed with "
+"Django (Python Web Framework), check out its security features:"
 msgstr ""
 "La seguridad de su Información Personal es importante para nosotros, pero "
 "recuerde que ningún método de transmisión por Internet, o método de "
@@ -318,17 +318,18 @@ msgid ""
 "you of any changes by posting the new Privacy Policy on this current page. "
 "You are advised to review this Privacy Policy periodically for changes."
 msgstr ""
-"Este sitio puede actualizar esta Política de Privacidad de vez en cuando. Le "
-"notificaremos cualquier cambio publicando la nueva Política de Privacidad en "
-"esta página actual. Le aconsejamos que revise periódicamente esta Política "
-"de Privacidad para comprobar si se han producido cambios."
+"Este sitio puede actualizar esta Política de Privacidad de vez en cuando. Le"
+" notificaremos cualquier cambio publicando la nueva Política de Privacidad "
+"en esta página actual. Le aconsejamos que revise periódicamente esta "
+"Política de Privacidad para comprobar si se han producido cambios."
 
 #: one/base/templates/base/privacy.html:41
 msgid "Contact Us"
 msgstr "Contacte con nosotros"
 
 #: one/base/templates/base/privacy.html:42
-msgid "If you have any questions about this Privacy Policy, please contact me:"
+msgid ""
+"If you have any questions about this Privacy Policy, please contact me:"
 msgstr ""
 "Si tiene alguna pregunta sobre esta Política de privacidad, póngase en "
 "contacto conmigo:"
@@ -485,11 +486,11 @@ msgstr "¿Estás seguro de eliminar esta aplicación?"
 
 #: one/candidates/templates/candidates/candidate_dashboard.html:53
 msgid "You haven't applied for any jobs yet."
-msgstr "Aún no has solicitado ningún trabajo."
+msgstr "Aún no has solicitado ningún puesto de trabajo."
 
 #: one/candidates/templates/candidates/candidate_dashboard.html:53
 msgid "Check for jobs."
-msgstr "Busca trabajo."
+msgstr "Echa un vistazo al listado de empleo."
 
 #: one/candidates/templates/candidates/candidate_dashboard.html:63
 msgid "Create your Profile"
@@ -593,16 +594,14 @@ msgid "edit"
 msgstr "editar"
 
 #: one/candidates/urls.py:55
-#, fuzzy
 #| msgid "Candidate dashboard"
 msgid "dashboard"
-msgstr "Panel de control del candidato"
+msgstr "panel-de-control"
 
 #: one/candidates/urls.py:66
-#, fuzzy
 #| msgid "Apply"
 msgid "apply"
-msgstr "Solicitar"
+msgstr "solicitar"
 
 #: one/candidates/views.py:90
 msgid "You already have a profile"
@@ -1578,11 +1577,11 @@ msgstr "Crea tu perfil"
 
 #: one/companies/urls.py:7
 msgid "job"
-msgstr "empleo"
+msgstr "trabajo"
 
 #: one/companies/urls.py:8
 msgid "jobs"
-msgstr "puestos de trabajo"
+msgstr "puestos-de-trabajo"
 
 #: one/companies/urls.py:9
 msgid "list"
@@ -1650,30 +1649,26 @@ msgid ""
 "\n"
 "Hello %(user_display)s\n"
 "\n"
-"Thank you for registering on my site. Please, consider to confirm your email "
-"address, just do this:\n"
+"Thank you for registering on my site. Please, consider to confirm your email address, just do this:\n"
 "\n"
 "1. Simply visit this page: https://%(host)s%(email_url_path)s\n"
 "\n"
 "2. Click on Resend Verification\n"
 "\n"
-"3. Go to your email inbox and confirm your email address by clicking on the "
-"link.\n"
+"3. Go to your email inbox and confirm your email address by clicking on the link.\n"
 "\n"
 "Thank you very much.\n"
 msgstr ""
 "\n"
 "Hola %(user_display)s\n"
 "\n"
-"Gracias por registrarse en mi sitio. Por favor, considere confirmar su "
-"dirección de correo electrónico:\n"
+"Gracias por registrarse en mi sitio. Por favor, considere confirmar su dirección de correo electrónico:\n"
 "\n"
 "1. Simplemente visite esta página: https://%(host)s%(email_url_path)s\n"
 "\n"
 "2. Haga clic en Reenviar verificación\n"
 "\n"
-"3. Vaya a la bandeja de entrada de su correo electrónico y confirme su "
-"dirección de correo electrónico haciendo clic en el enlace.\n"
+"3. Vaya a la bandeja de entrada de su correo electrónico y confirme su dirección de correo electrónico haciendo clic en el enlace.\n"
 "\n"
 "Muchas gracias.\n"
 
@@ -1806,21 +1801,21 @@ msgid ""
 "Listing requires personalization or not. Will only change if "
 "is_personalizable is 'true'."
 msgstr ""
-"El listado requiere personalización o no. Sólo cambiará si is_personalizable "
-"es 'true'."
+"El listado requiere personalización o no. Sólo cambiará si is_personalizable"
+" es 'true'."
 
 #: one/etsy/models.py:248
 msgid ""
 "It represents the maximum length for the personalization message entered by "
 "the buyer. Will only change if is_personalizable is 'true'."
 msgstr ""
-"Representa la longitud máxima para el mensaje de personalización introducido "
-"por el comprador. Sólo cambiará si is_personalizable es 'true'."
+"Representa la longitud máxima para el mensaje de personalización introducido"
+" por el comprador. Sólo cambiará si is_personalizable es 'true'."
 
 #: one/etsy/models.py:256
 msgid ""
-"It represents  instructions for the buyer to enter the personalization. Will "
-"only change if is_personalizable is 'true'."
+"It represents  instructions for the buyer to enter the personalization. Will"
+" only change if is_personalizable is 'true'."
 msgstr ""
 "Representa las instrucciones para que el comprador introduzca la "
 "personalización. Sólo cambiará si is_personalizable es 'true'."

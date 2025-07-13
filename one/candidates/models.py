@@ -41,6 +41,7 @@ class Candidate(TranslatableModel):
     )
     languages = ChoiceArrayField(
         models.CharField(max_length=8, choices=settings.LANGUAGES),
+        verbose_name=_("Languages"),
         default=list,
         blank=True,
     )
@@ -51,37 +52,46 @@ class Candidate(TranslatableModel):
         editable=False,
     )
     user = OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    first_name = models.CharField(max_length=64)
-    last_name = models.CharField(max_length=64)
+    first_name = models.CharField(max_length=64, verbose_name=_("First name"))
+    last_name = models.CharField(max_length=64, verbose_name=_("Last name"))
     full_name = models.GeneratedField(
         expression=Concat("first_name", Value(" "), "last_name"),
         output_field=models.CharField(max_length=128),
+        verbose_name=_("Full name"),
         db_persist=True,
     )
-    job_title = models.CharField(max_length=64)
-    email = models.EmailField(max_length=64)
-    phone = models.CharField(max_length=32)
-    location = models.CharField(max_length=32)
+    job_title = models.CharField(max_length=64, verbose_name=_("Job title"))
+    email = models.EmailField(max_length=64, verbose_name=_("E-mail"))
+    phone = models.CharField(max_length=32, verbose_name=_("Phone number"))
+    location = models.CharField(max_length=32, verbose_name=_("Location"))
     linkedin_url = models.CharField(
-        verbose_name=_("linkedin URL"),
+        verbose_name=_("LinkedIn URL"),
         max_length=128,
         null=True,
         blank=True,
     )
     website_url = models.URLField(
-        verbose_name=_("website URL"),
+        verbose_name=_("Website URL"),
         max_length=128,
         blank=True,
         null=True,
     )
     about = models.TextField(
-        verbose_name=_("about me"),
+        verbose_name=_("About me"),
         null=True,
         blank=True,
     )
-    coverletter_body = models.TextField(null=True, blank=True)
+    coverletter_body = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_("Body of cover letter"),
+    )
 
-    photo = models.ImageField(upload_to=get_upload_path, null=True)
+    photo = models.ImageField(
+        upload_to=get_upload_path,
+        null=True,
+        verbose_name=_("Photo"),
+    )
     docs = models.FileField(upload_to=get_upload_path, null=True, blank=True)
 
     own_cv = models.FileField(upload_to=get_upload_path, null=True, blank=True)
@@ -134,12 +144,9 @@ class Candidate(TranslatableModel):
 
     def _clone_children(self, cloned_obj):
         related_sets = (
-            "experience_set",
-            "education_set",
-            "skill_set",
-            "certificate_set",
-            "project_set",
-            "language_set",
+            "candidateexperience_set",
+            "candidateeducation_set",
+            "candidateskill_set",
         )
         for related_set in related_sets:
             children_related = getattr(self, related_set, None)
@@ -218,9 +225,14 @@ class CandidateChild(TranslatableModel):
 
 
 class CandidateSkill(CandidateChild):
-    name = models.CharField(max_length=64)
-    level = models.IntegerField(choices=CompetenceLevel)
-    skill_type = models.CharField(max_length=32, null=True, choices=SkillType)
+    name = models.CharField(max_length=64, verbose_name=_("Name"))
+    level = models.IntegerField(choices=CompetenceLevel, verbose_name=_("Level"))
+    skill_type = models.CharField(
+        max_length=32,
+        null=True,
+        choices=SkillType,
+        verbose_name=_("Skill type"),
+    )
 
     @cached_property
     def hx_edit_url(self):
@@ -239,12 +251,33 @@ class CandidateSkill(CandidateChild):
 
 
 class CandidateEducation(CandidateChild):
-    institution = models.CharField(max_length=64)
-    title = models.CharField(max_length=64)
-    start_date = models.CharField(max_length=64)
-    end_date = models.CharField(max_length=64, null=True, blank=True)
-    studying_now = models.BooleanField(default=False)
-    description = models.TextField(null=True, blank=True)
+    institution = models.CharField(
+        max_length=64,
+        verbose_name=_("Institution"),
+    )
+    title = models.CharField(
+        max_length=64,
+        verbose_name=_("Title"),
+    )
+    start_date = models.CharField(
+        max_length=64,
+        verbose_name=_("Start date"),
+    )
+    end_date = models.CharField(
+        max_length=64,
+        null=True,
+        blank=True,
+        verbose_name=_("End date"),
+    )
+    studying_now = models.BooleanField(
+        default=False,
+        verbose_name=_("Studying this now"),
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_("Description"),
+    )
 
     @property
     def x_data_end_date(self):
@@ -267,12 +300,33 @@ class CandidateEducation(CandidateChild):
 
 
 class CandidateExperience(CandidateChild):
-    company_name = models.CharField(max_length=64)
-    job_title = models.CharField(max_length=64)
-    start_date = models.CharField(max_length=64)
-    end_date = models.CharField(max_length=64, null=True, blank=True)
-    here_now = models.BooleanField(default=False)
-    description = models.TextField(null=True, blank=True)
+    company_name = models.CharField(
+        max_length=64,
+        verbose_name=_("Company name"),
+    )
+    job_title = models.CharField(
+        max_length=64,
+        verbose_name=_("Role"),
+    )
+    start_date = models.CharField(
+        max_length=64,
+        verbose_name=_("Start date"),
+    )
+    end_date = models.CharField(
+        max_length=64,
+        null=True,
+        blank=True,
+        verbose_name=_("End date"),
+    )
+    here_now = models.BooleanField(
+        default=False,
+        verbose_name=_("Working here now"),
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_("Description"),
+    )
 
     @property
     def x_data_end_date(self):
@@ -295,14 +349,23 @@ class CandidateExperience(CandidateChild):
 
 
 class CandidateJobAlert(CandidateChild):
-    name = models.CharField(max_length=255)
-    query = models.CharField(max_length=255)
-    area = PolygonField()
+    name = models.CharField(
+        max_length=255,
+        verbose_name=_("Name"),
+    )
+    query = models.CharField(
+        max_length=255,
+        verbose_name=_("Term"),
+    )
+    area = PolygonField(verbose_name=_("Area"))
     notification = models.CharField(
-        default=NotificationFrequency.WEEKLY, choices=NotificationFrequency
+        default=NotificationFrequency.WEEKLY,
+        choices=NotificationFrequency,
+        verbose_name=_("Notification type"),
     )
     languages = ChoiceArrayField(
         models.CharField(max_length=8, choices=settings.LANGUAGES),
+        verbose_name=_("Languages"),
         default=list,
         blank=True,
         db_index=True,
@@ -417,15 +480,47 @@ class JobApplication(OneModel):
         choices=settings.LANGUAGES,
         default=settings.LANGUAGE_CODE,
     )
-    job = ForeignKey("companies.Job", on_delete=models.CASCADE)
-    candidate = ForeignKey(Candidate, on_delete=models.CASCADE)
+    job = ForeignKey(
+        "companies.Job",
+        on_delete=models.CASCADE,
+        verbose_name=_("Job"),
+    )
+    candidate = ForeignKey(
+        Candidate,
+        on_delete=models.CASCADE,
+        verbose_name=_("Candidate"),
+    )
     # Application option 1: cv + coverletter (complex, to be defined)
-    cv = ForeignKey(TexCv, on_delete=models.CASCADE, null=True, blank=True)
-    coverletter = models.FileField(upload_to=get_upload_path, null=True, blank=True)
-    coverletter_text = models.TextField(null=True, blank=True)
+    cv = ForeignKey(
+        TexCv,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name=_("Curriculum Vitae"),
+    )
+    coverletter = models.FileField(
+        upload_to=get_upload_path,
+        null=True,
+        blank=True,
+        verbose_name=_("Cover letter"),
+    )
+    coverletter_text = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_("LaTeX text of Cover letter"),
+    )
     # Application option 2: dossier (easier to implement)
-    dossier = models.FileField(upload_to=get_upload_path, null=True, blank=True)
-    dossier_text = models.TextField(null=True, blank=True)
+    dossier = models.FileField(
+        upload_to=get_upload_path,
+        null=True,
+        blank=True,
+        verbose_name=_("Dossier"),
+    )
+    dossier_text = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_("LaTeX text of Dossier"),
+    )
 
     def render_coverletter(self):
         self.coverletter.delete(save=False)
