@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.sitemaps.views import index as django_sitemap_index
 from django.contrib.sitemaps.views import sitemap as django_sitemap
 from django.db.models import Q
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.views import View
@@ -159,6 +159,15 @@ class ContactView(FormView):
     http_method_names = ["get", "post"]
     template_name = "base/contact.html"
     form_class = ContactMessageForm
+
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        initial = {}
+        if request.user.is_authenticated:
+            initial = {"name": request.user.full_name, "email": request.user.email}
+        form = self.form_class(None, initial=initial)
+        context = {"form": form}
+
+        return render(request, self.template_name, context)
 
     def form_valid(self, form):
         obj = form.save(commit=False)
