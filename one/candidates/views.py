@@ -88,8 +88,7 @@ class CandidateCreateView(LoginRequiredMixin, FormView):
         if candidate:
             messages.warning(request, _("You already have a profile"))
             return redirect(candidate.url)
-
-        form = self.form_class(None, initial={"language": get_language()})
+        form = self.form_class()
         context = {"form": form}
         return render(request, self.template_name, context)
 
