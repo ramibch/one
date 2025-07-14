@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-13 21:25+0200\n"
+"POT-Creation-Date: 2025-07-14 23:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -362,11 +362,11 @@ msgid "Server Error"
 msgstr ""
 
 #: one/candidates/models.py:38
-msgid "Main language"
+msgid "Primary language"
 msgstr ""
 
-#: one/candidates/models.py:44 one/candidates/models.py:368
-msgid "Languages"
+#: one/candidates/models.py:44
+msgid "Additional Languages"
 msgstr ""
 
 #: one/candidates/models.py:55
@@ -413,117 +413,121 @@ msgstr ""
 msgid "Photo"
 msgstr ""
 
-#: one/candidates/models.py:228 one/candidates/models.py:354
+#: one/candidates/models.py:232 one/candidates/models.py:358
 msgid "Name"
 msgstr ""
 
-#: one/candidates/models.py:229
+#: one/candidates/models.py:233
 msgid "Level"
 msgstr ""
 
-#: one/candidates/models.py:234
+#: one/candidates/models.py:238
 msgid "Skill type"
 msgstr ""
 
-#: one/candidates/models.py:256
+#: one/candidates/models.py:260
 msgid "Institution"
 msgstr ""
 
-#: one/candidates/models.py:260
+#: one/candidates/models.py:264
 msgid "Title"
 msgstr ""
 
-#: one/candidates/models.py:264 one/candidates/models.py:313
+#: one/candidates/models.py:268 one/candidates/models.py:317
 msgid "Start date"
 msgstr ""
 
-#: one/candidates/models.py:270 one/candidates/models.py:319
+#: one/candidates/models.py:274 one/candidates/models.py:323
 msgid "End date"
 msgstr ""
 
-#: one/candidates/models.py:274
+#: one/candidates/models.py:278
 msgid "Studying this now"
 msgstr ""
 
-#: one/candidates/models.py:279 one/candidates/models.py:328
+#: one/candidates/models.py:283 one/candidates/models.py:332
 msgid "Description"
 msgstr ""
 
-#: one/candidates/models.py:305
+#: one/candidates/models.py:309
 msgid "Company name"
 msgstr ""
 
-#: one/candidates/models.py:309
+#: one/candidates/models.py:313
 msgid "Role"
 msgstr ""
 
-#: one/candidates/models.py:323
+#: one/candidates/models.py:327
 msgid "Working here now"
 msgstr ""
 
-#: one/candidates/models.py:358
+#: one/candidates/models.py:362
 msgid "Term"
 msgstr ""
 
-#: one/candidates/models.py:360
+#: one/candidates/models.py:364
 msgid "Area"
 msgstr ""
 
-#: one/candidates/models.py:364
+#: one/candidates/models.py:368
 msgid "Notification type"
 msgstr ""
 
-#: one/candidates/models.py:478
+#: one/candidates/models.py:372
+msgid "Languages"
+msgstr ""
+
+#: one/candidates/models.py:482
 msgid "Language"
 msgstr ""
 
-#: one/candidates/models.py:486
+#: one/candidates/models.py:490
 #: one/candidates/templates/candidates/candidate_dashboard.html:15
 msgid "Job"
 msgstr ""
 
-#: one/candidates/models.py:491
+#: one/candidates/models.py:495
 msgid "Candidate"
 msgstr ""
 
-#: one/candidates/models.py:499
+#: one/candidates/models.py:503
 msgid "Curriculum Vitae"
 msgstr ""
 
-#: one/candidates/models.py:505
+#: one/candidates/models.py:509
 msgid "Cover letter"
 msgstr ""
 
-#: one/candidates/models.py:510
+#: one/candidates/models.py:514
 msgid "LaTeX text of Cover letter"
 msgstr ""
 
-#: one/candidates/models.py:517
+#: one/candidates/models.py:521
 #: one/candidates/templates/candidates/candidate_dashboard.html:16
 msgid "Dossier"
 msgstr ""
 
-#: one/candidates/models.py:522
+#: one/candidates/models.py:526
 msgid "LaTeX text of Dossier"
 msgstr ""
 
-#: one/candidates/models.py:536
+#: one/candidates/models.py:540
 msgid "Coverletter.pdf"
 msgstr ""
 
-#: one/candidates/models.py:583
+#: one/candidates/models.py:587
 msgid "Dear Sir/Madam"
 msgstr ""
 
-#: one/candidates/models.py:585
+#: one/candidates/models.py:589
 msgid "Mrs"
 msgstr ""
 
-#: one/candidates/models.py:585
+#: one/candidates/models.py:589
 msgid "Mr"
 msgstr ""
 
-#: one/candidates/models.py:590
+#: one/candidates/models.py:594
 msgid "Best regards"
 msgstr ""
 
@@ -531,7 +535,11 @@ msgstr ""
 msgid "New Profile"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_create.html:13
+#: one/candidates/templates/candidates/candidate_create.html:11
+msgid "Your New Profile"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_create.html:19
 msgid "Create"
 msgstr ""
 
@@ -557,6 +565,7 @@ msgid "Unknown"
 msgstr ""
 
 #: one/candidates/templates/candidates/candidate_dashboard.html:30
+#: one/candidates/templates/candidates/candidate_detail.html:15
 #: one/candidates/templates/candidates/partials/education_edit_form.html:19
 #: one/candidates/templates/candidates/partials/experience_edit_form.html:19
 #: one/candidates/templates/candidates/partials/skill_edit_form.html:21
@@ -579,22 +588,26 @@ msgstr ""
 msgid "Create your Profile"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_detail.html:12
+#: one/candidates/templates/candidates/candidate_detail.html:11
+msgid "Superuser actions"
+msgstr ""
+
+#: one/candidates/templates/candidates/candidate_detail.html:23
 #: one/candidates/templates/candidates/candidate_edit.html:5
 msgid "Edit"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_detail.html:18
+#: one/candidates/templates/candidates/candidate_detail.html:28
 msgid "My CVs"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_detail.html:29
+#: one/candidates/templates/candidates/candidate_detail.html:39
 #: one/etsy/enums.py:25
 #: one/tex/templates/tex/yearlyholidaycalender_detail.html:19
 msgid "Download"
 msgstr ""
 
-#: one/candidates/templates/candidates/candidate_detail.html:31
+#: one/candidates/templates/candidates/candidate_detail.html:41
 msgid "Updated"
 msgstr ""
 
@@ -668,23 +681,15 @@ msgstr ""
 msgid "Skills"
 msgstr ""
 
-#: one/candidates/urls.py:29
-msgid "new"
-msgstr ""
-
-#: one/candidates/urls.py:39
-msgid "edit"
-msgstr ""
-
-#: one/candidates/urls.py:55
+#: one/candidates/urls.py:61
 msgid "dashboard"
 msgstr ""
 
-#: one/candidates/urls.py:66
+#: one/candidates/urls.py:72
 msgid "apply"
 msgstr ""
 
-#: one/candidates/views.py:89
+#: one/candidates/views.py:87
 msgid "You already have a profile"
 msgstr ""
 
