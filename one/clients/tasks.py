@@ -1,5 +1,3 @@
-import re
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
@@ -55,16 +53,6 @@ def block_bad_clients_creating_user_accounts():
     ).filter(num_requests__gte=2)
 
     block_spammy_clients(bad_clients)
-
-    # We remove the users they created
-    text = "".join(
-        Request.objects.filter(
-            client__in=bad_clients,
-            post__isnull=False,
-        ).values_list("post", flat=True)
-    )
-    bad_emails = re.findall(r"[\w.+-]+@[\w-]+\.[\w.-]+", text)
-    User.objects.filter(email__in=bad_emails).delete()
 
 
 @huey.db_task()

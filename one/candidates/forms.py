@@ -21,14 +21,13 @@ class CandidateCreateForm(forms.ModelForm):
         model = Candidate
         fields = (
             "language",
-            # "languages",
-            "job_title",
+            "languages",
             "first_name",
             "last_name",
             "email",
             "phone",
-            "location",
         )
+        widgets = {"languages": forms.CheckboxSelectMultiple()}
 
 
 class CandidateEditForm(forms.ModelForm):

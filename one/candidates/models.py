@@ -35,13 +35,13 @@ class Candidate(TranslatableModel):
     LANG_ATTR = "language"
     LANGS_ATTR = "languages"
     language = models.CharField(
-        verbose_name=_("Main language"),
+        verbose_name=_("Primary language"),
         max_length=4,
         choices=settings.LANGUAGES,
     )
     languages = ChoiceArrayField(
         models.CharField(max_length=8, choices=settings.LANGUAGES),
-        verbose_name=_("Languages"),
+        verbose_name=_("Additional Languages"),
         default=list,
         blank=True,
     )
@@ -167,6 +167,10 @@ class Candidate(TranslatableModel):
     @cached_property
     def edit_url(self):
         return reverse("candidate_edit", kwargs={"pk": self.pk})
+
+    @cached_property
+    def delete_url(self):
+        return reverse("candidate_delete", kwargs={"pk": self.pk})
 
     @cached_property
     def hx_edit_url(self):
@@ -466,7 +470,7 @@ class TexCv(TranslatableModel):
 
 class JobApplication(OneModel):
     def get_upload_path(self, filename):
-        return f"candidates/{self.cv.candidate.id}/apps/{filename}"
+        return f"candidates/{self.candidate.id}/apps/{filename}"
 
     id = models.UUIDField(
         primary_key=True,
@@ -526,7 +530,7 @@ class JobApplication(OneModel):
         self.coverletter.delete(save=False)
         template = "candidates/tex/coverletter.tex"
         context = {
-            "candidate": self.cv.candidate,
+            "candidate": self.candidate,
             "job": self.job,
             "app": self,
         }
@@ -542,7 +546,7 @@ class JobApplication(OneModel):
         template = "candidates/tex/dossier.tex"
         lang = get_language()
         tex_lang = TEX_LANGUAGE_MAPPING.get(lang)
-        candidate = self.candidate or self.cv.candidate
+        candidate = self.candidate
         hard_skills = CandidateSkill.objects.filter(
             candidate=candidate,
             skill_type=SkillType.HARD,

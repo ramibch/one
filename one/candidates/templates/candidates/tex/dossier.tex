@@ -1,4 +1,4 @@
-\documentclass[a4paper, {{- app.cv.latex_pt -}}pt]{report}
+\documentclass[a4paper, 12pt]{report}
 \usepackage[T1]{fontenc}
 \usepackage{helvet}
 \usepackage[utf8]{inputenc}
@@ -9,12 +9,6 @@
 \usepackage{eso-pic}
 \usepackage{charter}
 \usepackage[ {{- tex_lang -}} ]{babel}
-\usepackage[
-  left={{- app.cv.margin_left -}} {{- app.cv.margin_unit -}},
-  right={{- app.cv.margin_right -}} {{- app.cv.margin_unit -}},
-  top={{- app.cv.margin_top -}} {{- app.cv.margin_unit -}},
-  bottom={{- app.cv.margin_bottom -}} {{- app.cv.margin_unit -}}
-  ]{geometry}
 \usepackage{enumitem}
 \usepackage{titlesec}
 \usepackage{parskip}
@@ -124,7 +118,7 @@
 
 {%- if candidate.about -%}
 \space
-\section*{\faIcon{user} {{ candidate.get_tex_value("about_label") }} }
+\section*{\faIcon{user} {% trans %}About{% endtrans %} }
 {{ candidate.about|latex_escape }}
 {%- endif -%}
 

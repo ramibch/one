@@ -11,7 +11,6 @@ from django.http import (
 )
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
-from django.utils import translation
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
@@ -87,7 +86,12 @@ class CandidateCreateView(LoginRequiredMixin, FormView):
         if candidate:
             messages.warning(request, _("You already have a profile"))
             return redirect(candidate.url)
-        form = self.form_class()
+        initial = {
+            "first_name": request.user.first_name,
+            "last_name": request.user.last_name,
+            "email": request.user.email,
+        }
+        form = self.form_class(initial=initial)
         context = {"form": form}
         return render(request, self.template_name, context)
 
@@ -96,12 +100,20 @@ class CandidateCreateView(LoginRequiredMixin, FormView):
         context = {"form": form}
         if form.is_valid():
             obj = form.save(commit=False)
-            translation.activate(obj.language)
+            # translation.activate(obj.language)
             obj.user = request.user
             obj.save()
             return redirect(obj.edit_url)
 
         return render(request, self.template_name, context)
+
+
+class CandidateDeleteView(LoginRequiredMixin, DeleteView):
+    model = Candidate
+    success_url = reverse_lazy("home")
+
+    def get_object(self) -> Any:
+        return get_candidate_or_404(self, url_key="pk")
 
 
 class PubCandidateView(DetailView):

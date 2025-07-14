@@ -5,6 +5,7 @@ from .views import (
     CandidateCreateOrDetailRedirectView,
     CandidateCreateView,
     CandidateDashboardView,
+    CandidateDeleteView,
     CandidateDetailView,
     CandidateEditHxView,
     CandidateEditView,
@@ -26,7 +27,7 @@ from .views import (
 
 urlpatterns = [
     path(
-        _("new"),
+        "➕",
         CandidateCreateView.as_view(),
         name="candidate_create",
     ),
@@ -36,9 +37,14 @@ urlpatterns = [
         name="candidate_detail",
     ),
     path(
-        "<uuid:pk>/" + _("edit"),
+        "<uuid:pk>/📝",
         CandidateEditView.as_view(),
         name="candidate_edit",
+    ),
+    path(
+        "<uuid:pk>/🗑️",
+        CandidateDeleteView.as_view(),
+        name="candidate_delete",
     ),
     path(
         "<uuid:pk>/info-edit",
