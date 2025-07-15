@@ -28,17 +28,15 @@
         <td> {{ jobapp.created_at }} </td>
         <td>
           <button style="border:none;" title="{% translate 'Delete' %}"
-          x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
-          x-bind:class="hover? '' : 'outline'"
-          hx-delete="{{ jobapp.hx_delete_url }}"
-          hx-confirm="{% translate 'Are you sure to delete this applicacion?' %}"
-          hx-target="closest td"
-          hx-trigger="click"
-          hx-swap="delete"
-          >
-        <i class="bi bi-trash"></i>
-      </button>
-
+            x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
+            x-bind:class="hover? '' : 'outline'"
+            hx-post="{{ jobapp.hx_delete_url }}"
+            hx-confirm="{% translate 'Are you sure to delete this applicacion?' %}"
+            hx-target="closest tr"
+            hx-trigger="click"
+            hx-swap="outerHTML">
+            <i class="bi bi-trash"></i>
+          </button>
         </td>
       </tr>
       {% endfor %}

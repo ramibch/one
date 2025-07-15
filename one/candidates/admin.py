@@ -85,7 +85,7 @@ class TexCvAdmin(OneModelAdmin):
 
 @admin.register(JobApplication)
 class JobApplicationAdmin(OneModelAdmin):
-    list_display = ("job", "candidate", "language")
+    list_display = ("job", "candidate", "language", "dossier")
     readonly_fields = ("coverletter_text", "dossier_text")
     actions = ("render_coverletters", "render_dossiers")
     list_filter = ("language",)

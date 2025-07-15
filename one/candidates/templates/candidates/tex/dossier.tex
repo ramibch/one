@@ -14,6 +14,7 @@
 \usepackage{parskip}
 \usepackage{xcolor}
 \usepackage{tcolorbox}
+\usepackage{multicol}
 
 \definecolor{primarycolor}{RGB}{43,29,20}
 \definecolor{testcolor}{RGB}{34,56,43}
@@ -119,7 +120,7 @@
 {%- if candidate.about -%}
 \space
 \section*{\faIcon{user} {{ about_label }} }
-{{ candidate.about|latex_escape }}
+{{ candidate.get_tex_value("about") }}
 {%- endif -%}
 
 {%- if candidate.candidateexperience_set.count() > 0 -%}
@@ -135,23 +136,24 @@
 \section*{\faIcon{graduation-cap} {{ education_label }} }
 {% for edu in candidate.candidateeducation_set.all() %}
 \subsection*{ {{- edu.get_tex_value("institution") -}} \hfill {{ edu.get_tex_value("start_date") }} - {% if edu.studying_now %} {{ now_label }} {% else %} {{ edu.get_tex_value("end_date") }}{% endif %}  }
-\textit{ {{- edu.title | latex_escape -}} } \vspace{3mm} \\
+\textit{ {{- edu.get_tex_value("title") -}} } \vspace{3mm} \\
 {{ edu.get_tex_value("description") }}
 {% endfor %}
 {%- endif -%}
 
+\begin{multicols}{ {{ skills_cols }} }
 {%- if hard_skills.count() > 0 -%}
 \section*{\faIcon{cogs} {{ hard_skills_label }} }
 \begin{center}
   \begin{itemize}[label=\faIcon{check}, itemsep=-3pt]
-      {% for skill in candidate.candidateskill_set.all() %}
+      {% for skill in hard_skills %}
       \item {{ skill.get_tex_value("name") }}
       {% endfor %}
   \end{itemize}
 \end{center}
 {%- endif -%}
 {%- if soft_skills.count() > 0 -%}
-\section*{\faIcon{cogs} {{ soft_skills_label }} }
+\section*{\faIcon{comment} {{ soft_skills_label }} }
 \begin{center}
   \begin{itemize}[label=\faIcon{check}, itemsep=-3pt]
       {% for skill in soft_skills %}
@@ -161,7 +163,6 @@
 \end{center}
 {%- endif -%}
 
-
 {%- if language_skills.count() > 0 -%}
 \section*{\faIcon{language} {{ languages_label }} }
 \begin{itemize}[label=\faIcon{globe}]
@@ -170,5 +171,6 @@
   {% endfor %}
 \end{itemize}
 {%- endif -%}
+\end{multicols}
 
 \end{document}

@@ -468,13 +468,13 @@ class TexCv(TranslatableModel):
 
 
 COMMON_TEX_CONTEXT = {
+    "about_label": _("About me"),
     "hard_skills_label": _("Hard skills"),
     "soft_skills_label": _("Soft skills"),
     "languages_label": _("Languages"),
-    "education_label": _("Languages"),
+    "education_label": _("Education"),
     "experience_label": _("Experience"),
     "now_label": _("Now"),
-    "about_label": _("About me"),
 }
 
 
@@ -566,11 +566,19 @@ class JobApplication(OneModel):
                 candidate=self.candidate,
                 skill_type=SkillType.LANGUAGE,
             )
+            skills_cols = sum(
+                CandidateSkill.objects.filter(
+                    candidate=self.candidate, skill_type=skill_type
+                ).exists()
+                for skill_type in SkillType.values
+            )
+
             context = {
                 "candidate": self.candidate,
                 "hard_skills": hard_skills,
                 "soft_skills": soft_skills,
                 "language_skills": language_skills,
+                "skills_cols": skills_cols,
                 "job": self.job,
                 "app": self,
                 "tex_lang": TEX_LANGUAGE_MAPPING.get(self.language),
@@ -602,3 +610,7 @@ class JobApplication(OneModel):
     @cached_property
     def coverletter_closing(self):
         return _("Best regards")
+
+    @cached_property
+    def hx_delete_url(self):
+        return reverse_lazy("jobapplication_delete", kwargs={"pk": self.pk})

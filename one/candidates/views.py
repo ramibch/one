@@ -116,6 +116,14 @@ class CandidateDeleteView(LoginRequiredMixin, DeleteView):
         return get_candidate_or_404(self, url_key="pk")
 
 
+class JobApplicationDeleteHxView(LoginRequiredMixin, DeleteView):
+    model = JobApplication
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.get_object().delete()
+        return HttpResponse(status=HTTPStatus.OK)
+
+
 class PubCandidateView(DetailView):
     model = Candidate
     template_name = "candidates/candidate_detail.html"
