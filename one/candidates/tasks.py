@@ -5,7 +5,8 @@ from huey.contrib import djhuey as huey
 from .models import Candidate, JobApplication, TexCv, TexCvTemplates
 
 
-@huey.db_periodic_task(crontab(minute="*"))
+# Temporary deactivated
+# @huey.db_periodic_task(crontab(minute="*"))
 def task_create_texcvs(candidates=None):
     if candidates is None:
         candidates = Candidate.objects.filter(texcv__isnull=True)
@@ -20,7 +21,8 @@ def task_create_texcvs(candidates=None):
     TexCv.objects.bulk_create(cvs, ignore_conflicts=True)
 
 
-@huey.db_periodic_task(crontab(minute="*"))
+# Temporary deactivated
+# @huey.db_periodic_task(crontab(minute="*"))
 def task_render_cvs(cv_objs=None):
     if cv_objs is None:
         cv_objs = TexCv.objects.filter(
@@ -35,7 +37,8 @@ def task_render_cvs(cv_objs=None):
         cv_obj.render_cv()
 
 
-@huey.db_periodic_task(crontab(minute="*"))
+# Temporary deactivated
+# @huey.db_periodic_task(crontab(minute="*"))
 def task_render_coverletters(job_apps=None):
     if job_apps is None:
         job_apps = JobApplication.objects.filter(coverletter__in=["", None])
