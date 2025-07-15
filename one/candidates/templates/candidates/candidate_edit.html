@@ -22,21 +22,6 @@
     <!-- Experience -->
     {% include "candidates/partials/experience_edit.html" %}
 
-
-    <!-- Modals -->
-    <dialog x-bind:open="openExampleModal">
-      <article>
-        <header>
-          <button aria-label="Close" rel="prev" x-on:click="openExampleModal = false"></button>
-          <h2><i class="bi bi-pencil-square"></i> {% translate "Example modal" %}</h2>
-        </header>
-        <form >
-          <p>Content here</p>
-          <button type="submit">{% translate "Save" %}</button>
-        </form>
-      </article>
-    </dialog>
-
   </div>
 </div>
 

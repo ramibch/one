@@ -14,7 +14,6 @@ from django.db.models.functions import Concat
 from django.urls import reverse, reverse_lazy
 from django.utils import translation
 from django.utils.functional import cached_property
-from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from pdf2image import convert_from_bytes
 
@@ -468,6 +467,17 @@ class TexCv(TranslatableModel):
         self.save()
 
 
+COMMON_TEX_CONTEXT = {
+    "hard_skills_label": _("Hard skills"),
+    "soft_skills_label": _("Soft skills"),
+    "languages_label": _("Languages"),
+    "education_label": _("Languages"),
+    "experience_label": _("Experience"),
+    "now_label": _("Now"),
+    "about_label": _("About me"),
+}
+
+
 class JobApplication(OneModel):
     def get_upload_path(self, filename):
         return f"candidates/{self.candidate.id}/apps/{filename}"
@@ -543,38 +553,38 @@ class JobApplication(OneModel):
 
     def render_dossier(self):
         self.dossier.delete(save=False)
-        template = "candidates/tex/dossier.tex"
-        lang = get_language()
-        tex_lang = TEX_LANGUAGE_MAPPING.get(lang)
-        candidate = self.candidate
-        hard_skills = CandidateSkill.objects.filter(
-            candidate=candidate,
-            skill_type=SkillType.HARD,
-        )
-        soft_skills = CandidateSkill.objects.filter(
-            candidate=candidate,
-            skill_type=SkillType.SOFT,
-        )
-        language_skills = CandidateSkill.objects.filter(
-            candidate=candidate,
-            skill_type=SkillType.LANGUAGE,
-        )
-        context = {
-            "candidate": candidate,
-            "hard_skills": hard_skills,
-            "soft_skills": soft_skills,
-            "language_skills": language_skills,
-            "job": self.job,
-            "app": self,
-            "tex_lang": tex_lang,
-        }
-        cl_bytes, latex_text = render_pdf_and_text(
-            template, context, interpreter="pdflatex"
-        )
-        filename = f"{_('Dossier')}_{lang}.pdf"
-        self.dossier.save(filename, ContentFile(cl_bytes), save=False)
-        self.dossier_text = latex_text
-        self.save()
+        with translation.override(self.language):
+            hard_skills = CandidateSkill.objects.filter(
+                candidate=self.candidate,
+                skill_type=SkillType.HARD,
+            )
+            soft_skills = CandidateSkill.objects.filter(
+                candidate=self.candidate,
+                skill_type=SkillType.SOFT,
+            )
+            language_skills = CandidateSkill.objects.filter(
+                candidate=self.candidate,
+                skill_type=SkillType.LANGUAGE,
+            )
+            context = {
+                "candidate": self.candidate,
+                "hard_skills": hard_skills,
+                "soft_skills": soft_skills,
+                "language_skills": language_skills,
+                "job": self.job,
+                "app": self,
+                "tex_lang": TEX_LANGUAGE_MAPPING.get(self.language),
+            } | COMMON_TEX_CONTEXT
+
+            d_bytes, latex_text = render_pdf_and_text(
+                "candidates/tex/dossier.tex",
+                context,
+                interpreter="pdflatex",
+            )
+
+            self.dossier.save(f"{_('Dossier')}.pdf", ContentFile(d_bytes), save=False)
+            self.dossier_text = latex_text
+            self.save()
 
     @cached_property
     def coverletter_title(self):

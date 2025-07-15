@@ -118,30 +118,30 @@
 
 {%- if candidate.about -%}
 \space
-\section*{\faIcon{user} {% trans %}About{% endtrans %} }
+\section*{\faIcon{user} {{ about_label }} }
 {{ candidate.about|latex_escape }}
 {%- endif -%}
 
 {%- if candidate.candidateexperience_set.count() > 0 -%}
-\section*{\faIcon{building} {% trans %}Experience{% endtrans %} }
+\section*{\faIcon{building} {{ experience_label }} }
 {% for exp in candidate.candidateexperience_set.all() %}
-\subsection*{ {{- exp.company_name | latex_escape -}} \hfill {{ exp.from_to|latex_escape }}  }
+\subsection*{ {{- exp.get_tex_value("company_name") -}} \hfill {{ exp.get_tex_value("start_date") }} - {% if exp.here_now %} {{ now_label }} {% else %} {{ exp.get_tex_value("end_date") }}{% endif %} }
 \textit{ {{- exp.job_title -}} } \vspace{3mm} \\
-{{ exp.description|latex_escape|linebreaks }}
+{{ exp.get_tex_value("description") }}
 {% endfor %}
 {%- endif -%}
 
 {%- if candidate.candidateeducation_set.count() > 0 -%}
-\section*{\faIcon{graduation-cap} {% trans %}Education{% endtrans %}}
+\section*{\faIcon{graduation-cap} {{ education_label }} }
 {% for edu in candidate.candidateeducation_set.all() %}
-\subsection*{ {{- edu.institution | latex_escape -}} \hfill {{ edu.from_to|latex_escape }} }
+\subsection*{ {{- edu.get_tex_value("institution") -}} \hfill {{ edu.get_tex_value("start_date") }} - {% if edu.studying_now %} {{ now_label }} {% else %} {{ edu.get_tex_value("end_date") }}{% endif %}  }
 \textit{ {{- edu.title | latex_escape -}} } \vspace{3mm} \\
-{{ edu.description|latex_escape|linebreaks }}
+{{ edu.get_tex_value("description") }}
 {% endfor %}
 {%- endif -%}
 
 {%- if hard_skills.count() > 0 -%}
-\section*{\faIcon{cogs} {% trans %}Hard Skills{% endtrans %}}
+\section*{\faIcon{cogs} {{ hard_skills_label }} }
 \begin{center}
   \begin{itemize}[label=\faIcon{check}, itemsep=-3pt]
       {% for skill in candidate.candidateskill_set.all() %}
@@ -151,7 +151,7 @@
 \end{center}
 {%- endif -%}
 {%- if soft_skills.count() > 0 -%}
-\section*{\faIcon{cogs} {% trans %}Soft Skills{% endtrans %}}
+\section*{\faIcon{cogs} {{ soft_skills_label }} }
 \begin{center}
   \begin{itemize}[label=\faIcon{check}, itemsep=-3pt]
       {% for skill in soft_skills %}
@@ -163,7 +163,7 @@
 
 
 {%- if language_skills.count() > 0 -%}
-\section*{\faIcon{language} {% trans %}Languages{% endtrans %} }
+\section*{\faIcon{language} {{ languages_label }} }
 \begin{itemize}[label=\faIcon{globe}]
   {% for lang in language_skills %}
   \item {{ lang.name }}

@@ -105,7 +105,6 @@ PATH_NAMES = (
     ("quiz_list", _("English Quizzes")),
     ("privacy", _("Privacy Policy")),
     ("terms", _("Terms and Conditions")),
-    ("impress", _("Impress")),
     ("candidate_create", _("Create candidate profile")),
     ("candidate_create_or_detail", _("Candidate profile")),
     ("candidate_dashboard", _("Candidate dashboard")),

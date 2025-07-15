@@ -5,8 +5,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Genders(TextChoices):
-    MALE = "m", _("male")
-    FEMALE = "f", _("female")
+    MALE = "m", _("Male")
+    FEMALE = "f", _("Female")
 
 
 class Topics(TextChoices):

@@ -117,10 +117,6 @@ class TermsView(TemplateView):
     template_name = "base/terms.html"
 
 
-class ImpressView(TemplateView):
-    template_name = "base/impress.html"
-
-
 class RobotTxtView(TemplateView):
     content_type = "text/plain"
     template_name = "robots.txt"

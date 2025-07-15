@@ -5,7 +5,6 @@ from .sitemaps import get_sitemaps
 from .views import (
     ContactView,
     HomeView,
-    ImpressView,
     PrivacyView,
     RobotTxtView,
     SearchResultsView,
@@ -32,7 +31,6 @@ urlpatterns = [
     # "static" pages
     path("~/p", PrivacyView.as_view(), name="privacy"),
     path("~/t", TermsView.as_view(), name="terms"),
-    path("~/i", ImpressView.as_view(), name="impress"),
     # Article, Product, topic ...
     path("<slug:slug>", SlugPageView.as_view(), name="slug_page"),
     # Home

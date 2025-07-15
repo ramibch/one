@@ -5,7 +5,6 @@ from .models import (
     CandidateEducation,
     CandidateExperience,
     CandidateSkill,
-    JobApplication,
     TexCv,
 )
 
@@ -33,8 +32,3 @@ class CandidateExperienceOptions(TranslationOptions):
 @register(TexCv)
 class TexCvOptions(TranslationOptions):
     fields = ("cv_text", "cv_image", "cv_pdf")
-
-
-@register(JobApplication)
-class JobApplicationOptions(TranslationOptions):
-    fields = ("coverletter", "coverletter_text", "dossier", "dossier_text")

@@ -48,7 +48,7 @@ class ExperienceInline(OneTranslationStackedInline):
 class CandiateAdmin(OneTranslatableModelAdmin):
     list_display = ("id", "full_name", "job_title", "email", "phone")
     inlines = [SkillInline, EducationInline, ExperienceInline, AlertInline]
-    actions = ["create_and_render_cvs"]
+    actions = ("create_and_render_cvs",)
 
     @admin.action(description="▶️ Create and render CVs")
     def create_and_render_cvs(modeladmin, request, queryset):
@@ -76,7 +76,7 @@ class ExperienceAdmin(OneTranslatableModelAdmin):
 class TexCvAdmin(OneModelAdmin):
     list_display = ("__str__", "template", "cv_image", "cv_pdf")
     list_filter = ("template",)
-    actions = ["render_cvs"]
+    actions = ("render_cvs",)
 
     @admin.action(description="▶️ Render CVs")
     def render_cvs(modeladmin, request, queryset):
@@ -85,8 +85,10 @@ class TexCvAdmin(OneModelAdmin):
 
 @admin.register(JobApplication)
 class JobApplicationAdmin(OneModelAdmin):
+    list_display = ("job", "candidate", "language")
     readonly_fields = ("coverletter_text", "dossier_text")
-    actions = ["render_coverletters", "render_dossiers"]
+    actions = ("render_coverletters", "render_dossiers")
+    list_filter = ("language",)
 
     @admin.action(description="▶️ Render Coverletters")
     def render_coverletters(modeladmin, request, queryset):
