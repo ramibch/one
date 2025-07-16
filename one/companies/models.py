@@ -1,3 +1,4 @@
+import uuid
 from datetime import timedelta
 
 from auto_prefetch import ForeignKey, Manager
@@ -9,6 +10,7 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
+from langdetect import detect
 
 from one.choices import Genders
 from one.db import ChoiceArrayField, OneModel
@@ -96,6 +98,12 @@ class JobManager(Manager):
 
 
 class Job(OneModel):
+    id = models.UUIDField(
+        primary_key=True,
+        db_index=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     language = models.CharField(max_length=8, choices=settings.LANGUAGES, default="de")
     title = models.CharField(max_length=128)
     body = models.TextField(blank=True, null=True)
@@ -142,6 +150,8 @@ class Job(OneModel):
         if not self.expires_on:
             base_time = self.created_at or now()
             self.expires_on = base_time + self.duration
+        if self.body:
+            self.language = detect(self.body)
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:

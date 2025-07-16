@@ -8,6 +8,9 @@ class Genders(TextChoices):
     MALE = "m", _("Male")
     FEMALE = "f", _("Female")
 
+    def salutation(self):
+        return _("Mrs") if self == Genders.FEMALE else _("Mr")
+
 
 class Topics(TextChoices):
     DJANGO = "django", "Django"

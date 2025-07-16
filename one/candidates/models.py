@@ -480,7 +480,7 @@ COMMON_TEX_CONTEXT = {
 
 class JobApplication(OneModel):
     def get_upload_path(self, filename):
-        return f"candidates/{self.candidate.id}/apps/{filename}"
+        return f"candidates/apps/{self.candidate.id}-{self.job.id}/{filename}"
 
     id = models.UUIDField(
         primary_key=True,
