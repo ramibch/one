@@ -43,7 +43,7 @@ class PersonAdmin(admin.ModelAdmin):
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
-    autocomplete_fields = ("recruiter", "company")  # "company_locations",
+    autocomplete_fields = ("company_locations", "recruiter", "company")
     search_fields = ("title", "body")
     list_display = ("__str__", "recruiter", "source_url")
     list_filter = ("language",)
