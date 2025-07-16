@@ -123,7 +123,7 @@ class Job(OneModel):
         blank=True,
         db_index=False,
     )
-    company_locations = models.ManyToManyField(CompanyLocation, blank=True)
+    # company_locations = models.ManyToManyField(CompanyLocation, blank=True)
     duration = models.DurationField(default=timedelta(days=60))
     expires_on = models.DateTimeField(editable=False)
     is_active = models.BooleanField(default=True, editable=False)
