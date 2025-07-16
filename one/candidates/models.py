@@ -176,6 +176,10 @@ class Candidate(TranslatableModel):
         return reverse("candidateinfo_edit", kwargs={"pk": self.pk})
 
     @cached_property
+    def hx_extra_edit_url(self):
+        return reverse("candidateextra_edit", kwargs={"pk": self.pk})
+
+    @cached_property
     def hx_create_skill_url(self):
         return reverse("candidateskill_create", kwargs={"candidate_pk": self.pk})
 
@@ -216,10 +220,10 @@ class CandidateChild(TranslatableModel):
         return {"candidate_pk": self.candidate.pk, "pk": self.pk}
 
     def save(self, *args, **kwargs):
-        if not self.order:
+        if self.order is None:
             qs = type(self).objects.filter(candidate=self.candidate)
             max_order = qs.aggregate(Max("order"))["order__max"]
-            self.order = max_order + 1 if max_order else 0
+            self.order = max_order + 1 if max_order else 1
         return super().save(*args, **kwargs)
 
     class Meta(TranslatableModel.Meta):

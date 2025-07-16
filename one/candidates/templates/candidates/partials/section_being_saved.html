@@ -1,0 +1,6 @@
+{% load i18n static %}
+{% if section_saved %}
+  <span x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 1500)" x-transition:leave.duration.500ms>
+    <img src="{% static 'img/animated/tail-spin.svg' %}" alt=""> {% translate "Saving..." %}
+  </span>
+{% endif %}

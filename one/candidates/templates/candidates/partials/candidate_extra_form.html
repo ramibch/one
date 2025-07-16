@@ -1,0 +1,10 @@
+{% load i18n static %}
+  <form hx-post="{{ candidate.hx_extra_edit_url }}" hx-swap="outerHTML" hx-trigger="change, keyup changed delay:1000ms">
+  {% for field in candidate_extra_form %}
+    <div>
+      {{ field.label }}
+      {{ field }}
+      {% include "candidates/partials/field_being_saved.html" %}
+    </div>
+  {% endfor %}
+</form>

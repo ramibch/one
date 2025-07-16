@@ -1,8 +1,8 @@
 <fieldset>
   <div class="grid">
     <label>
-      {% if is_new_form %} <small>{{ education_form.title.label_tag }}</small> {% endif %}
-      {{ education_form.title }}
+        {% if is_new_form %} <small>{{ education_form.title.label_tag }}</small> {% endif %}
+        {{ education_form.title }}
     </label>
     <label>
       {% if is_new_form %} <small>{{ education_form.institution.label_tag }}</small> {% endif %}
@@ -11,7 +11,6 @@
   </div>
   <div class="grid"
   x-data="{ endDate: {{ education_form.instance.x_data_end_date }}, studyingNow : {{ education_form.instance.x_data_studying_now }} }"
-
   >
     <label>
       {% if is_new_form %} <small>{{ education_form.start_date.label_tag }}</small> {% endif %}

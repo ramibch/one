@@ -1,7 +1,6 @@
 from http import HTTPStatus
 from typing import Any
 
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
 from django.http import (
@@ -12,7 +11,6 @@ from django.http import (
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
 from django.views.generic import FormView, RedirectView, TemplateView
 from django.views.generic.detail import DetailView
@@ -22,6 +20,7 @@ from django_htmx.http import reswap, retarget
 from one.candidates.forms import (
     CandidateCreateForm,
     CandidateEditForm,
+    CandidateExtraEditForm,
     EducationForm,
     ExperienceForm,
     JobApplicationForm,
@@ -56,12 +55,12 @@ class JobApplicationView(LoginRequiredMixin, FormView):
         return super().get(request, *args, **kwargs)
 
 
-class CandidateCreateOrDetailRedirectView(LoginRequiredMixin, RedirectView):
+class CandidateCreateOrEditRedirectView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args: Any, **kwargs: Any) -> str | None:
         candidate = getattr(self.request.user, "candidate", None)
         if candidate is None:
             return reverse("candidate_create")
-        return candidate.url
+        return candidate.edit_url
 
 
 class CandidateDashboardView(LoginRequiredMixin, TemplateView):
@@ -84,8 +83,7 @@ class CandidateCreateView(LoginRequiredMixin, FormView):
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         candidate = getattr(self.request.user, "candidate", None)
         if candidate:
-            messages.warning(request, _("You already have a profile"))
-            return redirect(candidate.url)
+            return redirect(candidate.edit_url)
         initial = {
             "first_name": request.user.first_name,
             "last_name": request.user.last_name,
@@ -158,6 +156,7 @@ class CandidateEditView(LoginRequiredMixin, TemplateView):
         context = {
             "candidate": candidate,
             "candidate_form": CandidateEditForm(instance=candidate),
+            "candidate_extra_form": CandidateExtraEditForm(instance=candidate),
             "skill_edit_forms": [SkillForm(instance=sk) for sk in skill_qs],
             "skill_new_form": SkillForm(),
             "education_edit_forms": [EducationForm(instance=edu) for edu in edu_qs],
@@ -182,7 +181,30 @@ class CandidateEditHxView(LoginRequiredMixin, UpdateView):
         form = self.form_class(request.POST, files=request.FILES, instance=self.object)
         if form.is_valid():
             form.save()
-        context = {"candidate_form": form} | self.get_context_data(**kwargs)
+        context = {
+            "candidate_form": form,
+            "changed_data": form.changed_data,
+        } | self.get_context_data(**kwargs)
+
+        return render(request, self.template_name, context)
+
+
+@method_decorator(never_cache, name="dispatch")
+class CandidateExtraEditHxView(LoginRequiredMixin, UpdateView):
+    model = Candidate
+    form_class = CandidateExtraEditForm
+    context_object_name = "candidate"
+    template_name = "candidates/partials/candidate_extra_form.html"
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.object = self.get_object()
+        form = self.form_class(request.POST, instance=self.object)
+        if form.is_valid():
+            form.save()
+        context = {
+            "candidate_extra_form": form,
+            "changed_data": form.changed_data,
+        } | self.get_context_data(**kwargs)
 
         return render(request, self.template_name, context)
 
@@ -232,6 +254,7 @@ class SkillEditHxView(LoginRequiredMixin, UpdateView):
             update_object.candidate = candidate
             update_object.save()
             context = context | self.get_context_data(kwargs=kwargs)
+            context["section_saved"] = True
         return render(request, self.template_name, context)
 
 
@@ -337,7 +360,7 @@ class EducationEditHxView(LoginRequiredMixin, UpdateView):
             update_object.candidate = candidate
             update_object.save()
             context = context | self.get_context_data(kwargs=kwargs)
-            form = self.form_class(request.POST, instance=update_object)
+            context["section_saved"] = True
         context["education_edit_form"] = form
         return render(request, self.template_name, context)
 
@@ -426,7 +449,8 @@ class ExperienceEditHxView(LoginRequiredMixin, UpdateView):
             update_object.candidate = candidate
             update_object.save()
             context = context | self.get_context_data(kwargs=kwargs)
-            form = self.form_class(request.POST, instance=update_object)
+            context["section_saved"] = True
+
         context["experience_edit_form"] = form
         return render(request, self.template_name, context)
 

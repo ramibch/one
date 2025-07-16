@@ -4,10 +4,13 @@
   data-id="{{ skill_edit_form.instance.id }}"
   onsubmit="event.preventDefault();"
   hx-post="{{ skill_edit_form.instance.hx_edit_url }}"
-  hx-trigger="change"
+  hx-trigger="change, keyup changed delay:1000ms"
   hx-swap="outerHTML"
   hx-target="closest form"
 >
+
+  {% include "candidates/partials/section_being_saved.html" %}
+
   <fieldset role="group">
     <div x-show="showSkillSort | showSkillDelete">
       <button x-show="showSkillSort" style="border:none;"
@@ -52,5 +55,6 @@
     </div>
 
   </fieldset>
+
   <input type="hidden" name="order" value="{{ skill_edit_form.instance.id }}">
 </form>

@@ -4,8 +4,8 @@
   data-id="{{ education_edit_form.instance.id }}"
   onsubmit="event.preventDefault();"
   hx-post="{{ education_edit_form.instance.hx_edit_url }}"
-  hx-trigger="change"
-  hx-swap="none"
+  hx-trigger="change, keyup changed delay:1000ms"
+  hx-swap="outerHTML"
 >
   <div x-show="showEduSort | showEduDelete" x-bind:class="showEduSort | showEduDelete? 'col-2' : '' ">
     <button x-show="showEduSort" style="border:none;"
@@ -30,8 +30,10 @@
   </div>
 
   <div x-bind:class="showEduSort | showEduDelete? 'col-10' : '' ">
+    {% include "candidates/partials/section_being_saved.html" %}
     {% include "candidates/partials/education_form_content.html" with education_form=education_edit_form %}
   </div>
+
 
   <input type="hidden" name="order" value="{{ education_edit_form.instance.id }}">
 </form>

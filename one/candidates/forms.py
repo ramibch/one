@@ -47,6 +47,12 @@ class CandidateEditForm(forms.ModelForm):
         )
 
 
+class CandidateExtraEditForm(forms.ModelForm):
+    class Meta:
+        model = Candidate
+        fields = ("coverletter_body",)
+
+
 class SkillForm(forms.ModelForm):
     class Meta:
         model = CandidateSkill

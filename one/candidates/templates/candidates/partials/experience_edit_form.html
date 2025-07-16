@@ -4,8 +4,8 @@
   data-id="{{ experience_edit_form.instance.id }}"
   onsubmit="event.preventDefault();"
   hx-post="{{ experience_edit_form.instance.hx_edit_url }}"
-  hx-trigger="change"
-  hx-swap="none"
+  hx-trigger="change, keyup changed delay:1000ms"
+  hx-swap="outerHTML"
 >
   <div x-show="showExpSort | showExpDelete" x-bind:class="showExpSort | showExpDelete? 'col-2' : '' ">
     <button x-show="showExpSort" style="border:none;"
@@ -30,6 +30,7 @@
   </div>
 
   <div x-bind:class="showExpSort | showExpDelete? 'col-10' : '' ">
+    {% include "candidates/partials/section_being_saved.html" %}
     {% include "candidates/partials/experience_form_content.html" with experience_form=experience_edit_form %}
   </div>
 

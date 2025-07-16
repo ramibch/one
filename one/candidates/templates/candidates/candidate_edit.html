@@ -2,12 +2,21 @@
 
 {% load i18n %}
 
-{% block head_title %}{% translate "Edit" %}{% endblock %}
+{% block head_title %}{% translate "Edit Profile" %}{% endblock %}
 
 {% block content %}
 
-<div class="row">
+<center>
+  <h1>{% translate "Edit Profile" %}</h1>
+  <hr>
+</center>
 
+<h2>{% translate "Curriculum vitae" %}</h2>
+<br>
+
+
+
+<div class="row">
   <div class="col-md-4">
     {% include "candidates/partials/candidate_form.html" %}
   </div>
@@ -23,6 +32,13 @@
     {% include "candidates/partials/experience_edit.html" %}
 
   </div>
+</div>
+
+
+<hr>
+<h2>{% translate "Extra information" %}</h2>
+<div>
+  {% include "candidates/partials/candidate_extra_form.html" %}
 </div>
 
 {% endblock content %}
