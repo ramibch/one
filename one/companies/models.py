@@ -107,7 +107,6 @@ class Job(OneModel):
     language = models.CharField(max_length=8, choices=settings.LANGUAGES, default="de")
     title = models.CharField(max_length=128)
     body = models.TextField(blank=True, null=True)
-    job_id = models.CharField(max_length=64, blank=True, null=True)
 
     source_url = models.URLField(max_length=256, blank=True, null=True)
     recruiter = ForeignKey(
