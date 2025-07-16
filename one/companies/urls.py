@@ -13,7 +13,7 @@ urlpatterns = [
     # jobs
     path(_("jobs"), JobListView.as_view(), name="job_list"),
     path(_("job") + "/<uuid:pk>", JobDetailView.as_view(), name="job_detail"),
-    path("job/<int:pk>/hx-apply", JobApplicationHxView.as_view(), name="job_apply"),
+    path("job-apply/<uuid:pk>", JobApplicationHxView.as_view(), name="job_apply"),
     # companies
     path(_("list"), CompanyListView.as_view(), name="company_list"),
     path("<int:pk>", CompanyDetailView.as_view(), name="company_detail"),
