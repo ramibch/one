@@ -30,8 +30,8 @@
   </div>
 
   <div x-bind:class="showEduSort | showEduDelete? 'col-10' : '' ">
-    {% include "candidates/partials/section_being_saved.html" %}
     {% include "candidates/partials/education_form_content.html" with education_form=education_edit_form %}
+    {% include "candidates/partials/section_being_saved.html" %}
   </div>
 
 

@@ -9,8 +9,6 @@
   hx-target="closest form"
 >
 
-  {% include "candidates/partials/section_being_saved.html" %}
-
   <fieldset role="group">
     <div x-show="showSkillSort | showSkillDelete">
       <button x-show="showSkillSort" style="border:none;"
@@ -55,6 +53,8 @@
     </div>
 
   </fieldset>
+
+  {% include "candidates/partials/section_being_saved.html" %}
 
   <input type="hidden" name="order" value="{{ skill_edit_form.instance.id }}">
 </form>

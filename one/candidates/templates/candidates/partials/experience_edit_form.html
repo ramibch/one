@@ -30,8 +30,8 @@
   </div>
 
   <div x-bind:class="showExpSort | showExpDelete? 'col-10' : '' ">
-    {% include "candidates/partials/section_being_saved.html" %}
     {% include "candidates/partials/experience_form_content.html" with experience_form=experience_edit_form %}
+    {% include "candidates/partials/section_being_saved.html" %}
   </div>
 
   <input type="hidden" name="order" value="{{ experience_edit_form.instance.id }}">
