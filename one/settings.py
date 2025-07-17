@@ -228,6 +228,12 @@ LANGUAGES = [
     ("pt", _("Portuguese")),
 ]
 
+
+lang_input = ["es", "de"]
+
+langs_out = [("en", _("English")), ("de", _("German"))]  # output desired
+
+
 LANGUAGE_CODES = [items[0] for items in LANGUAGES]
 LANGUAGE_CODES_WITHOUT_DEFAULT = copy(LANGUAGE_CODES)
 LANGUAGE_CODES_WITHOUT_DEFAULT.remove(LANGUAGE_CODE)

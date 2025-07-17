@@ -501,7 +501,7 @@ class JobApplication(OneModel):
         editable=False,
     )
     language = models.CharField(
-        verbose_name=_("Language"),
+        verbose_name=_("Application language"),
         max_length=4,
         choices=settings.LANGUAGES,
         default=settings.LANGUAGE_CODE,

@@ -46,11 +46,19 @@ class JobAdmin(admin.ModelAdmin):
     autocomplete_fields = ("company_locations", "recruiter", "company")
     search_fields = ("title", "body")
     list_display = ("__str__", "recruiter", "source_url")
-    list_filter = ("language",)
+    list_filter = ("language", "is_approved", "is_active", "expires_on")
     readonly_fields = ("is_active", "expires_on")
 
-    actions = ["scrape_pages"]
+    actions = ["scrape_pages", "approve_jobs", "disapprove_jobs"]
 
     @admin.action(description="🧐 Scrape job pages")
     def scrape_pages(modeladmin, request, queryset):
         scrape_job_detail_pages(queryset)
+
+    @admin.action(description="✅ Approve jobs")
+    def approve_jobs(modeladmin, request, queryset):
+        queryset.update(is_approved=True)
+
+    @admin.action(description="❌ Disapprove jobs")
+    def disapprove_jobs(modeladmin, request, queryset):
+        queryset.update(is_approved=False)

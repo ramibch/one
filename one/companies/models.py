@@ -127,6 +127,7 @@ class Job(OneModel):
     duration = models.DurationField(default=timedelta(days=60))
     expires_on = models.DateTimeField(editable=False)
     is_active = models.BooleanField(default=True, editable=False)
+    is_approved = models.BooleanField(default=False)
 
     objects = JobManager()
     all_objects = Manager()
