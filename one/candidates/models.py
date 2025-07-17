@@ -502,6 +502,7 @@ class JobApplication(OneModel):
         "companies.Job",
         on_delete=models.CASCADE,
         verbose_name=_("Job"),
+        null=True,
     )
     candidate = ForeignKey(
         Candidate,
