@@ -1,0 +1,33 @@
+{% load i18n static %}
+<form
+    hx-post="{{ candidate.hx_photo_edit_url }}"
+    hx-encoding="multipart/form-data"
+    hx-trigger="change"
+    hx-target="this"
+    hx-swap="outerHTML"
+>
+  {% if candidate.photo and candidate.photo.url %}
+    <div x-data="{ commands: false}" id="photo_container">
+      <img x-on:click="commands=!commands" src="{{ candidate.photo.url }}" alt="">
+      <center class="mt-2" x-show="commands">
+        <button title="{% translate "Delete photo" %}" class="outline"
+          hx-delete="{{ candidate.hx_delete_photo_url }}"
+          hx-confirm="{% translate 'Are you sure to delete the photo?' %}"
+          hx-target="#photo_container"
+          hx-trigger="click"
+          hx-swap="delete"
+        >
+        <i class="bi bi-trash" ></i>
+        </button>
+      </center>
+    </div>
+  {% endif %}
+
+  {% for field in candidate_photo_form %}
+    <div>
+      {{ field.label }}
+      {{ field }}
+      {% include "candidates/partials/field_being_saved.html" %}
+    </div>
+  {% endfor %}
+</form>

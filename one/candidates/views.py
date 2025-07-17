@@ -21,6 +21,7 @@ from one.candidates.forms import (
     CandidateCreateForm,
     CandidateEditForm,
     CandidateExtraEditForm,
+    CandidatePhotoEditForm,
     EducationForm,
     ExperienceForm,
     JobApplicationForm,
@@ -156,6 +157,7 @@ class CandidateEditView(LoginRequiredMixin, TemplateView):
         context = {
             "candidate": candidate,
             "candidate_form": CandidateEditForm(instance=candidate),
+            "candidate_photo_form": CandidatePhotoEditForm(instance=candidate),
             "candidate_extra_form": CandidateExtraEditForm(instance=candidate),
             "skill_edit_forms": [SkillForm(instance=sk) for sk in skill_qs],
             "skill_new_form": SkillForm(),
@@ -207,6 +209,34 @@ class CandidateExtraEditHxView(LoginRequiredMixin, UpdateView):
         } | self.get_context_data(**kwargs)
 
         return render(request, self.template_name, context)
+
+
+class CandidatePhotoEditHxView(LoginRequiredMixin, UpdateView):
+    model = Candidate
+    form_class = CandidatePhotoEditForm
+    template_name = "candidates/partials/candidate_photo_form.html"
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.object = self.get_object()
+
+        form = self.form_class(request.POST, files=request.FILES, instance=self.object)
+        if form.is_valid():
+            form.save()
+        context = {
+            "candidate_photo_form": form,
+            "changed_data": form.changed_data,
+        } | self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
+
+
+@method_decorator(never_cache, name="dispatch")
+class CandidatePhotoDeleteHxView(LoginRequiredMixin, DeleteView):
+    model = Candidate
+
+    def delete(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        candidate = get_candidate_or_404(self, url_key="pk")
+        candidate.photo.delete()
+        return HttpResponse(status=HTTPStatus.OK)
 
 
 @method_decorator(never_cache, name="dispatch")

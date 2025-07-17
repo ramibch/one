@@ -30,11 +30,16 @@ class CandidateCreateForm(forms.ModelForm):
         widgets = {"languages": forms.CheckboxSelectMultiple()}
 
 
+class CandidatePhotoEditForm(forms.ModelForm):
+    class Meta:
+        model = Candidate
+        fields = ("photo",)
+
+
 class CandidateEditForm(forms.ModelForm):
     class Meta:
         model = Candidate
         fields = (
-            "photo",
             "job_title",
             "first_name",
             "last_name",

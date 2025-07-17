@@ -180,6 +180,14 @@ class Candidate(TranslatableModel):
         return reverse("candidateextra_edit", kwargs={"pk": self.pk})
 
     @cached_property
+    def hx_photo_edit_url(self):
+        return reverse("candidatephoto_edit", kwargs={"pk": self.pk})
+
+    @cached_property
+    def hx_delete_photo_url(self):
+        return reverse("candidatephoto_delete", kwargs={"pk": self.pk})
+
+    @cached_property
     def hx_create_skill_url(self):
         return reverse("candidateskill_create", kwargs={"candidate_pk": self.pk})
 

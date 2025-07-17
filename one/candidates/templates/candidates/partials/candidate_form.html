@@ -1,15 +1,10 @@
 {% load i18n static %}
 <form
-    hx-encoding="multipart/form-data"
     hx-post="{{ candidate.hx_edit_url }}"
-    hx-trigger="change, keyup changed delay:1000ms"
-    hx-swap="outerHTML"
+    hx-trigger="change delay:500ms, keyup delay:500ms"
     hx-target="this"
+    hx-swap="outerHTML"
 >
-  {% if candidate.photo and candidate.photo.url %}
-    <img src="{{ candidate.photo.url }}" alt="">
-  {% endif %}
-
   {% for field in candidate_form %}
     <div>
       {{ field.label }}

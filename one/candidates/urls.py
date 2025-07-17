@@ -10,6 +10,8 @@ from .views import (
     CandidateEditHxView,
     CandidateEditView,
     CandidateExtraEditHxView,
+    CandidatePhotoDeleteHxView,
+    CandidatePhotoEditHxView,
     EducationCreateHxView,
     EducationDeleteHxView,
     EducationEditHxView,
@@ -57,6 +59,16 @@ urlpatterns = [
         "<uuid:pk>/extra-edit",
         CandidateExtraEditHxView.as_view(),
         name="candidateextra_edit",
+    ),
+    path(
+        "<uuid:pk>/photo-edit",
+        CandidatePhotoEditHxView.as_view(),
+        name="candidatephoto_edit",
+    ),
+    path(
+        "<uuid:pk>/photo-delete",
+        CandidatePhotoDeleteHxView.as_view(),
+        name="candidatephoto_delete",
     ),
     path(
         "<uuid:pk>/pub",
