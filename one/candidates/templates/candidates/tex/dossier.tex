@@ -67,46 +67,47 @@
 
 \end{titlepage}
 
+{% if candidate.coverletter_body %}
+  % Header
+  \begin{center}
+    {\fontsize{24}{0}\selectfont {{ candidate.get_tex_value("full_name") }} } \\
+    \vspace{5mm}
+    \today
+  \end{center}
 
-% Header
-\begin{center}
-  {\fontsize{24}{0}\selectfont {{ candidate.get_tex_value("full_name") }} } \\
+  \vspace{10mm}
+  {% if app.job.recruiter %}{{- app.job.recruiter.get_tex_value("full_name") -}} \\{% endif %}
+  {{- app.job.company.name -}} \\
+  {%- if app.job.company_locations.count() == 1 -%}
+  {{ app.job.company_locations.first().geoinfo.get_tex_value("address") }}
+  {%- endif -%}
+
+  \begin{center}
+  \textbf{ {{- app.job.get_tex_value("title") -}} }\\
+  \vspace{15mm}
+  \end{center}
+
+  \vspace{-3mm}{{- app.get_tex_value("coverletter_salutation") -}}\\
+
+  % Body
+  \vspace{-3mm}\setlength\parindent{24pt}
+
+  {{ candidate.get_tex_value("coverletter_body") }}
+
   \vspace{5mm}
-  \today
-\end{center}
 
-\vspace{10mm}
-{% if app.job.recruiter %}{{- app.job.recruiter.get_tex_value("full_name") -}} \\{% endif %}
-{{- app.job.company.name -}} \\
-{%- if app.job.company_locations.count() == 1 -%}
-{{ app.job.company_locations.first().geoinfo.get_tex_value("address") }}
-{%- endif -%}
+  % Closer
+  \vspace{10mm}
 
-\begin{center}
-\textbf{ {{- app.job.get_tex_value("title") -}} }\\
-\vspace{15mm}
-\end{center}
+  \begin{flushleft}
+  {{- app.coverletter_closing -}}\\
+  {{- candidate.get_tex_value("full_name") -}}\\
+  \vspace{3mm}
 
-\vspace{-3mm}{{- app.coverletter_salutation -}}\\
+  \end{flushleft}
 
-% Body
-\vspace{-3mm}\setlength\parindent{24pt}
-
-{{ candidate.get_tex_value("coverletter_body") }}
-
-\vspace{5mm}
-
-% Closer
-\vspace{10mm}
-
-\begin{flushleft}
-{{- app.coverletter_closing -}}\\
-{{- candidate.get_tex_value("full_name") -}}\\
-\vspace{3mm}
-
-\end{flushleft}
-
-\pagebreak
+  \pagebreak
+{% endif %}
 
 % \section*{\faIcon{address-card} Contact Information}
 \begin{center}
