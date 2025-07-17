@@ -46,7 +46,7 @@ class JobListView(ListView):
 
     def get_queryset(self) -> QuerySet:
         qs = super().get_queryset()
-        return qs.filter(body__isnull=False, is_approved=True, is_active=True)
+        return qs.filter(is_approved=True, is_active=True).exclude(body__in=[None, ""])
 
 
 class CompanyListView(ListView):
