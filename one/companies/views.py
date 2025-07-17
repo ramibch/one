@@ -45,8 +45,12 @@ class JobListView(ListView):
     paginate_by = 12
 
     def get_queryset(self) -> QuerySet:
-        qs = super().get_queryset()
-        return qs.filter(is_approved=True, is_active=True).exclude(body__in=[None, ""])
+        return (
+            super()
+            .get_queryset()
+            .filter(body__isnull=False, is_approved=True, is_active=True)
+            .exclude(body="")
+        )
 
 
 class CompanyListView(ListView):
