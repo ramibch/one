@@ -17,7 +17,7 @@ from copy import copy
 from datetime import datetime
 from pathlib import Path
 
-from csp.constants import NONCE, SELF, UNSAFE_EVAL, UNSAFE_HASHES
+from csp.constants import NONCE, NONE, SELF, UNSAFE_EVAL, UNSAFE_HASHES
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 from environs import Env
@@ -557,7 +557,7 @@ CONTENT_SECURITY_POLICY = {
         "frame-ancestors": [SELF],
         "form-action": [SELF],
         "img-src": [SELF, AWS_S3_ENDPOINT_URL, "data:"],
-        "default-src": [SELF, NONCE, AWS_S3_ENDPOINT_URL],
+        "default-src": [SELF, NONCE, NONE, AWS_S3_ENDPOINT_URL],
         "script-src": [SELF, NONCE, AWS_S3_ENDPOINT_URL, UNSAFE_EVAL, UNSAFE_HASHES],
         "script-src-attr": [
             SELF,
