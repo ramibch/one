@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     "bx_django_utils",  # needed from huey_monitor
     "huey_monitor",
     "debug_toolbar",
+    "csp",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -116,6 +117,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "one.base.middleware.ip.IpAddressMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "csp.middleware.CSPMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
