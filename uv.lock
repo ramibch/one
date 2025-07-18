@@ -654,6 +654,19 @@ wheels = [
 ]
 
 [[package]]
+name = "django-permissions-policy"
+version = "4.26.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "asgiref" },
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/31/2e/421a9dc5852175802fbf5266a87c945e4c91117938a02fa24732e4f39907/django_permissions_policy-4.26.0.tar.gz", hash = "sha256:0e129870453ff90521aa2cf8264978fbc57e33117d2313052809730869f8b626", size = 10367, upload-time = "2025-04-30T09:31:23.305Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/06/f2/13cba28047672e4b195e4296037e78290acd6656234095ff47b85128902f/django_permissions_policy-4.26.0-py3-none-any.whl", hash = "sha256:d5a5067b8137c326f3015e02d8e6615e980f1a12903d0dbf9cb446e227bc67dd", size = 6744, upload-time = "2025-04-30T09:31:21.655Z" },
+]
+
+[[package]]
 name = "django-rest-framework"
 version = "0.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1274,6 +1287,7 @@ dependencies = [
     { name = "django-modeltranslation" },
     { name = "django-money" },
     { name = "django-nested-inline" },
+    { name = "django-permissions-policy" },
     { name = "django-rest-framework" },
     { name = "django-rosetta" },
     { name = "django-storages" },
@@ -1336,6 +1350,7 @@ requires-dist = [
     { name = "django-modeltranslation", specifier = ">=0.19.11" },
     { name = "django-money", specifier = ">=3.5.4" },
     { name = "django-nested-inline", specifier = ">=0.4.6" },
+    { name = "django-permissions-policy", specifier = ">=4.26.0" },
     { name = "django-rest-framework", specifier = ">=0.1.0" },
     { name = "django-rosetta", specifier = ">=0.10.1" },
     { name = "django-storages", specifier = ">=1.14.4" },

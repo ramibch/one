@@ -121,6 +121,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "one.base.middleware.ip.IpAddressMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "django_permissions_policy.PermissionsPolicyMiddleware",
     "csp.middleware.CSPMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -575,6 +576,25 @@ CONTENT_SECURITY_POLICY = {
     },
 }
 
+# Permissions-Policy
+
+PERMISSIONS_POLICY = {
+    "accelerometer": [],
+    "ambient-light-sensor": [],
+    "autoplay": [],
+    "camera": [],
+    "display-capture": [],
+    "encrypted-media": ["self"],
+    "fullscreen": [],
+    "geolocation": ["self"],
+    "gyroscope": [],
+    "interest-cohort": [],
+    "magnetometer": [],
+    "microphone": [],
+    "midi": [],
+    "payment": ["self"],
+    "usb": [],
+}
 
 # One secret key
 ONE_SECRET_KEY = env("ONE_SECRET_KEY")
