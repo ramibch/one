@@ -31,43 +31,22 @@
           <div class="row" id="answers">
             {% if question.type == 1 %}
               <p>
-                <span style="cursor: pointer" x-on:click="quiz_question_modal = true">🈳</span>
+                <span  class="clickable" x-on:click="quiz_question_modal = true">🈳</span>
                 {% if question.text_one %}{{ question.text_one }}{% endif %}
-                <input style="all: unset;
-                              border-bottom: 5px solid;
-                              text-align: center"
-                       size="10px"
-                       onkeypress="this.style.width = ((this.value.length + 5) * 15) + 'px';"
-                       type="text"
-                       name="answer_input_one"
-                       value="">
+                  <input type="text" name="answer_input_one" value="">
                 {% if question.text_two %}{{ question.text_two }}{% endif %}
               </p>
             {% elif question.type == 2 %}
               <p>
                 {% if question.text_one %}{{ question.text_one }}{% endif %}
-                <input style="all: unset;
-                              border-bottom: 5px solid;
-                              text-align: center"
-                       size="10px"
-                       onkeypress="this.style.width = ((this.value.length + 10) * 15) + 'px';"
-                       type="text"
-                       name="answer_input_one"
-                       value="">
+                  <input type="text" name="answer_input_one" value="">
                 {% if question.text_two %}{{ question.text_two }}{% endif %}
-                <input style="all: unset;
-                              border-bottom: 5px solid;
-                              text-align: center"
-                       size="10px"
-                       onkeypress="this.style.width = ((this.value.length + 10) * 15) + 'px';"
-                       type="text"
-                       name="answer_input_two"
-                       value="">
+                  <input type="text" name="answer_input_two" value="">
                 {% if question.text_three %}{{ question.text_three }}{% endif %}
               </p>
             {% elif question.type == 5 %}
               <p>
-                <span style="cursor: pointer" x-on:click="quiz_question_modal = true">🈳</span> {{ question.text_one }}
+                <span  class="clickable" x-on:click="quiz_question_modal = true">🈳</span> {{ question.text_one }}
               </p>
               {% if question.text_two %}<p>{{ question.text_two }}</p>{% endif %}
               {% if question.text_three %}<p>{{ question.text_three }}</p>{% endif %}

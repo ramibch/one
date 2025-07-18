@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-  "django==5.2",
+  "django>=5.2.4",
   "django-auto-prefetch>=1.12.0",
   "django-cleanup>=9.0.0",
   "django-extensions>=3.2.3",
@@ -61,7 +61,8 @@ dependencies = [
   "markdownify>=1.1.0",
   "langdetect>=1.0.9",
   "selenium>=4.32.0",
-  "ruff>=0.12.2", # when django 6.0, use its standard implementation
+  "ruff>=0.12.2",
+  "django-csp>=4.0",
 ]
 
 

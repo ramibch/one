@@ -78,3 +78,20 @@ function getCropInitData() {
   console.log(data);
   return data;
 }
+
+
+// quiz type inputs
+const inputOne = document.querySelector('input[name="answer_input_one"]');
+
+if (inputOne) {
+  inputOne.addEventListener('input', () => {
+    inputOne.style.width = `${(inputOne.value.length + 10) * 15}px`;
+  });
+}
+
+const inputTwo = document.querySelector('input[name="answer_input_two"]');
+if (inputTwo) {
+  inputTwo.addEventListener('input', () => {
+    inputTwo.style.width = `${(inputTwo.value.length + 10) * 15}px`;
+  });
+}

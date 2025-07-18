@@ -27,7 +27,7 @@
         <td> {% if jobapp.job.recruiter %} {{ jobapp.job.recruiter }} {% else %} {% translate "Unknown" %} {% endif %} </td>
         <td> {{ jobapp.created_at }} </td>
         <td>
-          <button style="border:none;" title="{% translate 'Delete' %}"
+          <button  class="no-border" title="{% translate 'Delete' %}"
             x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
             x-bind:class="hover? '' : 'outline'"
             hx-post="{{ jobapp.hx_delete_url }}"

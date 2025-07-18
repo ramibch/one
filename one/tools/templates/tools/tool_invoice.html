@@ -41,7 +41,7 @@
        x-init="update_totals();">
     <div class="row">
       <div class="col-md-6">
-        <input type="text" x-model="title" style="border: 0; outline: 0; font-weight: bold;" />
+        <input type="text" x-model="title" class="border-0 outline-0 text-bold"  />
         <input type="text" x-model="company_name" placeholder="Company name" />
         <textarea x-model="company_address" rows="4" placeholder="Company address"></textarea>
       </div>
@@ -49,19 +49,19 @@
         <!-- https://gist.github.com/igotit-anything/90ea1095c785a41dd8409bd92d86c6f7 -->
       </div>
       <div x-bind:class="settings_shipto_active ? 'col-md-3' : 'col-md-6'">
-        <input x-model="to_heading" style="border: 0; outline: 0" />
+        <input x-model="to_heading" class="border-0 outline-0" />
         <textarea x-model="to" rows="4"></textarea>
       </div>
       <div x-bind:class="settings_shipto_active ? 'col-md-3' : '' " x-show="settings_shipto_active">
-        <input x-model="ship_to_heading" style="border: 0; outline: 0" />
+        <input x-model="ship_to_heading" class="border-0 outline-0" />
         <textarea x-model="ship_to" rows="4"></textarea>
       </div>
       <div class="col-md-6">
         <div class="row">
           <div class="col">
-            <input x-model="number_heading" style="border: 0; outline: 0; text-align: right" />
-            <input x-model="date_heading" style="border: 0; outline: 0; text-align: right" />
-            <input x-model="order_number_heading" style="border: 0; outline: 0; text-align: right" />
+            <input x-model="number_heading" class="border-0 outline-0 text-right" />
+            <input x-model="date_heading" class="border-0 outline-0 text-right" />
+            <input x-model="order_number_heading" class="border-0 outline-0 text-right" />
           </div>
           <div class="col">
             <input x-model="number" type="text" />
@@ -71,17 +71,17 @@
         </div>
       </div>
       <div class="col-md-4">
-        <input type="text" x-model="article_title_text" style="border: 0; outline: 0" />
+        <input type="text" x-model="article_title_text" class="border-0 outline-0" />
       </div>
       <div class="col-md-2">
         <input type="text"
-               x-model="article_quantity_text" style="border: 0; outline: 0" />
+               x-model="article_quantity_text" class="border-0 outline-0" />
       </div>
       <div class="col-md-2">
-        <input type="text" x-model="article_price_text" style="border: 0; outline: 0" />
+        <input type="text" x-model="article_price_text" class="border-0 outline-0" />
       </div>
       <div class="col-md-2">
-        <input type="text" x-model="article_total_text" style="border: 0; outline: 0" />
+        <input type="text" x-model="article_total_text" class="border-0 outline-0" />
       </div>
       <template x-for="(product, p_index) in products">
         <div class="row">
@@ -105,18 +105,18 @@
     </button>
     <div class="row">
       <div class="col-md-6">
-        <input type="text" x-model="terms_heading" style="border: 0; outline: 0" />
+        <input type="text" x-model="terms_heading" class="border-0 outline-0" />
         <textarea rows="4" x-model="terms"></textarea>
       </div>
       <!-- subtotal, discount, total -->
       <div class="col-md-6">
         <div class="row">
           <div class="col-6">
-            <input type="text" x-model="subtotal_heading" style="border: 0; outline: 0; text-align: right" />
-            <input type="text" x-show="settings_discount_active" x-model="discount_heading" style="border: 0; outline: 0; text-align: right" />
-            <input x-show="settings_discount_active" type="text" x-model="subtotal_with_discount_heading" style="border: 0; outline: 0; text-align: right" />
-            <input type="text" x-model="vat_heading" style="border: 0; outline: 0; text-align: right" />
-            <input type="text" x-model="total_heading" style="border: 0; outline: 0; text-align: right" />
+            <input type="text" x-model="subtotal_heading" class="border-0 outline-0 text-right" />
+            <input type="text" x-show="settings_discount_active" x-model="discount_heading" class="border-0 outline-0 text-right" />
+            <input x-show="settings_discount_active" type="text" x-model="subtotal_with_discount_heading" class="border-0 outline-0 text-right" />
+            <input type="text" x-model="vat_heading" class="border-0 outline-0 text-right" />
+            <input type="text" x-model="total_heading" class="border-0 outline-0 text-right" />
           </div>
           <div class="col-6">
             <input type="text" x-model="subtotal_str" disabled />

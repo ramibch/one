@@ -72,3 +72,130 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.no-border {
+  border: none;
+}
+
+
+.clickable {
+  cursor: pointer;
+}
+
+
+.float-right{
+  float: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-bold{
+  font-weight: bold;
+}
+
+.fs-1{
+  font-size: 1em;
+}
+
+.fs-2{
+  font-size: 2em;
+}
+
+.fs-3{
+  font-size: 3em;
+}
+
+.fs-4{
+  font-size: 4em;
+}
+
+.fs-5{
+  font-size: 5em;
+}
+
+.fs-6{
+  font-size: 6em;
+}
+
+.fs-7{
+  font-size: 7em;
+}
+
+.fs-8{
+  font-size: 8em;
+}
+
+.fs-9{
+  font-size: 9em;
+}
+
+.fs-10{
+  font-size: 10em;
+}
+
+
+.r-1{
+  border-radius: 1em;
+}
+
+.r-2{
+  border-radius: 2em;
+}
+
+.r-3{
+  border-radius: 3em;
+}
+
+.r-4{
+  border-radius: 4em;
+}
+
+.r-5{
+  border-radius: 5em;
+}
+
+.r-6{
+  border-radius: 6em;
+}
+
+no-text-deco{
+  text-decoration: none;
+}
+
+
+.outline-0{
+  outline: 0;
+}
+
+.border-0{
+  border: 0;
+}
+
+
+/* quiz text input */
+input[name="answer_input_one"]{
+  all: unset;
+  border-bottom: 3px solid;
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+  width: 10px; /* optional default width */
+}
+
+input[name="answer_input_two"]{
+  all: unset;
+  border-bottom: 3px solid;
+  margin: auto;
+  text-align: center;
+  width: 10px; /* optional default width */
+}

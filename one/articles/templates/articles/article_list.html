@@ -12,7 +12,7 @@
   {% for obj in object_list %}
   <li>
     <a href="{{ obj.url }}" title="{{ obj.display_title }}">{{ obj.display_title }}</a>
-    <span style="float: right;">{{ obj.created_on }}</span>
+    <span class="float-right">{{ obj.created_on }}</span>
   </li>
   {% endfor %}
 </ul>

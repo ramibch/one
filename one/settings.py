@@ -11,10 +11,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 # 0. Setup
+import base64
+import hashlib
 from copy import copy
 from datetime import datetime
 from pathlib import Path
 
+from csp.constants import NONCE, SELF, UNSAFE_EVAL, UNSAFE_HASHES
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 from environs import Env
@@ -99,6 +102,7 @@ INSTALLED_APPS = [
     "bx_django_utils",  # needed from huey_monitor
     "huey_monitor",
     "debug_toolbar",
+    "csp",  # remove when django v6.0 is installed
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -111,11 +115,13 @@ INSTALLED_APPS = [
     "django.contrib.gis",
     "django.db.migrations",
     "django.contrib.admindocs",
+    "django.contrib.postgres",
 ]
 
 MIDDLEWARE = [
     "one.base.middleware.ip.IpAddressMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "csp.middleware.CSPMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -480,42 +486,6 @@ Project settings
 
 MAIN_WEBSITE_URL = "https://ramib.ch"
 
-# https
-if HTTPS:
-    # https in production
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_HSTS_SECONDS = 31_536_000  # 31536000 # usual: 31536000 (1 year)
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_PRELOAD = True
-
-# One secret key
-ONE_SECRET_KEY = env("ONE_SECRET_KEY")
-
-# cache clear
-CLEAR_CACHE_IN_DEV = True
-
-
-# Tex
-# TODO: check if it is posible to pass an arg. to run tex without this setting.
-
-LATEX_GRAPHICSPATH = []
-
-
-# Submodules
-SUBMODULES_PATH = BASE_DIR / "submodules"
-
-
-# Telegram
-# 1. Use BotFather to get API KEY: https://telegram.me/BotFather
-# 2. (Admin): Write something to Bot in Telegram
-# 3. Read the updates: one.base.utils.telegram.Bot.get_updates
-
-TELEGRAM_BOT_API_KEY = env("TELEGRAM_BOT_API_KEY")
-TELEGRAM_ADMIN_CHAT_ID = env("TELEGRAM_ADMIN_CHAT_ID", "1777934566")
-
 
 # Media and static files (S3)
 AWS_S3_ACCESS_KEY_ID = env("AWS_S3_ACCESS_KEY_ID")
@@ -561,6 +531,75 @@ STORAGES = {
     #     },
     # },
 }
+
+# https
+if HTTPS:
+    # https in production
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_HSTS_SECONDS = 31_536_000  # 31536000 # usual: 31536000 (1 year)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_PRELOAD = True
+
+# CSP
+
+
+def csp_sha256_hash(js_code):
+    digest = hashlib.sha256(js_code.encode("utf-8")).digest()
+    return f"'sha256-{base64.b64encode(digest).decode('utf-8')}'"
+
+
+CONTENT_SECURITY_POLICY = {
+    "EXCLUDE_URL_PREFIXES": ["/excluded-path/"],
+    "DIRECTIVES": {
+        "frame-ancestors": [SELF],
+        "form-action": [SELF],
+        "img-src": [SELF, AWS_S3_ENDPOINT_URL, "data:"],
+        "default-src": [SELF, NONCE, AWS_S3_ENDPOINT_URL],
+        "script-src": [SELF, NONCE, AWS_S3_ENDPOINT_URL, UNSAFE_EVAL, UNSAFE_HASHES],
+        "script-src-attr": [
+            SELF,
+            UNSAFE_HASHES,
+            csp_sha256_hash("event.preventDefault();"),
+        ],
+        "style-src": [SELF, NONCE, UNSAFE_HASHES],
+        "style-src-attr": [SELF, NONCE, UNSAFE_HASHES],
+        "style-src-elem": [
+            SELF,
+            NONCE,
+            UNSAFE_HASHES,
+            "'sha256-bsV5JivYxvGywDAZ22EZJKBFip65Ng9xoJVLbBg7bdo='",
+        ],
+    },
+}
+
+
+# One secret key
+ONE_SECRET_KEY = env("ONE_SECRET_KEY")
+
+# cache clear
+CLEAR_CACHE_IN_DEV = True
+
+
+# Tex
+# TODO: check if it is posible to pass an arg. to run tex without this setting.
+
+LATEX_GRAPHICSPATH = []
+
+
+# Submodules
+SUBMODULES_PATH = BASE_DIR / "submodules"
+
+
+# Telegram
+# 1. Use BotFather to get API KEY: https://telegram.me/BotFather
+# 2. (Admin): Write something to Bot in Telegram
+# 3. Read the updates: one.base.utils.telegram.Bot.get_updates
+
+TELEGRAM_BOT_API_KEY = env("TELEGRAM_BOT_API_KEY")
+TELEGRAM_ADMIN_CHAT_ID = env("TELEGRAM_ADMIN_CHAT_ID", "1777934566")
 
 # DB backups
 # https://django-dbbackup.readthedocs.io/en/stable/storage.html#amazon-s3

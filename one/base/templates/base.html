@@ -78,12 +78,12 @@
     {% block extra_body %}
     {% endblock extra_body %}
     <!-- js -->
-    <script defer src="{% static 'js/htmx.js' %}"></script>
+    <script defer src="{% static 'js/htmx.js' %}" nonce="{{ request.csp_nonce }}"></script>
     <script defer src="{% static 'js/htmx-ext-ws.js' %}"></script>
     <script defer src="{% static 'js/hyperscript.js' %}"></script>
     <script defer src="{% static 'js/cropper.js' %}"></script>
-    <script defer src="{% static 'js/alpine_persist.js' %}"></script>
-    <script defer src="{% static 'js/alpine.js' %}"></script>
+    <script defer src="{% static 'js/alpine_persist.js' %}" nonce="{{ request.csp_nonce }}" ></script>
+    <script defer src="{% static 'js/alpine.js' %}" nonce="{{ request.csp_nonce }}"></script>
     <script defer src="{% static 'js/sortable.js' %}"></script>
     <script defer src="{% static 'js/base.js' %}"></script>
     {% block extra_js %}{% endblock %}

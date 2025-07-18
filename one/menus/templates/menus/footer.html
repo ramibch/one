@@ -31,7 +31,7 @@
     <p>
       {% for link in social_media_links %}
         {% if link.url %}
-          <a href="{{ link.url }}?ref={{ request.get_host }}" style="text-decoration: none"
+          <a href="{{ link.url }}?ref={{ request.get_host }}" class="no-text-deco"
              title="{{ link.platform }}" {% if link.new_tab %}target="_blank"{% endif %}>
             <img src='{% static link.static_icon_url %}' alt="{{ link.platform }}" height="32">
           </a>
@@ -46,10 +46,10 @@
       </i>
     </small>
     {% if request.site.change_theme_light_in_footer %}
-      <span style="cursor: pointer" x-on:click="darkTheme = !darkTheme" x-text="darkTheme ? '☀️' : '🌒'"></span>
+      <span class="clickable" x-on:click="darkTheme = !darkTheme" x-text="darkTheme ? '☀️' : '🌒'"></span>
     {% endif %}
     {% if request.site.change_language_in_footer and request.site.language_count > 1 %}
-      <span style="cursor: pointer" x-on:click="openLanguageModal = ! openLanguageModal" x-text="openLanguageModal ? '🪛' : '🌐' "></span>
+      <span class="clickable" x-on:click="openLanguageModal = ! openLanguageModal" x-text="openLanguageModal ? '🪛' : '🌐' "></span>
       {{ LANG_CODE|upper }}
     {% endif %}
   </center>

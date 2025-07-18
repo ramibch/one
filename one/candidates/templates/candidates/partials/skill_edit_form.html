@@ -10,17 +10,16 @@
 >
   <fieldset role="group">
     <div x-show="showSkillSort | showSkillDelete">
-      <button x-show="showSkillSort" style="border:none;"
+      <button x-show="showSkillSort"
           x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
-          x-bind:class="hover? 'handle' : 'outline handle'"
+          x-bind:class="hover? 'no-border handle' : 'no-border outline handle'"
           >
         <i class="bi bi-list"></i>
       </button>
       <button x-show="showSkillDelete"
-          style="border:none;"
           title="{% translate 'Delete' %}"
           x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
-          x-bind:class="hover? '' : 'outline'"
+          x-bind:class="hover? 'no-border' : 'no-border outline'"
           hx-delete="{{ skill_edit_form.instance.hx_delete_url }}"
           hx-confirm="{% translate 'Are you sure to delete this skill?' %}"
           hx-target="closest form"

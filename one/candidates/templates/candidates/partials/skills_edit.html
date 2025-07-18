@@ -2,12 +2,12 @@
 <section id="skills_edit" x-data="{showSkillSort : $persist(false), showSkillDelete : $persist(false) }">
   <h2>
     {% translate "Skills" %}
-    <button x-on:click="showSkillSort = !showSkillSort;" x-bind:class="showSkillSort? '' : 'outline'" style="border:none;"
+    <button x-on:click="showSkillSort = !showSkillSort;" x-bind:class="showSkillSort? 'no-border' : 'no-border outline'"
             x-bind:title="showSkillSort? '{% translate "Hide sorting buttons" %}' : '{% translate "Show sorting buttons" %}' ">
       <i class="bi bi-list"></i>
       <sup><i x-bind:class="showSkillSort? 'bi bi-eye-slash' : 'bi bi-eye' "></i></sup>
     </button>
-    <button x-on:click="showSkillDelete = !showSkillDelete;" x-bind:class="showSkillDelete? '' : 'outline'" style="border:none;"
+    <button x-on:click="showSkillDelete = !showSkillDelete;" x-bind:class="showSkillDelete? 'no-border' : 'no-border outline'"
             x-bind:title="showSkillDelete? '{% translate "Hide deleting buttons" %}' : '{% translate "Show deleting buttons" %}'">
       <i class="bi bi-trash" ></i>
       <sup><i x-bind:class="showSkillDelete? 'bi bi-eye-slash' : 'bi bi-eye' "></i></sup>
@@ -25,7 +25,7 @@
   </div>
   <div x-data="{showSkillNew: $persist(false) }"  >
     <center>
-      <button x-on:click="showSkillNew = !showSkillNew;" x-bind:class="showSkillNew? '' : 'outline'" style="border:none;" title="{% translate 'Add a new skill' %}">
+      <button x-on:click="showSkillNew = !showSkillNew;" x-bind:class="showSkillNew? 'no-border' : 'no-border outline'" title="{% translate 'Add a new skill' %}">
         <i class="bi bi-plus-circle-fill"></i>
       </button>
     </center>

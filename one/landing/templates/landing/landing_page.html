@@ -17,7 +17,7 @@
           </center>
         </div>
         <div class="col-md-6">
-          <img src="{{ section.image.url }}" alt="{{ section.image.alt }}" style="border-radius: 4em;">
+          <img src="{{ section.image.url }}" alt="{{ section.image.alt }}" class="r-4">
         </div>
       </section>
     {% endwith %}
@@ -31,7 +31,7 @@
       <hr>
       <section class="mt-5" >
         <div class="row">
-          <div class="col-md-3" style="text-align: center; font-size: 5em;" >{{ section.emoji }} </div>
+          <div class="col-md-3" class="text-center fs-5" >{{ section.emoji }} </div>
           <div class="col-md-9">
             <h2>{{ section.title }} </h2>
             <p >{{ section.description|markdownify:"simple_text" }}</p>
@@ -53,7 +53,7 @@
             <h2>{{ section.title }} </h2>
             {{ section.description|markdownify:"simple_text"|linebreaks }}
           </div>
-          <div class="col-md-4" style="text-align: center; font-size: 5em;" >{{ section.emoji }} </div>
+          <div class="col-md-4 text-center fs-5" >{{ section.emoji }} </div>
         </div>
       </section>
     {% endwith %}
@@ -70,9 +70,9 @@
         <div class="row mt-5">
           {% for b in landing.benefititem_set.all %}
             <div class="col-md-3">
-              <span  style="font-size: 3em;">{{ b.emoji }}</span>
+              <span  class="fs-3" >{{ b.emoji }}</span>
               <h3 class="mt-3">{{ b.name }}</h3>
-              <p style="text-align: left;">{{ b.description }}</p>
+              <p class="text-left" >{{ b.description }}</p>
             </div>
           {% endfor %}
         </div>
@@ -90,7 +90,7 @@
             <h2>{{ section.title }} </h2>
             {{ section.description|markdownify:"text_and_headings"|linebreaks }}
           </div>
-          <div class="col-md-5" style="text-align: center; font-size: 10em;" > 🎯 </div>
+          <div class="col-md-5 text-center fs-10"> 🎯 </div>
         </div>
       </section>
     {% endwith %}
@@ -105,7 +105,7 @@
           {% if section.emoji %}{{ section.emoji }}{% endif %}
           {{ section.title }}
           {% if section.show_all_link %}
-            <span style="float: right;"> <a href="{% url 'article_list' %}">{% translate "All" %}</a> </span>
+            <span class="float-right"> <a href="{% url 'article_list' %}">{% translate "All" %}</a> </span>
           {% endif %}
         </h2>
         <div class="row mt-5">

@@ -8,17 +8,16 @@
   hx-swap="outerHTML"
 >
   <div x-show="showEduSort | showEduDelete" x-bind:class="showEduSort | showEduDelete? 'col-2' : '' ">
-    <button x-show="showEduSort" style="border:none;"
+    <button x-show="showEduSort"
         x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
-        x-bind:class="hover? 'handle' : 'outline handle'"
+        x-bind:class="hover? 'no-border handle' : 'no-border outline handle'"
         >
       <i class="bi bi-list"></i>
     </button>
     <button x-show="showEduDelete"
-        style="border:none;"
         title="{% translate 'Delete' %}"
         x-data="{hover : false }" x-on:mouseover="hover = true" x-on:mouseleave="hover = false"
-        x-bind:class="hover? '' : 'outline'"
+        x-bind:class="hover? 'no-border' : 'no-border outline'"
         hx-delete="{{ education_edit_form.instance.hx_delete_url }}"
         hx-confirm="{% translate 'Are you sure to delete this education item?' %}"
         hx-target="closest form"
