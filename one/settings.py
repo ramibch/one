@@ -15,7 +15,6 @@ from copy import copy
 from datetime import datetime
 from pathlib import Path
 
-from csp.constants import SELF
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 from environs import Env
@@ -100,7 +99,6 @@ INSTALLED_APPS = [
     "bx_django_utils",  # needed from huey_monitor
     "huey_monitor",
     "debug_toolbar",
-    "csp",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -118,7 +116,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "one.base.middleware.ip.IpAddressMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "csp.middleware.CSPMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -493,18 +490,6 @@ if HTTPS:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_PRELOAD = True
-
-# django-csp
-# https://django-csp.readthedocs.io/en/latest/configuration.html
-CONTENT_SECURITY_POLICY = {
-    "EXCLUDE_URL_PREFIXES": [],
-    "DIRECTIVES": {
-        "default-src": [SELF],
-        "frame-ancestors": [SELF],
-        "form-action": [SELF],
-        "report-uri": "/csp-report/",
-    },
-}
 
 # One secret key
 ONE_SECRET_KEY = env("ONE_SECRET_KEY")
