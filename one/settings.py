@@ -557,7 +557,7 @@ CONTENT_SECURITY_POLICY = {
         "frame-ancestors": [SELF],
         "form-action": [SELF],
         "img-src": [SELF, AWS_S3_ENDPOINT_URL, "data:"],
-        "default-src": [SELF, NONCE, NONE, AWS_S3_ENDPOINT_URL],
+        "default-src": [NONE],
         "script-src": [SELF, NONCE, AWS_S3_ENDPOINT_URL, UNSAFE_EVAL, UNSAFE_HASHES],
         "script-src-attr": [
             SELF,
