@@ -91,6 +91,10 @@ class Person(OneModel):
     def __str__(self) -> str:
         return f"{self.full_name} ({self.company})"
 
+    @property
+    def gender_salutation(self):
+        return Genders(self.gender).salutation
+
 
 class JobManager(Manager):
     def get_queryset(self) -> models.QuerySet:

@@ -8,18 +8,22 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import PolygonField
 from django.core.files.base import ContentFile
+from django.core.mail import EmailMessage
 from django.db import models
 from django.db.models import Max, Value
 from django.db.models.functions import Concat
+from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
-from django.utils import translation
+from django.utils import timezone, translation
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from pdf2image import convert_from_bytes
 
+from one.bot import Bot
 from one.choices import CompetenceLevel, Genders, NotificationFrequency, SkillType
-from one.companies.models import Person
+from one.companies.models import JobApplicationMethods, Person
 from one.db import ChoiceArrayField, OneModel, TranslatableModel
+from one.sites.models import Site, SiteType
 from one.tex.compile import render_pdf_and_text
 from one.tex.values import TEX_LANGUAGE_MAPPING, PaperUnits
 from one.tmp import TmpFile
@@ -548,6 +552,16 @@ class JobApplication(OneModel):
         blank=True,
         verbose_name=_("LaTeX text of Dossier"),
     )
+    # Sending
+    sent_on = models.DateTimeField(
+        verbose_name=_("Sent at"),
+        null=True,
+        blank=True,
+    )
+    email_force_send = models.BooleanField(
+        verbose_name=_("Force send E-mail"),
+        default=False,
+    )
 
     def render_coverletter(self):
         self.coverletter.delete(save=False)
@@ -606,6 +620,91 @@ class JobApplication(OneModel):
             self.dossier.save(f"{_('Dossier')}.pdf", ContentFile(d_bytes), save=False)
             self.dossier_text = latex_text
             self.save()
+
+    @property
+    def local_dossier_path(self) -> str:
+        return str(TmpFile(self.dossier).path)
+
+    def send_application_per_email(self):
+        if self.sent_on is None and not self.email_force_send:
+            return
+
+        admin_url = self.full_admin_url
+
+        if self.dossier == "":
+            Bot.to_admin(f"JobApp Error: No dossier: {admin_url}")
+            return
+
+        if JobApplicationMethods.EMAIL not in self.job.company.application_methods:
+            Bot.to_admin(f"JobApp Error: email method not considered: {admin_url}")
+            return
+
+        if self.recipient_person is None:
+            Bot.to_admin(f"JobApp Error: no recipient person for {admin_url}")
+            return
+
+        if self.email_sender is None:
+            Bot.to_admin(f"JobApp Error: no email sender for {admin_url}")
+            return
+
+        with translation.override(self.language):
+            message = EmailMessage(
+                subject=self.email_subject,
+                body=self.email_body,
+                from_email=self.email_sender,
+                to=[self.recipient_person.email],
+                cc=[self.candidate.email],
+                reply_to=[self.candidate.email],
+            )
+
+            message.attach_file(self.local_dossier_path)
+
+            message.send(fail_silently=True)
+            self.sent_on = timezone.now()
+            self.save()
+
+    @property
+    def recipient_person(self) -> Person | None:
+        recruiter = getattr(self.job, "recruiter", None)
+        if recruiter:
+            return recruiter
+
+        persons = Person.objects.filter(company=self.job.company)
+        return persons.filter(is_hr=True).last() or persons.last()
+
+    @property
+    def email_body(self) -> str:
+        context = {
+            "candidate": self.candidate,
+            "job": self.job,
+            "recruiter": self.recipient_person,
+        }
+        return render_to_string(
+            "candidates/emails/send_application.txt",
+            context=context,
+            request=None,
+        )
+
+    @property
+    def email_subject(self) -> str:
+        return f"{self.job.title} | {self.candidate.full_name}"
+
+    @cached_property
+    def asociated_site(self) -> type[Site] | None:
+        site_type = SiteType.JOBAPPS
+        try:
+            return Site.objects.get(site_type=site_type)  # type: ignore
+        except Site.DoesNotExist:
+            Bot.to_admin(f"No site site types for {site_type}")
+            return None
+        except Site.MultipleObjectsReturned:
+            Bot.to_admin(f"There are multiple site types for {site_type}")
+            return Site.objects.filter(site_type=site_type).last()  # type: ignore
+
+    @property
+    def email_sender(self) -> str | None:
+        if self.asociated_site:
+            return self.asociated_site.noreply_email_sender.name_and_address  # type: ignore
 
     @cached_property
     def coverletter_title(self):

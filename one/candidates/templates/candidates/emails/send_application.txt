@@ -1,0 +1,12 @@
+{% if recruiter %}{% translate "Dear" %} {{ recruiter.gender_salutation }} {{ recruiter.last_name }}{% else %}{% translate "Dear Sir/Madam" %}{% endif %}
+
+{% blocktranslate with candidate_name=candidate.full_name job_title=job.title %}
+{{ candidate.full_name }} is interested in the job {{ job_title }}.
+Please find the application documents attached to this e-mail.
+
+We are happy to answer any questions you may have at any time.
+
+Thank you very much.
+
+
+{% endblocktranslate %}

@@ -1,7 +1,5 @@
 from pathlib import Path
 
-from django.utils.functional import cached_property
-
 from one.bot import Bot
 
 
@@ -23,7 +21,7 @@ class TmpFile:
         with open(self._path, "wb") as f:
             f.write(content)
 
-    @cached_property
+    @property
     def file_bytes(self):
         try:
             return self.field.storage.open(self.field.name, "rb").read()
@@ -35,7 +33,7 @@ class TmpFile:
     def path_exists(self):
         return self._path.is_file()
 
-    @cached_property
+    @property
     def path(self):
         if not self.path_exists():
             self.write_content_in_path()

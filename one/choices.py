@@ -8,6 +8,7 @@ class Genders(TextChoices):
     MALE = "m", _("Male")
     FEMALE = "f", _("Female")
 
+    @property
     def salutation(self):
         return _("Mrs") if self == Genders.FEMALE else _("Mr")
 

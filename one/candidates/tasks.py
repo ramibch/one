@@ -2,6 +2,8 @@ from django.db.models import F, Q
 from huey import crontab
 from huey.contrib import djhuey as huey
 
+from one.companies.models import JobApplicationMethods
+
 from .models import Candidate, JobApplication, TexCv, TexCvTemplates
 
 
@@ -54,3 +56,14 @@ def task_render_dossiers(job_apps=None):
 
     for job_app in job_apps:
         job_app.render_dossier()
+
+
+@huey.db_periodic_task(crontab(minute="*"))
+def task_send_applications_per_email():
+    job_apps = JobApplication.objects.filter(
+        sent_on__isnull=True,
+        job__company__job_application_methods=JobApplicationMethods.EMAIL,
+    ).exclude(dossier="")
+
+    for job_app in job_apps:
+        job_app.send_application_per_email()
