@@ -24,11 +24,13 @@
     {% endfor %}
   </div>
   <div x-data="{showEduNew: $persist(false) }"  >
+    <center>
       <button x-on:click="showEduNew = !showEduNew;"
-              x-bind:class="showEduNew? 'no-border text-center' : 'no-border text-center outline'"
-              title="{% translate 'Add a new education item' %}">
+        x-bind:class="showEduNew? 'no-border' : 'no-border outline'"
+        title="{% translate 'Add a new education item' %}">
         <i class="bi bi-plus-circle-fill"></i>
       </button>
+    </center>
     <div x-show="showEduNew" class="mt-3">
       {% include "candidates/partials/education_new_form.html" %}
     </div>

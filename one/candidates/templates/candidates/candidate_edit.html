@@ -9,7 +9,22 @@
 <h1 class="text-center">{% translate "Edit Profile" %}</h1>
 <hr>
 
-<h2>{% translate "Curriculum vitae" %}</h2>
+{% if candidate.language_count > 1 %}
+  <h2 class="my-5">{% translate "Languages" %}</h2>
+  <div class="grid">
+    {% get_current_language as current_language %}
+    {% for lang in candidate.get_languages %}
+    <form action="{% url 'set_language' %}" method="post" >
+      {% csrf_token %}
+      <input type="hidden" name="language" value="{{ lang }}">
+      {% get_language_info for lang as lang_info %}
+      <button type="submit" {% if not current_language == lang %}class="outline"{% endif %}  >{{ lang_info.name_local|title }}</button>
+    </form>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<h2 class="my-5">{% translate "Curriculum vitae" %}</h2>
 <br>
 
 <div class="row">

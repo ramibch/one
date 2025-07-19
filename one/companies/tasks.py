@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 from http import HTTPStatus
 from urllib.parse import urlparse
@@ -123,8 +124,10 @@ def scrape_company_pages(qs=None):
             if Job.objects.filter(source_url=url).exists():
                 continue
 
+            title = re.sub(r"\s{2,}", " ", re.sub(r"\n", " ", element.text)).strip()
+
             job = Job.objects.create(
-                title=element.text[:128],
+                title=title[:128],
                 source_url=url,
                 company=c,
                 expires_on=timezone.now() + timedelta(days=60),

@@ -55,7 +55,8 @@ class CandidateEditForm(forms.ModelForm):
 class CandidateExtraEditForm(forms.ModelForm):
     class Meta:
         model = Candidate
-        fields = ("coverletter_body",)
+        fields = ("coverletter_body", "language", "languages")
+        widgets = {"languages": forms.CheckboxSelectMultiple()}
 
 
 class SkillForm(forms.ModelForm):
