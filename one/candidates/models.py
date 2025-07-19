@@ -635,7 +635,7 @@ class JobApplication(OneModel):
             Bot.to_admin(f"JobApp Error: No dossier: {admin_url}")
             return
 
-        if JobApplicationMethods.EMAIL not in self.job.company.application_methods:
+        if JobApplicationMethods.EMAIL not in self.job.company.job_application_methods:
             Bot.to_admin(f"JobApp Error: email method not considered: {admin_url}")
             return
 
