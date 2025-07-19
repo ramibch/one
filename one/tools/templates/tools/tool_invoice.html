@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 {% load i18n static %}
 {% block content %}
-  <h1>
-    <center>
-      {{ object.title }}
-    </center>
-  </h1>
+
+  <h1 class="text-center">{{ object.title }}</h1>
+
   {% translate "Invoice" as INVOICE_TEXT %}
   <div x-data="{
         title: '{{ INVOICE_TEXT }}', company_name : '', company_address : '', to_heading: '{% translate "Client" %}', to: '',

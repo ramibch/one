@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block head_title %}{% trans "Sites" %}{% endblock head_title %}
+{% block head_title %}{% translate "Sites" %}{% endblock %}
 
 {% block content %}
-<center><h1>{% trans "Sites" %}</h1></center>
+<h1 class="text-center">{% translate "Sites" %}</h1>
 <div class="row mt-5">
 {% for obj in object_list %}
   <div class="col-md-4">
@@ -13,7 +13,7 @@
       {% if obj.description %}{{ obj.description }}{% endif %}
       <footer>
         {% if request.get_host == obj.domain %}
-          {% trans "Current site!" %}
+          {% translate "Current site!" %}
         {% else %}
         <a href="{{ obj.url }}" target="_blank"  {% if obj.title %}title="{{ obj.title }}"{% endif %}>🔗 {{ obj.url }}</a>
         {% endif %}

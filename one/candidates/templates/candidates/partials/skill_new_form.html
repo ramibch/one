@@ -7,9 +7,7 @@
   hx-on::after-request="if(event.detail.successful) this.reset()"
   id="skill_new_form"
 >
-<center>
-  <small><i class="bi bi-tools"></i> <i>{% translate "Add a new skill" %}</i></small>
-</center>
+  <small class="text-center"><i class="bi bi-tools"></i> <i>{% translate "Add a new skill" %}</i></small>
   <fieldset role="group">
     {{ skill_new_form }}
     <button type="submit" class="outline"> <i class="bi bi-plus-circle-fill"></i> </button>

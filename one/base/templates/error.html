@@ -1,13 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-  <center>
-    <h1>{{ page_title }} 😓</h1>
-    <p>
-      <a href='{% url "home" %}'>{% translate "Home" %}</a>
-    </p>
-    <p>
-      <a href='{% url "search" %}'>{% translate "Search" %}</a>
-    </p>
-  </center>
+    <h1 class="text-center">{{ page_title }} 😓</h1>
+    <p class="text-center"> <a href='{% url "home" %}'>{% translate "Home" %}</a> </p>
+    <p class="text-center"> <a href='{% url "search" %}'>{% translate "Search" %}</a> </p>
 {% endblock content %}

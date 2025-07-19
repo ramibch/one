@@ -9,17 +9,15 @@
         <strong>{{ object.price }} €</strong>
       </p>
       <br>
-      <center>
-        {% if object.etsylisting_set.first %}
-            <a role="button" class="col-6" href="{{ object.etsylisting_set.first.url }}">{% translate 'Check out' %}</a>
-        {% endif %}
-      </center>
+      {% if object.etsylisting_set.first %}
+        <a role="button" class="col-6 text-center" href="{{ object.etsylisting_set.first.url }}">{% translate 'Check out' %}</a>
+      {% endif %}
       <br>
     </div>
     {% if object.productimage_set.first %}
-        <div>
-            <img src="{{ object.productimage_set.first.file.url }}" width="100%" />
-        </div>
+      <div>
+        <img src="{{ object.productimage_set.first.file.url }}" width="100%"/>
+      </div>
     {% endif %}
   </section>
 

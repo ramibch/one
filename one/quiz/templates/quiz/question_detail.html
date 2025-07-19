@@ -63,15 +63,16 @@
                 </p>
               {% endfor %}
             {% endif %}
-            <center>
-              <button hx-post="{{ question.check_answer_url }}"
-                      hx-trigger="click"
-                      hx-target="#answers"
-                      hx-boost="true"
-                      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                      hx-swap="innerHTML"
-                      title="Check my answer">Check</button>
-            </center>
+              <button
+                class="text-center"
+                hx-post="{{ question.check_answer_url }}"
+                hx-trigger="click"
+                hx-target="#answers"
+                hx-boost="true"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-swap="innerHTML"
+                title="Check my answer">Check
+              </button>
           </div>
         </div>
       </div>

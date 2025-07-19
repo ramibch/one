@@ -5,9 +5,7 @@
 
 {% block content %}
 
-<center>
-  <h1 class="my-5"> {% translate "Holidays" %}:  {{ object.title }}  {{ object.year }}</a></h1>
-</center>
+  <h1 class="text-center my-5"> {% translate "Holidays" %}:  {{ object.title }}  {{ object.year }}</a></h1>
 
   <ul>
     {% for date,name in object.country_holidays %}
@@ -20,23 +18,19 @@
   </center>
 
   {% if related_calendars %}
-  <center>
-    <h2>{% translate "Related calendars" %}</h2>
-  </center>
-  {% endif %}
-
-  <div class="row">
-    {% for rel in object.related_objects %}
-    <div class="col-md-4">
-      <a href="{{ rel.get_absolute_url }}">
-        <article>
-          <header> {{ rel.title }} </header>
-          <img  src="{{ rel.image.url }}" alt="{{ rel.title }}">
-        </article>
-      </a>
+    <h2 class="text-center">{% translate "Related calendars" %}</h2>
+    <div class="row">
+      {% for rel in object.related_objects %}
+      <div class="col-md-4">
+        <a href="{{ rel.get_absolute_url }}">
+          <article>
+            <header> {{ rel.title }} </header>
+            <img  src="{{ rel.image.url }}" alt="{{ rel.title }}">
+          </article>
+        </a>
+      </div>
+      {% endfor %}
     </div>
-  {% endfor %}
-  </div>
-
+  {% endif %}
 
 {% endblock content %}

@@ -2,9 +2,7 @@
 
 {% block content %}
   <section class="my-5">
-    <center>
-      <h1>{{ page_title }}</h1>
-    </center>
+    <h1 class="text-center">{{ page_title }}</h1>
+    {% include 'dgt/test_list.html' %}
   </section>
-  {% include 'dgt/test_list.html' %}
 {% endblock content %}

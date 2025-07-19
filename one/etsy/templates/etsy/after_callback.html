@@ -1,27 +1,25 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-  <section>
-    <center>
-        <h1>{% translate "You are now logged in with Etsy" %} </h1>
-    </center>
-  </section>
-  <section >
-    <table>
-        <thead>
-          <tr>
-            <th scope="col"><i>user_id</i></th>
-            <th scope="col"><i>shop_id</i></th>
-            <th scope="col"><i>code</i></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td> {{ etsy_auth.etsy_user_id }} </td>
-            <td> {{ etsy_auth.shop_id }} </td>
-            <td> {{ etsy_auth.code }}</td>
-          </tr>
-        </tbody>
-      </table>
-  </section>
+<section>
+  <h1 class="text-center">{% translate "You are now logged in with Etsy" %} </h1>
+</section>
+<section >
+  <table>
+      <thead>
+        <tr>
+          <th scope="col"><i>user_id</i></th>
+          <th scope="col"><i>shop_id</i></th>
+          <th scope="col"><i>code</i></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td> {{ etsy_auth.etsy_user_id }} </td>
+          <td> {{ etsy_auth.shop_id }} </td>
+          <td> {{ etsy_auth.code }}</td>
+        </tr>
+      </tbody>
+    </table>
+</section>
 {% endblock content %}

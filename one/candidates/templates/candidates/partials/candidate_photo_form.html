@@ -9,8 +9,10 @@
   {% if candidate.photo and candidate.photo.url %}
     <div x-data="{ commands: false}" id="photo_container">
       <img x-on:click="commands=!commands" src="{{ candidate.photo.url }}" alt="">
-      <center class="mt-2" x-show="commands">
-        <button title="{% translate "Delete photo" %}" class="outline"
+      <center class="my-2" x-show="commands">
+        <button
+          title="{% translate "Delete photo" %}"
+          class="outline"
           hx-delete="{{ candidate.hx_delete_photo_url }}"
           hx-confirm="{% translate 'Are you sure to delete the photo?' %}"
           hx-target="#photo_container"

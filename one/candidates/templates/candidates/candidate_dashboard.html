@@ -5,9 +5,9 @@
 {% block content %}
 
 {% if candidate %}
-  <center class="mb-5">
-    <h1>{% translate "Job Applicacions" %}</h1>
-  </center>
+
+  <h1 class="text-center mb-5">{% translate "Job Applicacions" %}</h1>
+
   {% if jobapps.count > 0 %}
   <table>
     <thead>
@@ -43,9 +43,7 @@
     </tbody>
   </table>
   {% else %}
-  <center>
-    <p>{% translate "You haven't applied for any jobs yet." %} <a href="{% url 'job_list' %}">{% translate "Check for jobs." %}</a></p>
-  </center>
+    <p class="text-center">{% translate "You haven't applied for any jobs yet." %} <a href="{% url 'job_list' %}">{% translate "Check for jobs." %}</a></p>
   {% endif %}
 
 

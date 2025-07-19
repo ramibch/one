@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <center>
-    <h1>Resultados ({{ session_test.percentage_passed }} %)</h1>
-    <p>{{ session_test.question_list_emojis }}</p>
-  </center>
+  <h1 class="text-center">Resultados ({{ session_test.percentage_passed }} %)</h1>
+  <p class="text-center">{{ session_test.question_list_emojis }}</p>
   {% for session_question in session_test.sessiondgtquestion_set.all %}
     <hr>
     <h2>{{ session_question.correct_emoji }} {{ session_question.question.title }}</h2>

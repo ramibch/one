@@ -6,15 +6,11 @@
 
 {% block content %}
 
-<center>
-  <h1>{% translate "Edit Profile" %}</h1>
-  <hr>
-</center>
+<h1 class="text-center">{% translate "Edit Profile" %}</h1>
+<hr>
 
 <h2>{% translate "Curriculum vitae" %}</h2>
 <br>
-
-
 
 <div class="row">
   <div class="col-md-4">
@@ -35,8 +31,8 @@
   </div>
 </div>
 
-
 <hr>
+
 <h2>{% translate "Extra information" %}</h2>
 <div>
   {% include "candidates/partials/candidate_extra_form.html" %}

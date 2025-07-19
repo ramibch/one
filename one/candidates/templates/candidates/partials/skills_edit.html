@@ -24,11 +24,12 @@
     {% endfor %}
   </div>
   <div x-data="{showSkillNew: $persist(false) }"  >
-    <center>
-      <button x-on:click="showSkillNew = !showSkillNew;" x-bind:class="showSkillNew? 'no-border' : 'no-border outline'" title="{% translate 'Add a new skill' %}">
-        <i class="bi bi-plus-circle-fill"></i>
-      </button>
-    </center>
+    <button
+      x-on:click="showSkillNew = !showSkillNew;"
+      x-bind:class="showSkillNew? 'no-border text-center' : 'no-border outline text-center'"
+      title="{% translate 'Add a new skill' %}">
+      <i class="bi bi-plus-circle-fill"></i>
+    </button>
     <div x-show="showSkillNew" class="mt-3">
       {% include "candidates/partials/skill_new_form.html" %}
     </div>

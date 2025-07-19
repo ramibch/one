@@ -7,9 +7,7 @@
   hx-on::after-request="if(event.detail.successful) this.reset()"
   id="education_new_form"
 >
-<center>
-  <small><i class="bi bi-mortarboard"></i> <i>{% translate "Add a new education item" %}</i></small>
-</center>
+  <small class="text-center"><i class="bi bi-mortarboard"></i> <i>{% translate "Add a new education item" %}</i></small>
   {% include "candidates/partials/education_form_content.html" with education_form=education_new_form is_new_form=True %}
   <button type="submit" class="outline"> <i class="bi bi-plus-circle-fill"></i> </button>
 </form>

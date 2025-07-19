@@ -1,11 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-  <h1>
-    <center>
-      {{ object.title }}
-    </center>
-  </h1>
+  <h1 class="text-center">{{ object.title }}</h1>
   <section class="row mb-2">
     {% for tool in tools %}
       {% if tool.index_listing %}
