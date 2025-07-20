@@ -62,5 +62,8 @@
 {% endif %}
 
 
+<h2 class="mt-5 text-center">{% translate "Recommended jobs" %}</h2>
+
+<div hx-get="{% url 'candidate_recommended_jobs' %}" hx-trigger="load"></div>
 
 {% endblock content %}

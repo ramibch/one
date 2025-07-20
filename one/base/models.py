@@ -108,6 +108,7 @@ PATH_NAMES = (
     ("candidate_create", _("Create candidate profile")),
     ("candidate_create_or_edit", _("Candidate profile")),
     ("candidate_dashboard", _("Candidate dashboard")),
+    ("candidate_recommended_jobs", _("Recommended jobs")),
     ("job_list", _("Jobs")),
     ("company_list", _("Companies")),
 )

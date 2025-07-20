@@ -23,7 +23,7 @@ from .views import (
     JobApplicationDeleteHxView,
     JobApplicationView,
     PubCandidateView,
-    RecommendedJobListView,
+    RecommendedJobsView,
     SkillCreateHxView,
     SkillDeleteHxView,
     SkillEditHxView,
@@ -96,8 +96,8 @@ urlpatterns = [
     # Jobs
     path(
         _("recommended-jobs"),
-        RecommendedJobListView.as_view(),
-        name="recommended_jobs",
+        RecommendedJobsView.as_view(),
+        name="candidate_recommended_jobs",
     ),
     path(
         "job-app/<uuid:pk>/delete",

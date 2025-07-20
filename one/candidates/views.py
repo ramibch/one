@@ -15,7 +15,6 @@ from django.views.decorators.cache import never_cache
 from django.views.generic import RedirectView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
-from django.views.generic.list import ListView
 from django_htmx.http import reswap, retarget
 
 from one.candidates.forms import (
@@ -35,6 +34,7 @@ from one.candidates.models import (
     CandidateSkill,
     JobApplication,
 )
+from one.companies.models import Job
 
 
 def get_candidate_or_404(view, url_key="candidate_pk") -> type[Candidate] | Any:
@@ -57,8 +57,21 @@ class JobApplicationView(LoginRequiredMixin, FormView):
         return super().get(request, *args, **kwargs)
 
 
-class RecommendedJobListView(LoginRequiredMixin, ListView):
-    pass
+class RecommendedJobsView(LoginRequiredMixin, TemplateView):
+    model = Job
+    template_name = "candidates/recommended_jobs.html"
+    hx_template_name = "companies/partials/job_cards.html"
+
+    def get_queryset(self) -> QuerySet:
+        candidate = getattr(self.request.user, "candidate", None)
+        if candidate:
+            return candidate.recommended_jobs()
+        return Job.objects.none()
+
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.htmx:
+            return render(request, self.hx_template_name, self.get_context_data())
+        return super().get(request, *args, **kwargs)
 
 
 class CandidateCreateOrEditRedirectView(LoginRequiredMixin, RedirectView):

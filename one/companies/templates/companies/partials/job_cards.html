@@ -1,0 +1,31 @@
+{% load i18n %}
+<div class="row">
+  {% for job in jobs %}
+  <div class="col-md-4">
+    <article >
+      <header>
+        💼 <a href="{{ job.url }}"> {{ job.title }} </a>
+      </header>
+      {% if job.company %}
+        <p><i class="bi bi-building"></i>  {{ job.company.name }}</p>
+      {% endif %}
+
+      <p>
+        <i class="bi bi-pin-map"></i>
+        {% if job.company_locations.count == 0 %}
+            {% translate "Unknown location" %}
+          {% elif job.company_locations.count == 1 %}
+            {{ job.company_locations.first }}
+          {% else %}
+            {% translate "Multiple locations" %}
+        {% endif %}
+      </p>
+    </article>
+  </div>
+  {% empty %}
+    <p class="mt-5 text-center">🤔 {% translate "No jobs found at the moment" %}</p>
+    {% if user.candidate and user.candidate.candidateskill_set.count == 0 %}
+      <p class="text-center">👉 <a href="{{ user.candidate.edit_url }}">{% translate "Tip: Complete your profile, so you can get recommended jobs" %}</a></p>
+    {% endif %}
+  {% endfor %}
+</div>

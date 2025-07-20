@@ -5,15 +5,10 @@
 
 <h1 class="text-center"> {% translate "Jobs" %} </h1>
 
-<div class="row">
-  {% for job in object_list %}
-  <div class="col-md-4">
-    <article >
-      💼 <a href="{{ job.url }}"> {{ job.title }} </a>
-    </article>
-  </div>
-  {% endfor %}
-</div>
+
+{% include "companies/partials/job_cards.html" with jobs=object_list %}
+
+
 
 {% include "pagination/centered_simple.html" %}
 

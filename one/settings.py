@@ -559,13 +559,25 @@ CONTENT_SECURITY_POLICY = {
         "form-action": [SELF],
         "img-src": [SELF, AWS_S3_ENDPOINT_URL, "data:"],
         "default-src": [SELF, NONCE, NONE, AWS_S3_ENDPOINT_URL],
-        "script-src": [SELF, NONCE, AWS_S3_ENDPOINT_URL, UNSAFE_EVAL, UNSAFE_HASHES],
+        "script-src": [
+            SELF,
+            NONCE,
+            AWS_S3_ENDPOINT_URL,
+            UNSAFE_EVAL,
+            UNSAFE_HASHES,
+            "cdn.jsdelivr.net",
+        ],
         "script-src-attr": [
             SELF,
             UNSAFE_HASHES,
             csp_sha256_hash("event.preventDefault();"),
         ],
-        "style-src": [SELF, NONCE, UNSAFE_HASHES],
+        "style-src": [
+            SELF,
+            NONCE,
+            UNSAFE_HASHES,
+            "cdn.jsdelivr.net",
+        ],
         "style-src-attr": [SELF, NONCE, UNSAFE_HASHES],
         "style-src-elem": [
             SELF,

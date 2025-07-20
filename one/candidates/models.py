@@ -10,7 +10,7 @@ from django.contrib.gis.db.models import PolygonField
 from django.core.files.base import ContentFile
 from django.core.mail import EmailMessage
 from django.db import models
-from django.db.models import Max, Value
+from django.db.models import Max, Q, Value
 from django.db.models.functions import Concat
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
@@ -21,7 +21,7 @@ from pdf2image import convert_from_bytes
 
 from one.bot import Bot
 from one.choices import CompetenceLevel, Genders, NotificationFrequency, SkillType
-from one.companies.models import JobApplicationMethods, Person
+from one.companies.models import Job, JobApplicationMethods, Person
 from one.db import ChoiceArrayField, OneModel, TranslatableModel
 from one.sites.models import Site, SiteType
 from one.tex.compile import render_pdf_and_text
@@ -214,6 +214,30 @@ class Candidate(TranslatableModel):
     @cached_property
     def hx_experience_order_url(self):
         return reverse("candidateexperience_order", kwargs={"candidate_pk": self.pk})
+
+    def recommended_jobs(self):
+        skill_qs = self.candidateskill_set.filter(skill_type=SkillType.HARD)
+
+        skill_names = set()
+        for skill in skill_qs:
+            for lang in self.get_languages():
+                name = getattr(skill, f"name_{lang}", None)
+                if name:
+                    skill_names.add(name.lower())
+
+        if not skill_names:
+            return Job.objects.none()
+
+        skill_filters = Q()
+        for skill in skill_names:
+            skill_filters |= Q(body__icontains=skill)
+
+        return (
+            Job.objects.filter(language__in=self.get_languages())
+            .filter(skill_filters)
+            .exclude(jobapplication__candidate=self)
+            .distinct()
+        )
 
 
 class CandidateChild(TranslatableModel):

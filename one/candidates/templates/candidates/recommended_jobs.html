@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% translate "Recommended Jobs" %}{% endblock %}
+
+{% block content %}
+
+<h1 class="mt-5 text-center">{% translate "Recommended Jobs" %}</h1>
+<hr>
+
+
+{% include "companies/partials/job_cards.html" with jobs=candidate.recommended_jobs %}
+
+
+{% endblock content %}
