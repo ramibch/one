@@ -4,7 +4,7 @@
   data-id="{{ skill_edit_form.instance.id }}"
   onsubmit="event.preventDefault();"
   hx-post="{{ skill_edit_form.instance.hx_edit_url }}"
-  hx-trigger="change, keyup changed delay:1000ms"
+  hx-trigger="change, keyup changed delay:3000ms"
   hx-swap="outerHTML"
   hx-target="closest form"
 >
@@ -34,9 +34,9 @@
       <label>
         {{ skill_edit_form.name }}
         <!--
-        Implement this?
+          Implement this?
           {% if not skill_edit_form.instance.name %}
-          <small class="mt-2">{{ skill_edit_form.instance.candidate.language }}: {{ skill_edit_form.instance.main_name }} </small>
+            <small class="mt-2">{% translate "In primary language" %} ({{ skill_edit_form.instance.candidate.language|upper }}): {{ skill_edit_form.instance.main_name }} </small>
           {% endif %}
         -->
       </label>

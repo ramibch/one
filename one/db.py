@@ -129,7 +129,14 @@ class TranslatableModel(OneModel):
         )
         flattened_list = chain.from_iterable(lists_of_langs)
 
-        return list(dict.fromkeys(flattened_list))
+        langs = list(dict.fromkeys(flattened_list))
+
+        if hasattr(self, "LANG_ATTR") and self.LANG_ATTR:
+            lang = getattr(self, self.LANG_ATTR, None)
+            if lang and lang not in langs:
+                langs.insert(0, lang)
+
+        return langs
 
     def get_languages_without_default(self):
         langs = copy(self.get_languages())

@@ -12,9 +12,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from django.views.generic import FormView, RedirectView, TemplateView
+from django.views.generic import RedirectView, TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
+from django.views.generic.list import ListView
 from django_htmx.http import reswap, retarget
 
 from one.candidates.forms import (
@@ -56,6 +57,10 @@ class JobApplicationView(LoginRequiredMixin, FormView):
         return super().get(request, *args, **kwargs)
 
 
+class RecommendedJobListView(LoginRequiredMixin, ListView):
+    pass
+
+
 class CandidateCreateOrEditRedirectView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args: Any, **kwargs: Any) -> str | None:
         candidate = getattr(self.request.user, "candidate", None)
@@ -81,30 +86,24 @@ class CandidateCreateView(LoginRequiredMixin, FormView):
     form_class = CandidateCreateForm
     template_name = "candidates/candidate_create.html"
 
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        candidate = getattr(self.request.user, "candidate", None)
-        if candidate:
-            return redirect(candidate.edit_url)
-        initial = {
-            "first_name": request.user.first_name,
-            "last_name": request.user.last_name,
-            "email": request.user.email,
+    def dispatch(self, request, *args, **kwargs):
+        if hasattr(request.user, "candidate"):
+            return redirect(request.user.candidate.edit_url)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        user = self.request.user
+        return {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
         }
-        form = self.form_class(initial=initial)
-        context = {"form": form}
-        return render(request, self.template_name, context)
 
-    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        form = self.form_class(request.POST)
-        context = {"form": form}
-        if form.is_valid():
-            obj = form.save(commit=False)
-            # translation.activate(obj.language)
-            obj.user = request.user
-            obj.save()
-            return redirect(obj.edit_url)
-
-        return render(request, self.template_name, context)
+    def form_valid(self, form):
+        candidate = form.save(commit=False)
+        candidate.user = self.request.user
+        candidate.save()
+        return redirect(candidate.edit_url)
 
 
 class CandidateDeleteView(LoginRequiredMixin, DeleteView):

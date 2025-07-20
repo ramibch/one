@@ -4,7 +4,7 @@
   data-id="{{ experience_edit_form.instance.id }}"
   onsubmit="event.preventDefault();"
   hx-post="{{ experience_edit_form.instance.hx_edit_url }}"
-  hx-trigger="change, keyup changed delay:1000ms"
+  hx-trigger="change, keyup changed delay:3000ms"
   hx-swap="outerHTML"
 >
   <div x-show="showExpSort | showExpDelete" x-bind:class="showExpSort | showExpDelete? 'col-2' : '' ">
