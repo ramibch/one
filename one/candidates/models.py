@@ -31,6 +31,24 @@ from one.tmp import TmpFile
 User = get_user_model()
 
 
+def get_asociated_site() -> type[Site] | None:
+    site_type = SiteType.JOBAPPS
+    try:
+        return Site.objects.get(site_type=site_type)  # type: ignore
+    except Site.DoesNotExist:
+        Bot.to_admin(f"No site site types for {site_type}")
+        return None
+    except Site.MultipleObjectsReturned:
+        Bot.to_admin(f"There are multiple site types for {site_type}")
+        return Site.objects.filter(site_type=site_type).last()  # type: ignore
+
+
+def get_email_sender() -> str | None:
+    site = get_asociated_site()
+    if site:
+        return site.noreply_email_sender.name_and_address  # type: ignore
+
+
 class Candidate(TranslatableModel):
     def get_upload_path(self, filename):
         return f"candidates/{self.id}/{filename}"
@@ -98,8 +116,9 @@ class Candidate(TranslatableModel):
     docs = models.FileField(upload_to=get_upload_path, null=True, blank=True)
 
     own_cv = models.FileField(upload_to=get_upload_path, null=True, blank=True)
-    receive_job_alerts = models.BooleanField(default=True)
     is_public = models.BooleanField(default=False)
+    recommend_jobs = models.BooleanField(default=True)
+    last_job_recommendation = models.DateTimeField(null=True, editable=False)
 
     def __str__(self) -> str:
         return f"{self.full_name} - {self.job_title}"
@@ -727,8 +746,7 @@ class JobApplication(OneModel):
 
     @property
     def email_sender(self) -> str | None:
-        if self.asociated_site:
-            return self.asociated_site.noreply_email_sender.name_and_address  # type: ignore
+        return get_email_sender()
 
     @cached_property
     def coverletter_title(self):

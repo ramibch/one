@@ -18,6 +18,7 @@ from .models import (
 )
 from .tasks import (
     task_create_texcvs,
+    task_recommend_jobs,
     task_render_coverletters,
     task_render_cvs,
     task_render_dossiers,
@@ -48,13 +49,17 @@ class ExperienceInline(OneTranslationStackedInline):
 class CandiateAdmin(OneTranslatableModelAdmin):
     list_display = ("id", "full_name", "job_title", "email", "phone")
     inlines = [SkillInline, EducationInline, ExperienceInline, AlertInline]
-    actions = ("create_and_render_cvs",)
+    actions = ("create_and_render_cvs", "recommend_jobs")
 
     @admin.action(description="▶️ Create and render CVs")
     def create_and_render_cvs(modeladmin, request, queryset):
         task_create_texcvs(queryset)
         ids = [c.id for c in queryset]
         task_render_cvs(TexCv.objects.filter(candidate__id__in=ids))
+
+    @admin.action(description="💼 Recommend jobs")
+    def recommend_jobs(modeladmin, request, queryset):
+        task_recommend_jobs(queryset)
 
 
 @admin.register(CandidateSkill)

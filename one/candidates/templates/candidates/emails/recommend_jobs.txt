@@ -1,0 +1,12 @@
+{% load i18n %}
+{% blocktranslate with candidate_name=candidate.first_name %}
+Hi {{ candidate_name }}
+
+I have found some jobs that match your profile.
+
+Click here {{ url }} to check them out.
+{% endblocktranslate %}
+
+{% for job in jobs %}
+💼 {{ job.title }} [{{ job.company.name }}]
+{% endfor %}
