@@ -566,6 +566,7 @@ CONTENT_SECURITY_POLICY = {
             UNSAFE_EVAL,
             UNSAFE_HASHES,
             "cdn.jsdelivr.net",
+            "cdn.overtracking.com",
         ],
         "script-src-attr": [
             SELF,
