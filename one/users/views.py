@@ -1,11 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django_htmx.http import HttpResponseClientRedirect
 
 from .forms import CustomUserChangeForm
-from .models import User
 
 
 @login_required
@@ -30,13 +29,7 @@ def edit_user(request):
 
 
 @login_required
-def hx_delete_user(request, id):
-    user = get_object_or_404(User, id=id)
-    if request.user == user:
-        user.delete()
-        messages.info(request, _("Account deleted"))
-    else:
-        messages.error(
-            request, _("You are not allowed to delete someone else's account.")
-        )
+def hx_delete_account(request):
+    request.user.delete()
+    messages.info(request, _("Account deleted"))
     return HttpResponseClientRedirect("/")

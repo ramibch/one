@@ -77,7 +77,6 @@ input:checked + .slider:before {
   border: none;
 }
 
-
 .clickable {
   cursor: pointer;
 }
@@ -198,4 +197,7 @@ input[name="answer_input_two"]{
   margin: auto;
   text-align: center;
   width: 10px; /* optional default width */
+}
+.w-100{
+  width: 100%;
 }
