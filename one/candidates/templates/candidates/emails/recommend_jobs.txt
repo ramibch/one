@@ -6,7 +6,3 @@ I have found some jobs that match your profile.
 
 Click here {{ url }} to check them out.
 {% endblocktranslate %}
-
-{% for job in jobs %}
-💼 {{ job.title }} [{{ job.company.name }}]
-{% endfor %}

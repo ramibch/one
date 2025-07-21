@@ -3,7 +3,6 @@ from datetime import timedelta
 from django.core.mail import EmailMessage
 from django.db.models import F, Q, QuerySet
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy
 from django.utils import timezone, translation
 from django.utils.translation import gettext_lazy as _
 from huey import crontab
@@ -11,13 +10,13 @@ from huey.contrib import djhuey as huey
 
 from one.bot import Bot
 from one.companies.models import JobApplicationMethods
+from one.sites.models import Site
 
 from .models import (
     Candidate,
     JobApplication,
     TexCv,
     TexCvTemplates,
-    get_asociated_site,
     get_email_sender,
 )
 
@@ -99,7 +98,7 @@ def task_recommend_jobs(candidates: QuerySet[Candidate] | None = None):
         | Q(last_job_recommendation__lt=timezone.now() - timedelta(days=7))
     )
 
-    url = f"{get_asociated_site()}{reverse_lazy('candidate_recommended_jobs')}"
+    site: Site = Site.objects.get_jobapps_site()  # type: ignore
 
     for c in candidates:
         jobs = c.recommended_jobs()
@@ -109,7 +108,7 @@ def task_recommend_jobs(candidates: QuerySet[Candidate] | None = None):
         with translation.override(c.language):
             email_body = render_to_string(
                 "candidates/emails/recommend_jobs.txt",
-                context={"candidate": c, "jobs": jobs[:20], "url": url},
+                context={"candidate": c, "jobs": jobs[:20], "url": site.url},
                 request=None,
             )
 

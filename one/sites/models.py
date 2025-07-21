@@ -12,6 +12,7 @@ from django.utils.functional import cached_property
 from django.utils.timezone import timedelta
 from django.utils.translation import gettext_lazy as _
 
+from one.bot import Bot
 from one.choices import Topics
 from one.db import ChoiceArrayField, TranslatableModel
 from one.menus.models import FooterItem, FooterLink, NavbarLink, SocialMediaLink
@@ -56,6 +57,25 @@ class SiteManager(Manager):
         """Clear the ``Site`` object cache."""
         global SITE_CACHE
         SITE_CACHE = {}
+
+    def get_site_by_type(self, site_type):
+        try:
+            return self.get(site_type=site_type)
+        except self.model.DoesNotExist:
+            Bot.to_admin(f"No site site types for {site_type}")
+            return None
+        except self.model.MultipleObjectsReturned:
+            Bot.to_admin(f"There are multiple site types for {site_type}")
+            return self.filter(site_type=site_type).last()  # type: ignore
+
+    def get_jobapps_site(self):
+        return self.get_site_by_type(SiteType.JOBAPPS)
+
+    def get_english_site(self):
+        return self.get_site_by_type(SiteType.ENGLISH)
+
+    def get_dgt_site(self):
+        return self.get_site_by_type(SiteType.DGT)
 
 
 class PicoCssColor(models.TextChoices):
@@ -162,7 +182,7 @@ class Site(TranslatableModel):
         related_name="+",
     )
 
-    objects = SiteManager()
+    objects: SiteManager = SiteManager()
 
     def __str__(self):
         return self.domain

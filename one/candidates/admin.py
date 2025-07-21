@@ -12,6 +12,7 @@ from .models import (
     CandidateEducation,
     CandidateExperience,
     CandidateJobAlert,
+    CandidateProfile,
     CandidateSkill,
     JobApplication,
     TexCv,
@@ -43,6 +44,12 @@ class EducationInline(OneTranslationStackedInline):
 class ExperienceInline(OneTranslationStackedInline):
     model = CandidateExperience
     extra = 1
+
+
+@admin.register(CandidateProfile)
+class CandidateProfileAdmin(OneModelAdmin):
+    list_display = ("title", "created_at", "updated_at")
+    list_filter = ("created_at", "updated_at")
 
 
 @admin.register(Candidate)

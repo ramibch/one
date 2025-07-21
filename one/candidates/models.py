@@ -31,22 +31,17 @@ from one.tmp import TmpFile
 User = get_user_model()
 
 
-def get_asociated_site() -> type[Site] | None:
-    site_type = SiteType.JOBAPPS
-    try:
-        return Site.objects.get(site_type=site_type)  # type: ignore
-    except Site.DoesNotExist:
-        Bot.to_admin(f"No site site types for {site_type}")
-        return None
-    except Site.MultipleObjectsReturned:
-        Bot.to_admin(f"There are multiple site types for {site_type}")
-        return Site.objects.filter(site_type=site_type).last()  # type: ignore
-
-
 def get_email_sender() -> str | None:
-    site = get_asociated_site()
+    site = Site.objects.get_jobapps_site()
     if site:
         return site.noreply_email_sender.name_and_address  # type: ignore
+
+
+class CandidateProfile(OneModel):
+    title = models.CharField(max_length=128, unique=True)
+
+    def __str__(self) -> str:
+        return self.title
 
 
 class Candidate(TranslatableModel):
@@ -65,6 +60,12 @@ class Candidate(TranslatableModel):
         verbose_name=_("Additional Languages"),
         default=list,
         blank=True,
+    )
+    profile = ForeignKey(
+        CandidateProfile,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
     )
     id = models.UUIDField(
         primary_key=True,
@@ -235,6 +236,8 @@ class Candidate(TranslatableModel):
         return reverse("candidateexperience_order", kwargs={"candidate_pk": self.pk})
 
     def recommended_jobs(self):
+        # TODO: implement another way of matching recommended jobs
+        # match by CandidateProfile object
         skill_qs = self.candidateskill_set.filter(skill_type=SkillType.HARD)
 
         skill_names = set()
