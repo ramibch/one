@@ -586,6 +586,7 @@ CONTENT_SECURITY_POLICY = {
             UNSAFE_HASHES,
             "'sha256-bsV5JivYxvGywDAZ22EZJKBFip65Ng9xoJVLbBg7bdo='",
         ],
+        "connect-src": ["https://cdn.overtracking.com"],
     },
 }
 
