@@ -25,7 +25,6 @@ class CandidateCreateForm(forms.ModelForm):
             "first_name",
             "last_name",
             "email",
-            "phone",
         )
         widgets = {"languages": forms.CheckboxSelectMultiple()}
 

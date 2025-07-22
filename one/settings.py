@@ -11,13 +11,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 # 0. Setup
-import base64
-import hashlib
 from copy import copy
 from datetime import datetime
 from pathlib import Path
 
-from csp.constants import NONCE, NONE, SELF, UNSAFE_EVAL, UNSAFE_HASHES
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 from environs import Env
@@ -102,7 +99,6 @@ INSTALLED_APPS = [
     "bx_django_utils",  # needed from huey_monitor
     "huey_monitor",
     "debug_toolbar",
-    "csp",  # remove when django v6.0 is installed
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -122,7 +118,6 @@ MIDDLEWARE = [
     "one.base.middleware.ip.IpAddressMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django_permissions_policy.PermissionsPolicyMiddleware",
-    "csp.middleware.CSPMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -546,52 +541,50 @@ if HTTPS:
 
 # CSP
 
+# def csp_sha256_hash(js_code):
+#     digest = hashlib.sha256(js_code.encode("utf-8")).digest()
+#     return f"'sha256-{base64.b64encode(digest).decode('utf-8')}'"
 
-def csp_sha256_hash(js_code):
-    digest = hashlib.sha256(js_code.encode("utf-8")).digest()
-    return f"'sha256-{base64.b64encode(digest).decode('utf-8')}'"
+# CONTENT_SECURITY_POLICY = {
+#     "EXCLUDE_URL_PREFIXES": ["/excluded-path/"],
+#     "DIRECTIVES": {
+#         "frame-ancestors": [SELF],
+#         "form-action": [SELF],
+#         "img-src": [SELF, AWS_S3_ENDPOINT_URL, "data:"],
+#         "default-src": [SELF, NONCE, NONE, AWS_S3_ENDPOINT_URL],
+#         "script-src": [
+#             SELF,
+#             NONCE,
+#             AWS_S3_ENDPOINT_URL,
+#             UNSAFE_EVAL,
+#             UNSAFE_HASHES,
+#             "cdn.jsdelivr.net",
+#             "cdn.overtracking.com",
+#         ],
+#         "script-src-attr": [
+#             SELF,
+#             UNSAFE_HASHES,
+#             csp_sha256_hash("event.preventDefault();"),
+#         ],
+#         "style-src": [
+#             SELF,
+#             NONCE,
+#             UNSAFE_HASHES,
+#             "cdn.jsdelivr.net",
+#         ],
+#         "style-src-attr": [SELF, NONCE, UNSAFE_HASHES],
+#         "style-src-elem": [
+#             SELF,
+#             NONCE,
+#             UNSAFE_HASHES,
+#             "'sha256-bsV5JivYxvGywDAZ22EZJKBFip65Ng9xoJVLbBg7bdo='",
+#         ],
+#         "connect-src": ["https://cdn.overtracking.com"],
+#     },
+# }
 
-
-CONTENT_SECURITY_POLICY = {
-    "EXCLUDE_URL_PREFIXES": ["/excluded-path/"],
-    "DIRECTIVES": {
-        "frame-ancestors": [SELF],
-        "form-action": [SELF],
-        "img-src": [SELF, AWS_S3_ENDPOINT_URL, "data:"],
-        "default-src": [SELF, NONCE, NONE, AWS_S3_ENDPOINT_URL],
-        "script-src": [
-            SELF,
-            NONCE,
-            AWS_S3_ENDPOINT_URL,
-            UNSAFE_EVAL,
-            UNSAFE_HASHES,
-            "cdn.jsdelivr.net",
-            "cdn.overtracking.com",
-        ],
-        "script-src-attr": [
-            SELF,
-            UNSAFE_HASHES,
-            csp_sha256_hash("event.preventDefault();"),
-        ],
-        "style-src": [
-            SELF,
-            NONCE,
-            UNSAFE_HASHES,
-            "cdn.jsdelivr.net",
-        ],
-        "style-src-attr": [SELF, NONCE, UNSAFE_HASHES],
-        "style-src-elem": [
-            SELF,
-            NONCE,
-            UNSAFE_HASHES,
-            "'sha256-bsV5JivYxvGywDAZ22EZJKBFip65Ng9xoJVLbBg7bdo='",
-        ],
-        "connect-src": ["https://cdn.overtracking.com"],
-    },
-}
 
 # Permissions-Policy
-
 PERMISSIONS_POLICY = {
     "accelerometer": [],
     "ambient-light-sensor": [],
