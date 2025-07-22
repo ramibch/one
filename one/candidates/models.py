@@ -121,6 +121,8 @@ class Candidate(TranslatableModel):
     recommend_jobs = models.BooleanField(default=True)
     last_job_recommendation = models.DateTimeField(null=True, editable=False)
 
+    is_demo = models.BooleanField(default=False)
+
     def __str__(self) -> str:
         return f"{self.full_name} - {self.job_title}"
 
@@ -673,6 +675,9 @@ class JobApplication(OneModel):
 
     def send_application_per_email(self):
         if self.sent_on is None and not self.email_force_send:
+            return
+
+        if self.candidate.is_demo:
             return
 
         admin_url = self.full_admin_url

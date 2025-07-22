@@ -76,6 +76,7 @@ def task_render_dossiers(job_apps=None):
 def task_send_applications_per_email():
     job_apps = JobApplication.objects.filter(
         sent_on__isnull=True,
+        candidate___is_demo=False,
         job__company__job_application_methods__contains=[JobApplicationMethods.EMAIL],
     ).exclude(dossier="")
 
