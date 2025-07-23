@@ -1,5 +1,5 @@
 {% load i18n static %}
-  <form hx-post="{{ candidate.hx_extra_edit_url }}" hx-swap="outerHTML" hx-trigger="change, keyup changed delay:1000ms">
+  <form hx-post="{{ candidate.hx_extra_edit_url }}" hx-swap="outerHTML" hx-trigger="change, keyup changed delay:5s">
   {% for field in candidate_extra_form %}
     <div>
       {{ field.label }}

@@ -4,7 +4,7 @@
   data-id="{{ skill_edit_form.instance.id }}"
   onsubmit="event.preventDefault();"
   hx-post="{{ skill_edit_form.instance.hx_edit_url }}"
-  hx-trigger="change, keyup changed delay:3000ms"
+  hx-trigger="change, keyup changed delay:5s"
   hx-swap="outerHTML"
   hx-target="closest form"
 >
