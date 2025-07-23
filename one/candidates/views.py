@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from typing import Any
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
 from django.http import (
@@ -11,6 +12,7 @@ from django.http import (
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
 from django.views.generic import RedirectView, TemplateView
 from django.views.generic.detail import DetailView
@@ -24,7 +26,6 @@ from one.candidates.forms import (
     CandidatePhotoEditForm,
     EducationForm,
     ExperienceForm,
-    JobApplicationForm,
     SkillForm,
 )
 from one.candidates.models import (
@@ -44,17 +45,6 @@ def get_candidate_or_404(view, url_key="candidate_pk") -> type[Candidate] | Any:
         pk=view.kwargs[url_key],
         user=view.request.user,
     )
-
-
-class JobApplicationView(LoginRequiredMixin, FormView):
-    model = JobApplication
-    form_class = JobApplicationForm
-    success_url = reverse_lazy("home")
-
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        # cxt["apply_form"] =
-        # TODO:
-        return super().get(request, *args, **kwargs)
 
 
 class RecommendedJobsView(LoginRequiredMixin, TemplateView):
@@ -102,6 +92,7 @@ class CandidateCreateView(LoginRequiredMixin, FormView):
     def dispatch(self, request, *args, **kwargs):
         if hasattr(request.user, "candidate"):
             return redirect(request.user.candidate.edit_url)
+
         return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
@@ -116,6 +107,10 @@ class CandidateCreateView(LoginRequiredMixin, FormView):
         candidate = form.save(commit=False)
         candidate.user = self.request.user
         candidate.save()
+        messages.info(
+            self.request,
+            f"{_('Finish your profile so I can send you job recommendations!')} 🙃",
+        )
         return redirect(candidate.edit_url)
 
 

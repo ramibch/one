@@ -21,7 +21,6 @@ from .views import (
     ExperienceEditHxView,
     ExperienceOrderHxView,
     JobApplicationDeleteHxView,
-    JobApplicationView,
     PubCandidateView,
     RecommendedJobsView,
     SkillCreateHxView,
@@ -86,12 +85,6 @@ urlpatterns = [
         "create-or-edit",
         CandidateCreateOrEditRedirectView.as_view(),
         name="candidate_create_or_edit",
-    ),
-    # Job apps
-    path(
-        _("apply"),
-        JobApplicationView.as_view(),
-        name="job_apply",
     ),
     # Jobs
     path(
