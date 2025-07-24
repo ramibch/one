@@ -6,15 +6,17 @@ from .views import (
     CompanyListView,
     JobApplicationHxView,
     JobDetailView,
+    JobEditHxView,
     JobListView,
 )
 
 urlpatterns = [
     # jobs
     path(_("jobs"), JobListView.as_view(), name="job_list"),
-    path(_("job") + "/<uuid:pk>", JobDetailView.as_view(), name="job_detail"),
-    path("job-apply/<uuid:pk>", JobApplicationHxView.as_view(), name="job_apply"),
+    path(f"{_('job')}/<uuid:pk>", JobDetailView.as_view(), name="job_detail"),
+    path("job/<uuid:pk>/apply", JobApplicationHxView.as_view(), name="job_apply"),
+    path("job/<uuid:pk>/edit", JobEditHxView.as_view(), name="job_edit"),
     # companies
-    path(_("list"), CompanyListView.as_view(), name="company_list"),
     path("<int:pk>", CompanyDetailView.as_view(), name="company_detail"),
+    path("", CompanyListView.as_view(), name="company_list"),
 ]

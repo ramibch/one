@@ -2,6 +2,7 @@ from django import forms
 from django.conf import settings
 
 from one.candidates.models import JobApplication
+from one.companies.models import Job
 
 
 class JobApplicationForm(forms.ModelForm):
@@ -39,3 +40,9 @@ class JobApplicationForm(forms.ModelForm):
             self.initial["language"] = preferred
         else:
             self.initial["language"] = candidate.language
+
+
+class JobEditForm(forms.ModelForm):
+    class Meta:
+        model = Job
+        fields = ("title", "body", "recruiter", "company_locations", "is_approved")

@@ -1,13 +1,23 @@
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, FormView, ListView
 
-from .forms import JobApplicationForm
+from .forms import JobApplicationForm, JobEditForm
 from .models import Company, Job
+
+
+class SuperuserLoginRequiredMixin(LoginRequiredMixin):
+    """Allows only superusers to access the view."""
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            raise PermissionDenied  # or redirect to another page
+        return super().dispatch(request, *args, **kwargs)
 
 
 class JobDetailView(LoginRequiredMixin, DetailView):
@@ -38,6 +48,33 @@ class JobApplicationHxView(LoginRequiredMixin, FormView):
         candidate = getattr(request.user, "candidate", None)
         context = {"apply_form": form, "job": job, "candidate": candidate}
         return render(request, self.template_name, context)
+
+
+class JobEditHxView(SuperuserLoginRequiredMixin, FormView):
+    form_class = JobEditForm
+    template_name = "companies/partials/job_edit.html"
+
+    def get_object(self):
+        return get_object_or_404(Job, pk=self.kwargs["pk"])
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["instance"] = self.get_object()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        # You can add messages or other post-save logic here if needed
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_invalid(self, form):
+        # On invalid form, just re-render with errors
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["job"] = self.get_object()
+        return context
 
 
 class JobListView(ListView):

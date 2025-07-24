@@ -15,7 +15,7 @@ from copy import copy
 from datetime import datetime
 from pathlib import Path
 
-from csp.constants import NONCE, NONE, SELF, UNSAFE_EVAL, UNSAFE_INLINE
+from csp.constants import NONCE, NONE, SELF, UNSAFE_EVAL, UNSAFE_HASHES, UNSAFE_INLINE
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -477,6 +477,12 @@ LINKEDIN_AUTHOR_ID = ""
 LINKEDIN_ACCESS_TOKEN = ""
 LINKEDIN_REFRESH_TOKEN = ""
 
+# debug toolbar
+
+DEBUG_TOOLBAR_CONFIG = {
+    "UPDATE_ON_FETCH": True,
+}
+
 
 """
 ################
@@ -545,48 +551,6 @@ if HTTPS:
 
 # CSP
 
-# def csp_sha256_hash(js_code):
-#     digest = hashlib.sha256(js_code.encode("utf-8")).digest()
-#     return f"'sha256-{base64.b64encode(digest).decode('utf-8')}'"
-
-# CONTENT_SECURITY_POLICY = {
-#     "EXCLUDE_URL_PREFIXES": ["/excluded-path/"],
-#     "DIRECTIVES": {
-#         "frame-ancestors": [SELF],
-#         "form-action": [SELF],
-#         "img-src": [SELF, AWS_S3_ENDPOINT_URL, "data:"],
-#         "default-src": [SELF, NONCE, NONE, AWS_S3_ENDPOINT_URL],
-#         "script-src": [
-#             SELF,
-#             NONCE,
-#             AWS_S3_ENDPOINT_URL,
-#             UNSAFE_EVAL,
-#             UNSAFE_HASHES,
-#             "cdn.jsdelivr.net",
-#             "cdn.overtracking.com",
-#         ],
-#         "script-src-attr": [
-#             SELF,
-#             UNSAFE_HASHES,
-#             csp_sha256_hash("event.preventDefault();"),
-#         ],
-#         "style-src": [
-#             SELF,
-#             NONCE,
-#             UNSAFE_HASHES,
-#             "cdn.jsdelivr.net",
-#         ],
-#         "style-src-attr": [SELF, NONCE, UNSAFE_HASHES],
-#         "style-src-elem": [
-#             SELF,
-#             NONCE,
-#             UNSAFE_HASHES,
-#             "'sha256-bsV5JivYxvGywDAZ22EZJKBFip65Ng9xoJVLbBg7bdo='",
-#         ],
-#         "connect-src": ["https://cdn.overtracking.com"],
-#     },
-# }
-
 REPORT_PERCENTAGE = 100  # reduce if too many
 
 CONTENT_SECURITY_POLICY_REPORT_ONLY = {
@@ -597,10 +561,10 @@ CONTENT_SECURITY_POLICY_REPORT_ONLY = {
         "script-src-elem": [SELF, NONCE],
         "style-src": [SELF, UNSAFE_INLINE],
         "style-src-elem": [SELF, UNSAFE_INLINE],
-        "script-src-attr": [SELF, UNSAFE_INLINE],
+        "script-src-attr": [SELF, UNSAFE_HASHES],
         "font-src": [SELF],
         "connect-src": [SELF],
-        "img-src": [SELF, "data:", AWS_S3_ENDPOINT_URL],
+        "img-src": [SELF, "data:", AWS_S3_ENDPOINT_URL, "https://revista.dgt.es"],
         "form-action": [SELF],
         "frame-ancestors": [SELF],
         "report-uri": reverse_lazy("csp_report"),

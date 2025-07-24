@@ -4,7 +4,18 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9" id="job_content_{{ job.id }}">
+    {% if user.is_superuser %}
+    <center>
+      <button class="outline"
+              hx-get="{{ job.hx_edit_url }}"
+              hx-swap="innerHTML"
+              hx-target="#job_content_{{ job.id }}"
+              >
+        {% translate "Edit Job" %}
+      </button>
+    </center>
+    {% endif %}
     <h1 class="text-center">{{ job.title }} </h1>
     {{ job.body|markdownify }}
   </div>
