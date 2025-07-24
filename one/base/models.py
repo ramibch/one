@@ -240,3 +240,36 @@ class Link(TranslatableModel):
             return self.custom_title
         else:
             return self.url_and_title[1]
+
+
+class CSPReport(OneModel):
+    blocked_uri = models.CharField(max_length=2048, null=True, blank=True)
+    column_number = models.IntegerField(null=True, blank=True)
+    disposition = models.CharField(max_length=20, null=True, blank=True)
+    document_uri = models.URLField(max_length=2048, null=True, blank=True)
+    effective_directive = models.CharField(max_length=100, null=True, blank=True)
+    line_number = models.IntegerField(null=True, blank=True)
+    original_policy = models.TextField(null=True, blank=True)
+    referrer = models.URLField(max_length=2048, null=True, blank=True)
+    source_file = models.URLField(max_length=2048, null=True, blank=True)
+    status_code = models.IntegerField(null=True, blank=True)
+    violated_directive = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"CSP Violation: {self.violated_directive} at {self.document_uri}"
+
+    class Meta(OneModel.Meta):
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "violated_directive",
+                    "effective_directive",
+                    "blocked_uri",
+                    "document_uri",
+                    "source_file",
+                    "line_number",
+                    "column_number",
+                ],
+                name="unique_csp_violation",
+            )
+        ]

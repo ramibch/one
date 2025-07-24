@@ -15,7 +15,9 @@ from copy import copy
 from datetime import datetime
 from pathlib import Path
 
+from csp.constants import NONE, SELF
 from django.core.exceptions import ImproperlyConfigured
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from environs import Env
 from redis import ConnectionPool as RedisConnectionPool
@@ -99,6 +101,7 @@ INSTALLED_APPS = [
     "bx_django_utils",  # needed from huey_monitor
     "huey_monitor",
     "debug_toolbar",
+    "csp",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -117,6 +120,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "one.base.middleware.ip.IpAddressMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "csp.middleware.CSPMiddleware",
     "django_permissions_policy.PermissionsPolicyMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -582,6 +586,23 @@ if HTTPS:
 #         "connect-src": ["https://cdn.overtracking.com"],
 #     },
 # }
+
+REPORT_PERCENTAGE = 100  # reduce if too many
+
+CONTENT_SECURITY_POLICY_REPORT_ONLY = {
+    "EXCLUDE_URL_PREFIXES": [],
+    "DIRECTIVES": {
+        "default-src": [NONE],
+        "connect-src": [SELF],
+        "img-src": [SELF],
+        "form-action": [SELF],
+        "frame-ancestors": [SELF],
+        "script-src": [SELF],
+        "style-src": [SELF],
+        "upgrade-insecure-requests": True,
+        "report-uri": reverse_lazy("csp_report"),
+    },
+}
 
 
 # Permissions-Policy

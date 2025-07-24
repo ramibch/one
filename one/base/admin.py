@@ -5,7 +5,7 @@ from django.db.migrations.recorder import MigrationRecorder
 from one.admin import OneTranslatableModelAdmin
 from one.emails.models import ReplyMessage
 
-from .models import Animation, ContactMessage, Link, SearchTerm
+from .models import Animation, ContactMessage, CSPReport, Link, SearchTerm
 
 
 @admin.register(Link)
@@ -57,3 +57,33 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_filter = ("client__is_blocked", "site", "created_at")
     readonly_fields = tuple(field.name for field in ContactMessage._meta.fields)
     inlines = [ReplyMessageInline]
+
+
+@admin.register(CSPReport)
+class CSPReportAdmin(admin.ModelAdmin):
+    list_display = (
+        "created_at",
+        "violated_directive",
+        "effective_directive",
+        "blocked_uri",
+        "document_uri",
+        "source_file",
+        "status_code",
+    )
+    list_filter = (
+        "violated_directive",
+        "effective_directive",
+        "disposition",
+        "status_code",
+        "created_at",
+    )
+    search_fields = (
+        "blocked_uri",
+        "document_uri",
+        "source_file",
+        "referrer",
+        "original_policy",
+    )
+    date_hierarchy = "created_at"
+    ordering = ("-created_at",)
+    readonly_fields = tuple(f.name for f in CSPReport._meta.fields)

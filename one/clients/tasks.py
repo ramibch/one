@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.db.models import Count, Max, Q
-from django.urls import reverse_lazy
 from django.utils import timezone
 from huey import crontab
 from huey.contrib import djhuey as huey
@@ -38,21 +37,6 @@ def block_spammy_clients_hourly():
         ip_address=Client.DUMMY_IP_ADDRESS
     )
     block_spammy_clients(clients)
-
-
-@huey.db_periodic_task(crontab(hour="1", minute="4"))
-def block_bad_clients_creating_user_accounts():
-    bad_clients = Client.objects.annotate(
-        num_requests=Count(
-            "request",
-            filter=Q(
-                request__path__name=reverse_lazy("account_signup"),
-                request__method="POST",
-            ),
-        )
-    ).filter(num_requests__gte=2)
-
-    block_spammy_clients(bad_clients)
 
 
 @huey.db_task()

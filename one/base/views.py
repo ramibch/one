@@ -1,3 +1,4 @@
+import json
 import operator
 from functools import reduce
 
@@ -6,17 +7,19 @@ from django.contrib.auth import get_user_model
 from django.contrib.sitemaps.views import index as django_sitemap_index
 from django.contrib.sitemaps.views import sitemap as django_sitemap
 from django.db.models import Q
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.decorators.cache import cache_control
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from django_htmx.http import retarget
 
 from one.articles.models import Article
+from one.bot import Bot
 from one.candidates.views import CandidateDashboardView
 from one.choices import Topics
 from one.db import TranslatableModel
@@ -28,6 +31,7 @@ from one.quiz.views import quiz_list
 from one.sites.models import SiteType
 
 from .forms import ContactMessageForm
+from .models import CSPReport
 from .tasks import save_search_query
 
 User = get_user_model()
@@ -222,3 +226,27 @@ def sitemap_view(*args, **kwargs):
         kwargs["sitemaps"][key].lang = kwargs.get("lang", settings.LANGUAGE_CODE)
     kwargs.pop("lang", None)
     return django_sitemap(*args, **kwargs)
+
+
+@csrf_exempt
+def csp_report(request):
+    try:
+        data = json.loads(request.body.decode("utf-8")).get("csp-report", {})
+        CSPReport.objects.get_or_create(
+            violated_directive=data.get("violated-directive"),
+            effective_directive=data.get("effective-directive"),
+            blocked_uri=data.get("blocked-uri"),
+            document_uri=data.get("document-uri"),
+            source_file=data.get("source-file"),
+            line_number=data.get("line-number"),
+            column_number=data.get("column-number"),
+            defaults={
+                "disposition": data.get("disposition"),
+                "original_policy": data.get("original-policy"),
+                "referrer": data.get("referrer"),
+                "status_code": data.get("status-code"),
+            },
+        )
+    except Exception as e:
+        Bot.to_admin(f"Failed to save CSP report: {e}")
+    return JsonResponse({"status": "ok"})

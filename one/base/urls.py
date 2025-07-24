@@ -11,6 +11,7 @@ from .views import (
     SearchView,
     SlugPageView,
     TermsView,
+    csp_report,
     favicon_view,
     sitemap_view,
 )
@@ -31,6 +32,8 @@ urlpatterns = [
     # "static" pages
     path("~/p", PrivacyView.as_view(), name="privacy"),
     path("~/t", TermsView.as_view(), name="terms"),
+    # csp-report
+    path("csp-report/", csp_report, name="csp_report"),
     # Article, Product, topic ...
     path("<slug:slug>", SlugPageView.as_view(), name="slug_page"),
     # Home
