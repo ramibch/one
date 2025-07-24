@@ -9,7 +9,7 @@
 
 {% if object.has_equations %}
   {% block extra_js %}
-    <script type="text/javascript" id="MathJax-script" async src='{% static "js/tex-mml-chtml.js" %}'> </script>
-    <script type="text/x-mathjax-config" src='{% static "js/mathjax-config.js" %}'></script>
+    <script type="text/javascript" id="MathJax-script" nonce="{{ request.csp_nonce }}" async src='{% static "js/tex-mml-chtml.js" %}'> </script>
+    <script type="text/x-mathjax-config" nonce="{{ request.csp_nonce }}" src='{% static "js/mathjax-config.js" %}'></script>
   {% endblock extra_js %}
 {% endif %}

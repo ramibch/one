@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.sessions.models import Session
 from django.db.migrations.recorder import MigrationRecorder
+from django.http import HttpResponse
 
 from one.admin import OneTranslatableModelAdmin
 from one.emails.models import ReplyMessage
@@ -87,3 +88,26 @@ class CSPReportAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     ordering = ("-created_at",)
     readonly_fields = tuple(f.name for f in CSPReport._meta.fields)
+
+    actions = ["export_csp_violations_as_txt"]
+
+    @admin.action(description="Export selected CSP violations as .txt")
+    def export_csp_violations_as_txt(modeladmin, request, queryset):
+        response = HttpResponse(content_type="text/plain")
+        response["Content-Disposition"] = 'attachment; filename="csp_violations.txt"'
+
+        lines = []
+        for obj in queryset:
+            lines.append("===")
+            lines.append(f"Violated Directive: {obj.violated_directive}")
+            lines.append(f"Effective Directive: {obj.effective_directive}")
+            lines.append(f"Blocked URI:        {obj.blocked_uri}")
+            lines.append(f"Document URI:       {obj.document_uri}")
+            lines.append(f"Source File:        {obj.source_file}")
+            lines.append(f"Line: {obj.line_number}, Column: {obj.column_number}")
+            lines.append(f"Status Code:        {obj.status_code}")
+            lines.append(f"Referrer:           {obj.referrer}")
+            lines.append("")
+
+        response.write("\n".join(lines))
+        return response

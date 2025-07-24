@@ -59,7 +59,7 @@
     </template>
 
     {% block head_extra %}{% endblock %}
-    <script defer src="{% static 'js/overtracking.js' %}"></script>
+    <script defer nonce="{{ request.csp_nonce }}" src="{% static 'js/overtracking.js' %}"></script>
   </head>
   <body class="container" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <header>
@@ -80,13 +80,16 @@
     {% endblock extra_body %}
     <!-- js -->
     <script defer src="{% static 'js/htmx.js' %}" nonce="{{ request.csp_nonce }}"></script>
-    <script defer src="{% static 'js/htmx-ext-ws.js' %}"></script>
-    <script defer src="{% static 'js/hyperscript.js' %}"></script>
-    <script defer src="{% static 'js/cropper.js' %}"></script>
-    <script defer src="{% static 'js/alpine_persist.js' %}" nonce="{{ request.csp_nonce }}" ></script>
+    <script defer src="{% static 'js/htmx-ext-ws.js' %}" nonce="{{ request.csp_nonce }}"></script>
+    <script defer src="{% static 'js/hyperscript.js' %}" nonce="{{ request.csp_nonce }}"></script>
+    <script defer src="{% static 'js/cropper.js' %}" nonce="{{ request.csp_nonce }}"></script>
+    <script defer src="{% static 'js/alpine_persist.js' %}" nonce="{{ request.csp_nonce }}"></script>
     <script defer src="{% static 'js/alpine.js' %}" nonce="{{ request.csp_nonce }}"></script>
-    <script defer src="{% static 'js/sortable.js' %}"></script>
-    <script defer src="{% static 'js/base.js' %}"></script>
+    <script defer src="{% static 'js/sortable.js' %}" nonce="{{ request.csp_nonce }}"></script>
+    <script defer src="{% static 'js/base.js' %}" nonce="{{ request.csp_nonce }}"></script>
+
+    <!-- This is needed to activate the nonce for Alpine's inline usage -->
+    <script nonce="{{ request.csp_nonce }}"></script>
     {% block extra_js %}{% endblock %}
   </body>
 </html>

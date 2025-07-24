@@ -166,6 +166,6 @@
 {% endblock content %}
 
 {% block extra_js %}
-  <script src='{% static "js/jspdf.min.js" %}'>  </script>
-  <script src='{% static "js/invoice-tool.js" %}'>  </script>
+  <script nonce="{{ request.csp_nonce }}" src='{% static "js/jspdf.min.js" %}'>  </script>
+  <script nonce="{{ request.csp_nonce }}" src='{% static "js/invoice-tool.js" %}'>  </script>
 {% endblock extra_js %}

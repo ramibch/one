@@ -50,5 +50,5 @@
 {% endblock content %}
 
 {% block extra_js %}
-  <script src='{% static "js/md5-tool.js" %}'></script>
+  <script nonce="{{ request.csp_nonce }}" src='{% static "js/md5-tool.js" %}'></script>
 {% endblock extra_js %}
