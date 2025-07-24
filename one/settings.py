@@ -15,7 +15,7 @@ from copy import copy
 from datetime import datetime
 from pathlib import Path
 
-from csp.constants import NONCE, NONE, SELF
+from csp.constants import NONCE, NONE, SELF, UNSAFE_EVAL, UNSAFE_INLINE
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -593,13 +593,14 @@ CONTENT_SECURITY_POLICY_REPORT_ONLY = {
     "EXCLUDE_URL_PREFIXES": [],
     "DIRECTIVES": {
         "default-src": [NONE],
-        "script-src": [SELF, NONCE],
+        "script-src": [SELF, NONCE, UNSAFE_EVAL],
         "script-src-elem": [SELF, NONCE],
-        "style-src": [SELF],
-        "style-src-elem": [SELF],
+        "style-src": [SELF, UNSAFE_INLINE],
+        "style-src-elem": [SELF, UNSAFE_INLINE],
+        "script-src-attr": [SELF, UNSAFE_INLINE],
         "font-src": [SELF],
         "connect-src": [SELF],
-        "img-src": [SELF, "data:"],
+        "img-src": [SELF, "data:", AWS_S3_ENDPOINT_URL],
         "form-action": [SELF],
         "frame-ancestors": [SELF],
         "report-uri": reverse_lazy("csp_report"),
