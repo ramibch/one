@@ -40,4 +40,3 @@ class SiteFactory(DjangoModelFactory):
 
     title = factory.LazyAttribute(lambda _: faker.sentence())
     description = factory.LazyAttribute(lambda _: faker.text())
-    keywords = factory.LazyAttribute(lambda _: faker.sentence())

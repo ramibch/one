@@ -166,7 +166,6 @@ class Site(TranslatableModel):
     # SEO
     title = models.CharField(max_length=64, null=True, blank=True)
     description = models.TextField(max_length=256, null=True, blank=True)
-    keywords = models.TextField(max_length=256, null=True, blank=True)
 
     # Emails
     brand_email_sender = ForeignKey(
@@ -205,10 +204,6 @@ class Site(TranslatableModel):
     def url(self) -> str:
         schema = "https" if settings.HTTPS else "http"
         return f"{schema}://{self.domain}"
-
-    @cached_property
-    def topic_keywords(self):
-        return ", ".join(self.topics)
 
     def get_object_admin_url(self, obj) -> str:
         # the url to the Django admin form for the model instance

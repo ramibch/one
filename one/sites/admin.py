@@ -56,7 +56,6 @@ class SiteAdmin(OneTranslatableModelAdmin):
                 "fields": (
                     "title",
                     "description",
-                    "keywords",
                 )
             },
         ),

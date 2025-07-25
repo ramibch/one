@@ -1,7 +1,6 @@
 {% load i18n static %}
-{% firstof page_title object.title request.site.title as title %}
-{% firstof page_keywords object.keywords request.site.keywords request.site.topic_keywords as keywords %}
-{% firstof page_description object.description request.site.description as description %}
+{% firstof page_title object.title request.site.title as title_ %}
+{% firstof page_description object.description request.site.description as description_ %}
 {% static 'css/pygments_default.css' as light_pygments_css %}
 {% static 'css/pygments_monokai.css' as dark_pygments_css %}
 {% get_current_language as LANG_CODE %}
@@ -11,38 +10,54 @@
       x-data="{'darkTheme' : $persist(true), 'openLanguageModal' : false, }"
       x-bind:data-theme="darkTheme ? 'dark' : 'light' ">
   <head>
-    <title>
-      {% block head_title %}
-        {{ title }}
-      {% endblock head_title %}
-    </title>
+
+    <title> {% block head_title %} {{ title_ }} {% endblock %} </title>
+
     <!-- favicon -->
     <link rel="shortcut icon" href="{% url 'favicon' %}" />
     <link rel="apple-touch-icon" href="{% url 'favicon' %}" />
+
     <!-- meta tags -->
     <meta charset="utf-8" />
     <meta name="ROBOTS" content="all" />
     <meta name="REVISIT-AFTER" content="7 days" />
-    <meta name="KEYWORDS" content="{{ keywords }}" />
-    <meta name="DESCRIPTION" content="{{ description }}" />
+    <meta name="DESCRIPTION" content="{{ description_ }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+
     <!-- mobile related meta tags -->
-    <meta name="application-name" content="{{ title }}" />
-    <meta name="apple-mobile-web-app-title" content="{{ title }}" />
+    <meta name="application-name" content="{{ title_ }}" />
+    <meta name="apple-mobile-web-app-title" content="{{ title_ }}" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <!-- TODO: change og:image & twitter:image -->
+    <!-- https://kerryathompson.com/blog/best-practices-for-sizing-your-social-sharing-icon -->
+
     <!-- OG meta tags-->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="{{ title }}" />
-    <meta property="og:image"
-          content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'favicon' %}" />
+    <meta property="og:title" content="{{ title_ }}" />
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'favicon' %}" />
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-    <meta property="og:description" content="{{ description }}" />
+    <meta property="og:description" content="{{ description_ }}" />
+
     <!-- twitter meta tags -->
-    <meta name="twitter:url"
-          content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'favicon' %}" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="{{ title }}" />
-    <meta name="twitter:description" content="{{ description }}" />
+    <meta name="twitter:url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'favicon' %}" />
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'favicon' %}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ title_ }}" />
+    <meta name="twitter:description" content="{{ description_ }}" />
+
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json" nonce="{{ request.csp_nonce }}">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "{{ request.build_absolute_uri }}",
+        "name": "{{ title_ }}",
+        "description": "{{ description_ }}"
+      }
+    </script>
+
     <!-- css -->
     <link href="{% static 'css/bootstrap-grid.min.css' %}" rel="stylesheet" />
     <link href="{% static 'css/bootstrap-icons.min.css' %}" rel="stylesheet" />

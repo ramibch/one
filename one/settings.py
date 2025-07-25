@@ -120,7 +120,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "one.base.middleware.ip.IpAddressMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "csp.middleware.CSPMiddleware",
+    "csp.contrib.rate_limiting.RateLimitedCSPMiddleware",  # https://django-csp.readthedocs.io/en/latest/reports.html#throttling-the-number-of-reports
     "django_permissions_policy.PermissionsPolicyMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -236,12 +236,6 @@ LANGUAGES = [
     ("nl", _("Dutch")),
     ("pt", _("Portuguese")),
 ]
-
-
-lang_input = ["es", "de"]
-
-langs_out = [("en", _("English")), ("de", _("German"))]  # output desired
-
 
 LANGUAGE_CODES = [items[0] for items in LANGUAGES]
 LANGUAGE_CODES_WITHOUT_DEFAULT = copy(LANGUAGE_CODES)
@@ -554,7 +548,7 @@ if HTTPS:
 
 # CSP
 
-REPORT_PERCENTAGE = 100  # reduce if too many
+REPORT_PERCENTAGE = 20.0  # reduce if too many
 
 CONTENT_SECURITY_POLICY_REPORT_ONLY = {
     "EXCLUDE_URL_PREFIXES": [],

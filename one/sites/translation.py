@@ -5,4 +5,4 @@ from .models import Site
 
 @register(Site)
 class SiteOptions(TranslationOptions):
-    fields = ("title", "description", "keywords")
+    fields = ("title", "description")

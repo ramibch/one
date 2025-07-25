@@ -36,20 +36,13 @@ BARCODE_RESULTS_TEMPLATE = "tools/results/barcode.html"
 
 
 class ToolListing:
-    def __init__(
-        self,
-        title=None,
-        keywords=GENERAL_KEYWORDS,
-        description=None,
-    ) -> None:
+    def __init__(self, title=None, description=None) -> None:
         self.title = title
-        self.keywords = keywords
         self.description = description if description is not None else title
 
 
 TOOL_LISTING_OBJECT = ToolListing(
     title=_("Free Online Tools"),
-    keywords=GENERAL_KEYWORDS,
     description=_("Generate charts, barcodes, QR codes with these free online tools"),
 )
 
@@ -68,7 +61,6 @@ class Tool:
         index_listing=True,
         icon="🔨",
         process_text=TEXT_GENERATE,
-        keywords=GENERAL_KEYWORDS,
         description=None,
         detail_template="tools/tool_detail.html",
         results_template="tools/results/general.html",
@@ -86,7 +78,6 @@ class Tool:
         self.process_text = process_text
         self.detail_template = detail_template
         self.results_template = results_template
-        self.keywords = keywords
         self.description = description if description is not None else title
 
     @cached_property
@@ -121,7 +112,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator EAN14"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.EAN14Barcode, fields=["text"]),
     ),
@@ -130,14 +120,12 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator EAN13"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.EAN13Barcode, fields=["text"]),
     ),
     Tool(
         slug="ean13-guards",
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         title=_("Barcode Generator EAN13 with guards"),
         form=modelform_factory(models.EAN13GuardBarcode, fields=["text"]),
@@ -148,7 +136,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator EAN8"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.EAN8Barcode, fields=["text"]),
     ),
@@ -158,7 +145,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator JAN"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.JANBarcode, fields=["text"]),
     ),
@@ -167,7 +153,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator Codabar"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.CodabarBarcode, fields=["text"]),
     ),
@@ -176,7 +161,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator Code 128"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.Code128Barcode, fields=["text"]),
     ),
@@ -185,7 +169,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator Code 39"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.Code39Barcode, fields=["text"]),
     ),
@@ -194,7 +177,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator ISBN 13"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.ISBN13Barcode, fields=["text"]),
     ),
@@ -204,7 +186,6 @@ TOOLS = (
         #
         title=_("Barcode Generator GS1 128"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.GS1_128Barcode, fields=["text"]),
     ),
@@ -213,7 +194,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator ISBN 10"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.ISBN10Barcode, fields=["text"]),
     ),
@@ -222,7 +202,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator ISSN"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.ISSNBarcode, fields=["text"]),
     ),
@@ -231,7 +210,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator PZN"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.PZNBarcode, fields=["text"]),
     ),
@@ -240,7 +218,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator ITF"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.ITFBarcode, fields=["text"]),
     ),
@@ -249,7 +226,6 @@ TOOLS = (
         category="barcodes",
         title=_("Barcode Generator UPC"),
         description=GENERAL_BARCODE_DESCRIPTION,
-        keywords=BARCODE_KEYWORDS,
         results_template=BARCODE_RESULTS_TEMPLATE,
         form=modelform_factory(models.UPCBarcode, fields=["text"]),
     ),
