@@ -156,6 +156,9 @@ TEMPLATES = [
                 "one.menus.context_processors.menu_items",
             ],
             "debug": DEBUG,
+            "builtins": [
+                "one.base.templatetags.basetags",
+            ],
         },
     },
     {

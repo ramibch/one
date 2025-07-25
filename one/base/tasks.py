@@ -195,6 +195,37 @@ def inform_to_admin_about_db_table_sizes():
     Bot.to_admin(text)
 
 
+@huey.periodic_task(crontab(day_of_week="2", hour="6", minute="38"))
+def inform_about_ghost_tables():
+    """
+    Django: find ghost tables without associated models
+    https://adamj.eu/tech/2024/11/21/django-tables-without-models/
+    """
+    with connection.cursor():
+        all_tables = set(connection.introspection.table_names())
+        django_tables = set(connection.introspection.django_table_names())
+
+    # Ignore known system or safe-to-ignore tables
+    excluded_tables = {"django_migrations"}
+    ghost_tables = sorted(all_tables - django_tables - excluded_tables)
+
+    if not ghost_tables:
+        return
+
+    drop_statements = "\n".join(f"DROP TABLE {table};" for table in ghost_tables)
+    drop_statements_cascade = drop_statements.replace(";", " CASCADE;")
+
+    message = (
+        "👻 Ghost tables detected in the database!\n\n"
+        f"{chr(10).join(ghost_tables)}\n\n"
+        "You may want to drop them:\n\n"
+        f"{drop_statements}\n\n"
+        "With cascade:\n\n"
+        f"{drop_statements_cascade}"
+    )
+    Bot.to_admin(message)
+
+
 @huey.periodic_task(crontab(minute="*/15"))
 def purge_tmp_files():
     """
