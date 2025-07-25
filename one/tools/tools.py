@@ -280,6 +280,13 @@ TOOLS = (
         process_func=get_random_secret_key,
         html_col1=4,
     ),
+    Tool(
+        icon="👨🏻‍💻",
+        slug="postgres-db-for-django",
+        category="django",
+        title=_("Create PostgreSQL Database for a Django project"),
+        detail_template="tools/tool_postgres.html",
+    ),
 )
 
 

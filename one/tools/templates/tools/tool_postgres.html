@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block content %}
+  <h1 class="text-center">{{ object.title }}</h1>
+
+<div class="row" x-data="{
+    db: 'db',
+    user: 'user',
+    pass: '1234',
+    output: '',
+    copied: false,
+    generateSQL() {
+      this.output = `CREATE DATABASE ${this.db};
+CREATE USER ${this.user} WITH PASSWORD '${this.pass}';
+ALTER ROLE ${this.user} SET client_encoding TO 'utf8';
+ALTER ROLE ${this.user} SET default_transaction_isolation TO 'read committed';
+ALTER ROLE ${this.user} SET timezone TO 'UTC';
+ALTER USER ${this.user} CREATEDB;
+GRANT ALL PRIVILEGES ON DATABASE ${this.db} TO ${this.user};
+ALTER DATABASE ${this.db} OWNER TO ${this.user};`
+;}
+}"
+x-init="
+    generateSQL();
+    $watch('db', () => generateSQL());
+    $watch('user', () => generateSQL());
+    $watch('pass', () => generateSQL());
+"
+>
+  <div class="col-md-4">
+    <h2 class="text-center mt-5">{% translate "Input" %}</h2>
+
+    <label for="db">{% translate "Database name" %}</label>
+    <input type="text" name="db" id="db" class="form-control" x-model="db">
+
+    <label for="user" class="mt-3">{% translate "User" %}</label>
+    <input type="text" name="user" id="user" class="form-control" x-model="user">
+
+    <label for="pass" class="mt-3">{% translate "Password" %}</label>
+    <input type="text" name="pass" id="pass" class="form-control" x-model="pass">
+    <center>
+      <button class="outline mt-3" x-on:click="db = ''; user = ''; pass = ''; " > 🗑️ {% translate "Remove" %} </button>
+    </center>
+  </div>
+  <div class="col-md-8">
+    <h2 class="text-center mt-5">{% translate "Output" %}</h2>
+
+    <label for="output">{% translate "Run in these commands in your psql tool" %} (<code>sudo psql -U postgres</code>)</label>
+    <textarea class="form-control" rows="12" x-model="output" id="output" readonly></textarea>
+    <center>
+      <button class="mt-3"
+        x-on:click="navigator.clipboard.writeText(output).then(() => copied = true)"
+        x-text="copied ? `🙂 {% translate 'Copied!' %}` : `📋 {% translate 'Copy' %}`">
+      </button>
+    </center>
+  </div>
+
+</div>
+
+{% endblock content %}
