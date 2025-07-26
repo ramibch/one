@@ -555,19 +555,24 @@ CONTENT_SECURITY_POLICY_REPORT_ONLY = {
     "DIRECTIVES": {
         "default-src": [NONE],
         "script-src": [SELF, NONCE, UNSAFE_EVAL],
-        "script-src-elem": [SELF, NONCE],
+        "script-src-elem": [SELF, NONCE, "https://cdn.jsdelivr.net"],
+        "script-src-attr": [SELF, UNSAFE_HASHES, UNSAFE_INLINE],
         "style-src": [SELF, UNSAFE_INLINE],
-        "style-src-elem": [SELF, UNSAFE_INLINE],
-        "script-src-attr": [SELF, UNSAFE_HASHES],
-        "font-src": [SELF],
+        "style-src-elem": [SELF, UNSAFE_INLINE, "https://cdn.jsdelivr.net"],
+        "font-src": [SELF, "data:"],
         "connect-src": [SELF],
-        "img-src": [SELF, "data:", AWS_S3_ENDPOINT_URL, "https://revista.dgt.es"],
+        "img-src": [
+            SELF,
+            "data:",
+            AWS_S3_ENDPOINT_URL,
+            "https://revista.dgt.es",
+            "https://tile.openstreetmap.org",
+        ],
         "form-action": [SELF],
         "frame-ancestors": [SELF],
         "report-uri": reverse_lazy("csp_report"),
     },
 }
-
 
 # Permissions-Policy
 PERMISSIONS_POLICY = {
