@@ -1,0 +1,11 @@
+{% load i18n %}
+<section class="row mt-5">
+  <h2>{% translate "Feedback" %}</h2>
+    <ul>
+      <li>{% translate "Do you like this tool?" %} 🤩</li>
+      <li>{% translate "Do you hate it?" %} 😠 </li>
+      <li>{% translate "Do you have any ideas on how to improve it?" %} 🤗</li>
+      <li>{% translate "Would you like to have another tool?" %} 🤗</li>
+    </ul>
+    <a href="{% url 'contact' %}">💬 {% translate "Then send me your feedback" %}</a>
+</section>

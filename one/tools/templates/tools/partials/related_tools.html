@@ -1,6 +1,6 @@
 {% load i18n %}
-<section class="row">
-  <h2>{% translate "Related tools" %}</h2>
+<section class="row mt-5">
+  <h2>{% translate "Related tools" %}   <small>(<a href="{% url 'tool_list' %}">{% translate "All." %}</a>)</small></h2>
   {% for related_tool in related_tools %}
     <div class="col-md-6">
       <a href="{{ related_tool.url }}"

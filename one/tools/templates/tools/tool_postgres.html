@@ -39,13 +39,13 @@ x-init="
     <label for="pass" class="mt-3">{% translate "Password" %}</label>
     <input type="text" name="pass" id="pass" class="form-control" x-model="pass">
     <center>
-      <button class="outline mt-3" x-on:click="db = ''; user = ''; pass = ''; " > 🗑️ {% translate "Remove" %} </button>
+      <button class="outline mt-3" x-on:click="db = ''; user = ''; pass = ''; output = ''; output = '';" > 🗑️ {% translate "Delete data" %} </button>
     </center>
   </div>
   <div class="col-md-8">
     <h2 class="text-center mt-5">{% translate "Output" %}</h2>
 
-    <label for="output">{% translate "Run these commands in your psql CLI tool." %} (<code>sudo psql -U postgres</code>)</label>
+    <label for="output">{% translate "Run these commands in your psql CLI tool." %} (<code>sudo -u postgres psql</code>)</label>
     <textarea class="form-control" rows="12" x-model="output" id="output" readonly></textarea>
     <center>
       <button class="mt-3"
@@ -56,6 +56,8 @@ x-init="
   </div>
 
 </div>
+
+  {% include "tools/partials/feedback.html" %}
 
   {% include "tools/partials/related_tools.html" %}
 
