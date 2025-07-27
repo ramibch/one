@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "one.etsy",
     "one.companies",
     "one.candidates",
+    "one.socialmedia",
     # Third-party apps
     "django_cleanup.apps.CleanupConfig",
     "django_extensions",

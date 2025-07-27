@@ -45,6 +45,7 @@ urlpatterns = [
     path("etsy/", include("one.etsy.urls")),
     path("pins/", include("one.pins.urls")),
     path("faqs/", include("one.faqs.urls")),
+    path("socialmedia/", include("one.socialmedia.urls")),
     path(_("plans/"), include("one.plans.urls")),
     path(_("articles/"), include("one.articles.urls")),
     path(_("products/"), include("one.products.urls")),
