@@ -1,9 +1,6 @@
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
-
-from one.bot import Bot
 
 from .models import LinkedinAuth
 from .utils import get_linkedin_access_from_code
@@ -11,7 +8,6 @@ from .utils import get_linkedin_access_from_code
 
 @login_required
 def linkedin_callback(request):
-
     state = request.GET.get("state")
     code = request.GET.get("code")
     if not state or not code:
@@ -29,4 +25,3 @@ def linkedin_callback(request):
         return HttpResponse(f"Failed to update auth object ({auth.pk}): {str(e)}")
 
     return redirect(auth.admin_url)
-

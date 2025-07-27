@@ -3,14 +3,12 @@ import re
 import urllib.parse
 import urllib.request
 from pathlib import Path
-from urllib.parse import urlencode
 
 import requests
-from django.conf import settings
-from django.urls import reverse_lazy
 
 DEFAULT_VERSION = "202507"
 LINKEDIN_API_URL = "https://api.linkedin.com/rest"
+
 
 class FileInputNotSupported(Exception):
     pass
@@ -21,7 +19,6 @@ def escape_little_text(text: str) -> str:
 
 
 class LinkedinClient:
-
     def __init__(
         self,
         access_token: str,

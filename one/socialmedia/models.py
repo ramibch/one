@@ -2,15 +2,15 @@ import secrets
 from datetime import timedelta
 
 from auto_prefetch import ForeignKey
-from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from one.bot import Bot
-from one.db import OneModel
+from one.choices import Topics
+from one.db import ChoiceArrayField, OneModel
 
-from .utils import get_linkedin_access_from_code
+from .linkedin import LinkedinClient
 
 
 class LinkedinAuthorType(models.TextChoices):
@@ -30,7 +30,7 @@ class LinkedinAuth(OneModel):
     def __str__(self) -> str:
         return f"[{self.pk}] {self.state}"
 
-    def update_values(self, access_data:dict, code:str|None=None):
+    def update_values(self, access_data: dict, code: str | None = None):
         """
         access_data = {
                       "access_token": <access_token>,
@@ -43,7 +43,7 @@ class LinkedinAuth(OneModel):
 
         if code:
             self.code = code
-        
+
         log = [f"🔄 Updating LinkedinAuth ({self.pk})"]
 
         if "access_token" in access_data:
@@ -59,14 +59,20 @@ class LinkedinAuth(OneModel):
             log.append("⚠️ refresh_token missing")
 
         if "expires_in" in access_data:
-            self.expires_at = timezone.now() + timedelta(seconds=access_data["expires_in"])
+            self.expires_at = timezone.now() + timedelta(
+                seconds=access_data["expires_in"]
+            )
             log.append(f"✅ expires_in set to {self.expires_at}")
         else:
             log.append("⚠️ expires_in missing")
 
         if "refresh_token_expires_in" in access_data:
-            self.refresh_token_expires_at = timezone.now() + timedelta(seconds=access_data["refresh_token_expires_in"])
-            log.append(f"✅ refresh_token_expires_in set to {self.refresh_token_expires_at}")
+            self.refresh_token_expires_at = timezone.now() + timedelta(
+                seconds=access_data["refresh_token_expires_in"]
+            )
+            log.append(
+                f"✅ refresh_token_expires_in set to {self.refresh_token_expires_at}"
+            )
         else:
             log.append("⚠️ refresh_token_expires_in missing")
 
@@ -83,7 +89,23 @@ class LinkedinAuth(OneModel):
 class LinkedinChannel(OneModel):
     auth = ForeignKey(LinkedinAuth, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
+    author_id = models.CharField(max_length=32)
     author_type = models.CharField(max_length=32, choices=LinkedinAuthorType)
+    post_jobs = models.BooleanField(default=False)
+    post_english = models.BooleanField(default=False)
+    topics = ChoiceArrayField(
+        models.CharField(max_length=16, choices=Topics),
+        default=list,
+        blank=True,
+    )
 
     def __str__(self) -> str:
         return self.name
+
+    @property
+    def client(self) -> LinkedinClient:
+        return LinkedinClient(
+            access_token=self.auth.access_token,
+            author_type=self.author_type,
+            author_id=self.author_id,
+        )

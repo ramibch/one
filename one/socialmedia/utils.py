@@ -1,4 +1,3 @@
-
 from urllib.parse import urlencode
 
 import requests
@@ -16,7 +15,7 @@ def get_linkedin_access_from_code(code: str) -> dict:
     """
     Request an access token using an authorization code.
     """
-    
+
     url = "https://www.linkedin.com/oauth/v2/accessToken"
     payload = {
         "grant_type": "authorization_code",
@@ -36,16 +35,11 @@ def get_linkedin_access_from_code(code: str) -> dict:
 def refresh_linkedin_access(refresh_token: str) -> dict:
     """
     Get a new access token using a refresh token.
-    
+
     https://learn.microsoft.com/en-us/linkedin/shared/authentication/programmatic-refresh-tokens
 
-    grant_type      The value of this field should always be refresh_token.
-    refresh_token   The refresh token.
-    client_id       The Client ID value generated when you registered your application.
-    client_secret 	The Client Secret value generated when you registered your application.
-
     """
-    
+
     url = "https://www.linkedin.com/oauth/v2/accessToken"
     payload = {
         "grant_type": "refresh_token",
@@ -54,7 +48,7 @@ def refresh_linkedin_access(refresh_token: str) -> dict:
         "client_secret": settings.LINKEDIN_SECRET_KEY,
     }
 
-    headers = {"Content-Type" : "application/x-www-form-urlencoded"}
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
     response = requests.post(url, data=payload, headers=headers)
 
     if response.status_code >= 400:

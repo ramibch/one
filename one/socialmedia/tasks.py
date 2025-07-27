@@ -20,7 +20,8 @@ def task_check_linkedin_auth_objects():
     for auth in auths:
         access_data = refresh_linkedin_access(auth.refresh_token)
         auth.update_values(access_data)
-    
-    if LinkedinAuth.objects.filter(refresh_token_expires_at__gt=timezone.now()).exists():
-        Bot.to_admin("⚠️ There are expired LinkedinAuth objects!")
 
+    if LinkedinAuth.objects.filter(
+        refresh_token_expires_at__gt=timezone.now()
+    ).exists():
+        Bot.to_admin("⚠️ There are expired LinkedinAuth objects!")
