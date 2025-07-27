@@ -1,9 +1,8 @@
 from django.urls import path
 
-from . import views
+from .views import linkedin_callback
 
 urlpatterns = [
     # Auth management
-    path("linkedin/code/", views.linkedin_request_code, name="linkedin_code"),
-    path("linkedin/callback/", views.linkedin_callback, name="linkedin_callback"),
+    path("linkedin/callback/", linkedin_callback, name="linkedin_callback"),
 ]

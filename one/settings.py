@@ -429,7 +429,15 @@ LOGIN_URL = "account_login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-SOCIALACCOUNT_STORE_TOKENS = True
+SOCIALACCOUNT_STORE_TOKENS = False
+
+# Google
+GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID")
+GOOGLE_SECRET_KEY = env("GOOGLE_SECRET_KEY")
+
+# Linkedin
+LINKEDIN_CLIENT_ID = env("LINKEDIN_CLIENT_ID")
+LINKEDIN_SECRET_KEY = env("LINKEDIN_SECRET_KEY")
 
 SOCIALACCOUNT_PROVIDERS = {
     # https://django-allauth.readthedocs.io/en/latest/providers.html#google
@@ -438,15 +446,15 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         "APP": {
-            "client_id": env("SOCIALACCOUNT_GOOGLE_CLIENT_ID"),
-            "secret": env("SOCIALACCOUNT_GOOGLE_SECRET_KEY"),
+            "client_id": GOOGLE_CLIENT_ID,
+            "secret": GOOGLE_SECRET_KEY,
             "key": "",
         }
     },
     "linkedin_oauth2": {
         "APP": {
-            "client_id": env("SOCIALACCOUNT_LINKEDIN_CLIENT_ID"),
-            "secret": env("SOCIALACCOUNT_LINKEDIN_SECRET_KEY"),
+            "client_id": LINKEDIN_CLIENT_ID,
+            "secret": LINKEDIN_SECRET_KEY,
             "key": "",
         },
         "SCOPE": ["r_liteprofile", "r_emailaddress", "w_member_social"],
