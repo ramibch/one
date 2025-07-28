@@ -144,6 +144,15 @@ css = [
 ]
 
 [[package]]
+name = "blurhash"
+version = "1.1.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/02/96/363eae896ec6a699dfc63f19f9b857c09294fe4d791198f002baa495fc4e/blurhash-1.1.4.tar.gz", hash = "sha256:da56b163e5a816e4ad07172f5639287698e09d7f3dc38d18d9726d9c1dbc4cee", size = 4738, upload-time = "2019-10-11T19:02:28.868Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/80/08/163cb166a2464223a5eb8890a92cc1cf7e8c7c79a2c75e497e3d8f3a4711/blurhash-1.1.4-py2.py3-none-any.whl", hash = "sha256:7611c1bc41383d2349b6129208587b5d61e8792ce953893cb49c38beeb400d1d", size = 5307, upload-time = "2019-10-11T19:02:27.484Z" },
+]
+
+[[package]]
 name = "boto3"
 version = "1.39.3"
 source = { registry = "https://pypi.org/simple" }
@@ -735,6 +744,19 @@ wheels = [
 ]
 
 [[package]]
+name = "django-tweets"
+version = "0.0.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "tweepy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ce/a2/99303ab7d5141e03962c34e4433bb91d310206e370d61cf33fdf761bd793/django-tweets-0.0.9.tar.gz", hash = "sha256:9d0408785ef8ec005e48c7ae3621e58dc04890bed656d4a5e903c480c20f95b4", size = 9790, upload-time = "2023-09-10T13:33:22.764Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/66/9a/7b80cc2a7800a1ba5fcf6116c8c53ba324a6285620cab27c8247d12e8d6c/django_tweets-0.0.9-py3-none-any.whl", hash = "sha256:0bbcbd0ef8ecc95752c57cfbf0fc05dbb9444e1f4ac380693efa6c32defd44ab", size = 11137, upload-time = "2023-09-10T13:33:20.515Z" },
+]
+
+[[package]]
 name = "django-upgrade"
 version = "1.25.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1146,6 +1168,23 @@ wheels = [
 ]
 
 [[package]]
+name = "mastodon-py"
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "blurhash" },
+    { name = "decorator" },
+    { name = "python-dateutil" },
+    { name = "python-magic", marker = "sys_platform != 'win32'" },
+    { name = "python-magic-bin", marker = "sys_platform == 'win32'" },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d4/40/8f962b2d1782fd097ea45a344094df7d56f980f1d64c62de0bfa1ef5b0fc/mastodon_py-2.0.1.tar.gz", hash = "sha256:f0a9cf59071347c7ff2ee49487d2520ca661f349f369b68845bdf3e43db1fff3", size = 10988936, upload-time = "2025-03-02T09:46:27.279Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cf/d7/632b8b14a13eb33a9fcc5c3354f878fa39dfb5f51ef6283b24fce84c5796/mastodon_py-2.0.1-py3-none-any.whl", hash = "sha256:5bb543ecbd7526bd50675d5d617ec04caa6b10d4002454cbf5641ad612723455", size = 108485, upload-time = "2025-03-02T09:46:22.308Z" },
+]
+
+[[package]]
 name = "matplotlib-inline"
 version = "0.1.7"
 source = { registry = "https://pypi.org/simple" }
@@ -1304,6 +1343,7 @@ dependencies = [
     { name = "django-rosetta" },
     { name = "django-storages" },
     { name = "django-stubs", extra = ["compatible-mypy"] },
+    { name = "django-tweets" },
     { name = "django-upgrade" },
     { name = "docutils" },
     { name = "environs" },
@@ -1322,6 +1362,7 @@ dependencies = [
     { name = "langdetect" },
     { name = "linkedin-posts" },
     { name = "markdownify" },
+    { name = "mastodon-py" },
     { name = "pdf2image" },
     { name = "pillow" },
     { name = "pre-commit" },
@@ -1369,6 +1410,7 @@ requires-dist = [
     { name = "django-rosetta", specifier = ">=0.10.1" },
     { name = "django-storages", specifier = ">=1.14.4" },
     { name = "django-stubs", extras = ["compatible-mypy"], specifier = ">=5.1.3" },
+    { name = "django-tweets", specifier = ">=0.0.9" },
     { name = "django-upgrade", specifier = ">=1.23.1" },
     { name = "docutils", specifier = ">=0.21.2" },
     { name = "environs", specifier = ">=14.1.1" },
@@ -1387,6 +1429,7 @@ requires-dist = [
     { name = "langdetect", specifier = ">=1.0.9" },
     { name = "linkedin-posts", specifier = ">=0.0.12" },
     { name = "markdownify", specifier = ">=1.1.0" },
+    { name = "mastodon-py", specifier = ">=2.0.1" },
     { name = "pdf2image", specifier = ">=1.17.0" },
     { name = "pillow", specifier = ">=11.1.0" },
     { name = "pre-commit", specifier = ">=4.1.0" },
@@ -1738,6 +1781,24 @@ wheels = [
 ]
 
 [[package]]
+name = "python-magic"
+version = "0.4.27"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/da/db/0b3e28ac047452d079d375ec6798bf76a036a08182dbb39ed38116a49130/python-magic-0.4.27.tar.gz", hash = "sha256:c1ba14b08e4a5f5c31a302b7721239695b2f0f058d125bd5ce1ee36b9d9d3c3b", size = 14677, upload-time = "2022-06-07T20:16:59.508Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6c/73/9f872cb81fc5c3bb48f7227872c28975f998f3e7c2b1c16e95e6432bbb90/python_magic-0.4.27-py2.py3-none-any.whl", hash = "sha256:c212960ad306f700aa0d01e5d7a325d20548ff97eb9920dcd29513174f0294d3", size = 13840, upload-time = "2022-06-07T20:16:57.763Z" },
+]
+
+[[package]]
+name = "python-magic-bin"
+version = "0.4.14"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5a/5d/10b9ac745d9fd2f7151a2ab901e6bb6983dbd70e87c71111f54859d1ca2e/python_magic_bin-0.4.14-py2.py3-none-win32.whl", hash = "sha256:34a788c03adde7608028203e2dbb208f1f62225ad91518787ae26d603ae68892", size = 397784, upload-time = "2017-10-02T16:30:15.806Z" },
+    { url = "https://files.pythonhosted.org/packages/07/c2/094e3d62b906d952537196603a23aec4bcd7c6126bf80eb14e6f9f4be3a2/python_magic_bin-0.4.14-py2.py3-none-win_amd64.whl", hash = "sha256:90be6206ad31071a36065a2fc169c5afb5e0355cbe6030e87641c6c62edc2b69", size = 409299, upload-time = "2017-10-02T16:30:18.545Z" },
+]
+
+[[package]]
 name = "python-stdnum"
 version = "2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2028,6 +2089,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/d1/3c/8b4358e81f2f2cfe71b66a267f023a91db20a817b9425dd964873796980a/trio_websocket-0.12.2.tar.gz", hash = "sha256:22c72c436f3d1e264d0910a3951934798dcc5b00ae56fc4ee079d46c7cf20fae", size = 33549, upload-time = "2025-02-25T05:16:58.947Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c7/19/eb640a397bba49ba49ef9dbe2e7e5c04202ba045b6ce2ec36e9cadc51e04/trio_websocket-0.12.2-py3-none-any.whl", hash = "sha256:df605665f1db533f4a386c94525870851096a223adcb97f72a07e8b4beba45b6", size = 21221, upload-time = "2025-02-25T05:16:57.545Z" },
+]
+
+[[package]]
+name = "tweepy"
+version = "4.16.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "oauthlib" },
+    { name = "requests" },
+    { name = "requests-oauthlib" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6e/45/a73bb812b1817247d3f79b3b9a4784ab93a081853b697e87428caa8c287b/tweepy-4.16.0.tar.gz", hash = "sha256:1d95cbdc50bf6353a387f881f2584eaf60d14e00dbbdd8872a73de79c66878e3", size = 87646, upload-time = "2025-06-22T01:17:51.34Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ee/7c/3375cd1fbefcb8ead580fe324b1b6dcdc21aabf51562ee6def7266fcf363/tweepy-4.16.0-py3-none-any.whl", hash = "sha256:48d1a1eb311d2c4b8990abcfa6f9fa2b2ad61be05c723b1a9b4f242656badae2", size = 98843, upload-time = "2025-06-22T01:17:49.823Z" },
 ]
 
 [[package]]
