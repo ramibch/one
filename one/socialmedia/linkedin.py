@@ -6,6 +6,8 @@ from pathlib import Path
 
 import requests
 
+from one.bot import Bot
+
 DEFAULT_VERSION = "202507"
 LINKEDIN_API_URL = "https://api.linkedin.com/rest"
 
@@ -57,6 +59,10 @@ class LinkedinClient:
         return requests.post(
             url, headers=self.build_headers(), data=json.dumps(payload).encode("utf-8")
         )
+
+    def get_me(self):
+        url = "https://api.linkedin.com/v2/me"
+        return requests.get(url, headers=self.build_headers())
 
     def _init_image_upload(self):
         url = f"{LINKEDIN_API_URL}/images?action=initializeUpload"
@@ -117,9 +123,13 @@ class LinkedinClient:
         if container:
             payload["container"] = container
 
-        return requests.post(
-            url, headers=self.build_headers(), data=json.dumps(payload).encode("utf-8")
+        r = requests.post(
+            url,
+            headers=self.build_headers(),
+            data=json.dumps(payload).encode("utf-8"),
         )
+        if r.status_code > 300:
+            Bot.to_admin(f"Failed to post to Linkedin:\n\n{r.text}\n\n{r.json()}")
 
     def share_poll(
         self,

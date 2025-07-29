@@ -11,7 +11,36 @@ from .models import (
     SocialMediaPost,
     TwitterChannel,
 )
+from .tasks import task_post_on_social_media
 from .utils import get_linkedin_auth_url
+
+
+@admin.register(SocialMediaPost)
+class SocialMediaPostAdmin(OneModelAdmin):
+    list_display = ("title", "shared_at", "language", "is_draft")
+    list_filter = ("is_draft", "language", "shared_at")
+    readonly_fields = ("image_li_urn", "shared_at")
+    actions = ("post", "reset_shared", "set_draft", "unset_draft")
+
+    @admin.action(description="⬆️ Publish post")
+    def post(modeladmin, request, queryset):
+        filtered_qs = queryset.filter(shared_at__isnull=True, is_draft=False)
+        if filtered_qs.count() == 1:
+            task_post_on_social_media(filtered_qs.first())
+        else:
+            messages.error(request, "Choose only one object that hasn't been shared.")
+
+    @admin.action(description="🔄 Reset shared")
+    def reset_shared(modeladmin, request, queryset):
+        queryset.update(shared_at=None)
+
+    @admin.action(description="📝 Set draft")
+    def set_draft(modeladmin, request, queryset):
+        queryset.update(is_draft=True)
+
+    @admin.action(description="✅ Unset draft")
+    def unset_draft(modeladmin, request, queryset):
+        queryset.update(is_draft=False)
 
 
 @admin.register(LinkedinAuth)
@@ -48,11 +77,6 @@ class LinkedinChannelAdmin(OneModelAdmin):
 @admin.register(TwitterChannel)
 class TwitterChannelAdmin(OneModelAdmin):
     list_display = ("name",)
-
-
-@admin.register(SocialMediaPost)
-class SocialMediaPostAdmin(OneModelAdmin):
-    pass
 
 
 @admin.register(MastodonChannel)

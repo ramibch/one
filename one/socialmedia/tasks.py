@@ -6,7 +6,14 @@ from huey.contrib import djhuey as huey
 
 from one.bot import Bot
 
-from .models import LinkedinAuth
+from .models import (
+    LinkedinAuth,
+    LinkedinChannel,
+    LinkedinGroupChannel,
+    MastodonChannel,
+    SocialMediaPost,
+    TwitterChannel,
+)
 from .utils import refresh_linkedin_access
 
 
@@ -27,6 +34,37 @@ def task_check_linkedin_auth_objects():
 
     if LinkedinAuth.objects.filter(refresh_token_expires_at__lte=now).exists():
         Bot.to_admin("⚠️ There are expired LinkedinAuth objects!")
+
+
+@huey.db_periodic_task(crontab(hour="8", minute="45"))
+def task_post_on_social_media(post: SocialMediaPost | None = None):
+    if post is None:
+        post = SocialMediaPost.objects.filter(
+            shared_at__isnull=True,
+            is_draft=False,
+        ).first()
+
+    if post is None:
+        return
+
+    post.shared_at = timezone.now()
+    post.save()
+
+    Channels = (LinkedinChannel, LinkedinGroupChannel, TwitterChannel, MastodonChannel)
+    for Channel in Channels:
+        channels = Channel.objects.filter(
+            language=post.language,
+            topics__overlap=post.topics,
+            is_active=True,
+        ).distinct()
+
+        for ch in channels:
+            try:
+                ch.publish_post(post)
+                Bot.to_admin(f"Posted '{post.title}' on {ch.name} ")
+            except Exception as e:
+                msg = f"Unable to post {post.title} in {ch._meta.model_name}: {e}"
+                Bot.to_admin(msg)
 
 
 """

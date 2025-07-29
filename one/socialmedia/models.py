@@ -16,31 +16,23 @@ from one.db import ChoiceArrayField, OneModel
 from .linkedin import LinkedinClient
 
 
-class SocialMediaPostStatus(models.TextChoices):
-    DRAFT = "draft", _("Draft")
-    SCHEDULED = "scheduled", _("Scheduled")
-    SENT = "sent", _("Sent")
-    FAILED = "failed", _("Failed")
-
-
 class SocialMediaPost(OneModel):
     title = models.CharField(max_length=256)
     text = models.TextField()
     image = models.ImageField(null=True, blank=True, upload_to="socialmedia/")
     image_li_urn = models.CharField(max_length=64, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    scheduled_at = models.DateTimeField(null=True, blank=True)
-    sent_at = models.DateTimeField(null=True, blank=True)
+    shared_at = models.DateTimeField(null=True, blank=True)
     topics = ChoiceArrayField(
         models.CharField(max_length=16, choices=Topics),
         default=list,
         blank=True,
     )
-    status = models.CharField(
-        max_length=16,
-        choices=SocialMediaPostStatus,
-        default=SocialMediaPostStatus.DRAFT,
+    language = models.CharField(
+        max_length=4,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
     )
+    is_draft = models.BooleanField(default=True)
 
     def __str__(self):
         return self.text[:100]
@@ -183,6 +175,16 @@ class LinkedinChannel(AbstractLinkedinChannel):
             access_token=self.auth.access_token,
             author_type=self.author_type,
             author_id=self.author_id,
+        )
+
+    def publish_post(self, post: SocialMediaPost):
+        self.client.share_post(
+            comment=post.text,
+            visibility="PUBLIC",
+            feed_distribution="MAIN_FEED",
+            reshable_disabled=False,
+            content=self.build_content(post),
+            container=None,
         )
 
 
