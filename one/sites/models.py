@@ -187,7 +187,7 @@ class Site(TranslatableModel):
         return self.domain
 
     def clean_emoji(self):
-        if self.emoji_in_brand and self.emoji in [None, ""]:
+        if self.emoji_in_brand and self.emoji is None:
             raise ValidationError(_("Add an emoji."), code="invalid")
 
     @cached_property

@@ -48,7 +48,7 @@ class DgtQuestion(auto_prefetch.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.img_url and self.image.name in ("", None):
+        if self.img_url and self.image.name == "":
             try:
                 self.image.save(
                     f"{str(self.pk).zfill(10)}.png",

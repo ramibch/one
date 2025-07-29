@@ -161,6 +161,9 @@ class AbstractLinkedinChannel(AbstractChannel):
             return {"multiImage": {"images": multi}}
         """
 
+        if post.image.name == "":
+            return None
+
         if post.image_li_urn is None:
             r, urn = self.client.upload_image(post.image.read())
             post.image_li_urn = urn

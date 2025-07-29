@@ -137,8 +137,8 @@ class SearchResultsView(View):
     http_method_names = ["get"]
 
     def get(self, request, *args, **kwargs):
-        q = request.GET.get("q")
-        if q in ["", None]:
+        q = request.GET.get("q", "")
+        if q == "":
             return HttpResponse()
 
         save_search_query({"client": request.client, "site": request.site, "query": q})
