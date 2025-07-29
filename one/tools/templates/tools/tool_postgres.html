@@ -4,9 +4,9 @@
   <h1 class="text-center">{{ object.title }}</h1>
 
 <div class="row" x-data="{
-    db: 'db',
-    user: 'user',
-    pass: '1234',
+    db: 'django_db',
+    user: 'django_user',
+    pass: '',
     output: '',
     copied: false,
     generateSQL() {
@@ -18,9 +18,11 @@ ALTER ROLE ${this.user} SET timezone TO 'UTC';
 ALTER USER ${this.user} CREATEDB;
 GRANT ALL PRIVILEGES ON DATABASE ${this.db} TO ${this.user};
 ALTER DATABASE ${this.db} OWNER TO ${this.user};`
-;}
+;},
+    generatePass(){ this.pass = window.crypto.randomUUID();}
 }"
 x-init="
+    generatePass();
     generateSQL();
     $watch('db', () => generateSQL());
     $watch('user', () => generateSQL());
