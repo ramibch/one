@@ -7,6 +7,7 @@ from one.admin import OneModelAdmin
 from .models import (
     LinkedinAuth,
     LinkedinChannel,
+    LinkedinGroupChannel,
     MastodonChannel,
     SocialMediaPost,
     TwitterChannel,
@@ -72,6 +73,18 @@ class LinkedinAuthAdmin(OneModelAdmin):
 @admin.register(LinkedinChannel)
 class LinkedinChannelAdmin(OneModelAdmin):
     list_display = ("name", "author_type", "auth")
+
+
+#   # more fields: name, post_jobs, post_english, is_active, topics, language
+#   channel = ForeignKey(LinkedinChannel, on_delete=models.CASCADE)
+#   group_id = models.CharField(max_length=64, unique=True)
+#   is_private = models.BooleanField(default=True)
+
+
+@admin.register(LinkedinGroupChannel)
+class LinkedinGroupChannelAdmin(OneModelAdmin):
+    list_display = ("name", "language", "url")
+    list_filter = ("is_active", "is_private", "language")
 
 
 @admin.register(TwitterChannel)

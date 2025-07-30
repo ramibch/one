@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 
 from one.companies.models import Company, CompanyLocation, Person
 from one.geo.models import GoogleGeoInfo as Geo
+from one.socialmedia.models import LinkedinChannel, LinkedinGroupChannel
 
 
 class Command(BaseCommand):
@@ -21,6 +22,24 @@ class Command(BaseCommand):
         companies_dict = {}
 
         company_data_list = [d for d in data if d.get("model") == "jobs.company"]
+        linkedin_group_list = [
+            d for d in data if d.get("model") == "socialmedia.linkedingroup"
+        ]
+
+        li_channel = LinkedinChannel.objects.filter(author_type="person").first()
+        if not li_channel:
+            self.stderr.write("No Linkedin channel available to set to group channels.")
+
+        for group_data in linkedin_group_list:
+            fields_dict = group_data.get("fields")
+            LinkedinGroupChannel.objects.get_or_create(
+                channel=li_channel,
+                group_id=fields_dict["group_id"],
+                is_private=fields_dict["private"],
+                is_active=fields_dict["active"],
+                name=fields_dict["name"],
+                language=fields_dict["language"],
+            )
 
         for company_data in company_data_list:
             fields_dict = company_data.get("fields")

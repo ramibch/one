@@ -6,6 +6,7 @@ from auto_prefetch import ForeignKey
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from mastodon import Mastodon
 
@@ -112,7 +113,7 @@ class LinkedinAuth(OneModel):
 
 
 class AbstractChannel(OneModel):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=128)
     post_jobs = models.BooleanField(default=False)
     post_english = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -165,6 +166,7 @@ class AbstractLinkedinChannel(AbstractChannel):
 
 
 class LinkedinChannel(AbstractLinkedinChannel):
+    # more fields: name, post_jobs, post_english, is_active, topics, language
     auth = ForeignKey(LinkedinAuth, on_delete=models.CASCADE)
     author_id = models.CharField(max_length=32)
     author_type = models.CharField(max_length=32, choices=LinkedinAuthorType)
@@ -187,8 +189,24 @@ class LinkedinChannel(AbstractLinkedinChannel):
             container=None,
         )
 
+    name = models.CharField(max_length=128)
+    post_jobs = models.BooleanField(default=False)
+    post_english = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    topics = ChoiceArrayField(
+        models.CharField(max_length=16, choices=Topics),
+        default=list,
+        blank=True,
+    )
+    language = models.CharField(
+        max_length=4,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
+    )
+
 
 class LinkedinGroupChannel(AbstractLinkedinChannel):
+    # more fields: name, post_jobs, post_english, is_active, topics, language
     channel = ForeignKey(LinkedinChannel, on_delete=models.CASCADE)
     group_id = models.CharField(max_length=64, unique=True)
     is_private = models.BooleanField(default=True)
@@ -218,6 +236,10 @@ class LinkedinGroupChannel(AbstractLinkedinChannel):
             content=self.build_content(post),
             container=self.li_container,
         )
+
+    @cached_property
+    def url(self):
+        return f"https://www.linkedin.com/groups/{self.group_id}"
 
 
 class TwitterChannel(AbstractChannel):
