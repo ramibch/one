@@ -7,13 +7,9 @@ from huey.contrib import djhuey as huey
 from one.bot import Bot
 
 from .models import (
+    AbstractChannel,
     LinkedinAuth,
-    LinkedinChannel,
-    LinkedinGroupChannel,
-    MastodonChannel,
     SocialMediaPost,
-    TelegramChannel,
-    TwitterChannel,
 )
 from .utils import refresh_linkedin_access
 
@@ -51,14 +47,7 @@ def task_post_on_social_media(post: SocialMediaPost | None = None):
     post.shared_at = timezone.now()
     post.save()
 
-    Channels = (
-        LinkedinChannel,
-        LinkedinGroupChannel,
-        TwitterChannel,
-        MastodonChannel,
-        TelegramChannel,
-    )
-    for Channel in Channels:
+    for Channel in AbstractChannel.__subclasses__():
         channels = Channel.objects.filter(
             languages__overlap=[post.language],
             topics__overlap=post.topics,
@@ -67,7 +56,7 @@ def task_post_on_social_media(post: SocialMediaPost | None = None):
 
         for ch in channels:
             try:
-                ch.publish_post(post)
+                ch.dispatch_post(post)
                 Bot.to_admin(f"Posted '{post.title}' on {ch.name} ")
             except Exception as e:
                 msg = f"Unable to post {post.title} in {ch._meta.model_name}: {e}"

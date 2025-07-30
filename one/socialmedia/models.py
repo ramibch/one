@@ -13,6 +13,7 @@ from mastodon import Mastodon
 from one.bot import Bot
 from one.choices import Topics
 from one.db import ChoiceArrayField, OneModel
+from one.tmp import TmpFile
 
 from .linkedin import LinkedinClient
 
@@ -21,7 +22,6 @@ class SocialMediaPost(OneModel):
     title = models.CharField(max_length=256)
     text = models.TextField()
     image = models.ImageField(null=True, blank=True, upload_to="socialmedia/")
-    image_li_urn = models.CharField(max_length=64, null=True, blank=True)
     shared_at = models.DateTimeField(null=True, blank=True)
     topics = ChoiceArrayField(
         models.CharField(max_length=16, choices=Topics),
@@ -37,6 +37,12 @@ class SocialMediaPost(OneModel):
 
     def __str__(self):
         return self.text[:100]
+
+    @property
+    def local_image_path(self) -> str | None:
+        if self.image.name == "":
+            return
+        return str(TmpFile(self.image).path)
 
 
 class LinkedinAuthorType(models.TextChoices):
@@ -122,7 +128,6 @@ class AbstractChannel(OneModel):
         default=list,
         blank=True,
     )
-
     languages = ChoiceArrayField(
         models.CharField(max_length=8, choices=settings.LANGUAGES),
         default=list,
@@ -135,38 +140,35 @@ class AbstractChannel(OneModel):
     class Meta(OneModel.Meta):
         abstract = True
 
-    def publish_post(self, post):
-        raise NotImplementedError("Implement this method in the subclass")
+    def dispatch_post(self, post: SocialMediaPost):
+        if post.shared_at or post.is_draft:
+            Bot.to_admin(f"Post '{post.text}' is draft or is already shared.")
+            return
+        self.handle_post_publish(post)
+
+    def handle_post_publish(self, post: SocialMediaPost):
+        raise NotImplementedError("Subclasses must implement `handle_post_publish`")
 
 
-class AbstractLinkedinChannel(AbstractChannel):
-    client = LinkedinClient(access_token="", author_id="", author_type="")
+def build_linkedin_content(client: LinkedinClient, post: SocialMediaPost):
+    """
+    One image:
+        {"media": {"title": images[0].title, "id": images[0].urn}}
 
-    class Meta(AbstractChannel.Meta):
-        abstract = True
+    Multiple images:
+        multi = [{"id": i.urn, "altText": i.title} for i in images]
+        return {"multiImage": {"images": multi}}
+    """
 
-    def build_content(self, post: SocialMediaPost):
-        """
-        One image:
-            {"media": {"title": images[0].title, "id": images[0].urn}}
+    if post.image.name == "":
+        return None
 
-        Multiple images:
-            multi = [{"id": i.urn, "altText": i.title} for i in images]
-            return {"multiImage": {"images": multi}}
-        """
-
-        if post.image.name == "":
-            return None
-
-        if post.image_li_urn is None:
-            r, urn = self.client.upload_image(post.image.read())
-            post.image_li_urn = urn
-            post.save()
-
-        return {"media": {"title": post.title, "id": post.image_li_urn}}
+    response, urn = client.upload_image(post.image.read())
+    response.raise_for_status()
+    return {"media": {"title": post.title, "id": urn}}
 
 
-class LinkedinChannel(AbstractLinkedinChannel):
+class LinkedinChannel(AbstractChannel):
     auth = ForeignKey(LinkedinAuth, on_delete=models.CASCADE)
     author_id = models.CharField(max_length=32)
     author_type = models.CharField(max_length=32, choices=LinkedinAuthorType)
@@ -179,13 +181,13 @@ class LinkedinChannel(AbstractLinkedinChannel):
             author_id=self.author_id,
         )
 
-    def publish_post(self, post: SocialMediaPost):
+    def handle_post_publish(self, post: SocialMediaPost):
         self.client.share_post(
             comment=post.text,
             visibility="PUBLIC",
             feed_distribution="MAIN_FEED",
             reshable_disabled=False,
-            content=self.build_content(post),
+            content=build_linkedin_content(self.client, post),
             container=None,
         )
 
@@ -205,10 +207,14 @@ class LinkedinChannel(AbstractLinkedinChannel):
     )
 
 
-class LinkedinGroupChannel(AbstractLinkedinChannel):
+class LinkedinGroupChannel(AbstractChannel):
     channel = ForeignKey(LinkedinChannel, on_delete=models.CASCADE)
     group_id = models.CharField(max_length=64, unique=True)
     is_private = models.BooleanField(default=True)
+
+    @cached_property
+    def url(self):
+        return f"https://www.linkedin.com/groups/{self.group_id}"
 
     @property
     def client(self) -> LinkedinClient:
@@ -226,19 +232,15 @@ class LinkedinGroupChannel(AbstractLinkedinChannel):
     def li_container(self):
         return "urn:li:group:" + self.group_id
 
-    def publish_post(self, post: SocialMediaPost):
+    def handle_post_publish(self, post: SocialMediaPost):
         self.client.share_post(
             comment=post.text,
             visibility=self.li_visibility,
             feed_distribution="MAIN_FEED",
             reshable_disabled=False,
-            content=self.build_content(post),
+            content=build_linkedin_content(self.client, post),
             container=self.li_container,
         )
-
-    @cached_property
-    def url(self):
-        return f"https://www.linkedin.com/groups/{self.group_id}"
 
 
 class TwitterChannel(AbstractChannel):
@@ -260,73 +262,16 @@ class TwitterChannel(AbstractChannel):
 
     @property
     def client_v1_1(self) -> tweepy.API:
-        auth = tweepy.OAuthHandler(self.api_key, self.api_key_secret)
+        auth = tweepy.OAuth1UserHandler(self.api_key, self.api_key_secret)
         auth.set_access_token(self.access_token, self.access_token_secret)
         return tweepy.API(auth, wait_on_rate_limit=True)
 
-    def publish_post(self, post):
-        """
-        # Twitter
-
-        In [1]: from django_tweets.clients import get_v2_client
-
-        In [2]: xclient = get_v2_client()
-
-        In [3]: r = xclient.create_tweet(text="This is just a test using the X API")
-
-        In [4]: r
-        Out[4]: Response(
-                    data={
-                        'id': '1949744247101419939',
-                        'edit_history_tweet_ids': ['1949744247101419939'],
-                        'text': 'This is just a test using the X API'
-                    },
-                    includes={},
-                    errors=[],
-                    meta={},
-        )
-
-        In [5]: r.data
-        Out[5]:
-        {'id': '1949744247101419939',
-         'edit_history_tweet_ids': ['1949744247101419939'],
-         'text': 'This is just a test using the X API'}
-
-        In [6]: r.data["id"]
-        Out[6]: '1949744247101419939'
-
-        In [7]: type(r)
-        Out[7]: tweepy.client.Response
-
-        In [8]: r.data
-        Out[8]:
-        {'id': '1949744247101419939',
-         'edit_history_tweet_ids': ['1949744247101419939'],
-         'text': 'This is just a test using the X API'}
-
-
-        # use v1 to upload media
-            def upload(self):
-                # use tempfile to upload the file to the Twitter API.
-                # Why tempfile? because not allways media files are not stored locally
-                with tempfile.NamedTemporaryFile(suffix="." + self.file_extension) as f:
-                    f.write(self.file.read())
-                    f.seek(0)  # https://github.com/tweepy/tweepy/issues/1667
-                    response = get_v1dot1_api().chunked_upload(f.name)
-                # save values into the db
-                self.media_id_string = response.media_id_string
-                self.response = str(response)
-                self.expires_at = timezone.now() + timezone.timedelta(
-                    seconds=response.expires_after_secs
-                )
-                if self.delete_after_upload:
-                    self.file.delete()
-                self.save()
-                return self
-
-
-        """
-        pass
+    def handle_post_publish(self, post: SocialMediaPost):
+        params = {"text": post.text}
+        if post.image.name != "":
+            media_response = self.client_v1_1.chunked_upload(post.local_image_path)
+            params["media_ids"] = [media_response.media_id_string]
+        self.client_v2.create_tweet(**params)
 
 
 class MastodonChannel(AbstractChannel):
@@ -337,17 +282,24 @@ class MastodonChannel(AbstractChannel):
     def client(self) -> Mastodon:
         return Mastodon(access_token=self.access_token, api_base_url=self.api_base_url)
 
+    def handle_post_publish(self, post: SocialMediaPost):
+        parameters = {"status": post.text}
+        if post.image.name != "":
+            media_response = self.client.media_post(post.local_image_path)  # type: ignore
+            parameters["media_ids"] = [media_response.id]
+        self.client.status_post(**parameters)
+
 
 class TelegramChannel(AbstractChannel):
     group_id = models.CharField(max_length=64, unique=True)
 
-    def publish_post(self, post):
+    @cached_property
+    def url(self):
+        return f"https://t.me/{self.group_id}"
+
+    def handle_post_publish(self, post: SocialMediaPost):
         Bot.to_group(
             group_id=self.group_id,
             text=post.text,
             file_url=post.image.url if post.image.name != "" else None,
         )
-
-    @cached_property
-    def url(self):
-        return f"https://t.me/{self.group_id}"

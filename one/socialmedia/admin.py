@@ -21,7 +21,7 @@ from .utils import get_linkedin_auth_url
 class SocialMediaPostAdmin(OneModelAdmin):
     list_display = ("title", "shared_at", "language", "is_draft")
     list_filter = ("is_draft", "language", "shared_at")
-    readonly_fields = ("image_li_urn", "shared_at")
+    readonly_fields = ("shared_at",)
     actions = ("post", "reset_shared", "set_draft", "unset_draft")
 
     @admin.action(description="⬆️ Publish post")
