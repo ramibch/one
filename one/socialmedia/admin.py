@@ -82,11 +82,6 @@ class LinkedinGroupChannelAdmin(OneModelAdmin):
     list_filter = ("is_active", "is_private", "languages")
 
 
-@admin.register(TwitterChannel)
-class TwitterChannelAdmin(OneModelAdmin):
-    list_display = ("name",)
-
-
 @admin.register(MastodonChannel)
 class MastodonChannelAdmin(OneModelAdmin):
     pass
@@ -95,3 +90,8 @@ class MastodonChannelAdmin(OneModelAdmin):
 @admin.register(TelegramChannel)
 class TelegramChannelAdmin(OneModelAdmin):
     list_display = ("name", "is_active", "languages", "url")
+
+
+@admin.register(TwitterChannel)
+class TwitterChannelAdmin(OneModelAdmin):
+    list_display = ("name", "languages", "topics")

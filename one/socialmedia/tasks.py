@@ -1,3 +1,4 @@
+import random
 from datetime import timedelta
 
 from django.utils import timezone
@@ -5,11 +6,14 @@ from huey import crontab
 from huey.contrib import djhuey as huey
 
 from one.bot import Bot
+from one.quiz.models import Question
 
 from .models import (
     AbstractChannel,
     LinkedinAuth,
+    LinkedinChannel,
     SocialMediaPost,
+    TwitterChannel,
 )
 from .utils import refresh_linkedin_access
 
@@ -61,3 +65,36 @@ def task_post_on_social_media(post: SocialMediaPost | None = None):
             except Exception as e:
                 msg = f"Unable to post {post.title} in {ch._meta.model_name}: {e}"
                 Bot.to_admin(msg)
+
+
+@huey.db_periodic_task(crontab(hour="12", minute="00"))
+def task_share_random_quiz_question():
+    """
+    Share english quiz question
+    """
+    question = random.choice(list(Question.objects.filter(promoted=False)))
+    text = question.get_question_promotion_text(add_link=False)
+    # text_with_link = question.get_question_promotion_text(add_link=True)
+
+    li_channels = LinkedinChannel.objects.filter(post_english=True, is_active=True)
+    x_channels = TwitterChannel.objects.filter(post_english=True, is_active=True)
+
+    for ch in li_channels:
+        ch.client.share_post(comment=text)
+
+    for ch in x_channels:
+        ch.client_v2.create_tweet(text=text)
+
+
+@huey.db_periodic_task(crontab(hour="9", minute="15"))
+def task_share_random_quiz_question_as_poll():
+    """
+    Share english quiz question as poll
+    """
+    question = random.choice(list(Question.objects.filter(type=5)))
+    options = question.get_answer_list()
+    comment = question.get_poll_explanation_text(add_link=False)
+    question = question.full_text
+
+    for channel in LinkedinChannel.objects.filter(post_english=True):
+        channel.client.share_poll(question=question, options=options, comment=comment)
