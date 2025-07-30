@@ -122,10 +122,11 @@ class AbstractChannel(OneModel):
         default=list,
         blank=True,
     )
-    language = models.CharField(
-        max_length=4,
-        choices=settings.LANGUAGES,
-        default=settings.LANGUAGE_CODE,
+
+    languages = ChoiceArrayField(
+        models.CharField(max_length=8, choices=settings.LANGUAGES),
+        default=list,
+        blank=True,
     )
 
     def __str__(self) -> str:
@@ -166,7 +167,6 @@ class AbstractLinkedinChannel(AbstractChannel):
 
 
 class LinkedinChannel(AbstractLinkedinChannel):
-    # more fields: name, post_jobs, post_english, is_active, topics, language
     auth = ForeignKey(LinkedinAuth, on_delete=models.CASCADE)
     author_id = models.CharField(max_length=32)
     author_type = models.CharField(max_length=32, choices=LinkedinAuthorType)
@@ -206,7 +206,6 @@ class LinkedinChannel(AbstractLinkedinChannel):
 
 
 class LinkedinGroupChannel(AbstractLinkedinChannel):
-    # more fields: name, post_jobs, post_english, is_active, topics, language
     channel = ForeignKey(LinkedinChannel, on_delete=models.CASCADE)
     group_id = models.CharField(max_length=64, unique=True)
     is_private = models.BooleanField(default=True)
@@ -265,6 +264,70 @@ class TwitterChannel(AbstractChannel):
         auth.set_access_token(self.access_token, self.access_token_secret)
         return tweepy.API(auth, wait_on_rate_limit=True)
 
+    def publish_post(self, post):
+        """
+        # Twitter
+
+        In [1]: from django_tweets.clients import get_v2_client
+
+        In [2]: xclient = get_v2_client()
+
+        In [3]: r = xclient.create_tweet(text="This is just a test using the X API")
+
+        In [4]: r
+        Out[4]: Response(
+                    data={
+                        'id': '1949744247101419939',
+                        'edit_history_tweet_ids': ['1949744247101419939'],
+                        'text': 'This is just a test using the X API'
+                    },
+                    includes={},
+                    errors=[],
+                    meta={},
+        )
+
+        In [5]: r.data
+        Out[5]:
+        {'id': '1949744247101419939',
+         'edit_history_tweet_ids': ['1949744247101419939'],
+         'text': 'This is just a test using the X API'}
+
+        In [6]: r.data["id"]
+        Out[6]: '1949744247101419939'
+
+        In [7]: type(r)
+        Out[7]: tweepy.client.Response
+
+        In [8]: r.data
+        Out[8]:
+        {'id': '1949744247101419939',
+         'edit_history_tweet_ids': ['1949744247101419939'],
+         'text': 'This is just a test using the X API'}
+
+
+        # use v1 to upload media
+            def upload(self):
+                # use tempfile to upload the file to the Twitter API.
+                # Why tempfile? because not allways media files are not stored locally
+                with tempfile.NamedTemporaryFile(suffix="." + self.file_extension) as f:
+                    f.write(self.file.read())
+                    f.seek(0)  # https://github.com/tweepy/tweepy/issues/1667
+                    response = get_v1dot1_api().chunked_upload(f.name)
+                # save values into the db
+                self.media_id_string = response.media_id_string
+                self.response = str(response)
+                self.expires_at = timezone.now() + timezone.timedelta(
+                    seconds=response.expires_after_secs
+                )
+                if self.delete_after_upload:
+                    self.file.delete()
+                self.save()
+                return self
+
+
+        """
+        pass
+
 
 class MastodonChannel(AbstractChannel):
     access_token = models.CharField(max_length=256)
@@ -273,3 +336,18 @@ class MastodonChannel(AbstractChannel):
     @property
     def client(self) -> Mastodon:
         return Mastodon(access_token=self.access_token, api_base_url=self.api_base_url)
+
+
+class TelegramChannel(AbstractChannel):
+    group_id = models.CharField(max_length=64, unique=True)
+
+    def publish_post(self, post):
+        Bot.to_group(
+            group_id=self.group_id,
+            text=post.text,
+            file_url=post.image.url if post.image.name != "" else None,
+        )
+
+    @cached_property
+    def url(self):
+        return f"https://t.me/{self.group_id}"

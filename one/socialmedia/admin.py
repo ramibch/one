@@ -10,6 +10,7 @@ from .models import (
     LinkedinGroupChannel,
     MastodonChannel,
     SocialMediaPost,
+    TelegramChannel,
     TwitterChannel,
 )
 from .tasks import task_post_on_social_media
@@ -75,16 +76,10 @@ class LinkedinChannelAdmin(OneModelAdmin):
     list_display = ("name", "author_type", "auth")
 
 
-#   # more fields: name, post_jobs, post_english, is_active, topics, language
-#   channel = ForeignKey(LinkedinChannel, on_delete=models.CASCADE)
-#   group_id = models.CharField(max_length=64, unique=True)
-#   is_private = models.BooleanField(default=True)
-
-
 @admin.register(LinkedinGroupChannel)
 class LinkedinGroupChannelAdmin(OneModelAdmin):
-    list_display = ("name", "language", "url")
-    list_filter = ("is_active", "is_private", "language")
+    list_display = ("name", "is_active", "is_private", "languages", "url")
+    list_filter = ("is_active", "is_private", "languages")
 
 
 @admin.register(TwitterChannel)
@@ -95,3 +90,8 @@ class TwitterChannelAdmin(OneModelAdmin):
 @admin.register(MastodonChannel)
 class MastodonChannelAdmin(OneModelAdmin):
     pass
+
+
+@admin.register(TelegramChannel)
+class TelegramChannelAdmin(OneModelAdmin):
+    list_display = ("name", "is_active", "languages", "url")
