@@ -1,5 +1,4 @@
 from django.urls import path
-from django.utils.translation import gettext_lazy as _
 
 from .views import (
     CandidateCreateOrEditRedirectView,
@@ -77,7 +76,7 @@ urlpatterns = [
     ),
     # Profiles
     path(
-        _("dashboard"),
+        "dashboard",
         CandidateDashboardView.as_view(),
         name="candidate_dashboard",
     ),
@@ -88,7 +87,7 @@ urlpatterns = [
     ),
     # Jobs
     path(
-        _("recommended-jobs"),
+        "recommended-jobs",
         RecommendedJobsView.as_view(),
         name="candidate_recommended_jobs",
     ),

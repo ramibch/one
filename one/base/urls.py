@@ -1,5 +1,4 @@
 from django.urls import path
-from django.utils.translation import gettext_lazy as _
 
 from .sitemaps import get_sitemaps
 from .views import (
@@ -25,10 +24,10 @@ urlpatterns = [
     # robots.txt
     path("robots.txt", RobotTxtView.as_view()),
     # Search
-    path(_("search"), SearchView.as_view(), name="search"),
+    path("search", SearchView.as_view(), name="search"),
     path("hx-search-results", SearchResultsView.as_view(), name="search-results"),
     # Contact
-    path(_("contact"), ContactView.as_view(), name="contact"),
+    path("contact", ContactView.as_view(), name="contact"),
     # "static" pages
     path("~/p", PrivacyView.as_view(), name="privacy"),
     path("~/t", TermsView.as_view(), name="terms"),

@@ -19,7 +19,6 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
-from django.utils.translation import gettext_lazy as _
 
 if settings.ENV == settings.PROD:
     handler403 = "one.base.views.error_403"
@@ -46,11 +45,11 @@ urlpatterns = [
     path("pins/", include("one.pins.urls")),
     path("faqs/", include("one.faqs.urls")),
     path("socialmedia/", include("one.socialmedia.urls")),
-    path(_("plans/"), include("one.plans.urls")),
-    path(_("articles/"), include("one.articles.urls")),
-    path(_("products/"), include("one.products.urls")),
-    path(_("companies/"), include("one.companies.urls")),
-    path(_("candidates/"), include("one.candidates.urls")),
+    path("plans/", include("one.plans.urls")),
+    path("articles/", include("one.articles.urls")),
+    path("products/", include("one.products.urls")),
+    path("companies/", include("one.companies.urls")),
+    path("candidates/", include("one.candidates.urls")),
     path("🌐/", include("one.sites.urls")),
     path("", include("one.tex.urls")),
     path("", include("one.base.urls")),
