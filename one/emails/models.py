@@ -304,28 +304,38 @@ class PostalMessage(OneModel):
         delivery_failed=False,
     ):
         message: dict = payload.get("message", {})
+        message_id = message.get("id")
+        token = message.get("token")
 
-        obj = cls(
-            message_id=message.get("id"),
-            token=message.get("token"),
-            direction=message.get("direction"),
-            large_id=message.get("message_id"),
-            mail_to=message.get("to"),
-            mail_from=message.get("from"),
-            subject=message.get("subject"),
-            spam_status=message.get("spam_status"),
-            tag=message.get("tag"),
-            output=payload.get("output"),
-            status=payload.get("status"),
-            details=payload.get("details"),
-            sent_with_ssl=payload.get("sent_with_ssl"),
-            time=payload.get("time"),
-            timestamp=payload.get("timestamp"),
-            message_dict=message,
-            delayed=delayed,
-            held=held,
-            delivery_failed=delivery_failed,
-        )
+        if not message_id and not token:
+            return
+
+        obj = cls.objects.filter(message_id=message_id).first()
+
+        if obj is None:
+            obj = cls(
+                message_id=message_id,
+                token=token,
+            )
+
+        # Update fields
+        obj.direction = message.get("direction")
+        obj.large_id = message.get("message_id")
+        obj.mail_to = message.get("to")
+        obj.mail_from = message.get("from")
+        obj.subject = message.get("subject")
+        obj.spam_status = message.get("spam_status")
+        obj.tag = message.get("tag")
+        obj.output = payload.get("output")
+        obj.status = payload.get("status")
+        obj.details = payload.get("details")
+        obj.sent_with_ssl = payload.get("sent_with_ssl")
+        obj.time = payload.get("time")
+        obj.timestamp = payload.get("timestamp")
+        obj.message_dict = message
+        obj.delayed = delayed
+        obj.held = held
+        obj.delivery_failed = delivery_failed
 
         if obj.timestamp:
             dt = datetime.fromtimestamp(int(obj.timestamp))
