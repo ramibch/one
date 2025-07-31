@@ -303,45 +303,45 @@ class PostalMessage(OneModel):
         held=False,
         delivery_failed=False,
     ):
-        message: dict = payload.get("message", {})
-        message_id = message.get("id")
-        token = message.get("token")
-
-        if not message_id and not token:
+        message = payload.get("message", {})
+        if not message:
             return
 
-        obj = cls.objects.filter(message_id=message_id).first()
+        message_id = message.get("id")
+        if not message_id:
+            return  # or log error
 
-        if obj is None:
-            obj = cls(
-                message_id=message_id,
-                token=token,
+        defaults = {
+            "token": message.get("token"),
+            "direction": message.get("direction"),
+            "large_id": message.get("message_id"),
+            "mail_to": message.get("to"),
+            "mail_from": message.get("from"),
+            "subject": message.get("subject"),
+            "spam_status": message.get("spam_status"),
+            "tag": message.get("tag"),
+            "output": payload.get("output"),
+            "status": payload.get("status"),
+            "details": payload.get("details"),
+            "sent_with_ssl": payload.get("sent_with_ssl"),
+            "time": payload.get("time"),
+            "timestamp": payload.get("timestamp"),
+            "message_dict": message,
+            "delayed": delayed,
+            "held": held,
+            "delivery_failed": delivery_failed,
+        }
+
+        if defaults["timestamp"]:
+            dt = datetime.fromtimestamp(int(defaults["timestamp"]))
+            defaults["received_at"] = timezone.make_aware(
+                dt, timezone.get_current_timezone()
             )
 
-        # Update fields
-        obj.direction = message.get("direction")
-        obj.large_id = message.get("message_id")
-        obj.mail_to = message.get("to")
-        obj.mail_from = message.get("from")
-        obj.subject = message.get("subject")
-        obj.spam_status = message.get("spam_status")
-        obj.tag = message.get("tag")
-        obj.output = payload.get("output")
-        obj.status = payload.get("status")
-        obj.details = payload.get("details")
-        obj.sent_with_ssl = payload.get("sent_with_ssl")
-        obj.time = payload.get("time")
-        obj.timestamp = payload.get("timestamp")
-        obj.message_dict = message
-        obj.delayed = delayed
-        obj.held = held
-        obj.delivery_failed = delivery_failed
-
-        if obj.timestamp:
-            dt = datetime.fromtimestamp(int(obj.timestamp))
-            obj.received_at = timezone.make_aware(dt, timezone.get_current_timezone())
-
-        obj.save()
+        cls.objects.update_or_create(
+            message_id=message_id,
+            defaults=defaults,
+        )
 
     def __str__(self):
         return f"[{self.message_id}] {self.subject}"[:40]
