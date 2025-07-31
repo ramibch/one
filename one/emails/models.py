@@ -261,7 +261,7 @@ class PostalMessage(OneModel):
         "https://postal.ramib.ch/org/ramib-ch/servers/ramib-ch/messages/{}/plain"
     )
 
-    message_id = models.PositiveBigIntegerField(null=True)
+    message_id = models.PositiveBigIntegerField(unique=True)
     status = models.CharField(max_length=128, null=True)
     details = models.CharField(max_length=512, null=True)
     output = models.CharField(max_length=512, null=True)
