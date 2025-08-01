@@ -109,9 +109,13 @@ def task_share_random_quiz_question():
     # text_with_link = question.get_question_promotion_text(add_link=True)
 
     li_channels = LinkedinChannel.objects.filter(post_english=True, is_active=True)
+    li_groups = LinkedinGroupChannel.objects.filter(post_english=True, is_active=True)
     x_channels = TwitterChannel.objects.filter(post_english=True, is_active=True)
 
     for ch in li_channels:
+        ch.client.share_post(comment=text)
+
+    for ch in li_groups:
         ch.client.share_post(comment=text)
 
     for ch in x_channels:
