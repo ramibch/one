@@ -9,6 +9,7 @@ from .models import (
     LinkedinChannel,
     LinkedinGroupChannel,
     MastodonChannel,
+    PostedSocialMediaPost,
     SocialMediaPost,
     TelegramChannel,
     TwitterChannel,
@@ -109,3 +110,10 @@ class TelegramChannelAdmin(OneModelAdmin):
 @admin.register(TwitterChannel)
 class TwitterChannelAdmin(OneModelAdmin):
     list_display = ("name", "languages", "topics")
+
+
+@admin.register(PostedSocialMediaPost)
+class PostedSocialMediaPostAdmin(OneModelAdmin):
+    list_display = ("post", "content_object", "content_type")
+    list_filter = ("content_type", "created_at")
+    readonly_fields = [f.name for f in PostedSocialMediaPost._meta.fields]

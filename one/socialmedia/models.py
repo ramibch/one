@@ -1,9 +1,12 @@
 import secrets
 from datetime import timedelta
+from http import HTTPStatus
 
 import tweepy
 from auto_prefetch import ForeignKey
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -188,6 +191,29 @@ def build_linkedin_content(client: LinkedinClient, post: SocialMediaPost):
     return {"media": {"title": post.title, "id": urn}}
 
 
+class PostedSocialMediaPost(OneModel):
+    post = ForeignKey(SocialMediaPost, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE,
+        limit_choices_to={
+            "model__in": [
+                "linkedinchannel",
+                "linkedingroupchannel",
+                "twitterchannel",
+            ]
+        },
+    )
+    object_id = models.PositiveBigIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+    json = models.JSONField()
+
+    class Meta(OneModel.Meta):
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
+
+
 class LinkedinChannel(AbstractChannel):
     auth = ForeignKey(LinkedinAuth, on_delete=models.CASCADE)
     author_id = models.CharField(max_length=32)
@@ -206,7 +232,7 @@ class LinkedinChannel(AbstractChannel):
             msg = f"Not possible to share '{post}' in Linkedin Channel '{self.name}'"
             Bot.to_admin(msg)
             return
-        self.client.share_post(
+        r = self.client.share_post(
             comment=post.text,
             visibility="PUBLIC",
             feed_distribution="MAIN_FEED",
@@ -214,6 +240,16 @@ class LinkedinChannel(AbstractChannel):
             content=build_linkedin_content(self.client, post),
             container=None,
         )
+
+        if r.status_code == HTTPStatus.CREATED:
+            posted = PostedSocialMediaPost(
+                post=post,
+                content_type=ContentType.objects.get_for_model(LinkedinChannel),
+                object_id=self.pk,
+                content_object=self,
+                json=r.json(),
+            )
+            posted.save()
 
 
 class LinkedinGroupChannel(AbstractChannel):
@@ -247,7 +283,7 @@ class LinkedinGroupChannel(AbstractChannel):
             Bot.to_admin(msg)
             return
 
-        self.client.share_post(
+        r = self.client.share_post(
             comment=post.text,
             visibility=self.li_visibility,
             feed_distribution="MAIN_FEED",
@@ -255,6 +291,16 @@ class LinkedinGroupChannel(AbstractChannel):
             content=build_linkedin_content(self.client, post),
             container=self.li_container,
         )
+
+        if r.status_code == HTTPStatus.CREATED:
+            posted = PostedSocialMediaPost(
+                post=post,
+                content_type=ContentType.objects.get_for_model(LinkedinGroupChannel),
+                object_id=self.pk,
+                content_object=self,
+                json=r.json(),
+            )
+            posted.save()
 
 
 class TwitterChannel(AbstractChannel):
@@ -289,7 +335,16 @@ class TwitterChannel(AbstractChannel):
         if post.image.name != "":
             media_response = self.client_v1_1.chunked_upload(post.local_image_path)
             params["media_ids"] = [media_response.media_id_string]
-        self.client_v2.create_tweet(**params)
+        r = self.client_v2.create_tweet(**params)
+
+        posted = PostedSocialMediaPost(
+            post=post,
+            content_type=ContentType.objects.get_for_model(TwitterChannel),
+            object_id=self.pk,
+            content_object=self,
+            json=r.data,
+        )
+        posted.save()
 
 
 class MastodonChannel(AbstractChannel):

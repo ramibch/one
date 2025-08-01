@@ -63,7 +63,10 @@ def task_post_on_social_media(post: SocialMediaPost | None = None):
         for ch in model_cls.objects.filter(**filters).distinct():
             try:
                 ch.dispatch_post(post)
-                time.sleep(2)  # just in case (prevents API throttling)
+                if model_cls in [LinkedinChannel, LinkedinGroupChannel]:
+                    time.sleep(60 * 10)  # avoid duplicates
+                else:
+                    time.sleep(2)  # just in case (prevents API throttling)
             except Exception as e:
                 msg = f"Unable to post '{post}' in '{ch}' ({model_cls.__name__}): {e}"
                 Bot.to_admin(msg)
@@ -114,9 +117,11 @@ def task_share_random_quiz_question():
 
     for ch in li_channels:
         ch.client.share_post(comment=text)
+        time.sleep(60 * 10)  # avoid duplicates
 
     for ch in li_groups:
         ch.client.share_post(comment=text)
+        time.sleep(60 * 10)  # avoid duplicates
 
     for ch in x_channels:
         ch.client_v2.create_tweet(text=text)

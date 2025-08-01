@@ -56,9 +56,9 @@ class LinkedinClient:
         }
         if content:
             payload["content"] = content
-        return requests.post(
-            url, headers=self.build_headers(), data=json.dumps(payload).encode("utf-8")
-        )
+
+        data = json.dumps(payload).encode("utf-8")
+        return requests.post(url, headers=self.build_headers(), data=data)
 
     def get_me(self):
         url = "https://api.linkedin.com/v2/me"
@@ -123,13 +123,16 @@ class LinkedinClient:
         if container:
             payload["container"] = container
 
-        r = requests.post(
+        response = requests.post(
             url,
             headers=self.build_headers(),
             data=json.dumps(payload).encode("utf-8"),
         )
-        if r.status_code > 300:
-            Bot.to_admin(f"Failed to post to Linkedin:\n\n{r.text}\n\n{r.json()}")
+        if response.status_code > 300:
+            msg = f"Failed to post to Linkedin:\n\n{response.text}\n\n{response.json()}"
+            Bot.to_admin(msg)
+
+        return response
 
     def share_poll(
         self,
