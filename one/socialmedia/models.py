@@ -35,6 +35,26 @@ class SocialMediaPost(OneModel):
     )
     is_draft = models.BooleanField(default=True)
 
+    # linkedin channels
+    share_in_linkedin = models.BooleanField(default=True)
+    shared_in_linkedin = models.BooleanField(default=False, editable=False)
+
+    # linkedin group channels
+    share_in_linkedin_groups = models.BooleanField(default=True)
+    shared_in_linkedin_groups = models.BooleanField(default=False, editable=False)
+
+    # twitter channels
+    share_in_twitter = models.BooleanField(default=True)
+    shared_in_twitter = models.BooleanField(default=False, editable=False)
+
+    # mastodon channels
+    share_in_mastodon = models.BooleanField(default=True)
+    shared_in_mastodon = models.BooleanField(default=False, editable=False)
+
+    # telegram channels
+    share_in_telegram = models.BooleanField(default=True)
+    shared_in_telegram = models.BooleanField(default=False, editable=False)
+
     def __str__(self):
         return self.text[:100]
 
@@ -182,6 +202,10 @@ class LinkedinChannel(AbstractChannel):
         )
 
     def handle_post_publish(self, post: SocialMediaPost):
+        if not post.share_in_linkedin or post.shared_in_linkedin:
+            msg = f"Not possible to share '{post}' in Linkedin Channel '{self.name}'"
+            Bot.to_admin(msg)
+            return
         self.client.share_post(
             comment=post.text,
             visibility="PUBLIC",
@@ -190,21 +214,6 @@ class LinkedinChannel(AbstractChannel):
             content=build_linkedin_content(self.client, post),
             container=None,
         )
-
-    name = models.CharField(max_length=128)
-    post_jobs = models.BooleanField(default=False)
-    post_english = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    topics = ChoiceArrayField(
-        models.CharField(max_length=16, choices=Topics),
-        default=list,
-        blank=True,
-    )
-    language = models.CharField(
-        max_length=4,
-        choices=settings.LANGUAGES,
-        default=settings.LANGUAGE_CODE,
-    )
 
 
 class LinkedinGroupChannel(AbstractChannel):
@@ -233,6 +242,11 @@ class LinkedinGroupChannel(AbstractChannel):
         return "urn:li:group:" + self.group_id
 
     def handle_post_publish(self, post: SocialMediaPost):
+        if not post.share_in_linkedin_groups or post.shared_in_linkedin_groups:
+            msg = f"Not possible to share '{post}' in Linkedin Group '{self.name}'"
+            Bot.to_admin(msg)
+            return
+
         self.client.share_post(
             comment=post.text,
             visibility=self.li_visibility,
@@ -267,6 +281,10 @@ class TwitterChannel(AbstractChannel):
         return tweepy.API(auth, wait_on_rate_limit=True)
 
     def handle_post_publish(self, post: SocialMediaPost):
+        if not post.share_in_twitter or post.shared_in_twitter:
+            msg = f"Not possible to share '{post}' in Twitter Channel '{self.name}'"
+            Bot.to_admin(msg)
+            return
         params = {"text": post.text}
         if post.image.name != "":
             media_response = self.client_v1_1.chunked_upload(post.local_image_path)
@@ -283,6 +301,10 @@ class MastodonChannel(AbstractChannel):
         return Mastodon(access_token=self.access_token, api_base_url=self.api_base_url)
 
     def handle_post_publish(self, post: SocialMediaPost):
+        if not post.share_in_mastodon or post.shared_in_mastodon:
+            msg = f"Not possible to share '{post}' in Mastodon Channel '{self.name}'"
+            Bot.to_admin(msg)
+            return
         parameters = {"status": post.text}
         if post.image.name != "":
             media_response = self.client.media_post(post.local_image_path)  # type: ignore
@@ -298,6 +320,10 @@ class TelegramChannel(AbstractChannel):
         return f"https://t.me/{self.group_id}"
 
     def handle_post_publish(self, post: SocialMediaPost):
+        if not post.share_in_telegram or post.shared_in_telegram:
+            msg = f"Not possible to share '{post}' in Telegram Channel '{self.name}'"
+            Bot.to_admin(msg)
+            return
         Bot.to_group(
             group_id=self.group_id,
             text=post.text,

@@ -21,8 +21,15 @@ from .utils import get_linkedin_auth_url
 class SocialMediaPostAdmin(OneModelAdmin):
     list_display = ("title", "shared_at", "language", "is_draft")
     list_filter = ("is_draft", "language", "shared_at")
-    readonly_fields = ("shared_at",)
     actions = ("post", "reset_shared", "set_draft", "unset_draft")
+    readonly_fields = (
+        "shared_at",
+        "shared_in_linkedin",
+        "shared_in_linkedin_groups",
+        "shared_in_twitter",
+        "shared_in_mastodon",
+        "shared_in_telegram",
+    )
 
     @admin.action(description="⬆️ Publish post")
     def post(modeladmin, request, queryset):

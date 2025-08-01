@@ -20,11 +20,13 @@ class Topics(TextChoices):
     ALPINEJS = "alpinejs", "AlpineJS"
     DEVOPS = "devops", "DevOps"
     PYTHON = "python", "Python"
+    JAVASCRIPT = "javascript", "JavasSript"
     LINUX = "linux", "Linux"
     LATEX = "latex", "LaTex"
     MATLAB = "matlab", "Matlab"
     SIEMENS = "siemens", "Siemens"
     EXCEL = "excel", "Excel"
+    POSTGRES = "postgres", "PostgreSQL"
     MATHS = "maths", _("Maths")
     MECHANICS = "mechanics", _("Mechanics")
     ENGLISH = "english", _("English")
@@ -32,7 +34,10 @@ class Topics(TextChoices):
     CALENDAR = "calendar", _("Calendars")
     CAREER = "career", _("Career")
     PSYCHOLOGY = "psychology", _("Psychology")
-    PHILOSOPHY = "philosophy", _("philosophy")
+    PHILOSOPHY = "philosophy", _("Philosophy")
+    FINANCE = "finance", _("Finance")
+    MARKETING = "marketing", ("Marketing")
+    ENTREPRENEURSHIP = "entrepreneurship", _("Entrepreneurship")
 
 
 class NotificationFrequency(TextChoices):

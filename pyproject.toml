@@ -65,9 +65,8 @@ dependencies = [
   "django-permissions-policy>=4.26.0",
   "django-csp>=4.0",
   "vulture>=2.14",
-  "linkedin-posts>=0.0.12",
-  "django-tweets>=0.0.9",
   "mastodon-py>=2.0.1",
+  "tweepy>=4.16.0",
 ]
 
 

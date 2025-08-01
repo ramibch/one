@@ -9,10 +9,12 @@ from one.bot import Bot
 from one.quiz.models import Question
 
 from .models import (
-    AbstractChannel,
     LinkedinAuth,
     LinkedinChannel,
+    LinkedinGroupChannel,
+    MastodonChannel,
     SocialMediaPost,
+    TelegramChannel,
     TwitterChannel,
 )
 from .utils import refresh_linkedin_access
@@ -48,20 +50,49 @@ def task_post_on_social_media(post: SocialMediaPost | None = None):
     if post is None:
         return
 
-    for Channel in AbstractChannel.__subclasses__():
-        channels = Channel.objects.filter(
-            languages__overlap=[post.language],
-            topics__overlap=post.topics,
-            is_active=True,
-        ).distinct()
+    filters = {
+        "languages__overlap": [post.language],
+        "topics__overlap": [post.topics],
+        "is_active": True,
+    }
 
-        for ch in channels:
+    def handle_platform(share_flag: bool, shared_attr: str, model_cls):
+        if not share_flag or getattr(post, shared_attr):
+            return
+        setattr(post, shared_attr, True)
+
+        for ch in model_cls.objects.filter(**filters).distinct():
             try:
                 ch.dispatch_post(post)
-                Bot.to_admin(f"Posted '{post.title}' on {ch.name} ")
             except Exception as e:
-                msg = f"Unable to post {post.title} in {ch._meta.model_name}: {e}"
+                msg = f"Unable to post '{post}' in '{ch}' ({model_cls.__name__}): {e}"
                 Bot.to_admin(msg)
+
+    handle_platform(
+        post.share_in_linkedin,
+        "shared_in_linkedin",
+        LinkedinChannel,
+    )
+    handle_platform(
+        post.share_in_linkedin_groups,
+        "shared_in_linkedin_groups",
+        LinkedinGroupChannel,
+    )
+    handle_platform(
+        post.share_in_twitter,
+        "shared_in_twitter",
+        TwitterChannel,
+    )
+    handle_platform(
+        post.share_in_mastodon,
+        "shared_in_mastodon",
+        MastodonChannel,
+    )
+    handle_platform(
+        post.share_in_telegram,
+        "shared_in_telegram",
+        TelegramChannel,
+    )
 
     post.shared_at = timezone.now()
     post.save()
