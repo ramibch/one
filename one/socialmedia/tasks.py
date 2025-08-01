@@ -48,9 +48,6 @@ def task_post_on_social_media(post: SocialMediaPost | None = None):
     if post is None:
         return
 
-    post.shared_at = timezone.now()
-    post.save()
-
     for Channel in AbstractChannel.__subclasses__():
         channels = Channel.objects.filter(
             languages__overlap=[post.language],
@@ -65,6 +62,9 @@ def task_post_on_social_media(post: SocialMediaPost | None = None):
             except Exception as e:
                 msg = f"Unable to post {post.title} in {ch._meta.model_name}: {e}"
                 Bot.to_admin(msg)
+
+    post.shared_at = timezone.now()
+    post.save()
 
 
 @huey.db_periodic_task(crontab(hour="12", minute="00"))

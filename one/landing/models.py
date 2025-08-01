@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
-from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
 from one.articles.models import Article
@@ -77,7 +76,7 @@ class ArticlesSection(_ChildModel):
         return (
             Article.objects.filter(
                 main_topic__name__in=self.landing.site.topics,
-                languages__contains=[get_language()],
+                languages__overlap=self.landing.site.languages,
                 slug__isnull=False,
             )
             .select_related("main_topic")

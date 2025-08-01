@@ -14,6 +14,7 @@ class Genders(TextChoices):
 
 
 class Topics(TextChoices):
+    ONE = "one", _("One project")
     DJANGO = "django", "Django"
     HTMX = "htmx", "htmx"
     ALPINEJS = "alpinejs", "AlpineJS"
@@ -29,7 +30,9 @@ class Topics(TextChoices):
     ENGLISH = "english", _("English")
     ELECTRONICS = "electronics", _("Electronics")
     CALENDAR = "calendar", _("Calendars")
-    ONE = "one", _("One project")
+    CAREER = "career", _("Career")
+    PSYCHOLOGY = "psychology", _("Psychology")
+    PHILOSOPHY = "philosophy", _("philosophy")
 
 
 class NotificationFrequency(TextChoices):
