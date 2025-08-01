@@ -59,14 +59,13 @@ def task_post_on_social_media(post: SocialMediaPost | None = None):
     def handle_platform(share_flag: bool, shared_attr: str, model_cls):
         if not share_flag or getattr(post, shared_attr):
             return
-        setattr(post, shared_attr, True)
-
         for ch in model_cls.objects.filter(**filters).distinct():
             try:
                 ch.dispatch_post(post)
             except Exception as e:
                 msg = f"Unable to post '{post}' in '{ch}' ({model_cls.__name__}): {e}"
                 Bot.to_admin(msg)
+        setattr(post, shared_attr, True)
 
     handle_platform(
         post.share_in_linkedin,
