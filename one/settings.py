@@ -429,8 +429,6 @@ LOGIN_URL = "account_login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-SOCIALACCOUNT_STORE_TOKENS = False
-
 # Google
 GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID")
 GOOGLE_SECRET_KEY = env("GOOGLE_SECRET_KEY")
@@ -439,15 +437,6 @@ GOOGLE_SECRET_KEY = env("GOOGLE_SECRET_KEY")
 LINKEDIN_CLIENT_ID = env("LINKEDIN_CLIENT_ID")
 LINKEDIN_SECRET_KEY = env("LINKEDIN_SECRET_KEY")
 
-# Twitter
-# save in models
-# TWITTER_BEARER_TOKEN = env("TWITTER_BEARER_TOKEN")
-# TWITTER_API_KEY = env("TWITTER_API_KEY")
-# TWITTER_API_KEY_SECRET = env("TWITTER_API_KEY_SECRET")
-# TWITTER_ACCESS_TOKEN = env("TWITTER_ACCESS_TOKEN")
-# TWITTER_ACCESS_TOKEN_SECRET = env("TWITTER_ACCESS_TOKEN_SECRET")
-# TWITTER_CLIENT_ID = env("TWITTER_CLIENT_ID")
-# TWITTER_CLIENT_SECRET = env("TWITTER_CLIENT_SECRET")
 
 SOCIALACCOUNT_PROVIDERS = {
     # https://django-allauth.readthedocs.io/en/latest/providers.html#google
@@ -572,7 +561,8 @@ CONTENT_SECURITY_POLICY_REPORT_ONLY = {
         "script-src-attr": [SELF, UNSAFE_HASHES, UNSAFE_INLINE],
         "style-src": [SELF, UNSAFE_INLINE],
         "style-src-elem": [SELF, UNSAFE_INLINE, "https://cdn.jsdelivr.net"],
-        "font-src": [SELF, "data:"],
+        "font-src": [SELF, "data:", "https://fonts.gstatic.com"],
+        "media-src": ["data:"],
         "connect-src": [SELF],
         "img-src": [
             SELF,
@@ -580,6 +570,7 @@ CONTENT_SECURITY_POLICY_REPORT_ONLY = {
             AWS_S3_ENDPOINT_URL,
             "https://revista.dgt.es",
             "https://tile.openstreetmap.org",
+            "https://images.unsplash.com",
         ],
         "form-action": [SELF],
         "frame-ancestors": [SELF],
