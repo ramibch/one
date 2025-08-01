@@ -41,7 +41,14 @@ class SocialMediaPostAdmin(OneModelAdmin):
 
     @admin.action(description="🔄 Reset shared")
     def reset_shared(modeladmin, request, queryset):
-        queryset.update(shared_at=None)
+        queryset.update(
+            shared_at=None,
+            shared_in_linkedin=False,
+            shared_in_linkedin_groups=False,
+            shared_in_twitter=False,
+            shared_in_mastodon=False,
+            shared_in_telegram=False,
+        )
 
     @admin.action(description="📝 Set draft")
     def set_draft(modeladmin, request, queryset):

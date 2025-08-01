@@ -52,7 +52,7 @@ def task_post_on_social_media(post: SocialMediaPost | None = None):
 
     filters = {
         "languages__overlap": [post.language],
-        "topics__overlap": [post.topics],
+        "topics__overlap": post.topics,
         "is_active": True,
     }
 
