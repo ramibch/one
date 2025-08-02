@@ -1,3 +1,4 @@
+import json
 import secrets
 from datetime import timedelta
 
@@ -257,7 +258,7 @@ class LinkedinChannel(AbstractChannel):
             post_type=ContentType.objects.get_for_model(type(post_object)),
             post_id=post_object.pk,
             post_object=post_object,
-            response_json=response.json(),
+            response_json=json.loads(response.text),
             response_headers=dict(response.headers),
             respose_status=response.status_code,
         )
@@ -315,7 +316,7 @@ class LinkedinGroupChannel(AbstractChannel):
             post_type=ContentType.objects.get_for_model(type(post_object)),
             post_id=post_object.pk,
             post_object=post_object,
-            response_json=response.json(),
+            response_json=json.loads(response.text),
             response_headers=dict(response.headers),
             respose_status=response.status_code,
         )
@@ -377,7 +378,7 @@ class TwitterChannel(AbstractChannel):
             post_type=ContentType.objects.get_for_model(type(post_object)),
             post_id=post_object.pk,
             post_object=post_object,
-            response_json=response.json(),
+            response_json=json.loads(response.text),
             response_headers=dict(response.headers),
             respose_status=response.status_code,
         )
