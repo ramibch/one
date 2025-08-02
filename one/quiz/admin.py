@@ -8,7 +8,14 @@ from nested_inline.admin import (
     NestedTabularInline,
 )
 
-from .models import Answer, DeeplLanguage, Lection, Question, Quiz, TranslatedQuestion
+from .models import (
+    Answer,
+    DeeplLanguage,
+    Lection,
+    Question,
+    Quiz,
+    TranslatedQuestion,
+)
 
 
 @admin.register(Quiz)

@@ -1,7 +1,7 @@
 import secrets
 from datetime import timedelta
-from http import HTTPStatus
 
+import requests
 import tweepy
 from auto_prefetch import ForeignKey
 from django.conf import settings
@@ -16,6 +16,7 @@ from mastodon import Mastodon
 from one.bot import Bot
 from one.choices import Topics
 from one.db import ChoiceArrayField, OneModel
+from one.quiz.models import Question as EnglishQuestion
 from one.tmp import TmpFile
 
 from .linkedin import LinkedinClient
@@ -191,27 +192,44 @@ def build_linkedin_content(client: LinkedinClient, post: SocialMediaPost):
     return {"media": {"title": post.title, "id": urn}}
 
 
-class PostedSocialMediaPost(OneModel):
-    post = ForeignKey(SocialMediaPost, on_delete=models.CASCADE)
-    content_type = models.ForeignKey(
+class PostedSocialMediaContent(OneModel):
+    # channel
+    channel_type = models.ForeignKey(
         ContentType,
         on_delete=models.CASCADE,
+        related_name="channel_posted_contents",
         limit_choices_to={
             "model__in": [
                 "linkedinchannel",
                 "linkedingroupchannel",
                 "twitterchannel",
+                "mastodonchannel",
+                "telegramchannel",
             ]
         },
     )
-    object_id = models.PositiveBigIntegerField()
-    content_object = GenericForeignKey("content_type", "object_id")
-    json = models.JSONField()
+    channel_id = models.PositiveBigIntegerField()
+    channel_object = GenericForeignKey("channel_type", "channel_id")
+    # posted object
+    post_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE,
+        related_name="post_posted_contents",
+        limit_choices_to={
+            "model__in": ["socialmediapost", "question"],
+            "app_label__in": ["quiz", "socialmedia"],
+        },
+    )
+    post_id = models.PositiveBigIntegerField()
+    post_object = GenericForeignKey("post_type", "post_id")
 
-    class Meta(OneModel.Meta):
-        indexes = [
-            models.Index(fields=["content_type", "object_id"]),
-        ]
+    # response
+    response_json = models.JSONField()
+    response_headers = models.JSONField(null=True)
+    respose_status = models.PositiveSmallIntegerField(null=True)
+
+    def __str__(self) -> str:
+        return f"{self.post_object} - {self.channel_object}"
 
 
 class LinkedinChannel(AbstractChannel):
@@ -227,29 +245,37 @@ class LinkedinChannel(AbstractChannel):
             author_id=self.author_id,
         )
 
+    def save_posted_content(
+        self,
+        post_object: SocialMediaPost | EnglishQuestion,
+        response: requests.Response,
+    ):
+        posted = PostedSocialMediaContent(
+            channel_type=ContentType.objects.get_for_model(LinkedinChannel),
+            channel_id=self.pk,
+            channel_object=self,
+            post_type=ContentType.objects.get_for_model(type(post_object)),
+            post_id=post_object.pk,
+            post_object=post_object,
+            response_json=response.json(),
+            response_headers=dict(response.headers),
+            respose_status=response.status_code,
+        )
+        posted.save()
+
     def handle_post_publish(self, post: SocialMediaPost):
         if not post.share_in_linkedin or post.shared_in_linkedin:
             msg = f"Not possible to share '{post}' in Linkedin Channel '{self.name}'"
             Bot.to_admin(msg)
             return
-        r = self.client.share_post(
-            comment=post.text,
-            visibility="PUBLIC",
-            feed_distribution="MAIN_FEED",
-            reshable_disabled=False,
-            content=build_linkedin_content(self.client, post),
-            container=None,
-        )
+        li_content = build_linkedin_content(self.client, post)
+        response = self.client.share_post(comment=post.text, content=li_content)
+        self.save_posted_content(post, response)
 
-        if r.status_code == HTTPStatus.CREATED:
-            posted = PostedSocialMediaPost(
-                post=post,
-                content_type=ContentType.objects.get_for_model(LinkedinChannel),
-                object_id=self.pk,
-                content_object=self,
-                json=r.json(),
-            )
-            posted.save()
+    def post_english_question(self, question: EnglishQuestion):
+        text = question.get_question_promotion_text(add_link=False)
+        response = self.client.share_post(comment=text)
+        self.save_posted_content(question, response)
 
 
 class LinkedinGroupChannel(AbstractChannel):
@@ -277,30 +303,42 @@ class LinkedinGroupChannel(AbstractChannel):
     def li_container(self):
         return "urn:li:group:" + self.group_id
 
+    def save_posted_content(
+        self,
+        post_object: SocialMediaPost | EnglishQuestion,
+        response: requests.Response,
+    ):
+        posted = PostedSocialMediaContent(
+            channel_type=ContentType.objects.get_for_model(LinkedinGroupChannel),
+            channel_id=self.pk,
+            channel_object=self,
+            post_type=ContentType.objects.get_for_model(type(post_object)),
+            post_id=post_object.pk,
+            post_object=post_object,
+            response_json=response.json(),
+            response_headers=dict(response.headers),
+            respose_status=response.status_code,
+        )
+        posted.save()
+
     def handle_post_publish(self, post: SocialMediaPost):
         if not post.share_in_linkedin_groups or post.shared_in_linkedin_groups:
             msg = f"Not possible to share '{post}' in Linkedin Group '{self.name}'"
             Bot.to_admin(msg)
             return
 
-        r = self.client.share_post(
+        response = self.client.share_post(
             comment=post.text,
             visibility=self.li_visibility,
-            feed_distribution="MAIN_FEED",
-            reshable_disabled=False,
             content=build_linkedin_content(self.client, post),
             container=self.li_container,
         )
+        self.save_posted_content(post, response)
 
-        if r.status_code == HTTPStatus.CREATED:
-            posted = PostedSocialMediaPost(
-                post=post,
-                content_type=ContentType.objects.get_for_model(LinkedinGroupChannel),
-                object_id=self.pk,
-                content_object=self,
-                json=r.json(),
-            )
-            posted.save()
+    def post_english_question(self, question: EnglishQuestion):
+        text = question.get_question_promotion_text(add_link=False)
+        response = self.client.share_post(comment=text)
+        self.save_posted_content(question, response)
 
 
 class TwitterChannel(AbstractChannel):
@@ -318,6 +356,7 @@ class TwitterChannel(AbstractChannel):
             consumer_secret=self.api_key_secret,
             access_token=self.access_token,
             access_token_secret=self.access_token_secret,
+            return_type=requests.Response,  # type: ignore
         )
 
     @property
@@ -325,6 +364,24 @@ class TwitterChannel(AbstractChannel):
         auth = tweepy.OAuth1UserHandler(self.api_key, self.api_key_secret)
         auth.set_access_token(self.access_token, self.access_token_secret)
         return tweepy.API(auth, wait_on_rate_limit=True)
+
+    def save_posted_content(
+        self,
+        post_object: SocialMediaPost | EnglishQuestion,
+        response: requests.Response,
+    ):
+        posted = PostedSocialMediaContent(
+            channel_type=ContentType.objects.get_for_model(TwitterChannel),
+            channel_id=self.pk,
+            channel_object=self,
+            post_type=ContentType.objects.get_for_model(type(post_object)),
+            post_id=post_object.pk,
+            post_object=post_object,
+            response_json=response.json(),
+            response_headers=dict(response.headers),
+            respose_status=response.status_code,
+        )
+        posted.save()
 
     def handle_post_publish(self, post: SocialMediaPost):
         if not post.share_in_twitter or post.shared_in_twitter:
@@ -335,16 +392,14 @@ class TwitterChannel(AbstractChannel):
         if post.image.name != "":
             media_response = self.client_v1_1.chunked_upload(post.local_image_path)
             params["media_ids"] = [media_response.media_id_string]
-        r = self.client_v2.create_tweet(**params)
+        response = self.client_v2.create_tweet(**params)
 
-        posted = PostedSocialMediaPost(
-            post=post,
-            content_type=ContentType.objects.get_for_model(TwitterChannel),
-            object_id=self.pk,
-            content_object=self,
-            json=r.data,
-        )
-        posted.save()
+        self.save_posted_content(post, response)  # type: ignore
+
+    def post_english_question(self, question: EnglishQuestion):
+        text = question.get_question_promotion_text(add_link=False)
+        response = self.client_v2.create_tweet(text=text)
+        self.save_posted_content(question, response)  # type: ignore
 
 
 class MastodonChannel(AbstractChannel):

@@ -107,24 +107,28 @@ def task_share_random_quiz_question():
     """
     Share english quiz question
     """
-    question = random.choice(list(Question.objects.filter(promoted=False)))
-    text = question.get_question_promotion_text(add_link=False)
-    # text_with_link = question.get_question_promotion_text(add_link=True)
+
+    available_questions = list(Question.objects.filter(promoted=False))
+
+    if not available_questions:
+        Bot.to_admin("All English questions are promoted in social media")
+        return
+
+    question = random.choice(available_questions)
 
     li_channels = LinkedinChannel.objects.filter(post_english=True, is_active=True)
-    li_groups = LinkedinGroupChannel.objects.filter(post_english=True, is_active=True)
     x_channels = TwitterChannel.objects.filter(post_english=True, is_active=True)
 
     for ch in li_channels:
-        ch.client.share_post(comment=text)
-        time.sleep(60 * 10)  # avoid duplicates
-
-    for ch in li_groups:
-        ch.client.share_post(comment=text)
-        time.sleep(60 * 10)  # avoid duplicates
+        ch.post_english_question(question)
+        time.sleep(60 * 10)
 
     for ch in x_channels:
-        ch.client_v2.create_tweet(text=text)
+        ch.post_english_question(question)
+        time.sleep(5)
+
+    question.promoted = True
+    question.save()
 
 
 @huey.db_periodic_task(crontab(hour="9", minute="15"))
