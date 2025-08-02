@@ -58,7 +58,7 @@ class LinkedinClient:
             payload["content"] = content
 
         data = json.dumps(payload).encode("utf-8")
-        return requests.post(url, headers=self.build_headers(), data=data)
+        return requests.post(url, headers=self.build_headers(), json=data)
 
     def get_me(self):
         url = "https://api.linkedin.com/v2/me"
@@ -69,7 +69,7 @@ class LinkedinClient:
         payload = {"initializeUploadRequest": {"owner": self._author_urn()}}
         data = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(
-            url, data=data, headers=self.build_headers(), method="POST"
+            url, json=data, headers=self.build_headers(), method="POST"
         )
         with urllib.request.urlopen(req) as res:
             value = json.loads(res.read().decode("utf-8"))["value"]
@@ -86,7 +86,7 @@ class LinkedinClient:
 
         upload_url, image_urn = self._init_image_upload()
         headers = {"Authorization": f"Bearer {self.access_token}"}
-        res = requests.put(upload_url, headers=headers, data=file_bytes)
+        res = requests.put(upload_url, headers=headers, json=file_bytes)
         return res, image_urn
 
     def get_image(self, image_urn: str):
@@ -126,7 +126,7 @@ class LinkedinClient:
         response = requests.post(
             url,
             headers=self.build_headers(),
-            data=json.dumps(payload).encode("utf-8"),
+            json=json.dumps(payload).encode("utf-8"),
         )
         if response.status_code > 300:
             msg = f"Failed to post to Linkedin:\n\n{response.text}\n\n{response.json()}"
