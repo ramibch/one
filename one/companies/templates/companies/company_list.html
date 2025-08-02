@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+
+<ul>
+  {% for company in object_list %}
+  <li>
+    <a href="{{ company.url }}"> {{ company.name }} </a>
+  </li>
+  {% endfor %}
+</ul>
+
+{% include "pagination/centered_simple.html" %}
+
+{% endblock content %}

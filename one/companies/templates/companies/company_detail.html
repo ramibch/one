@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load cache i18n markdownify static %}
+
+{% block content %}
+
+<h1 class="text-center">  {{ object.name }} </h1>
+
+
+{% include "companies/partials/job_cards.html" with jobs=object.job_set.all %}
+
+{% include "pagination/centered_simple.html" %}
+
+{% endblock content %}

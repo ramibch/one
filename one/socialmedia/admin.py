@@ -94,7 +94,7 @@ class LinkedinChannelAdmin(OneModelAdmin):
 @admin.register(LinkedinGroupChannel)
 class LinkedinGroupChannelAdmin(OneModelAdmin):
     list_display = ("name", "is_active", "is_private", "languages", "url")
-    list_filter = ("is_active", "is_private", "languages")
+    list_filter = ("is_active", "is_private")
 
 
 @admin.register(MastodonChannel)
